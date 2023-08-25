@@ -1,0 +1,14 @@
+{
+  "name": "@pcd/tsconfig",
+  "version": "0.6.0",
+  "license": "MIT",
+  "private": false,
+  "files": [
+    "base.json",
+    "nextjs.json",
+    "ts-library.json"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}
