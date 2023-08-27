@@ -8,9 +8,8 @@
     },
     "lint": {},
     "dev": {
-      "cache": true,
-      "persistent": true,
-      "dependsOn": ["build"]
+      "cache": false,
+      "persistent": true
     }
   }
 }
