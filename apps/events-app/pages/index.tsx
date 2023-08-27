@@ -2,18 +2,15 @@ import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
 import { UserPassportContext, useUserPassportContext } from "../context/PassportContext";
 import { PCD_GITHUB_URL } from "../src/constants";
 import axios from "axios";
-import { useGlobal } from "../context/GlobalContext";
+import { useGlobalContext } from "../context/GlobalContext";
 
 /**
- * Landing page of the example 'consumer client' application, which is a
- * directory of examples for how to use the PCD SDK and integrate with
- * the passport.
+ * Landing page of events application
  */
-export default function Page() {
+export default function Home() {
   const { signIn } = useUserPassportContext()
-  const { isAuthenticated } = useGlobal()
+  const { isAuthenticated } = useGlobalContext();
 
-  console.log(isAuthenticated)
   return (
     <>
       <button onClick={signIn}>Sign In</button>

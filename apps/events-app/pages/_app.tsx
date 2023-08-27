@@ -28,43 +28,7 @@ const App = ({ Component, pageProps }: { Component: any; pageProps: any }) => {
   );
 };
 
-
 export default App;
 
 
 
-export const getServerSideProps = async (ctx: any) => {
-  const supabase = createPagesServerClient(ctx)
-  let {
-    data: { session },
-  } = await supabase.auth.getSession()
-
-
-  if (!session)
-    return {
-      props: {
-        initialSession: null,
-        user: null
-      },
-    }
-
-  console.log('session ', session)
-
-  // get profile from session 
-  const { data: profile, error } = await supabase
-    .from('profile')
-    .select('*')
-    .eq('uuid', session.user.id);
-
-
-  return {
-    props: {
-      initialSession: session,
-      user: session?.user,
-      profile: profile
-    },
-  }
-
-
-
-}

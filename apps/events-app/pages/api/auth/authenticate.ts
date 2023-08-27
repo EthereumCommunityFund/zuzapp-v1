@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { createPagesServerClient } from '@supabase/auth-helpers-nextjs'
-import withSession from "../middleware/withSession";
+import withSession from "../../../middleware/withSession";
 import { ApiError } from "next/dist/server/api-utils";
 import { AuthError } from "@supabase/supabase-js";
 

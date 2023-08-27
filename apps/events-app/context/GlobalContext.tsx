@@ -1,22 +1,23 @@
-import React from 'react';
+
+import React, { createContext, useContext, ReactElement } from 'react';
 
 interface GlobalContextType {
     isAuth: boolean;
 }
 
-const GlobalContext = React.createContext<GlobalContextType | undefined>(undefined);
+const GlobalContext = createContext<GlobalContextType | undefined>(undefined);
 
-export const useGlobal = () => {
-    const context = React.useContext(GlobalContext);
+export const useGlobalContext = () => {
+    const context = useContext(GlobalContext);
     if (!context) {
-        throw new Error('useGlobal must be used within a GlobalProvider');
+        throw new Error('useGlobalContext must be used within a GlobalProvider');
     }
     return context;
 };
 
 
 type GlobalProviderProps = {
-    children: React.ReactElement;
+    children: ReactElement;
     user: any
 }
 
