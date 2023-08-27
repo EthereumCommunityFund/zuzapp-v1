@@ -6,6 +6,8 @@ import { AuthError } from "@supabase/supabase-js";
 
 const PASSWORD = process.env.SUPABASE_USER_PASS as string
 
+console.log('password', PASSWORD)
+
 async function handler(req: NextApiRequest, res: NextApiResponse) {
     const supabase = createPagesServerClient({
         req,
@@ -27,6 +29,8 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
             email,
             password: PASSWORD
         });
+
+        console.log(req.body)
 
         // If the user signs in successfully
         if (data?.user) {

@@ -12,11 +12,6 @@ const withSession = (handler: NextApiHandler) => {
         }
         handler(req, res)
     }
-
-
-
-
-
 }
 
 export default withSession;

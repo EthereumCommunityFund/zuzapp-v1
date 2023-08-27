@@ -2,6 +2,7 @@ import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
 import { UserPassportContext, useUserPassportContext } from "../context/PassportContext";
 import { PCD_GITHUB_URL } from "../src/constants";
 import axios from "axios";
+import { useGlobal } from "../context/GlobalContext";
 
 /**
  * Landing page of the example 'consumer client' application, which is a
@@ -10,8 +11,14 @@ import axios from "axios";
  */
 export default function Page() {
   const { signIn } = useUserPassportContext()
+  const { isAuthenticated } = useGlobal()
+
+  console.log(isAuthenticated)
   return (
-    <button onClick={signIn}>Sign In</button>
+    <>
+      <button onClick={signIn}>Sign In</button>
+      {isAuthenticated && <div>signed in</div>}
+    </>
   );
 }
 
@@ -21,6 +28,7 @@ export const getServerSideProps = async (ctx: any) => {
     data: { session },
   } = await supabase.auth.getSession()
 
+
   if (!session)
     return {
       props: {
@@ -28,6 +36,9 @@ export const getServerSideProps = async (ctx: any) => {
         user: null
       },
     }
+
+
+
 
   // get profile from session 
   const { data: profile, error } = await supabase
