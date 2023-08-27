@@ -9,9 +9,13 @@
   "devDependencies": {
     "eslint": "^8.47.0",
     "prettier": "^3.0.2",
-    "tsconfig": "workspace:*",
+    "tsconfig": "*",
     "turbo": "latest"
   },
-  "packageManager": "pnpm@8.6.10",
-  "name": "Zuzapp-main"
+  "name": "Zuzapp-main",
+  "packageManager": "yarn@1.22.19",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ]
 }
