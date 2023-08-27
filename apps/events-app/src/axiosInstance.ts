@@ -1,0 +1,46 @@
+import axios, { AxiosInstance } from 'axios';
+
+const axiosInstance: AxiosInstance = axios.create({
+    baseURL: 'http://localhost:3001', // replace with your API endpoint
+    headers: {
+        'Content-Type': 'application/json',
+    },
+});
+
+
+
+
+
+// Response interceptor
+axiosInstance.interceptors.response.use(
+    (response) => {
+        // Do something with the response data
+        return response;
+    },
+    (error) => {
+        // if (error.response) {
+        //     switch (error.response.status) {
+        //         case 401:
+
+        //             alert('Unauthorized. Please login again.');
+
+        //             break;
+        //         case 403:
+
+        //             alert('Forbidden. You do not have permission.');
+        //             break;
+        //         case 500:
+
+        //             alert('Server error. Please try again later.');
+        //             break;
+        //         default:
+
+        //             alert('Something went wrong.');
+        //     }
+        // }
+        return Promise.reject(error);
+    }
+);
+
+
+export default axiosInstance;
