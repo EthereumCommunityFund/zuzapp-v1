@@ -96,7 +96,7 @@ export function UserPassportContextProvider({ children }: UserPassportProviderPr
                 pcdString: pcdStr,
                 ...user
             })
-            router.reload()
+            router.push("/")
         } catch (error) {
             console.log(error, "new error")
         }

@@ -14,7 +14,9 @@
     "noEmit": true,
     "resolveJsonModule": true,
     "strict": false,
-    "target": "es5"
+    "skipLibCheck": false,
+    "target": "esnext",
+    "noUncheckedIndexedAccess": true
   },
   "include": ["src", "next-env.d.ts"],
   "exclude": ["node_modules"]

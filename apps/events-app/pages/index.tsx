@@ -1,7 +1,5 @@
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
-import { UserPassportContext, useUserPassportContext } from "../context/PassportContext";
-import { PCD_GITHUB_URL } from "../src/constants";
-import axios from "axios";
+import { useUserPassportContext } from "../context/PassportContext";
 import { useGlobalContext } from "../context/GlobalContext";
 
 /**
@@ -9,12 +7,12 @@ import { useGlobalContext } from "../context/GlobalContext";
  */
 export default function Home() {
   const { signIn } = useUserPassportContext()
-  const { isAuthenticated } = useGlobalContext();
+  const { isAuthenticated, user } = useGlobalContext();
 
   return (
     <>
-      <button onClick={signIn}>Sign In</button>
-      {isAuthenticated && <div>signed in</div>}
+      <button onClick={signIn}>Passport Login</button>
+      {isAuthenticated && <div>Logged in {user.email}</div>}
     </>
   );
 }

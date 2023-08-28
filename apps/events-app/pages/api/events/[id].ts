@@ -4,8 +4,8 @@ import withSession from "../../../middleware/withSession"
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
-    console.log('got to this handler')
+    console.log('testing')
 }
 
 
-export default withSession(handler)
+export default handler;
