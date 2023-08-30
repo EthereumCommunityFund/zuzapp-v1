@@ -1,7 +1,7 @@
 
-import React, { createContext, useContext, ReactElement } from 'react';
+import  { createContext, useContext, ReactElement } from 'react';
 
-interface GlobalContextType {
+type GlobalContextType {
     isAuthenticated: boolean;
     user: any
 }
