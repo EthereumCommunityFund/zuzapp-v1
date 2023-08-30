@@ -8,8 +8,9 @@
   },
   "devDependencies": {
     "eslint": "^8.47.0",
+    "eslint-custom-config": "workspace:*",
     "prettier": "^3.0.2",
-    "tsconfig": "*",
+    "tsconfig": "workspace:*",
     "turbo": "latest"
   },
   "name": "Zuzapp-main",

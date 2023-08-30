@@ -11,6 +11,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@pcd/eslint-config-custom": "^0.6.2",
     "@pcd/ethereum-ownership-pcd": "0.6.0",
     "@pcd/passport-interface": "0.6.0",
     "@pcd/pcd-types": "0.6.0",
@@ -36,8 +37,8 @@
     "@types/react-dom": "^18.0.7",
     "@types/styled-components": "^5.1.26",
     "eslint": "7.32.0",
-    "tsconfig": "*",
     "eslint-config-custom": "*",
+    "tsconfig": "*",
     "typescript": "^4.5.3"
   }
 }
