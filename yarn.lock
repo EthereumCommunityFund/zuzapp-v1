@@ -831,13 +831,6 @@
   dependencies:
     glob "7.1.7"
 
-"@next/eslint-plugin-next@^13.4.19":
-  version "13.4.19"
-  resolved "https://registry.yarnpkg.com/@next/eslint-plugin-next/-/eslint-plugin-next-13.4.19.tgz#93d130c37b47fd120f6d111aee36a60611148df1"
-  integrity sha512-N/O+zGb6wZQdwu6atMZHbR7T9Np5SUFUjZqCbj0sXm+MwQO35M8TazVB4otm87GkXYs2l6OPwARd3/PUWhZBVQ==
-  dependencies:
-    glob "7.1.7"
-
 "@next/swc-darwin-arm64@13.4.19":
   version "13.4.19"
   resolved "https://registry.yarnpkg.com/@next/swc-darwin-arm64/-/swc-darwin-arm64-13.4.19.tgz#77ad462b5ced4efdc26cb5a0053968d2c7dac1b6"
@@ -911,10 +904,10 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@pcd/eslint-config-custom@0.6.0":
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/@pcd/eslint-config-custom/-/eslint-config-custom-0.6.0.tgz#d8a6ee7e2b31ea1dc0f87b7f4c5bf1b074c02134"
-  integrity sha512-dLYt5qQZgxzdBbDB8b032RvumxKc4A53ULN3Hifp/njSG8kFkHvbqJTtOK07vIIN6tuLSVx6CAt0g3IPN1TMjg==
+"@pcd/eslint-config-custom@^0.6.2":
+  version "0.6.2"
+  resolved "https://registry.yarnpkg.com/@pcd/eslint-config-custom/-/eslint-config-custom-0.6.2.tgz#e7e0dac79501f7c8b82df731e5dcd8645491e575"
+  integrity sha512-wkt9wDxczE6sHGDZ0HC3jWq1aNzlRHpcEx2DRTsBuELfq5PAP49C4jOaXDgwqqTGgpl2Njgk/cwnU7rr2KRgGA==
   dependencies:
     eslint "^7.23.0"
     eslint-config-next "13.0.0"
@@ -4658,7 +4651,7 @@ next-tick@^1.1.0:
   resolved "https://registry.yarnpkg.com/next-tick/-/next-tick-1.1.0.tgz#1836ee30ad56d67ef281b22bd199f709449b35eb"
   integrity sha512-CXdUiJembsNjuToQvxayPZF9Vqht7hewsvy2sOWafLvi2awflj9mOC6bHIg50orX8IJvWKY9wYQ/zB2kogPslQ==
 
-next@^13.1.1, next@^13.4.19:
+next@^13.1.1:
   version "13.4.19"
   resolved "https://registry.yarnpkg.com/next/-/next-13.4.19.tgz#2326e02aeedee2c693d4f37b90e4f0ed6882b35f"
   integrity sha512-HuPSzzAbJ1T4BD8e0bs6B9C1kWQ6gv8ykZoRWs5AQoiIuqbGHHdQO7Ljuvg05Q0Z24E2ABozHe6FxDvI6HfyAw==
