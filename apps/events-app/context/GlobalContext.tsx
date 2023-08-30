@@ -28,7 +28,7 @@ export const GlobalProvider = ({ children, user }: GlobalProviderProps) => {
     const isAuthenticated = user ? true : false
 
     return (
-        <GlobalContext.Provider value={{ isAuthenticated }}>
+        <GlobalContext.Provider value={{ isAuthenticated, user }}>
             {children}
         </GlobalContext.Provider>
     );

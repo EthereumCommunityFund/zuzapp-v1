@@ -1,19 +1,7 @@
 {
-  "extends": "tsconfig/nextjs.json",
   "compilerOptions": {
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ],
-    "jsx": "preserve"
+      "jsx": "react"
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "extends": "tsconfig/nextjs.json",
+
 }
