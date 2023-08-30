@@ -2,7 +2,8 @@
 import React, { createContext, useContext, ReactElement } from 'react';
 
 interface GlobalContextType {
-    isAuth: boolean;
+    isAuthenticated: boolean;
+    user: any
 }
 
 const GlobalContext = createContext<GlobalContextType | undefined>(undefined);
