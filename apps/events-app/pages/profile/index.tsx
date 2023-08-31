@@ -6,7 +6,7 @@ type Props = {}
 function Profile(props: any) {
 
     return (
-        <div> profiler</div>
+        <div> profile</div>
 
     )
 }

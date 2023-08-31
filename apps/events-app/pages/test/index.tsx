@@ -14,6 +14,7 @@ export default function Home() {
   const { isAuthenticated, user } = useGlobalContext();
   
   const updateData = {
+    
     name: "davik",
     event_space_type: "tracks",
     start_date: Date.now(),
