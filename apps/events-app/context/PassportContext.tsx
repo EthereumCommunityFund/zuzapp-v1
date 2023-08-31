@@ -6,14 +6,12 @@ import { createContext, ReactNode, useState, useContext, useEffect } from "react
 import {
     openSignedZuzaluSignInPopup,
     SignInMessagePayload,
-    useFetchUser,
     usePassportPopupMessages,
     useSemaphoreSignatureProof,
     User,
     fetchUser
 } from "@pcd/passport-interface";
 import { ZUPASS_SERVER_URL, ZUPASS_URL } from "../src/constants";
-import { AuthTokenResponse } from "@supabase/supabase-js";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import axiosInstance from "../src/axiosInstance";
 import { useRouter } from "next/router";
