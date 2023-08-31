@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 
 function handler(req: NextApiRequest, res: NextApiResponse) {
-    console.log("events index")
+    console.log("get event spaces")
 }
 
 export default handler

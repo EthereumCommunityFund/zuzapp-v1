@@ -1,8 +1,8 @@
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
 import { useUserPassportContext } from "../../context/PassportContext";
 import { useGlobalContext } from "../../context/GlobalContext";
-import { createEventSpace, updateEventSpace } from "../../controllers";
-import { timeStamp } from "console";
+import { createEventSpace, deleteEventSpace, fetchEventSpace, updateEventSpace } from "../../controllers";
+import { timeStamp, trace } from "console";
 
 
 
@@ -14,7 +14,6 @@ export default function Home() {
   const { isAuthenticated, user } = useGlobalContext();
   
   const updateData = {
-    
     name: "davik",
     event_space_type: "tracks",
     start_date: Date.now(),
@@ -24,7 +23,6 @@ export default function Home() {
     event_type: ["Great"],
     experience_level: ["Expert"],
     status: "draft"
-  
   }
   
   
@@ -44,13 +42,33 @@ export default function Home() {
       }}>Create event space</button>
       <button onClick={ async()=> {
         try {
-          const result = await  updateEventSpace("aeb1c13c-a932-4192-b7cf-9c37ee725ca3", updateData)
+          const result = await  updateEventSpace("2c612bc1-3349-462c-b802-46fd5a905e60", updateData)
           console.log('result ',result)
         } catch (error) {
             console.log(error)
         }
     
+        
       }}>Update event space</button>
+      <button onClick={ async()=> {
+        
+        try {
+          const result = await fetchEventSpace("2c612bc1-3349-462c-b802-46fd5a905e60")
+          console.log('result ',result)
+        } catch (error) {
+            console.log(error)
+        }
+    
+      }}>Get event space</button>
+      <button onClick={ async()=> {
+        try {
+          const result = await deleteEventSpace("2c612bc1-3349-462c-b802-46fd5a905e60")
+          console.log('result ',result)
+        } catch (error) {
+            console.log(error)
+        }
+    
+      }}>Delete event space</button>
       {isAuthenticated && <div>Logged in {user.email}</div>}
     </>
   );

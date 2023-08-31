@@ -1,16 +1,6 @@
 import Joi from "joi";
+import { NextApiResponse } from "next";
 
-interface EventSpaceUpdateData {
-    name: string;
-    event_space_type: "tracks" | "schedules",
-    start_date: number;
-    end_date: number;
-    description: string;
-    format: "in-person" | "online" | "hybrid";
-    event_type: string[];
-    experience_level: string[];
-    status: "draft" | "published" | "archived"
-}
 
 
 const eventspace_update_schema = Joi.object({
@@ -20,7 +10,7 @@ const eventspace_update_schema = Joi.object({
     start_date: Joi.date().required(),
     end_date: Joi.date().required(),
     description: Joi.string().required(),
-    format: Joi.string().valid('in-person', 'online', 'hybrid').default('online'),
+    format: Joi.string().valid('in-person', 'online', 'hybrid').required(),
     event_type: Joi.array().items(Joi.string()).default(['General']).required(),
     experience_level: Joi.array().items(Joi.string()).default(['beginner']).required(),
 });
@@ -29,7 +19,24 @@ export const validateEventSpaceUpdate = (body: any): [Joi.ValidationResult<any>,
     const data = { ...body }
     // remove user object added on to the body by session middleware 
     delete data.user;
-
-
     return [eventspace_update_schema.validate(data), data];
 }
+
+
+
+
+const uuidv4Regex = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$/;
+export const validateUUID = (id: any) => {
+    let errors = [];
+    if (typeof id !== 'string') {
+        errors.push('Invalid ID type');
+    }
+    if (!uuidv4Regex.test(id)) {
+        errors.push('Invalid ID format');
+    }
+
+    if (id.length > 36) {
+        errors.push('Invalid ID length');
+    }
+    return errors;
+};
