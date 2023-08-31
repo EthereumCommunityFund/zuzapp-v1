@@ -4,8 +4,10 @@ import { NextApiRequest, NextApiResponse } from "next";
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     const supabase = createPagesServerClient({ req, res });
+    const session = await supabase.auth.getSession();
+    if (!session) {
 
-    console.log("session ", await supabase.auth.getSession())
+    }
 }
 
 export default handler

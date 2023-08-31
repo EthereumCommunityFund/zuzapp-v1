@@ -5,12 +5,19 @@ import { NextApiRequest, NextApiResponse } from "next";
 const withSession = (handler: NextApiHandler) => {
     return async (req: NextApiRequest, res: NextApiResponse) => {
         const supabase = createPagesServerClient({ req, res });
-        const session = await supabase.auth.getSession()
+        const { data, error } = await supabase.auth.getSession()
+        let user = data.session?.user;
 
-        if (!session) {
+        if (!data.session) {
             return res.status(401).send("Unathourized access")
         }
-        handler(req, res)
+
+
+        req.body = {
+            ...req.body,
+            user
+        }
+        return handler(req, res);
     }
 }
 
