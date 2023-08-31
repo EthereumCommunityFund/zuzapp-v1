@@ -1,5 +1,5 @@
 
 export const formatTimestamp = (date: number) => {
-    if (typeof (date) !== "number") return;
+    if (typeof (date) !== "number") return null;
     return new Date(date).toISOString();
 }

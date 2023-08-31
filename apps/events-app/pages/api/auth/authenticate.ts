@@ -3,7 +3,6 @@ import { createPagesServerClient } from '@supabase/auth-helpers-nextjs'
 
 const PASSWORD = process.env.SUPABASE_USER_PASS as string
 
-console.log('password', PASSWORD)
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
     const supabase = createPagesServerClient({
