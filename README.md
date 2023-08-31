@@ -3,7 +3,6 @@
 
 
 ### Build
-
 To build all apps and packages, run the following command:
 
 ```

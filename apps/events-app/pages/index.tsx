@@ -16,9 +16,7 @@ export default function Home() {
   
   return (
     <>
-      <button onClick={ async()=> {
-      signIn()
-      }}>Passport Login</button>
+      <button onClick={signIn}>Passport Login</button>
       {isAuthenticated && <div>Logged in {user.email}</div>}
     </>
   );
