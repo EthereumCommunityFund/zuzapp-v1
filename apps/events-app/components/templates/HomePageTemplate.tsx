@@ -1,0 +1,67 @@
+import Button from "../ui/buttons/Button"
+import Image from "next/image"
+import Link from "next/link"
+import { BsCalendar2Fill } from 'react-icons/bs'
+import { HiLockClosed } from "react-icons/hi"
+
+
+export const sampleEvents = [
+    {
+        name: 'Zu Connect',
+        date: 'Oct 8 - Oct 20'
+    },
+    {
+        name: 'Zuzalu Town Halls',
+        date: 'Recuring'
+    }
+]
+
+export default function HomePageTemplate() {
+    return (
+        <div>
+            <div className="w-full border border-white/10 rounded-lg mt-5" style={{
+                backgroundImage: "url('/images/home-page-bg.png')",
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",                
+            }}>
+                <div className="px-10 py-10 max-w-[650px]">
+                    <h2 className="font-bold text-xl md:text-5xl mb-5">Discover & Experience Extraordinary Events</h2>
+                    <Link href="/dashboard/events/create">
+                        <Button variant={'primary'} className="rounded-full">Create Event</Button>
+                    </Link>
+                </div>
+            </div>
+            <div className="mt-10">
+                <h3 className="text-2xl md:text-4xl">Zuzalu Events</h3>
+                <div>
+                    {
+                        sampleEvents.map((event, index) => (
+                            <div key={index} className="flex flex-col md:flex-row md:justify-between md:items-center border border-white/10 bg-[#2F3232E5] rounded-lg px-3 md:px-5 py-3 mt-5">
+                                <div className="flex flex-col md:flex-row space-x-3 md:items-center">
+                                    <div>
+                                        <Image src="/images/black-img.png" alt="Event" width={150} height={120} />
+                                    </div>
+                                    <div className="space-y-2 mt-2 md:mt-0">
+                                        <h4 className="text-2xl font-bold">{event.name}</h4>
+                                        <div className="flex space-x-2">
+                                            <p className="flex items-center text-xs md:text-sm text-white/60 bg-white/10 rounded-full py-2 px-3 w-fit font-semibold">
+                                                <BsCalendar2Fill className="mr-2 text-sm md:text-base" /> {event.date}
+                                            </p>
+                                            <p className="flex items-center text-xs md:text-sm text-white/60 bg-white/10 rounded-full py-2 px-3 w-fit font-semibold">
+                                                <HiLockClosed className="mr-2 text-sm md:text-base" /> Resident Only
+                                            </p>
+                                        </div> 
+                                    </div>
+                                </div>
+                                <div className="mt-3 md:mt-0">
+                                    <Button variant={'primary'} className="rounded-full">View Event</Button>
+                                </div>
+                            </div>
+                        ))
+                    }
+                </div>
+            </div>
+        </div>
+    )
+}

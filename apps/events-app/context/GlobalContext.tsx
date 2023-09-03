@@ -1,9 +1,11 @@
 
-import React, { createContext, useContext, ReactElement } from 'react';
+import  { createContext, useContext, ReactElement } from 'react';
 
 interface GlobalContextType {
-    isAuth: boolean;
+    isAuthenticated: boolean;
+    user: any;
 }
+
 
 const GlobalContext = createContext<GlobalContextType | undefined>(undefined);
 
@@ -25,6 +27,8 @@ type GlobalProviderProps = {
 
 
 export const GlobalProvider = ({ children, user }: GlobalProviderProps) => {
+
+    console.log(user, "user")
     const isAuthenticated = user ? true : false
 
     return (

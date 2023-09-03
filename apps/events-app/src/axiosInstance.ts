@@ -1,4 +1,7 @@
 import axios, { AxiosInstance } from 'axios';
+import Router from 'next/router';
+
+
 
 const axiosInstance: AxiosInstance = axios.create({
     baseURL: 'http://localhost:3001', // replace with your API endpoint
@@ -18,26 +21,24 @@ axiosInstance.interceptors.response.use(
         return response;
     },
     (error) => {
-        // if (error.response) {
-        //     switch (error.response.status) {
-        //         case 401:
+        if (error.response) {
+            switch (error.response.status) {
+                case 401:
+                    Router.push('/')
+                    break;
+                // case 403:
 
-        //             alert('Unauthorized. Please login again.');
+                //     alert('Forbidden. You do not have permission.');
+                //     break;
+                // case 500:
 
-        //             break;
-        //         case 403:
+                //     alert('Server error. Please try again later.');
+                //     break;
+                // default:
 
-        //             alert('Forbidden. You do not have permission.');
-        //             break;
-        //         case 500:
-
-        //             alert('Server error. Please try again later.');
-        //             break;
-        //         default:
-
-        //             alert('Something went wrong.');
-        //     }
-        // }
+                //     alert('Something went wrong.');
+            }
+        }
         return Promise.reject(error);
     }
 );
