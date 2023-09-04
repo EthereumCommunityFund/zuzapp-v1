@@ -1,5 +1,5 @@
 import Joi from "joi";
-import { NextApiResponse } from "next";
+import { EventSpaceUpdateData } from "../types";
 
 
 
@@ -14,6 +14,7 @@ const eventspace_update_schema = Joi.object({
     event_type: Joi.array().items(Joi.string()).default(['General']).required(),
     experience_level: Joi.array().items(Joi.string()).default(['beginner']).required(),
 });
+
 
 export const validateEventSpaceUpdate = (body: any): [Joi.ValidationResult<any>, EventSpaceUpdateData] => {
     const data = { ...body }

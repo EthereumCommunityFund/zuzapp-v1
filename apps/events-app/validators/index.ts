@@ -1,1 +1,1 @@
-export * from './eventspace.validation'
+export * from './eventspace.validator'
