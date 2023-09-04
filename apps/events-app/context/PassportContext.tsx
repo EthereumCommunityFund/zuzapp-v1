@@ -82,7 +82,6 @@ export function UserPassportContextProvider({ children }: UserPassportProviderPr
             "consumer-client"
         )
 
-
     }
 
     // Once we have the UUID, fetch the user data from Passport.
@@ -94,7 +93,7 @@ export function UserPassportContextProvider({ children }: UserPassportProviderPr
                 pcdString: pcdStr,
                 ...user
             })
-            router.push("/")
+            router.push("/dashboard/events/create")
         } catch (error) {
             console.log(error, "new error")
         }

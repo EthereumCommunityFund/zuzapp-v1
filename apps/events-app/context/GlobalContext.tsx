@@ -1,6 +1,7 @@
 
 import  { createContext, useContext, ReactElement } from 'react';
 
+
 type GlobalContextType  = {
     isAuthenticated: boolean;
     user: any

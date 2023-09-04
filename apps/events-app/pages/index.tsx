@@ -1,6 +1,9 @@
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
 import { useUserPassportContext } from "../context/PassportContext";
 import { useGlobalContext } from "../context/GlobalContext";
+import React from "react";
+
+
 
 
 
@@ -14,7 +17,7 @@ export default function Home() {
   
   return (
     <>
-      <button onClick={signIn}>Passport Login</button>
+      <button className="bg-blue-500" onClick={signIn}>Passport Login</button>
       {isAuthenticated && <div>Logged in {user.email}</div>}
     </>
   );
