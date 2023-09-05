@@ -1,111 +1,76 @@
+import { createContext, ReactNode, useState, useContext, useEffect } from 'react';
 
-import { createContext, ReactNode, useState, useContext, useEffect } from "react"
-
-
-
-import {
-    openSignedZuzaluSignInPopup,
-    SignInMessagePayload,
-    usePassportPopupMessages,
-    useSemaphoreSignatureProof,
-    User,
-    fetchUser
-} from "@pcd/passport-interface";
-import { ZUPASS_SERVER_URL, ZUPASS_URL } from "../src/constants";
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
-import axiosInstance from "../src/axiosInstance";
-import { useRouter } from "next/router";
-
+import { openSignedZuzaluSignInPopup, SignInMessagePayload, usePassportPopupMessages, useSemaphoreSignatureProof, User, fetchUser } from '@pcd/passport-interface';
+import { ZUPASS_SERVER_URL, ZUPASS_URL } from '../src/constants';
+import { useSupabaseClient } from '@supabase/auth-helpers-react';
+import axiosInstance from '../src/axiosInstance';
+import { useRouter } from 'next/router';
 
 type UserPassportContextData = {
-    signIn: any;
-    // user: User | null
-}
+  signIn: any;
+  // user: User | null
+};
 
 type UserPassportProviderProps = {
-    children: ReactNode
-}
+  children: ReactNode;
+};
 
-export const UserPassportContext = createContext({} as UserPassportContextData)
+export const UserPassportContext = createContext({} as UserPassportContextData);
 
 export function UserPassportContextProvider({ children }: UserPassportProviderProps) {
-    const supabase = useSupabaseClient()
-    const router = useRouter()
+  const supabase = useSupabaseClient();
+  const router = useRouter();
 
-    // We only do client-side proofs for Zuzalu UUID proofs, which means we can
-    // ignore any PendingPCDs that would result from server-side proving
-    const [pcdStr, _passportPendingPCDStr] = usePassportPopupMessages();
+  // We only do client-side proofs for Zuzalu UUID proofs, which means we can
+  // ignore any PendingPCDs that would result from server-side proving
+  const [pcdStr, _passportPendingPCDStr] = usePassportPopupMessages();
 
-    // console.log(pcdStr, "pcdString")
+  // console.log(pcdStr, "pcdString")
 
-    const [signatureProofValid, setSignatureProofValid] = useState<
-        boolean | undefined
-    >();
-    // Extract UUID, the signed message of the returned PCD
-    const [signedMessage, setSignedMessage] = useState<
-        SignInMessagePayload | undefined
-    >();
+  const [signatureProofValid, setSignatureProofValid] = useState<boolean | undefined>();
+  // Extract UUID, the signed message of the returned PCD
+  const [signedMessage, setSignedMessage] = useState<SignInMessagePayload | undefined>();
 
-    const onProofVerified = (valid: boolean) => {
-        setSignatureProofValid(valid);
-    };
+  const onProofVerified = (valid: boolean) => {
+    setSignatureProofValid(valid);
+  };
 
+  const { signatureProof } = useSemaphoreSignatureProof(pcdStr, onProofVerified);
 
-    const { signatureProof } = useSemaphoreSignatureProof(
-        pcdStr,
-        onProofVerified
-    );
+  useEffect(() => {
+    if (signatureProofValid && signatureProof) {
+      const signInPayload = JSON.parse(signatureProof.claim.signedMessage) as SignInMessagePayload;
 
-
-    useEffect(() => {
-        if (signatureProofValid && signatureProof) {
-            const signInPayload = JSON.parse(
-                signatureProof.claim.signedMessage
-            ) as SignInMessagePayload;
-
-            console.log('signInPayload', signInPayload)
-            fetchUser(ZUPASS_SERVER_URL, signInPayload.uuid).then(user => {
-                if (user) {
-                    logInUser(user)
-                }
-            })
-            setSignedMessage(signInPayload)
+      console.log('signInPayload', signInPayload);
+      fetchUser(ZUPASS_SERVER_URL, signInPayload.uuid).then((user) => {
+        if (user) {
+          logInUser(user);
         }
-    }, [signatureProofValid, signatureProof]);
-
-
-
-    const signIn = async () => {
-        openSignedZuzaluSignInPopup(
-            ZUPASS_URL,
-            window.location.origin + "/popup",
-            "consumer-client"
-        )
-
+      });
+      setSignedMessage(signInPayload);
     }
+  }, [signatureProofValid, signatureProof]);
 
-    // Once we have the UUID, fetch the user data from Passport.
-    const logInUser = async (user: User) => {
-        console.log('logging in user', user)
+  const signIn = async () => {
+    openSignedZuzaluSignInPopup(ZUPASS_URL, window.location.origin + '/popup', 'consumer-client');
+  };
 
-        try {
-            await axiosInstance.post('/api/auth/authenticate', {
-                pcdString: pcdStr,
-                ...user
-            })
-            router.push("/dashboard/events/create")
-        } catch (error) {
-            console.log(error, "new error")
-        }
+  // Once we have the UUID, fetch the user data from Passport.
+  const logInUser = async (user: User) => {
+    console.log('logging in user', user);
 
-
+    try {
+      await axiosInstance.post('/api/auth/authenticate', {
+        pcdString: pcdStr,
+        ...user,
+      });
+      router.push('/dashboard/home');
+    } catch (error) {
+      console.log(error, 'new error');
     }
+  };
 
-    return (
-        <UserPassportContext.Provider value={{ signIn }}>
-            {children}
-        </UserPassportContext.Provider>
-    )
+  return <UserPassportContext.Provider value={{ signIn }}>{children}</UserPassportContext.Provider>;
 }
 
-export const useUserPassportContext = () => useContext(UserPassportContext)
+export const useUserPassportContext = () => useContext(UserPassportContext);
