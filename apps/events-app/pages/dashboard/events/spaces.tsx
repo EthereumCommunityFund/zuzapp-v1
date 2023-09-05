@@ -2,7 +2,6 @@ import EventSpacesTemplate from "@/components/templates/events/EventSpacesTempla
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs"
 
 export default function EventSpacesPage() {
-
     // Make request to get all event spaces
 
     return (

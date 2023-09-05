@@ -1,8 +1,20 @@
 import { NextApiRequest, NextApiResponse } from "next";
+import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
+import { logToFile } from "../../../utils/logger";
 
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+    const supabase = createPagesServerClient({ req, res });
 
-function handler(req: NextApiRequest, res: NextApiResponse) {
-    console.log("get event spaces")
-}
+    const { data, error } = await supabase
+        .from('eventspace')
+        .select('*');
 
-export default handler
+    if (error) {
+        logToFile("server error", error.message, error.code, "Unknown user");
+        return res.status(500).send("Server error");
+    }
+
+    return res.status(200).json(data);
+};
+
+export default handler;
