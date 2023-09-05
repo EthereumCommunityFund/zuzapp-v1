@@ -1,6 +1,5 @@
 import Joi from "joi";
-import { NextApiResponse } from "next";
-
+import { EventSpaceUpdateData } from "../types";
 
 
 const eventspace_update_schema = Joi.object({
