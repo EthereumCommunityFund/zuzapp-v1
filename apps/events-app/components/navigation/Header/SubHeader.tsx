@@ -1,7 +1,9 @@
 import { useRouter } from "next/router";
 import { BsArrowLeft } from "react-icons/bs";
-import { tabButtonLists } from "./buttons"; 
+import { tabButtonLists } from "./TabButtons"; 
 import TabButton from "./TabButton";
+import Event from "./Event";
+import AddToEventButton from "./AddToEvent";
 
 export default function SubHeader() {
   const router = useRouter();
@@ -11,24 +13,22 @@ export default function SubHeader() {
   return (
     <>
       <div className="border-b border-white/20 pl-4 justify-between flex">
-        <div className="flex">
-          <button className="flex items-center mb-3 pr-2 pl-2 font-semibold " onClick={goBackToPreviousPage}>
+        <div className="flex gap-2.5 items-center">
+          <button className="flex items-center pr-2 pl-2 font-semibold" onClick={goBackToPreviousPage}>
             <BsArrowLeft className="mr-1" /> Exit
           </button>
-          <div className="rounded-xl border border-white/20 flex bg-background font-semibold ">
-            <div className="from-neutral-600 text-{rgba(255, 255, 255, 1)} ">Event:</div>
-            <div>ZuConnect</div>
-          </div>
+          <Event name={"ZuConnect"}/>
         </div>
         <div className="flex">
           {
             tabButtonLists.map((tabButton) => {
               return (
-                <TabButton name={tabButton.name} ButtonIcon={tabButton.icon} />
+                <TabButton name={tabButton.name} ButtonIcon={tabButton.icon}/>
               )
             })
           }
         </div>
+        <AddToEventButton />
       </div>
     </>
   );
