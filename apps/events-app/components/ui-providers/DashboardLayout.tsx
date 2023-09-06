@@ -26,7 +26,7 @@ export const DashboardProvider = ({ children }: { children: React.ReactNode }) =
                   <SubHeader />
                   )
                 }
-            <div className="flex-1 mx-auto mt-10 max-w-[925px] px-4">
+            <div className="flex-1 mx-auto mt-10 px-10 gap-2.5">
               {children}
             </div>
           </div>

@@ -3,7 +3,7 @@ import EventSpaceDetailsNavBar from "@/components/eventspace/EventSpaceDetailsNa
 
 export default function EventSpace() {
   return (
-    <div className="flex w-full">
+    <div className="flex w-full gap-10">
       <EventSpaceDetailsNavBar />
       <EventSpaceDeatils />
     </div>
