@@ -9,9 +9,9 @@ export default function EventSpaceDetailsNavBar() {
       </div>
       <div>
         {
-          eventDetailsList.map((eventDetailsItem) => (
+          eventDetailsList.map((eventDetailsItem, index) => (
             <>
-              <div className="gap-2.5 py-2 px-3.5 hover: cursor-pointer font-bold">{eventDetailsItem.name}</div>
+              <div key={index} className="gap-2.5 py-2 px-3.5 hover: cursor-pointer font-bold">{eventDetailsItem.name}</div>
             </>
           ))
         }

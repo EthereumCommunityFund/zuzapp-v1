@@ -3,6 +3,6 @@ interface IEventDeatilsDescription1 {
 }
 export default function EventDeatilsDescription1(props: IEventDeatilsDescription1) {
   return (
-    <div className="opacity-70 h-[18px] font-normal text-[13px] leading-[18.2px] tracking-[0.13px]">{props.name}</div>
+    <div className="opacity-70 h-[18px] font-normal text-[13px] leading-[18.2px] tracking-[0.13px] self-stretch">{props.name}</div>
   )
 }
