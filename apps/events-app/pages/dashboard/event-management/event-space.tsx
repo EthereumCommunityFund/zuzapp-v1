@@ -10,8 +10,8 @@ export default function EventSpace() {
       <div className="flex flex-col px-5 w-full gap-[31px]">
         <EventStatus />
         <EventSpaceDeatils />
+        <EventLocation />
       </div>
-      <EventLocation />
     </div>
   )
 }
