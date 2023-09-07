@@ -1,7 +1,7 @@
 import Location from "../ui/Location";
 import IconButton from "../ui/buttons/IconButton";
 import { RxPlus } from "react-icons/rx"
-import LocationForm from "./LOcationForm";
+import EventLocationForm from "./EventLocationForm";
 
 export default function EventLocation(){
   return (
@@ -15,7 +15,7 @@ export default function EventLocation(){
         <div className="font-semibold text-base leading-[19.px] flex items-center">Add a Location</div>
         <IconButton className="rounded-[40px] py-2.5 px-3.5 bg-[#F1F1F1] bg-opacity-20 border-none" icon={RxPlus}></IconButton>
       </div>
-      <LocationForm />
+      <EventLocationForm />
     </div>
   )
 }

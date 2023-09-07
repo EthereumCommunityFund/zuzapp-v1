@@ -5,6 +5,7 @@ import { createPagesBrowserClient } from '@supabase/auth-helpers-nextjs'
 import { SessionContextProvider, Session } from '@supabase/auth-helpers-react'
 import GlobalProvider from "../context/GlobalContext";
 import '../styles/globals.css'
+import '../styles/quill.css'
 import { DashboardProvider } from "@/components/ui-providers/DashboardLayout";
 
 /**

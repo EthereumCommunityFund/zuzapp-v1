@@ -22,7 +22,7 @@ export default function DashboardNavigation() {
   return (
     <>
       {/* Mobile menu button */}
-      <div className="z-20 top-4 left-3 fixed">
+      <div className="z-50 top-4 left-3 fixed">
         <button onClick={handleClick} className="block md:hidden " aria-label="Open Dashboard Menu">
           <HiOutlineMenuAlt1 size={28} />
         </button>
