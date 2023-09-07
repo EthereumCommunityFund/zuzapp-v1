@@ -15,7 +15,6 @@ export default function EventSpaceDeatils() {
         <EventLinks />
         <EventCategoriesLabs />
         <EventEditionButtons />
-        <EventLocation />
       </div>
     </div>
   )
