@@ -1,5 +1,5 @@
 import { BsCalendar2 } from "react-icons/bs";
-import { eventDetailsList } from "./eventdetails";
+import { eventDetailsList } from "../../constant/eventdetails";
 
 export default function EventSpaceDetailsNavBar() {
   return (

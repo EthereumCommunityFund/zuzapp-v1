@@ -5,7 +5,7 @@ import { ImSpinner2 } from 'react-icons/im';
 
 import { cn } from '@/lib/utils';
 
-const ButtonVariant = ['primary', 'outline', 'ghost', 'light', 'dark'] as const;
+const ButtonVariant = ['primary', 'outline', 'ghost', 'light', 'dark', 'light-blue', 'light-dark'] as const;
 const ButtonSize = ['sm', 'base', 'lg'] as const;
 
 type ButtonProps = {
@@ -91,6 +91,16 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
               'border border-gray-600',
               'hover:bg-gray-800 active:bg-gray-700 disabled:bg-gray-700',
             ],
+            variant === 'light-blue' && [
+              'bg-[#67DAEF] bg-opacity-20',
+              'text-[#67DAEF]',
+              'hover:bg-opacity-30',
+            ],
+            variant === 'light-dark' && [
+              'bg-white bg-opacity-10',
+              'text-white',
+              'hover:bg-opacity-30',
+            ]
           ],
           //#endregion  //*======== Variants ===========
           'disabled:cursor-not-allowed',
