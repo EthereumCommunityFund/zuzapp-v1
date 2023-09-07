@@ -23,7 +23,7 @@ export const DashboardProvider = ({ children }: { children: React.ReactNode }) =
           <div className="mt-20 w-full">
             <div className="h-[90vh] overflow-y-auto">
               {
-                !checkIfCurrentRouteIsInDashboardRoutes() && (
+                checkIfCurrentRouteIsInDashboardRoutes() && (
                     <SubHeader />
                     )
                   }
