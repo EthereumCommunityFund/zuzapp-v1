@@ -12,7 +12,7 @@ export const tabButtonLists: TabButtons[] = [
     {
         name: 'Dashboard',
         icon: MdDashboard,
-        path: '/event-management',
+        path: '/dashboard/space-dashboard',
     },
     {
         name: 'Track',
