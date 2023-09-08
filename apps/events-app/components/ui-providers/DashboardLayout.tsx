@@ -1,14 +1,14 @@
 import { useRouter } from "next/router"
 import DashboardNavigation from "../navigation/Dashboard"
 import DashboardHeader from "../navigation/Header"
-import { dashboardRoutes } from "../navigation/Dashboard/routes"
+import { navBarRoutes } from "@/constant/routes"
 import SubHeader from "../navigation/Header/SubHeader"
 
 export const DashboardProvider = ({ children }: { children: React.ReactNode }) => {
     const router = useRouter()
 
     const checkIfCurrentRouteIsInDashboardRoutes = () => {
-      const routes = dashboardRoutes;
+      const routes = navBarRoutes;
       const currentRoute = routes.find(route => route.path === router.pathname);
       if (currentRoute) return true;
       return false;
@@ -23,7 +23,7 @@ export const DashboardProvider = ({ children }: { children: React.ReactNode }) =
           <div className="mt-20 w-full">
             <div className="h-[90vh] overflow-y-auto">
               {
-                checkIfCurrentRouteIsInDashboardRoutes() && (
+                !checkIfCurrentRouteIsInDashboardRoutes() && (
                     <SubHeader />
                     )
                   }

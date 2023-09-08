@@ -1,17 +1,19 @@
 import Image from "next/image";
 import Link from "next/link";
-import { HiCollection, HiHome, HiLightningBolt, HiOutlineMenuAlt1, HiTicket, HiViewBoards } from "react-icons/hi";
-import { dashboardRoutes } from "./routes";
+import { HiLightningBolt, HiOutlineMenuAlt1 } from "react-icons/hi";
+import { FaCog } from "react-icons/fa";
+import { navBarRoutes } from "@/constant/routes";
 import React from "react";
-import IconButton from "@/components/ui/buttons/IconButton";
+
 import { useRouter } from "next/router";
 import { useGlobalContext } from "@/context/GlobalContext";
+import Button from "@/components/ui/buttons/Button";
 
 
 
 // Create a navigation side menu for the dashboard.
 export default function DashboardNavigation() {
-  const routes = dashboardRoutes;
+  const routes = navBarRoutes;
   const [dashboardOpen, setDashboardOpen] = React.useState(false);
   const { isAuthenticated, user } = useGlobalContext();
   const router = useRouter();
@@ -46,7 +48,12 @@ export default function DashboardNavigation() {
           {/* Profile navigation */}
           {
             isAuthenticated && (
-              <ul>
+              <ul className="flex flex-col gap-[31px]">
+                <li className="flex items-center space-x-2">
+                  <Link href={"my-event-spaces"}>
+                    <Button variant={'primary'} className="rounded-full" leftIcon={FaCog}>My Event Spaces</Button>
+                  </Link>
+                </li>
                 <li className="flex items-center space-x-2">
                   <Image src="/images/Avatar.png" alt="Avatar" width={32} height={32} />
                   <Link href="/dashboard/profile">
