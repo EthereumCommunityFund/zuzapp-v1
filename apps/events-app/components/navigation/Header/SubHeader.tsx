@@ -11,6 +11,9 @@ export default function SubHeader() {
   const goBackToPreviousPage = () => {
     router.back();
   };
+  const goTabButton = (path: string) => {
+    router.replace(path);
+  }
   return (
     <>
       <div className="border-b border-white/20 pl-4 justify-between flex">
@@ -24,7 +27,7 @@ export default function SubHeader() {
           {
             tabButtonLists.map((tabButton) => {
               return (
-                <TabButton name={tabButton.name} ButtonIcon={tabButton.icon} />
+                <TabButton name={tabButton.name} ButtonIcon={tabButton.icon} onClick={() => goTabButton(tabButton.path)}/>
               )
             })
           }

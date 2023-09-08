@@ -1,22 +1,27 @@
 import { IconType } from "react-icons";
-import { BsTicket, BsCalendar2 } from "react-icons/bs";
+import { BsTicket } from "react-icons/bs";
+import { MdDashboard } from "react-icons/md";
 import { SlMap } from "react-icons/sl";
 
 interface TabButtons {
     name: string;    
     icon: IconType;
+    path: string;
 }
 export const tabButtonLists: TabButtons[] = [
     {
-        name: 'Event Space',
-        icon: BsCalendar2
+        name: 'Dashboard',
+        icon: MdDashboard,
+        path: '/event-management',
     },
     {
         name: 'Track',
-        icon: SlMap
+        icon: SlMap,
+        path: '/tracks',
     },
     {
         name: 'Schedules',
-        icon: BsTicket
+        icon: BsTicket,
+        path: '/schedules',
     },
 ]

@@ -20,7 +20,9 @@ export default function EventSpacesTemplate() {
                                 </h4>
                             </div>
                             <div>
-                                <Button variant="dark" className="bg-white/20 text-white/70 rounded-full" leftIcon={HiPencilAlt}>Edit Space</Button>
+                                <Link href="/dashboard/event-management" className="w-full">
+                                    <Button variant="dark" className="bg-white/20 text-white/70 rounded-full" leftIcon={HiPencilAlt}>Edit Space</Button>
+                                </Link>
                             </div>
                         </div>
                     ))   
