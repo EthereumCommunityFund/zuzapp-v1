@@ -1,7 +1,15 @@
-import Joi from "joi";
+import Joi, { boolean } from "joi";
 import { EventSpaceUpdateData } from "../types";
 
-
+const locationSchema = Joi.object({
+    id: Joi.string(),
+    name: Joi.string().required(),
+    description: Joi.string().allow('', null),
+    is_main: Joi.bool().required(),
+    address: Joi.string().required(),
+    capacity: Joi.number().integer().min(1).required(),
+    image_urls: Joi.array().items(Joi.string()).optional()
+});
 
 const eventspace_update_schema = Joi.object({
     name: Joi.string().required(),
@@ -13,8 +21,8 @@ const eventspace_update_schema = Joi.object({
     format: Joi.string().valid('in-person', 'online', 'hybrid').required(),
     event_type: Joi.array().items(Joi.string()).default(['General']).required(),
     experience_level: Joi.array().items(Joi.string()).default(['beginner']).required(),
+    locations: Joi.array().items(locationSchema).min(1).required()
 });
-
 
 export const validateEventSpaceUpdate = (body: any): [Joi.ValidationResult<any>, EventSpaceUpdateData] => {
     const data = { ...body }

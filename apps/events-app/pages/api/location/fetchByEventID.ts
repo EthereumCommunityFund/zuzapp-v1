@@ -1,35 +1,33 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import withSession from "../middlewares/withSession";
-import { createPagesServerClient } from "@supabase/auth-helpers-nextjs"; import { Database } from "@/database.types";
+import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
+import { Database } from "@/database.types";
 import { logToFile } from "../../../utils/logger";
 import { validateUUID } from "../../../validators";
+import { QueryWithID } from "@/types";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const supabase = createPagesServerClient<Database>({ req, res });
 
-    const { user } = req.body;
 
+    let { event_space_id } = req.query as QueryWithID
 
-    const errors = validateUUID(user.id);
+    // validate uuid
+    const errors = validateUUID(event_space_id);
     if (errors.length > 0) {
         return res.status(400).json({ errors });
     }
 
-
     const { data, error } = await supabase
-        .from('eventspace')
+        .from('eventspacelocation')
         .select('*')
-        .eq('creator_id', user.id);
-
+        .eq('event_space_id', event_space_id);
 
     if (error) {
-        logToFile("server error", error.message, error.code, user.email);
+        logToFile("server error", error.message, error.code, "Unknown user");
         return res.status(500).send("Server error");
     }
 
-    // Send back the event spaces
     return res.status(200).json(data);
 };
 
-// If you're using the withSession middleware, make sure to include it in the export
-export default withSession(handler);
+export default handler;

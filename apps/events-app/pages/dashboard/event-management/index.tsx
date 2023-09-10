@@ -1,4 +1,5 @@
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
+import { Database } from "@/database.types";
 import EventSpace from "./event-space";
 
 export default function EventManagement() {
@@ -10,7 +11,7 @@ export default function EventManagement() {
 }
 
 export const getServerSideProps = async (ctx: any) => {
-  const supabase = createPagesServerClient(ctx);
+  const supabase = createPagesServerClient<Database>(ctx);
   let {
     data: { session },
   } = await supabase.auth.getSession();

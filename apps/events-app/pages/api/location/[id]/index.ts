@@ -1,11 +1,9 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import withSession from "../../middlewares/withSession";
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
+import { Database } from "@/database.types";
 import { logToFile } from "../../../../utils/logger";
 import { validateUUID } from "../../../../validators";
-import { Database } from "@/database.types";
 import { QueryWithID } from "@/types";
-
 
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -18,29 +16,18 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         return res.status(400).json({ errors });
     }
 
-    // Fetch EventSpace and associated EventSpaceLocation data
     const { data, error } = await supabase
-        .from('eventspace')
-        .select(`
-            *,
-            eventspacelocation: eventspacelocation (id, name, is_main_location, description, address, capacity, image_urls)
-        `)
+        .from('eventspacelocation')
+        .select('*')
         .eq('id', id)
         .single();
 
     if (error) {
         logToFile("server error", error.message, error.code, "Unknown user");
-        return res.status(404).send("Event space not found");
-    }
-
-    if (!data) {
-        return res.status(404).send("Event space not found");
+        return res.status(500).send("Server error");
     }
 
     return res.status(200).json(data);
 };
 
 export default handler;
-
-
-

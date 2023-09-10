@@ -1,12 +1,9 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import withSession from "../../middlewares/withSession";
-import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
-import { Database } from "@/database.types";
+import { createPagesServerClient } from "@supabase/auth-helpers-nextjs"; import { Database } from "@/database.types";
 import { logToFile } from "../../../../utils/logger";
 import { validateUUID } from "../../../../validators";
+import withSession from "../../middlewares/withSession";
 import { QueryWithID } from "@/types";
-
-
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const supabase = createPagesServerClient<Database>({ req, res });
@@ -19,7 +16,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     const { error, status } = await supabase
-        .from('eventspace')
+        .from('eventspacelocation')
         .delete()
         .eq('id', id);
 
@@ -28,7 +25,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         return res.status(500).send("Internal server error");
     }
 
-    return res.status(status).send("Event space deleted");
+    return res.status(status).send("Event space location deleted");
 };
 
 export default withSession(handler);

@@ -1,12 +1,14 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { createPagesServerClient } from "@supabase/auth-helpers-nextjs"; import { Database } from "@/database.types";
+import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
+import { Database } from "@/database.types";
 import { logToFile } from "../../../utils/logger";
+
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const supabase = createPagesServerClient<Database>({ req, res });
 
     const { data, error } = await supabase
-        .from('eventspace')
+        .from('eventspacelocation')
         .select('*');
 
     if (error) {

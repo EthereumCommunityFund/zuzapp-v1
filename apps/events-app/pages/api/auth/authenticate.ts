@@ -5,7 +5,7 @@ const PASSWORD = process.env.SUPABASE_USER_PASS as string
 
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
-    const supabase = createPagesServerClient({
+    const supabase = createPagesServerClient<Database>({
         req,
         res,
     })

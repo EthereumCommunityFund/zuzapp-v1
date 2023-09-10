@@ -1,10 +1,10 @@
 import { NextApiHandler } from "next";
-import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
+import { createPagesServerClient } from "@supabase/auth-helpers-nextjs"; import { Database } from "@/database.types";
 import { NextApiRequest, NextApiResponse } from "next";
 
 const withSession = (handler: NextApiHandler) => {
     return async (req: NextApiRequest, res: NextApiResponse) => {
-        const supabase = createPagesServerClient({ req, res });
+        const supabase = createPagesServerClient<Database>({ req, res });
         const { data, error } = await supabase.auth.getSession()
         if (!data.session) {
             return res.status(401).send("Unathourized access")

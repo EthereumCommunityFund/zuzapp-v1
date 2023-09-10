@@ -1,10 +1,23 @@
-import { createContext, ReactNode, useState, useContext, useEffect } from 'react';
+import {
+  createContext,
+  ReactNode,
+  useState,
+  useContext,
+  useEffect,
+} from "react";
 
-import { openSignedZuzaluSignInPopup, SignInMessagePayload, usePassportPopupMessages, useSemaphoreSignatureProof, User, fetchUser } from '@pcd/passport-interface';
-import { ZUPASS_SERVER_URL, ZUPASS_URL } from '../src/constants';
-import { useSupabaseClient } from '@supabase/auth-helpers-react';
-import axiosInstance from '../src/axiosInstance';
-import { useRouter } from 'next/router';
+import {
+  openSignedZuzaluSignInPopup,
+  SignInMessagePayload,
+  usePassportPopupMessages,
+  useSemaphoreSignatureProof,
+  User,
+  fetchUser,
+} from "@pcd/passport-interface";
+import { ZUPASS_SERVER_URL, ZUPASS_URL } from "../src/constants";
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import axiosInstance from "../src/axiosInstance";
+import { useRouter } from "next/router";
 
 type UserPassportContextData = {
   signIn: any;
@@ -17,7 +30,9 @@ type UserPassportProviderProps = {
 
 export const UserPassportContext = createContext({} as UserPassportContextData);
 
-export function UserPassportContextProvider({ children }: UserPassportProviderProps) {
+export function UserPassportContextProvider({
+  children,
+}: UserPassportProviderProps) {
   const supabase = useSupabaseClient();
   const router = useRouter();
 
@@ -27,21 +42,30 @@ export function UserPassportContextProvider({ children }: UserPassportProviderPr
 
   // console.log(pcdStr, "pcdString")
 
-  const [signatureProofValid, setSignatureProofValid] = useState<boolean | undefined>();
+  const [signatureProofValid, setSignatureProofValid] = useState<
+    boolean | undefined
+  >();
   // Extract UUID, the signed message of the returned PCD
-  const [signedMessage, setSignedMessage] = useState<SignInMessagePayload | undefined>();
+  const [signedMessage, setSignedMessage] = useState<
+    SignInMessagePayload | undefined
+  >();
 
   const onProofVerified = (valid: boolean) => {
     setSignatureProofValid(valid);
   };
 
-  const { signatureProof } = useSemaphoreSignatureProof(pcdStr, onProofVerified);
+  const { signatureProof } = useSemaphoreSignatureProof(
+    pcdStr,
+    onProofVerified
+  );
 
   useEffect(() => {
     if (signatureProofValid && signatureProof) {
-      const signInPayload = JSON.parse(signatureProof.claim.signedMessage) as SignInMessagePayload;
+      const signInPayload = JSON.parse(
+        signatureProof.claim.signedMessage
+      ) as SignInMessagePayload;
 
-      console.log('signInPayload', signInPayload);
+      console.log("signInPayload", signInPayload);
       fetchUser(ZUPASS_SERVER_URL, signInPayload.uuid).then((user) => {
         if (user) {
           logInUser(user);
@@ -52,25 +76,42 @@ export function UserPassportContextProvider({ children }: UserPassportProviderPr
   }, [signatureProofValid, signatureProof]);
 
   const signIn = async () => {
-    openSignedZuzaluSignInPopup(ZUPASS_URL, window.location.origin + '/popup', 'consumer-client');
+    // openSignedZuzaluSignInPopup(ZUPASS_URL, window.location.origin + '/popup', 'consumer-client');
+
+    let user: User = {
+      commitment:
+        "2564230506240300597415797788618650300376657081809946093404919780893081810351",
+      email: "donwaleyb@gmail.com",
+      name: "Sly Olawale",
+      order_id: "BC7AD",
+      role: undefined,
+      uuid: "1cb3ff4f-74ce-4691-8593-aef526124d28",
+      visitor_date_ranges: [],
+    };
+    logInUser(user);
   };
 
   // Once we have the UUID, fetch the user data from Passport.
   const logInUser = async (user: User) => {
-    console.log('logging in user', user);
+    let pcdStr = "adfaf";
+    console.log("logging in user", user);
 
     try {
-      await axiosInstance.post('/api/auth/authenticate', {
+      await axiosInstance.post("/api/auth/authenticate", {
         pcdString: pcdStr,
         ...user,
       });
-      router.push('/dashboard/home');
+      router.push("/dashboard/home");
     } catch (error) {
-      console.log(error, 'new error');
+      console.log(error, "new error");
     }
   };
 
-  return <UserPassportContext.Provider value={{ signIn }}>{children}</UserPassportContext.Provider>;
+  return (
+    <UserPassportContext.Provider value={{ signIn }}>
+      {children}
+    </UserPassportContext.Provider>
+  );
 }
 
 export const useUserPassportContext = () => useContext(UserPassportContext);
