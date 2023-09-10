@@ -35,4 +35,4 @@ yarn-error.log*
 # vercel
 .vercel
 
-/apps/events-app/pages/test/*
+/apps/events-app/pages/test
