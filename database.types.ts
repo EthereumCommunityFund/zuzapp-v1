@@ -1,4 +1,5 @@
-
+yarn run v1.22.19
+$ / Users / Saitozen / Documents / Zuzapp - main / node_modules /.bin / supabase gen types typescript--project - id ddsckwslfyjnhcythyko
 export type Json =
   | string
   | number
@@ -61,25 +62,25 @@ export interface Database {
       }
       eventspaceinvites: {
         Row: {
-          event_space_id: string
+          event_space_id: string | null
           id: string
-          invitee_id: string
-          inviter_id: string
-          status: string
+          invitee_id: string | null
+          inviter_id: string | null
+          status: string | null
         }
         Insert: {
-          event_space_id: string
+          event_space_id?: string | null
           id?: string
-          invitee_id: string
-          inviter_id: string
-          status?: string
+          invitee_id?: string | null
+          inviter_id?: string | null
+          status?: string | null
         }
         Update: {
-          event_space_id?: string
+          event_space_id?: string | null
           id?: string
-          invitee_id?: string
-          inviter_id?: string
-          status?: string
+          invitee_id?: string | null
+          inviter_id?: string | null
+          status?: string | null
         }
         Relationships: [
           {
@@ -249,4 +250,4 @@ export interface Database {
     }
   }
 }
-
+Done in 3.84s.

@@ -1,8 +1,8 @@
 import Joi, { boolean } from "joi";
-import { EventSpaceUpdateData } from "../types";
+import { EventSpaceData } from "../types";
 
 const locationSchema = Joi.object({
-    id: Joi.string(),
+    id: Joi.string().length(36),
     name: Joi.string().required(),
     description: Joi.string().allow('', null),
     is_main: Joi.bool().required(),
@@ -12,6 +12,7 @@ const locationSchema = Joi.object({
 });
 
 const eventspace_update_schema = Joi.object({
+    id: Joi.string().length(36),
     name: Joi.string().required(),
     event_space_type: Joi.string().valid('tracks', 'schedules').required(),
     status: Joi.string().valid('draft', 'published', 'archived').required(),
@@ -21,10 +22,10 @@ const eventspace_update_schema = Joi.object({
     format: Joi.string().valid('in-person', 'online', 'hybrid').required(),
     event_type: Joi.array().items(Joi.string()).default(['General']).required(),
     experience_level: Joi.array().items(Joi.string()).default(['beginner']).required(),
-    locations: Joi.array().items(locationSchema).min(1).required()
+    eventspacelocation: Joi.array().items(locationSchema)
 });
 
-export const validateEventSpaceUpdate = (body: any): [Joi.ValidationResult<any>, EventSpaceUpdateData] => {
+export const validateEventSpaceUpdate = (body: any): [Joi.ValidationResult<any>, EventSpaceData] => {
     const data = { ...body }
     // remove user object added on to the body by session middleware 
     delete data.user;

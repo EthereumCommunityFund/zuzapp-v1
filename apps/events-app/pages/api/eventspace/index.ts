@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { createPagesServerClient } from "@supabase/auth-helpers-nextjs"; import { Database } from "@/database.types";
+import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
+import { Database } from "@/database.types";
 import { logToFile } from "../../../utils/logger";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -7,7 +8,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     const { data, error } = await supabase
         .from('eventspace')
-        .select('*');
+        .select(`
+            *,
+            eventspacelocation: eventspacelocation (id, name, is_main_location, description, address, capacity, image_urls)
+        `)
+        .filter('status', 'eq', 'published');
+
+    console.log(data);
 
     if (error) {
         logToFile("server error", error.message, error.code, "Unknown user");

@@ -1,5 +1,5 @@
 import Joi from "joi";
-import { EventSpaceUpdateData } from "../types";
+import { EventSpaceData } from "../types";
 
 
 const eventspace_update_schema = Joi.object({
@@ -14,10 +14,13 @@ const eventspace_update_schema = Joi.object({
     experience_level: Joi.array().items(Joi.string()).default(['beginner']).required(),
 });
 
-export const validateEventSpaceUpdate = (body: any): [Joi.ValidationResult<any>, EventSpaceUpdateData] => {
+export const validateEventSpaceUpdate = (body: any): [Joi.ValidationResult<any>, EventSpaceData] => {
+
     const data = { ...body }
+    console.log(data.id, "data id");
+    console.log(data)
     // remove user object added on to the body by session middleware 
-    delete data.user;
+    // delete data.user;
     return [eventspace_update_schema.validate(data), data];
 }
 

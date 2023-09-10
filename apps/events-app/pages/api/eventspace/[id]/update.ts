@@ -12,10 +12,8 @@ import { QueryWithID } from "@/types"
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
+    // validate request body
     const [validation_result, data] = validateEventSpaceUpdate(req.body)
-
-
-    console.log(validation_result.error, "result")
     if (validation_result.error) {
         logToFile("user error", validation_result.error.details[0].message, 400, req.body.user.email)
         return res.status(400).json({ error: validation_result.error.details[0].message });
@@ -24,6 +22,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     const supabase = createPagesServerClient<Database>({ req, res })
     const { id } = req.query as QueryWithID
+    console.log(req.query)
+
 
     // validate uuid
     const errors = validateUUID(id);
@@ -32,13 +32,33 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
 
+    // Check if the current user is authorized to delete this event space
+    const event_space_response = await supabase
+        .from('eventspace')
+        .select('creator_id')
+        .eq('id', id)
+        .single();
+
+    if (event_space_response.error || !event_space_response.data) {
+        logToFile("server error", event_space_response.error?.message, event_space_response.error?.code, req.body?.user?.email || "Unknown user");
+        return res.status(500).send("Internal server error");
+    }
+
+    if (event_space_response.data.creator_id !== req.body.user.id) {
+        return res.status(403).send("You are not authorized to delete this event space");
+    }
+
+
 
     let start_date = formatTimestamp(data.start_date);
     let end_date = formatTimestamp(data.end_date)
-    let locations = data?.locations
+    let locations = data?.eventspacelocation
+    delete data.eventspacelocation
+    console.log(data, "locations")
+    if (!start_date || !end_date) return;
 
-    delete data.locations;
 
+    // update event space
     const event_space_update_result = await supabase.from('eventspace').update({
         ...data,
         start_date,
@@ -51,7 +71,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         return res.status(500).send("Internal server error");
     }
 
-    if (locations) {
+    // update locations
+    if (locations && locations?.length > 0) {
         if (locations) {
             for (const location of locations) {
                 // If location has an ID, update the record in EventSpaceLocation table
@@ -64,7 +85,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                         address: location.address,
                         capacity: location.capacity,
                         image_urls: location.image_urls
-                    }).eq('id', location.id);  // Match by location's ID for update
+                    }).eq('id', location.id);
 
                     if (eventSpaceLocationResult.error) {
                         logToFile("server error", eventSpaceLocationResult.error.message, eventSpaceLocationResult.error.code, req.body.user.email)

@@ -18,7 +18,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     const { data, error } = await supabase
         .from('eventspace')
-        .select('*')
+        .select('*,  eventspacelocation: eventspacelocation (id, name, is_main_location, description, address, capacity, image_urls)'
+        )
         .eq('creator_id', user.id);
 
 

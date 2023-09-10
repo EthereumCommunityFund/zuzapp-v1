@@ -5,7 +5,7 @@ export type EventSpaceCreateData = {
 
 
 export type Location = {
-    id?: string, // Location ID should be included when updating but omitted when creating
+    id?: string, // Location ID should be included when updating a location but omitted when creating a location
     name: string;
     description: string;
     is_main: boolean;
@@ -14,18 +14,20 @@ export type Location = {
     image_urls?: string[];
 }
 
-export type EventSpaceUpdateData = {
+export type EventSpaceData = {
+    id: string;
     name: string;
     event_space_type: "tracks" | "schedules";
     start_date: number;
     end_date: number;
     description: string;
     format: "in-person" | "online" | "hybrid";
-    event_type: string[];
-    experience_level: string[];
+    event_type?: string[];
+    experience_level?: string[];
     status: "draft" | "published" | "archived";
-    locations?: Location[];   // Locations array should contain at least one item
+    eventspacelocation?: Location[];
 }
+
 
 export type QueryWithID = {
     [key: string]: string
