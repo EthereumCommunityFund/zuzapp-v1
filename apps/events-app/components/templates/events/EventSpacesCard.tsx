@@ -21,7 +21,7 @@ export default function EventSpaceCard(props: IProps) {
         </h4>
       </div>
       <div>
-        <Link href="/dashboard/event-management" className="w-full">
+        <Link href="/dashboard/events/spacedashboard" className="w-full">
           <Button variant="dark" className="bg-white/20 text-white/70 rounded-full" leftIcon={HiArrowRight}>Enter Space</Button>
         </Link>
       </div>
