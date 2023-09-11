@@ -17,29 +17,9 @@ export default function EventLinks() {
         <EventSpaceLabel name="Event Links" />
         <EventDeatilsDescription1 name="Links include social media and other links related to your event" />
       </div>
-      <div className="flex gap-5">
+      <button className="flex gap-5" onClick={() => setIsLink(!isLink)}>
         <SwitchButton />
         <InputFieldLabel name="Add Links" />
-      </div>
-      <div className="flex flex-col gap-5">
-        <div className="flex gap-5 items-center">
-          <InputFieldLabel name="Social Media" />
-          <IconButton icon={GoPlus} className="rounded-[40px] py-2.5 px-3.5 bg-[#F1F1F1] bg-opacity-20 border-none" />
-        </div>
-        <div>
-          <MediaLink linkType={""} />
-        </div>
-        <div>
-
-        </div>
-        <div>
-
-        </div>
-      </div>
-
-      <button className="flex gap-5" onClick={() => setIsLink(!isLink)}>
-        {/* <SwitchButton /> */}
-        <EventSpaceLabel1 name="Add Links" />
       </button>
       {
         isLink && (
