@@ -21,7 +21,7 @@ export default function EventLocationForm() {
       </div>
       <div className="flex flex-col justify-center items-start gap-[10px] self-stretch">
         <div className="flex items-center gap-5 self-stretch">
-          <SwitchButton />
+          {/* <SwitchButton /> */}
           <EventSpaceLabel1 name="Main Location" />
         </div>
         <EventDeatilsDescription1 name="This is the location of the main event" />
@@ -47,12 +47,12 @@ export default function EventLocationForm() {
       <div className="flex flex-col items-start gap-[14px] self-stretch">
         <EventSpaceLabel1 name="Location Description" />
         <TextEditor value={editorValue} onChange={handleTextEditorChange} />
-        <EventDeatilsDescription1 name="000 characters left"/>
+        <EventDeatilsDescription1 name="000 characters left" />
       </div>
       <div className="flex flex-col items-center gap-[10px] self-stretch">
-        <EventSpaceLabel1 name="Location Media"/>
+        <EventSpaceLabel1 name="Location Media" />
         <ImageUpload />
-        <EventDeatilsDescription1 name="We recommend using at least a 2160x1080px"/>
+        <EventDeatilsDescription1 name="We recommend using at least a 2160x1080px" />
       </div>
     </div>
   )
