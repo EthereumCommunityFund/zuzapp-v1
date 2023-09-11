@@ -1,17 +1,17 @@
 import { BsCalendar2 } from "react-icons/bs";
-import { eventDetailsList } from "./eventdetails";
+import { eventDetailsList } from "../../constant/eventdetails";
 
 export default function EventSpaceDetailsNavBar() {
   return (
-    <div className="rounded-s-xl opacity-70">
+    <div className="rounded-s-xl opacity-70 w-[230px]">
       <div className="p-3.5 flex gap-2.5 ">
         <BsCalendar2 className="w-5 h-5"/> Event Space Details
       </div>
       <div>
         {
-          eventDetailsList.map((eventDetailsItem) => (
+          eventDetailsList.map((eventDetailsItem, index) => (
             <>
-              <div className="gap-2.5 py-2 px-3.5 hover: cursor-pointer font-bold">{eventDetailsItem.name}</div>
+              <div key={index} className="gap-2.5 py-2 px-3.5 hover: cursor-pointer font-bold">{eventDetailsItem.name}</div>
             </>
           ))
         }

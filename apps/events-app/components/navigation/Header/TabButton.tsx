@@ -1,17 +1,18 @@
+import { MouseEventHandler } from "react";
 import { IconType } from "react-icons";
 
 interface ITabButton {
   name: string,
   ButtonIcon: IconType,
-  // onClick: () => void,
+  onClick: MouseEventHandler<HTMLButtonElement> | undefined,
 }
 
 export default function TabButton(props: ITabButton) {
-  const { name, ButtonIcon } = props;
+  const { name, ButtonIcon, onClick } = props;
   return (
-    <div className="flex p-3.5 gap-2.5 font-semibold text-base leading-5 align-middle hover:cursor-pointer hover:font-bold">
+    <button className="flex p-3.5 gap-2.5 font-semibold text-base leading-5 align-middle hover:cursor-pointer hover:font-bold" onClick={onClick}>
       <ButtonIcon />
       {name}
-    </div>
+    </button>
   );
 }

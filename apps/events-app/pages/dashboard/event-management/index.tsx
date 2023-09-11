@@ -1,10 +1,11 @@
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
 import EventSpace from "./event-space";
+import EventSpaceDashboard from "@/components/eventspace/EventSpaceDashboard";
 
 export default function EventManagement() {
   return (
     <>
-      <EventSpace />
+      <EventSpaceDashboard />
     </>
   );
 }
