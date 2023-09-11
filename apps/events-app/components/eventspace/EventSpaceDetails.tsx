@@ -12,10 +12,12 @@ export default function EventSpaceDeatils() {
       <div className="flex flex-col gap-[34px]">
         <div className="text-[25px] font-normal leading-7.5">Event Space Details</div>
         <EventBasics />
-        <EventFormat />
+        <EventFormat setEventCreated={function (eventCreated: boolean): void {
+          throw new Error("Function not implemented.");
+        }} />
         <EventLinks />
         <EventCategoriesLabs />
-        <EditionButtons type="Event-Space-Details"/>
+        <EditionButtons type="Event-Space-Details" />
       </div>
     </div>
   )
