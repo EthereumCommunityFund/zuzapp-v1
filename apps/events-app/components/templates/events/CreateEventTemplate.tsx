@@ -13,7 +13,7 @@ export default function CreateEventTemplate() {
                 eventCreated ? (
                     <div className="flex flex-col items-center">
                         <h3 className="font-bold text-xl">Your Event Space Has Been Created</h3>
-                        <Link href="/dashboard/events/spaces">
+                        <Link href="/dashboard/events/myspaces">
                             <Button variant="primary" className="mt-8 bg-[#67DBFF]/20 text-[#67DBFF] rounded-full" leftIcon={HiArrowRight}>
                                 Go to dashboard
                             </Button>
