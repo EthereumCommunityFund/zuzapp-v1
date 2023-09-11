@@ -50,15 +50,9 @@ export default function EventLocationForm() {
         <EventDeatilsDescription1 name="000 characters left" />
       </div>
       <div className="flex flex-col items-center gap-[10px] self-stretch">
-<<<<<<< HEAD
-        <InputFieldLabel name="Location Media"/>
-        <ImageUploadButton />
-        <EventDeatilsDescription1 name="We recommend using at least a 2160x1080px"/>
-=======
-        <EventSpaceLabel1 name="Location Media" />
-        <ImageUpload />
+        <InputFieldLabel name="Location Media" />
+        <ImageUploadButton title={""} />
         <EventDeatilsDescription1 name="We recommend using at least a 2160x1080px" />
->>>>>>> d817d01ab290dc19084bdee964ed7bfd5eabfeda
       </div >
     </div >
   )
