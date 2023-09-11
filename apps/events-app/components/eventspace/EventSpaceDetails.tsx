@@ -9,7 +9,7 @@ import EventLinks from "./EventLinks";
 import EditionButtons from "@/components/ui/buttons/EditionButtons";
 
 
-export default function EventSpaceDeatils() {
+export default function EventSpaceDetails() {
   return (
     <Container>
       <div className="flex flex-col gap-[34px]">
