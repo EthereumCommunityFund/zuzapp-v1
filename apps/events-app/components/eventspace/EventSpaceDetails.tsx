@@ -3,10 +3,11 @@ import { HiArrowLeft } from "react-icons/hi";
 import Button from "../ui/buttons/Button";
 import EventBasics from "./EventBasics";
 import EventCategoriesLabs from "./EventCategoriesLabs";
-import EventEditionButtons from "./EventEditionButtons";
+
 import EventFormat from "./EventFormat";
 import EventLinks from "./EventLinks";
-import EventLocation from "./EventLocation";
+import EditionButtons from "@/components/ui/buttons/EditionButtons";
+
 
 export default function EventSpaceDeatils() {
   return (
@@ -19,7 +20,7 @@ export default function EventSpaceDeatils() {
         }} />
         <EventLinks />
         <EventCategoriesLabs />
-        <EventEditionButtons />
+        <EditionButtons type="Event-Space-Details" />
       </div>
     </div>
   )

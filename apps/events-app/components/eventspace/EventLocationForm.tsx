@@ -4,8 +4,8 @@ import InputWrapper from "../ui/Input-Wrapper";
 import TextEditor from "../ui/TextEditor";
 import SwitchButton from "../ui/buttons/SwitchButton";
 import EventDeatilsDescription1 from "../ui/labels/event-details-description-1";
-import EventSpaceLabel1 from "../ui/labels/event-space-label-1";
-import ImageUpload from "../ui/buttons/ImageUpload";
+import InputFieldLabel from "../ui/labels/input-field-label";
+import ImageUploadButton from "../ui/buttons/SelectImageButton";
 
 export default function EventLocationForm() {
   const [editorValue, setEditorValue] = useState('');
@@ -27,25 +27,25 @@ export default function EventLocationForm() {
         <EventDeatilsDescription1 name="This is the location of the main event" />
       </div>
       <div className="flex flex-col items-start gap-[14px] self-stretch">
-        <EventSpaceLabel1 name="Location Name" />
+        <InputFieldLabel name="Location Name" />
         <InputWrapper>
           <input placeholder="Name of this location" className="bg-[#242727] h-4 w-full"></input>
         </InputWrapper>
       </div>
       <div className="flex flex-col items-start gap-[14px] self-stretch">
-        <EventSpaceLabel1 name="Address" />
+        <InputFieldLabel name="Address" />
         <InputWrapper>
           <input placeholder="Type the address" className="bg-[#242727] h-4 w-full"></input>
         </InputWrapper>
       </div>
       <div className="flex flex-col items-start gap-[14px] self-stretch">
-        <EventSpaceLabel1 name="Capacity" />
+        <InputFieldLabel name="Capacity" />
         <InputWrapper>
           <input placeholder="Enter a number" className="bg-[#242727] h-4 w-full"></input>
         </InputWrapper>
       </div>
       <div className="flex flex-col items-start gap-[14px] self-stretch">
-        <EventSpaceLabel1 name="Location Description" />
+        <InputFieldLabel name="Location Description" />
         <TextEditor value={editorValue} onChange={handleTextEditorChange} />
         <EventDeatilsDescription1 name="000 characters left" />
       </div>

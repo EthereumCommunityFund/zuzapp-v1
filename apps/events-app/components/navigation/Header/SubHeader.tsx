@@ -12,7 +12,7 @@ export default function SubHeader() {
     router.back();
   };
   const goTabButton = (path: string) => {
-    router.replace(path);
+    router.push(path);
   }
   return (
     <>
