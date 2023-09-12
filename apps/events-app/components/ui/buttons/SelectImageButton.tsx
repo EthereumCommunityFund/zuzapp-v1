@@ -6,11 +6,7 @@ interface IProps {
   title: string
 }
 
-<<<<<<< HEAD
 export default function SelectImageButton(props: IProps) {
-=======
-export default function SelectImageButton (props: IProps) {
->>>>>>> df1dcdbf62c9b28231a82a6c0ebcb064226f4982
   return (
     <Button variant="light-dark" className="flex flex-col py-2.5 px-3 gap-[10px] self-stretch rounded-[6px] border-dashed border-white border-opacity-10 bg-[#242727] w-full">
       <HiUpload />

@@ -71,14 +71,14 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
               'border-primary border',
               'hover:bg-primary active:bg-primary/10 disabled:bg-primary/10',
               isDarkBg &&
-                'hover:bg-gray-900 active:bg-gray-800 disabled:bg-gray-800',
+              'hover:bg-gray-900 active:bg-gray-800 disabled:bg-gray-800',
             ],
             variant === 'ghost' && [
               'text-primary-500',
               'shadow-none',
               'hover:bg-primary/5 active:bg-primary/10 disabled:bg-primary/10',
               isDarkBg &&
-                'hover:bg-gray-900 active:bg-gray-800 disabled:bg-gray-800',
+              'hover:bg-gray-900 active:bg-gray-800 disabled:bg-gray-800',
             ],
             variant === 'light' && [
               'bg-white text-white bg-opacity-20',
@@ -95,6 +95,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
               'bg-[#67DAEF] bg-opacity-20',
               'text-[#67DAEF]',
               'hover:bg-opacity-30',
+              'active:bg-[#67DAEF]/80 disabled:bg-gray-200'
             ],
             variant === 'light-dark' && [
               'bg-white bg-opacity-10',
@@ -110,7 +111,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           //#endregion  //*======== Variants ===========
           'disabled:cursor-not-allowed',
           isLoading &&
-            'relative text-transparent transition-none hover:text-transparent disabled:cursor-wait',
+          'relative text-transparent transition-none hover:text-transparent disabled:cursor-wait',
           className
         )}
         {...rest}

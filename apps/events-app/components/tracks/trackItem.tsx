@@ -1,8 +1,8 @@
 import { BsCalendar2 } from "react-icons/bs"
 
-export default function TrackItem(){
+export default function TrackItem() {
   return (
-    <div className="flex py-3 px-3.5 items-center gap-[364px] self-stretch">
+    <div className="flex py-3 px-3.5 items-center gap-[364px] self-stretch border rounded-2xl border-white/20 bg-[#2E3131]">
       <div className="flex items-start gap-[10px]">
         <div className="w-[130px] h-[100px] rounded-[10px] border border-[#FFFFFF10] bg-[#222]"></div>
         <div className="flex flex-col w-[382px] justify-center items-start gap-[14px] self-stretch">
