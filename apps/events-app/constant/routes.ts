@@ -16,10 +16,6 @@ export const eventRoutes: Routes[] = [
       title: 'Event Space Details',
     },
     {
-      path: '/dashboard/events/myspaces',
-      title: 'My Spaces Dashboard',
-    },
-    {
       path: '/dashboard/events/tracks',
       title: 'Tracks',
     },
