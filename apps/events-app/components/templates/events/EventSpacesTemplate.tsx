@@ -21,7 +21,7 @@ const EventSpacesTemplate: React.FC<EventSpacesTemplateProps> = ({ eventSpaces }
                     ))
                     } */}
           {eventSpaces.map((event, index) => (
-            <EventSpacesCard eventTitle={event.name} index={index} key={event.id} />
+            <EventSpacesCard eventTitle={event.name} index={index} key={event.id} eventId={event.id} />
           ))}
           <Link href="/dashboard/events/create" className="w-full">
             <Button variant="dark" size="lg" className="bg-transparent text-white/70 mt-3 border-dashed w-full justify-center py-4 rounded-lg">
