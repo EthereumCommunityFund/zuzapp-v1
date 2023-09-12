@@ -1,3 +1,4 @@
+import { TrackType } from '@/types';
 import Joi from 'joi';
 
 const track_schema = Joi.object({
@@ -7,7 +8,10 @@ const track_schema = Joi.object({
     event_space_id: Joi.string().uuid().required(),
 });
 
-export const validateTrackObject = (data: any) => {
+export const validateTrackObject = (data: any): [Joi.ValidationResult<any>, TrackType] => {
+    if (data.user) {
+        delete data.user
+    }
     const result = track_schema.validate(data);
-    return [result, result.value];
+    return [result, data];
 };

@@ -32,6 +32,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         logToFile("server error", error.message, error.code, "Unknown user");
         return res.status(404).send("Event space not found");
     }
+    console.log(data, "gotten location")
 
     if (!data) {
         return res.status(404).send("Event space not found");

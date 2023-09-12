@@ -12,6 +12,7 @@ type ExtractInsertUpdateTypes<T> = {
   [K in keyof T]: {
     Insert: T[K]['Insert'];
     Update: T[K]['Update'];
+    Row: T[K]['Row'];
   }
 };
 
@@ -21,39 +22,53 @@ type AllInsertUpdateTypes = ExtractInsertUpdateTypes<Tables>;
 
 export type EventSpaceInsert = AllInsertUpdateTypes['eventspace']['Insert'];
 export type EventSpaceUpdate = AllInsertUpdateTypes['eventspace']['Update'];
+export type EventSpaceResponse = AllInsertUpdateTypes['eventspace']['Row'];
 
+
+export type EventSpaceInvitesRowType = AllInsertUpdateTypes['eventspaceinvites']['Row'];
 export type EventSpaceInvitesInsert = AllInsertUpdateTypes['eventspaceinvites']['Insert'];
 export type EventSpaceInvitesUpdate = AllInsertUpdateTypes['eventspaceinvites']['Update'];
 
+export type EventSpaceLocationResponse = AllInsertUpdateTypes['eventspacelocation']['Row'];
 export type EventSpaceLocationInsert = AllInsertUpdateTypes['eventspacelocation']['Insert'];
 export type EventSpaceLocationUpdate = AllInsertUpdateTypes['eventspacelocation']['Update'];
 
+export type LocationResponseType = AllInsertUpdateTypes['location']['Row'];
 export type LocationInsert = AllInsertUpdateTypes['location']['Insert'];
 export type LocationUpdate = AllInsertUpdateTypes['location']['Update'];
 
+export type ProfileResponseType = AllInsertUpdateTypes['profile']['Row'];
 export type ProfileInsert = AllInsertUpdateTypes['profile']['Insert'];
 export type ProfileUpdate = AllInsertUpdateTypes['profile']['Update'];
 
+export type ScheduleResponseType = AllInsertUpdateTypes['schedule']['Row'];
 export type ScheduleInsert = AllInsertUpdateTypes['schedule']['Insert'];
 export type ScheduleUpdate = AllInsertUpdateTypes['schedule']['Update'];
 
+export type ScheduleSpeakerRoleRow = AllInsertUpdateTypes['schedulespeakerrole']['Row'];
 export type ScheduleSpeakerRoleInsert = AllInsertUpdateTypes['schedulespeakerrole']['Insert'];
 export type ScheduleSpeakerRoleUpdate = AllInsertUpdateTypes['schedulespeakerrole']['Update'];
 
+export type ScheduleTagsRow = AllInsertUpdateTypes['scheduletags']['Row'];
 export type ScheduleTagsInsert = AllInsertUpdateTypes['scheduletags']['Insert'];
 export type ScheduleTagsUpdate = AllInsertUpdateTypes['scheduletags']['Update'];
 
+export type SocialMediaLinksRow = AllInsertUpdateTypes['socialmedialinks']['Row'];
 export type SocialMediaLinksInsert = AllInsertUpdateTypes['socialmedialinks']['Insert'];
 export type SocialMediaLinksUpdate = AllInsertUpdateTypes['socialmedialinks']['Update'];
 
+export type SpeakerRow = AllInsertUpdateTypes['speaker']['Row'];
 export type SpeakerInsert = AllInsertUpdateTypes['speaker']['Insert'];
 export type SpeakerUpdate = AllInsertUpdateTypes['speaker']['Update'];
 
+export type TagsRow = AllInsertUpdateTypes['tags']['Row'];
 export type TagsInsert = AllInsertUpdateTypes['tags']['Insert'];
 export type TagsUpdate = AllInsertUpdateTypes['tags']['Update'];
 
+export type TrackResponseType = AllInsertUpdateTypes['track']['Row'];
 export type TrackInsert = AllInsertUpdateTypes['track']['Insert'];
 export type TrackUpdate = AllInsertUpdateTypes['track']['Update'];
+
 
 
 export interface Database {

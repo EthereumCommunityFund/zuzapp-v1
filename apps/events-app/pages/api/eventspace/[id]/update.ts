@@ -125,9 +125,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             return res.status(500).send("Internal server error");
         }
     }
-
-
     return res.status(event_space_update_result.status).end()
+
 }
 
 

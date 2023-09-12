@@ -1,4 +1,4 @@
-import Joi from 'joi';
+import Joi from "joi";
 
 const schedule_schema = Joi.object({
     name: Joi.string().required(),
