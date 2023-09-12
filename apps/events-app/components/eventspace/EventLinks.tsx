@@ -11,16 +11,21 @@ import { useState } from "react";
 
 export default function EventLinks() {
   const [isLink, setIsLink] = useState(false);
+  const [isLinkAdded, setIsLinkAdded] = useState(false);
+
+  const handleChangeSwitch = () => {
+    setIsLink(prev => !prev);
+  }
   return (
     <div className="flex flex-col gap-[34px]">
       <div className="flex flex-col gap-[10px]">
         <EventSpaceLabel name="Event Links" />
         <EventDeatilsDescription1 name="Links include social media and other links related to your event" />
       </div>
-      <button className="flex gap-5" onClick={() => setIsLink(!isLink)}>
-        <SwitchButton />
+      <div className="flex gap-5">
+        <SwitchButton value={isLink} onClick={handleChangeSwitch} />
         <InputFieldLabel name="Add Links" />
-      </button>
+      </div>
       {
         isLink && (
           <div className="flex flex-col gap-5">
