@@ -3786,6 +3786,7 @@ color-convert@^1.9.0:
     color-name "1.1.3"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 cmd-shim@^6.0.0:
   version "6.0.1"
   resolved "https://registry.yarnpkg.com/cmd-shim/-/cmd-shim-6.0.1.tgz#a65878080548e1dca760b3aea1e21ed05194da9d"
@@ -3795,6 +3796,9 @@ color-convert@^1.9.0, color-convert@^1.9.3:
 =======
 color-convert@^1.9.3:
 >>>>>>> 5692e51 (feat: add event categories)
+=======
+color-convert@^1.9.3:
+>>>>>>> df1dcdbf62c9b28231a82a6c0ebcb064226f4982
   version "1.9.3"
   resolved "https://registry.npmjs.org/color-convert/-/color-convert-1.9.3.tgz"
   integrity sha512-QfAUtd+vFdAtFQcC8CCyYt1fYWxSqAiK2cSD6zDB8N3cpsEBAvRxp9zOGg6G/SHHJYAT88/az/IuDGALsNVbGg==
@@ -4057,6 +4061,7 @@ data-uri-to-buffer@^5.0.1:
   integrity sha512-a9l6T1qqDogvvnw0nKlfZzqsyikEBZBClF39V3TFoKhDtGBqHu2HkuomJc02j5zft8zrUaXEuoicLeW54RkzPg==
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 debug@4, debug@^4.0.1, debug@^4.1.0, debug@^4.1.1, debug@^4.3.2, debug@^4.3.4:
   version "4.3.4"
   resolved "https://registry.npmjs.org/debug/-/debug-4.3.4.tgz"
@@ -4068,6 +4073,8 @@ debug@4, debug@^4.0.1, debug@^4.1.0, debug@^4.1.1, debug@^4.3.2, debug@^4.3.4:
 >>>>>>> 5692e51 (feat: add event categories)
 =======
 >>>>>>> d817d01 (feat: add dropdownmenu)
+=======
+>>>>>>> df1dcdbf62c9b28231a82a6c0ebcb064226f4982
 debug@^2.2.0:
   version "2.6.9"
   resolved "https://registry.npmjs.org/debug/-/debug-2.6.9.tgz"
@@ -5102,6 +5109,7 @@ fecha@^4.2.0:
   integrity sha512-OP2IUU6HeYKJi3i0z4A19kHMQoLVs4Hc+DPqqxI2h/DPZHTm/vjsfC6P0b4jCMy14XizLBqvndQ+UilD7707Jw==
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 fetch-blob@^3.1.2, fetch-blob@^3.1.4:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/fetch-blob/-/fetch-blob-3.2.0.tgz#f09b8d4bbd45adc6f0c20b7e787e793e309dcce9"
@@ -5114,6 +5122,9 @@ ffjavascript@0.2.48:
 =======
 ffjavascript@^0.2.48, ffjavascript@0.2.48:
 >>>>>>> 5692e51 (feat: add event categories)
+=======
+ffjavascript@^0.2.48, ffjavascript@0.2.48:
+>>>>>>> df1dcdbf62c9b28231a82a6c0ebcb064226f4982
   version "0.2.48"
   resolved "https://registry.npmjs.org/ffjavascript/-/ffjavascript-0.2.48.tgz"
   integrity sha512-uNrWP+odLofNmmO+iCCPi/Xt/sJh1ku3pVKmKWVWCLFfdCP69hvRrogKUIGnsdiINcWn0lGxcEh5oEjStMFXQQ==
@@ -6525,6 +6536,11 @@ mkdirp@^1.0.3:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/mkdirp/-/mkdirp-1.0.4.tgz#3eb5ed62622756d79a5f0e2a221dfebad75c2f7e"
   integrity sha512-vVqVZQyf3WLx2Shd0qJ9xuvqgAyKPLAiqITEtqW0oIUjzo3PePDd6fW9iFz30ef7Ysp/oiWqbhszeGWW2T6Gzw==
+
+ms@^2.1.1, ms@2.1.2:
+  version "2.1.2"
+  resolved "https://registry.npmjs.org/ms/-/ms-2.1.2.tgz"
+  integrity sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==
 
 ms@2.0.0:
   version "2.0.0"
@@ -7976,6 +7992,7 @@ sucrase@^3.32.0:
     ts-interface-checker "^0.1.9"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 supabase@^1.93.0:
   version "1.93.0"
   resolved "https://registry.yarnpkg.com/supabase/-/supabase-1.93.0.tgz#35bd2706120379c7151622c548bdf95663b05e2f"
@@ -7987,6 +8004,8 @@ supabase@^1.93.0:
 
 supports-color@^5.3.0, supports-color@^5.5.0:
 =======
+=======
+>>>>>>> df1dcdbf62c9b28231a82a6c0ebcb064226f4982
 supports-color@^5.3.0:
   version "5.5.0"
   resolved "https://registry.npmjs.org/supports-color/-/supports-color-5.5.0.tgz"
@@ -7995,7 +8014,10 @@ supports-color@^5.3.0:
     has-flag "^3.0.0"
 
 supports-color@^5.5.0:
+<<<<<<< HEAD
 >>>>>>> 5692e51 (feat: add event categories)
+=======
+>>>>>>> df1dcdbf62c9b28231a82a6c0ebcb064226f4982
   version "5.5.0"
   resolved "https://registry.npmjs.org/supports-color/-/supports-color-5.5.0.tgz"
   integrity sha512-QjVjwdXIt408MIiAqCX4oUKsgU2EqAGzs2Ppkm4aQYbjm+ZEWEcW4SfFNTr4uMNZma0ey4f5lgLrkB0aX0QMow==

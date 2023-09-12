@@ -14,7 +14,6 @@ export default function SubHeader() {
   const goBackToPreviousPage = () => {
     router.back();
   };
-
   const goTabButton = (path: string, index: any) => {
     router.push(path);
     setActiveTab(index);
