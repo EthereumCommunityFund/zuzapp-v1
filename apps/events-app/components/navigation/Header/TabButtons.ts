@@ -12,16 +12,16 @@ export const tabButtonLists: TabButtons[] = [
     {
         name: 'Dashboard',
         icon: MdDashboard,
-        path: '/dashboard/space-dashboard',
+        path: '/dashboard/events/spacedashboard',
     },
     {
         name: 'Track',
         icon: SlMap,
-        path: '/tracks',
+        path: '/dashboard/events/tracks',
     },
     {
         name: 'Schedules',
         icon: BsTicket,
-        path: '/schedules',
+        path: '/dashboard/events/schedules',
     },
 ]

@@ -1,17 +1,15 @@
 import { useRouter } from "next/router"
 import DashboardNavigation from "../navigation/Dashboard"
 import DashboardHeader from "../navigation/Header"
-import { navBarRoutes } from "@/constant/routes"
+import { eventRoutes } from "@/constant/routes"
 import SubHeader from "../navigation/Header/SubHeader"
 
 export const DashboardProvider = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter()
 
   const checkIfCurrentRouteIsInDashboardRoutes = () => {
-    const routes = navBarRoutes;
+    const routes = eventRoutes;
     const currentRoute = routes.find(route => route.path === router.pathname);
-    console.log("currentRoute", currentRoute);
-    console.log("currentRoute Status", (currentRoute ? "true" : "false"));
     if (currentRoute) return true;
     return false;
   }

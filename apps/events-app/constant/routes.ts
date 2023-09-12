@@ -6,26 +6,34 @@ interface Routes {
     title: string;
     icon?: IconType | null;
 }
-export const routes: Routes[] = [
+export const eventRoutes: Routes[] = [
     {
-      path: '/dashboard/events/myspaces',
+      path: '/dashboard/events/spacedashboard',
       title: 'Event Space Dashboard',
     },
     {
-      path: '/dashboard/events/eventspace',
+      path: '/dashboard/events/spacedetails',
       title: 'Event Space Details',
     },
     {
-      path: '/dashboard/event-management/tracks',
+      path: '/dashboard/events/myspaces',
+      title: 'My Spaces Dashboard',
+    },
+    {
+      path: '/dashboard/events/tracks',
       title: 'Tracks',
     },
     {
-      path: '/dashboard/event-management/allschedules',
-      title: 'All schedules',
+      path: '/dashboard/events/addtrack',
+      title: 'Add a Track ',
     },
     {
-      path: 'my-event-spaces',
-      title: 'My Event Spaces',
+      path: '/dashboard/events/schedules',
+      title: 'Schedules Dashboard',
+    },
+    {
+      path: '/dashboard/events/addschedule',
+      title: 'Schedules Dashboard',
     }
 ];
 
