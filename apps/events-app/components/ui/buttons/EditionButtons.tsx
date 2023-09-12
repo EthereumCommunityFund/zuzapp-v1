@@ -18,8 +18,13 @@ interface IEditionButtons {
 }
 
 export default function EditionButtons(props: IEditionButtons) {
+<<<<<<< HEAD
   const { type, leftButtonName, rightButtonName, leftButtonIcon, rightButtonIcon } = props;
 
+=======
+  const leftButton = props.type === "Event-Space-Details" ? "Discard" : "Discard Track";
+  const rightButton = props.type === "track" ? "Add Track" : "Save Edit";
+>>>>>>> 7504e52 (Create tracks/schedules dashboard page)
   return (
     <>
       <div className="flex gap-[30px] w-full">
