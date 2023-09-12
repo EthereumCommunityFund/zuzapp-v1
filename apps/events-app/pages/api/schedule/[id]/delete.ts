@@ -34,7 +34,7 @@ const deleteScheduleHandler = async (req: NextApiRequest, res: NextApiResponse) 
     // }
 
     const { error, status } = await supabase
-        .from('Schedule')
+        .from('schedule')
         .delete()
         .eq('id', id);
 

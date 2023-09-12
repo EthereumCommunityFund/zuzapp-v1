@@ -1,5 +1,4 @@
-import { ScheduleInsert } from "@/database.types";
-import { ScheduleType } from "@/types";
+import { ScheduleCreateRequestBody } from "@/types";
 import Joi from "joi";
 
 const speakerSchema = Joi.object({
@@ -53,11 +52,6 @@ const schedule_update_schema = Joi.object({
 });
 
 
-
-interface ScheduleCreateRequestBody extends ScheduleType {
-    tags: string[],
-    speakers: string[]
-}
 
 
 export const validateScheduleCreation = (body: any): [Joi.ValidationResult<any>, ScheduleCreateRequestBody] => {

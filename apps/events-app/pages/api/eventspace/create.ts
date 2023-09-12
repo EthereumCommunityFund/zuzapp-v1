@@ -13,7 +13,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const supabase = createPagesServerClient<Database>({ req, res });
 
 
-    // add joi verification
     const [validation_result, data] = validateEventSpaceCreate(req.body)
     // validate request body
     if (validation_result.error) {

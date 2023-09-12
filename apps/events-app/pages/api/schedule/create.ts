@@ -6,20 +6,24 @@ import { Database, ScheduleInsert } from "@/database.types";
 import { logToFile } from "@/utils/logger";
 import { validateScheduleCreation } from "@/validators";
 import { formatTimestamp } from "@/utils";
+import { ScheduleCreateRequestBody } from "@/types";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     const supabase = createPagesServerClient<Database>({ req, res });
 
     // Validate schedule data
-    const [validation_result, validatedData]: [any, any] = validateScheduleCreation(req.body);
+    const [validation_result, validatedData] = validateScheduleCreation(req.body);
     if (validation_result.error) {
         logToFile("user error", validation_result.error.details[0].message, 400, req.body.user.email);
         return res.status(400).json({ error: validation_result.error.details[0].message });
     }
 
+
+
+
     let {
-        name, format, description, date, all_day,
+        name, format, description, all_day,
         schedule_frequency, images, video_call_link, live_stream_url, location_id,
         event_type, experience_level, rsvp_amount, limit_rsvp, event_space_id, track_id, tags,
         speakers
@@ -28,11 +32,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     console.log(validatedData.start_time, validatedData.end_time, "timre")
     let start_time = formatTimestamp(validatedData.start_time);
     let end_time = formatTimestamp(validatedData.end_time);
+    let date = formatTimestamp(validatedData.date)
 
     console.log(start_time, end_time)
 
     const schedule_insert_result = await supabase.from('schedule').insert({
-        name, format, description, date, start_time, end_time, all_day,
+        name,
+        format, description, date, start_time, end_time, all_day,
         schedule_frequency, images, video_call_link, live_stream_url, location_id,
         event_type, experience_level, rsvp_amount, limit_rsvp, event_space_id, track_id
     }).select("id").single();
@@ -41,6 +47,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         logToFile("server error", schedule_insert_result.error.message, 500, req.body.user.email);
         return res.status(500).send("Internal server error");
     }
+
 
     const scheduleId = schedule_insert_result.data.id;
 
@@ -59,7 +66,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             tagId = existing_tag.data.id;
         }
 
-        await supabase.from('ScheduleTags').insert({
+        await supabase.from('scheduletags').insert({
             schedule_id: scheduleId,
             tag_id: tagId
         });
@@ -70,6 +77,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     // Handling speakers and their roles concurrently
     const speakerPromises = speakers.map(async (speaker: SpeakerType) => {
+        console.log(speaker, "speakerss")
         const { speaker_name, role } = speaker;
         let existingSpeaker = await supabase.from('speaker').select('id').eq('name', speaker_name.toLowerCase().trim()).single();
 

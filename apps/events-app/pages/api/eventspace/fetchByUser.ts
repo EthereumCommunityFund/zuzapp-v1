@@ -27,7 +27,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     // Check if there's no data
     if (!eventSpacesResult.data || eventSpacesResult.data.length === 0) {
-        return res.status(404).send("No event spaces found for the user");
+        return res.status(200).json([]);
     }
 
     const eventSpacesData = await Promise.all(eventSpacesResult.data.map(async (space) => {
@@ -50,7 +50,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             .single();
 
         if (error) {
-
             logToFile("server error", error.message, error.code, user.email);
             return null;
         }
@@ -65,5 +64,5 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 };
 
 
-// If you're using the withSession middleware, make sure to include it in the export
+
 export default withSession(handler);
