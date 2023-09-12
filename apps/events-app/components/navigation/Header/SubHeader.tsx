@@ -3,6 +3,7 @@ import { BsArrowLeft } from "react-icons/bs";
 import { tabButtonLists } from "./TabButtons"; 
 import TabButton from "./TabButton";
 import Event from "./Event";
+import { Popover } from "@/components/ui/popover";
 import AddToEventButton from "./AddToEvent";
 
 export default function SubHeader() {
@@ -23,7 +24,7 @@ export default function SubHeader() {
           {
             tabButtonLists.map((tabButton) => {
               return (
-                <TabButton name={tabButton.name} ButtonIcon={tabButton.icon}/>
+                <TabButton name={tabButton.name} ButtonIcon={tabButton.icon} />
               )
             })
           }

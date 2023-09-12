@@ -1,5 +1,6 @@
 import EventBasics from "./EventBasics";
 import EventCategoriesLabs from "./EventCategoriesLabs";
+import EventEditionButtons from "./EventEditionButtons";
 import EventFormat from "./EventFormat";
 import EventLinks from "./EventLinks";
 import EventLocation from "./EventLocation";
@@ -13,6 +14,7 @@ export default function EventSpaceDeatils() {
         <EventFormat />
         <EventLinks />
         <EventCategoriesLabs />
+        <EventEditionButtons />
         <EventLocation />
       </div>
     </div>
