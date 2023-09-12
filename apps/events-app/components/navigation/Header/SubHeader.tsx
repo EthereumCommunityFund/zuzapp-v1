@@ -39,6 +39,7 @@ export default function SubHeader() {
           <Button
             className="rounded-[40px] py-2.5 px-3.5 bg-bgPrimary border-none hover:bg-[#363636] duration-200 text-textSecondary hover:text-textSecondary"
             leftIcon={FaCircleArrowLeft}
+            onClick={goBackToPreviousPage}
           >
             Exit
           </Button>

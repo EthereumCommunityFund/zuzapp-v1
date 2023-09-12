@@ -88,3 +88,14 @@ export enum SubHeaderTabIndex {
     Schedules
 }
 
+export enum SpaceDashboardType {
+    New,
+    Created
+}
+
+export enum SpaceDashboardCardType {
+    EnterEventDetails,
+    PublishEvent,
+    EditDetails,
+    OpenSettings,
+}

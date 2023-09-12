@@ -52,7 +52,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           'transition-colors duration-75',
           //#region  //*=========== Size ===========
           [
-            size === 'base' && ['px-3 py-1.5', 'text-sm md:text-base'],
+            size === 'base' && ['px-3 py-1.5', 'text-sm'],
             size === 'sm' && ['px-2 py-1', 'text-xs md:text-sm'],
             size === 'lg' && ['px-4 py-2', 'text-base md:text-lg'],
           ],
@@ -98,7 +98,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
               'active:bg-[#67DAEF]/80 disabled:bg-gray-200'
             ],
             variant === 'light-dark' && [
-              'bg-white bg-opacity-10',
+              'bg-white bg-opacity-20',
               'text-white',
               'hover:bg-opacity-30',
             ],
@@ -139,7 +139,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             ])}
           >
             <LeftIcon
-              size='1.5em'
+              size='1em'
               className={cn(
                 [
                   size === 'base' && 'md:text-md text-md',

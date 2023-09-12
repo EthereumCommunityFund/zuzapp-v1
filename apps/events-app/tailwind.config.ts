@@ -81,6 +81,12 @@ module.exports = {
         sans: ['Inter var', ...defaultTheme.fontFamily.sans],
       },
     },
+    screens: {
+      'sm': '390px',
+      'md': '810px',
+      'lg': '1200px',
+      'xl': '1400px',
+    }
   },
   plugins: [require("tailwindcss-animate")],
 }

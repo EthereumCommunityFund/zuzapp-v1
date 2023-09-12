@@ -21,13 +21,13 @@ export const DashboardProvider = ({ children }: { children: React.ReactNode }) =
         <DashboardNavigation />
         <DashboardHeader />
         <div className="mt-16 w-full">
-          <div className="">
+          <div>
             {
               checkIfCurrentRouteIsInDashboardRoutes() && (
                 <SubHeader />
               )
             }
-            <div className="flex-1 mx-auto mt-10 px-10">
+            <div className="flex-1 mx-auto px-10 sm:px-0">
               {children}
             </div>
           </div>
