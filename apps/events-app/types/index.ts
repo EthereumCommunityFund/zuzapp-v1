@@ -33,3 +33,10 @@ export type QueryWithID = {
     [key: string]: string
 }
 
+
+export enum SubHeaderTabIndex {
+    Dashboard,
+    Track,
+    Schedules
+}
+

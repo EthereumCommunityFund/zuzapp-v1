@@ -1,15 +1,17 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { BsArrowLeft } from "react-icons/bs";
+import { FaCircleArrowLeft } from "react-icons/fa6";
 import { tabButtonLists } from "./TabButtons";
 import TabButton from "./TabButton";
 import Event from "./Event";
+import Button from "@/components/ui/buttons/Button";
+import { SubHeaderTabIndex } from "@/types";
 
 import AddToEventButton from "./AddToEvent";
 
 export default function SubHeader() {
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState(null);
+  const [activeTab, setActiveTab] = useState<SubHeaderTabIndex>();
 
   const goBackToPreviousPage = () => {
     router.back();
@@ -18,18 +20,33 @@ export default function SubHeader() {
     router.push(path);
     setActiveTab(index);
   }
+
+  useEffect(() => {
+    const currentUrl = router.asPath;
+    if (currentUrl.includes('/spacedashboard')) {
+      setActiveTab(SubHeaderTabIndex.Dashboard);
+    } else if (currentUrl.includes('/tracks')) {
+      setActiveTab(SubHeaderTabIndex.Track);
+    } else if (currentUrl.includes('/schedules')) {
+      setActiveTab(SubHeaderTabIndex.Schedules);
+    }
+  }, [router]);
+
   return (
     <>
-      <div className="border-b border-white/20 px-5 justify-between flex items-center self-stretch bg-[#22222280] backdrop-blur-20">
+      <div className="h-20 border-b border-white/20 px-5 justify-between block sm:flex items-center self-stretch bg-color1 backdrop-blur-20">
         <div className="flex gap-[10px] items-center self-stretch">
-          <button className="flex items-center pr-2 pl-2 font-semibold" onClick={goBackToPreviousPage}>
-            <BsArrowLeft className="mr-1" /> Exit
-          </button>
+          <Button
+            className="rounded-[40px] py-2.5 px-3.5 bg-bgPrimary border-none hover:bg-[#363636] duration-200 text-textSecondary hover:text-textSecondary"
+            leftIcon={FaCircleArrowLeft}
+          >
+            Exit
+          </Button>
           <Event name={"ZuConnect"} />
         </div>
-        <div className="flex">
+        <div className="flex box-border h-full">
           {
-            tabButtonLists.map((tabButton, index) => {
+            tabButtonLists.map((tabButton, index: number) => {
               return (
                 <TabButton
                   key={index}
@@ -42,7 +59,7 @@ export default function SubHeader() {
             })
           }
         </div>
-        <AddToEventButton />
+        <AddToEventButton className="hidden sm:block" />
       </div>
     </>
   );
