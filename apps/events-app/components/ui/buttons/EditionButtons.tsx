@@ -1,8 +1,12 @@
+<<<<<<< HEAD
 import { useState } from "react";
+=======
+>>>>>>> df0c4f1 (feat: add tracks page)
 import { HiSave } from "react-icons/hi";
 import { AiOutlineClose } from "react-icons/ai";
 
 import Button from "./Button";
+<<<<<<< HEAD
 import BasicPrompt from "../prompts/basicPrompt";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../dialog";
 import Link from "next/link";
@@ -48,4 +52,25 @@ export default function EditionButtons(props: IEditionButtons) {
       </div>
     </>
   );
+=======
+
+interface IEditionButtons {
+  type: string
+}
+
+export default function EditionButtons(props: IEditionButtons) {
+  const leftButton = props.type === "Event-Space-Details" ? "Discard" : "Discard Track";
+  const rightButton = props.type === "Event-Space-Details" ? "Save Edit" : "Add Track";
+  return (
+    <div className="flex gap-[30px] w-full">
+      <Button className="rounded-full w-1/2 flex justify-center" variant="light-dark" size="lg" type="button" leftIcon={AiOutlineClose}>
+        <span>{leftButton}</span>
+      </Button>
+      <Button className="rounded-full w-1/2 flex justify-center" variant="light-blue" size="lg" type="submit" leftIcon={HiSave}>
+        <span>{rightButton}</span>
+      </Button>
+    </div>
+
+  )
+>>>>>>> df0c4f1 (feat: add tracks page)
 }

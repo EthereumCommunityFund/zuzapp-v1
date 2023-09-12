@@ -5,7 +5,11 @@ export default function EditionForm(props: { children: string | number | boolean
   return (
     <div className="flex flex-col w-[800px] items-center py-5 px-4 gap-8 border border-white border-opacity-10 rounded-2xl bg-[#2E3131]">
       {props.children}
+<<<<<<< HEAD
       <EditionButtons type={"track"} />
+=======
+      <EditionButtons type={"Add a Track"} />
+>>>>>>> df0c4f1 (feat: add tracks page)
     </div>
   )
 }

@@ -14,9 +14,14 @@ export default function SubHeader() {
   const goBackToPreviousPage = () => {
     router.back();
   };
+<<<<<<< HEAD
   const goTabButton = (path: string, index: any) => {
     router.push(path);
     setActiveTab(index);
+=======
+  const goTabButton = (path: string) => {
+    router.push(path);
+>>>>>>> df0c4f1 (feat: add tracks page)
   }
   return (
     <>
