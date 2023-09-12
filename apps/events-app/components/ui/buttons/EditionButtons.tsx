@@ -7,24 +7,29 @@ import BasicPrompt from "../prompts/basicPrompt";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../dialog";
 import Link from "next/link";
 import { BsMap } from "react-icons/bs";
+import { IconType } from "react-icons";
 
 interface IEditionButtons {
   type: string
+  leftButtonName: string
+  rightButtonName: string
+  leftButtonIcon: IconType
+  rightButtonIcon: IconType
 }
 
 export default function EditionButtons(props: IEditionButtons) {
-  const leftButton = props.type === "Event-Space-Details" ? "Discard" : "Discard Track";
-  const rightButton = props.type === "track" ? "Add Track" : "Save Edit";
+  const { type, leftButtonName, rightButtonName, leftButtonIcon, rightButtonIcon } = props;
+
   return (
     <>
       <div className="flex gap-[30px] w-full">
-        <Button className="rounded-full w-1/2 flex justify-center" variant="light-dark" size="lg" type="button" leftIcon={AiOutlineClose}>
-          <span>{leftButton}</span>
+        <Button className="rounded-full w-1/2 flex justify-center" variant="light-dark" size="lg" type="button" leftIcon={leftButtonIcon}>
+          <span>{leftButtonName}</span>
         </Button>
         <Dialog>
           <DialogTrigger asChild>
-            <Button className="rounded-full w-1/2 flex justify-center" variant="light-blue" size="lg" type="submit" leftIcon={HiSave}>
-              <span>{rightButton}</span>
+            <Button className="rounded-full w-1/2 flex justify-center" variant="light-blue" size="lg" type="submit" leftIcon={rightButtonIcon}>
+              <span>{rightButtonName}</span>
             </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[425px]">
