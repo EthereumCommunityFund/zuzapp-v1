@@ -20,8 +20,8 @@ export default function SubHeader() {
   }
   return (
     <>
-      <div className="border-b border-white/20 pl-4 justify-between flex">
-        <div className="flex gap-2.5 items-center">
+      <div className="border-b border-white/20 px-5 justify-between flex items-center self-stretch bg-[#22222280] backdrop-blur-20">
+        <div className="flex gap-[10px] items-center self-stretch">
           <button className="flex items-center pr-2 pl-2 font-semibold" onClick={goBackToPreviousPage}>
             <BsArrowLeft className="mr-1" /> Exit
           </button>
