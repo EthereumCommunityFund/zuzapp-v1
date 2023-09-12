@@ -17,10 +17,9 @@ export default function EventLinks() {
         <EventSpaceLabel name="Event Links" />
         <EventDeatilsDescription1 name="Links include social media and other links related to your event" />
       </div>
-
       <button className="flex gap-5" onClick={() => setIsLink(!isLink)}>
-        {/* <SwitchButton /> */}
-        <EventSpaceLabel1 name="Add Links" />
+        <SwitchButton />
+        <InputFieldLabel name="Add Links" />
       </button>
       {
         isLink && (
