@@ -7,7 +7,7 @@ import { HiArrowLeft } from "react-icons/hi";
 
 export default function EventSpace() {
   return (
-    <div className="flex w-full gap-10 overflow-hidden self-stretch">
+    <div className="flex w-full gap-10 self-stretch">
       <EventSpaceDetailsNavBar />
       <div className="flex flex-col px-5 w-full gap-[31px]">        
         <Button leftIcon={HiArrowLeft} variant="light-dark">Back</Button>

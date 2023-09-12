@@ -139,7 +139,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             ])}
           >
             <LeftIcon
-              size='1em'
+              size='1.5em'
               className={cn(
                 [
                   size === 'base' && 'md:text-md text-md',
@@ -150,6 +150,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             />
           </div>
         )}
+        <div className="w-2"></div>
         {children}
         {RightIcon && (
           <div
@@ -160,7 +161,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             ])}
           >
             <RightIcon
-              size='1em'
+              size='1.25em'
               className={cn(
                 [
                   size === 'base' && 'text-md md:text-md',

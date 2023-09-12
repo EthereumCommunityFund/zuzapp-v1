@@ -7,8 +7,8 @@ import Link from "next/link";
 export default function SchedulesDashboardPage() {
   return (
     <div className="flex flex-col items-start gap-10 self-stretch">
-      <div className="flex-shrink-0 w-[750px] flex flex-col justify-start items-start overflow-visible relative p-0 gap-[30px] rounded-0">
-        <div className="flex-shrink-0 flex w-full justify-between items-center overflow-hidden flex-1 flex-grow-0">
+      <div className="flex-shrink-0 w-[750px] flex flex-col justify-start items-start relative p-0 gap-[30px] rounded-0">
+        <div className="flex-shrink-0 flex w-full justify-between items-center flex-1 flex-grow-0">
           <Button className="light-dark" leftIcon={BiLeftArrowAlt}> Back </Button>
           <Button className="dark rounded-2xl" leftIcon={BiEditAlt}> Edit </Button>
         </div>

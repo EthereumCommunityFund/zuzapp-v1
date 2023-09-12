@@ -17,11 +17,11 @@ export const DashboardProvider = ({ children }: { children: React.ReactNode }) =
   if (!router.pathname.startsWith("/dashboard")) return <div className="bg-[#222222] text-white relative min-h-screen">{children}</div>
   return (
     <>
-      <div className="flex relative bg-[#222222] text-white h-[100vh]">
+      <div className="flex relative bg-[#222222] text-white">
         <DashboardNavigation />
         <DashboardHeader />
-        <div className="mt-20 w-full">
-          <div className="h-[90vh] overflow-y-auto">
+        <div className="mt-16 w-full">
+          <div className="">
             {
               checkIfCurrentRouteIsInDashboardRoutes() && (
                 <SubHeader />
