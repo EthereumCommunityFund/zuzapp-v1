@@ -1,4 +1,3 @@
-
 export type Json =
   | string
   | number
@@ -6,7 +5,9 @@ export type Json =
   | null
   | { [key: string]: Json | undefined }
   | Json[]
-export type EventSpaceRow = Database['public']['Tables']['eventspace']['Row'];
+
+
+
 export interface Database {
   public: {
     Tables: {
@@ -206,6 +207,156 @@ export interface Database {
           }
         ]
       }
+      schedule: {
+        Row: {
+          all_day: boolean | null
+          date: string
+          description: string | null
+          end_time: string
+          event_space_id: string | null
+          event_type: string[] | null
+          experience_level: string[] | null
+          format: string
+          id: string
+          images: string[] | null
+          limit_rsvp: boolean | null
+          live_stream_url: string | null
+          location_id: string | null
+          name: string
+          rsvp_amount: number | null
+          schedule_frequency: string | null
+          start_time: string
+          track_id: string | null
+          video_call_link: string | null
+        }
+        Insert: {
+          all_day?: boolean | null
+          date: string
+          description?: string | null
+          end_time: string
+          event_space_id?: string | null
+          event_type?: string[] | null
+          experience_level?: string[] | null
+          format: string
+          id?: string
+          images?: string[] | null
+          limit_rsvp?: boolean | null
+          live_stream_url?: string | null
+          location_id?: string | null
+          name: string
+          rsvp_amount?: number | null
+          schedule_frequency?: string | null
+          start_time: string
+          track_id?: string | null
+          video_call_link?: string | null
+        }
+        Update: {
+          all_day?: boolean | null
+          date?: string
+          description?: string | null
+          end_time?: string
+          event_space_id?: string | null
+          event_type?: string[] | null
+          experience_level?: string[] | null
+          format?: string
+          id?: string
+          images?: string[] | null
+          limit_rsvp?: boolean | null
+          live_stream_url?: string | null
+          location_id?: string | null
+          name?: string
+          rsvp_amount?: number | null
+          schedule_frequency?: string | null
+          start_time?: string
+          track_id?: string | null
+          video_call_link?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "schedule_event_space_id_fkey"
+            columns: ["event_space_id"]
+            referencedRelation: "eventspace"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "schedule_location_id_fkey"
+            columns: ["location_id"]
+            referencedRelation: "eventspacelocation"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "schedule_track_id_fkey"
+            columns: ["track_id"]
+            referencedRelation: "track"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      schedulespeakerrole: {
+        Row: {
+          id: string
+          role: string
+          schedule_id: string | null
+          speaker_id: string | null
+        }
+        Insert: {
+          id?: string
+          role: string
+          schedule_id?: string | null
+          speaker_id?: string | null
+        }
+        Update: {
+          id?: string
+          role?: string
+          schedule_id?: string | null
+          speaker_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "schedulespeakerrole_schedule_id_fkey"
+            columns: ["schedule_id"]
+            referencedRelation: "schedule"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "schedulespeakerrole_speaker_id_fkey"
+            columns: ["speaker_id"]
+            referencedRelation: "speaker"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      scheduletags: {
+        Row: {
+          id: string
+          schedule_id: string | null
+          tag_id: string | null
+        }
+        Insert: {
+          id?: string
+          schedule_id?: string | null
+          tag_id?: string | null
+        }
+        Update: {
+          id?: string
+          schedule_id?: string | null
+          tag_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "scheduletags_schedule_id_fkey"
+            columns: ["schedule_id"]
+            referencedRelation: "schedule"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "scheduletags_tag_id_fkey"
+            columns: ["tag_id"]
+            referencedRelation: "tags"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       socialmedialinks: {
         Row: {
           event_space_id: string | null
@@ -234,6 +385,64 @@ export interface Database {
           }
         ]
       }
+      speaker: {
+        Row: {
+          id: string
+        }
+        Insert: {
+          id?: string
+        }
+        Update: {
+          id?: string
+        }
+        Relationships: []
+      }
+      tags: {
+        Row: {
+          id: string
+          name: string
+        }
+        Insert: {
+          id?: string
+          name: string
+        }
+        Update: {
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
+      track: {
+        Row: {
+          description: string | null
+          event_space_id: string
+          id: string
+          image: string | null
+          name: string
+        }
+        Insert: {
+          description?: string | null
+          event_space_id: string
+          id?: string
+          image?: string | null
+          name: string
+        }
+        Update: {
+          description?: string | null
+          event_space_id?: string
+          id?: string
+          image?: string | null
+          name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "track_event_space_id_fkey"
+            columns: ["event_space_id"]
+            referencedRelation: "eventspace"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -249,4 +458,3 @@ export interface Database {
     }
   }
 }
-

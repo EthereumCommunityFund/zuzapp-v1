@@ -1,7 +1,8 @@
 import { NextApiResponse } from "next";
-import { EventSpaceData, Location } from "@/types";
+import { EventSpaceUpdateRequestBody, LocationType } from "@/types";
 export const formatTimestamp = (date: number) => {
-    if (typeof (date) !== "number") return null;
+    console.log(date)
+    // if (typeof (date) !== "string") return null;
     return new Date(date).toISOString();
 }
 
@@ -15,7 +16,7 @@ function getRandomElement<T>(array: T[]): T {
     return array[randomIndex];
 }
 
-function generateRandomLocation(): Location {
+function generateRandomLocation(): LocationType {
     const locationNames = ["Location A", "Location B", "Location C", "Location D"];
     const addresses = ["123 Main St", "456 Side St", "789 Back St", "101 High St"];
     const descriptions = ["Great place!", "Cozy and comfortable", "Spacious and bright", "Central location"];
@@ -33,7 +34,7 @@ function generateRandomLocation(): Location {
 
 
 
-export const generateRandomEventSpaceUpdateData = (id: string): EventSpaceData => {
+export const generateRandomEventSpaceUpdateData = (id: string, event_space_type: "tracks" | "schedules"): EventSpaceUpdateRequestBody => {
     const formats = ["in-person", "online", "hybrid"];
     const statuses = ["draft", "published", "archived"];
     const eventTypes = ["General", "Special", "Workshop", "Seminar"];
@@ -42,7 +43,7 @@ export const generateRandomEventSpaceUpdateData = (id: string): EventSpaceData =
     return {
         id,
         name: `Sample Event ${getRandomInt(1, 100)}`,
-        event_space_type: getRandomElement(["tracks", "schedules"]),
+        event_space_type: event_space_type,
         start_date: Date.now() - getRandomInt(1, 5) * 24 * 60 * 60 * 1000, // Random date within the last 5 days
         end_date: Date.now() + getRandomInt(1, 5) * 24 * 60 * 60 * 1000, // Random date within the next 5 days
         description: `Random event description ${getRandomInt(1, 1000)}`,
