@@ -1,4 +1,4 @@
-export type EventSpaceCreateData = {
+export type EventSpaceType = {
     name: string;
     event_space_type: 'tracks' | 'schedules';
 }
@@ -13,6 +13,17 @@ export type Location = {
     capacity: number;
     image_urls?: string[];
 }
+
+// export type Location = {
+//     address?: string | undefined;
+//     capacity?: number | undefined;
+//     description?: string | null | undefined;
+//     is_main: boolean;
+//     id?: string | undefined;
+//     image_urls?: string[] | null | undefined;
+//     name?: string | undefined;
+// }
+
 
 export type EventSpaceData = {
     id: string;

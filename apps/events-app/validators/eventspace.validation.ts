@@ -14,7 +14,7 @@ const eventspace_update_schema = Joi.object({
     experience_level: Joi.array().items(Joi.string()).default(['beginner']).required(),
 });
 
-export const validateEventSpaceUpdate = (body: any): [Joi.ValidationResult<any>, EventSpaceData] => {
+export const validateEventSpaceObject = (body: any): [Joi.ValidationResult<any>, EventSpaceData] => {
 
     const data = { ...body }
     console.log(data.id, "data id");

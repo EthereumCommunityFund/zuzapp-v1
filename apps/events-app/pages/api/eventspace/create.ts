@@ -12,6 +12,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     const supabase = createPagesServerClient<Database>({ req, res });
 
+
+    // add joi verification
     const { name, event_space_type, user } = req.body
 
 
