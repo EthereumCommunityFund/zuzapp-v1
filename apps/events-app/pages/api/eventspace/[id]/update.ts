@@ -4,7 +4,7 @@ import { createPagesServerClient } from "@supabase/auth-helpers-nextjs"
 import { validateEventSpaceUpdate, validateUUID } from "../../../../validators"
 import { formatTimestamp, } from "../../../../utils"
 import { logToFile } from "../../../../utils/logger"
-import { Database } from "@/database.types"
+import { Database, EventSpaceLocationInsert, EventSpaceLocationUpdate } from "@/database.types"
 import { QueryWithID } from "@/types"
 
 
@@ -32,13 +32,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
 
-    // Check if the current user is authorized to delete this event space
+    // Check if the current user is authorized to update this event space
     const event_space_response = await supabase
         .from('eventspace')
         .select('creator_id')
         .eq('id', id)
         .single();
 
+    console.log(event_space_response)
     if (event_space_response.error || !event_space_response.data) {
         logToFile("server error", event_space_response.error?.message, event_space_response.error?.code, req.body?.user?.email || "Unknown user");
         return res.status(500).send("Internal server error");
@@ -73,48 +74,60 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     // update locations
     if (locations && locations?.length > 0) {
-        if (locations) {
-            for (const location of locations) {
-                // If location has an ID, update the record in EventSpaceLocation table
-                if (location.id) {
-                    const eventSpaceLocationResult = await supabase.from('eventspacelocation').update({
-                        event_space_id: id,
-                        name: location.name,
-                        is_main_location: location.is_main,
-                        description: location.description,
-                        address: location.address,
-                        capacity: location.capacity,
-                        image_urls: location.image_urls
-                    }).eq('id', location.id);
+        // Separate locations into updates and inserts
+        const locationsToUpdate = locations.filter(loc => loc.id);
+        const locationsToInsert = locations.filter(loc => !loc.id);
 
-                    if (eventSpaceLocationResult.error) {
-                        logToFile("server error", eventSpaceLocationResult.error.message, eventSpaceLocationResult.error.code, req.body.user.email)
-                        return res.status(500).send("Internal server error when updating location");
-                    }
+        // Prepare promises for the locations to update
+        const updatePromises = locationsToUpdate.map((location: EventSpaceLocationUpdate) => {
+            if (location.id) {
+                return supabase.from('eventspacelocation').update({
+                    event_space_id: id,
+                    name: location.name,
+                    is_main_location: location.is_main_location,
+                    description: location.description,
+                    address: location.address,
+                    capacity: location.capacity,
+                    image_urls: location.image_urls
+                } as EventSpaceLocationUpdate).eq('id', location.id);
+            }
 
-                } else {
-                    // If location doesn't have an ID, insert a new record in EventSpaceLocation table
-                    const eventSpaceLocationInsertResult = await supabase.from('eventspacelocation').insert([{
-                        event_space_id: id,
-                        name: location.name,
-                        is_main_location: location.is_main,
-                        description: location.description,
-                        address: location.address,
-                        capacity: location.capacity,
-                        image_urls: location.image_urls
-                    }]);
+        });
 
-                    if (eventSpaceLocationInsertResult.error) {
-                        logToFile("server error", eventSpaceLocationInsertResult.error.message, eventSpaceLocationInsertResult.error.code, req.body.user.email)
-                        return res.status(500).send("Internal server error when inserting a new location");
-                    }
+        // Prepare promises for the locations to insert
+        const insertPromises = locationsToInsert.map(location => {
+            return supabase.from('eventspacelocation').insert({
+                event_space_id: id,
+                name: location.name,
+                is_main_location: location.is_main,
+                description: location.description,
+                address: location.address,
+                capacity: location.capacity,
+                image_urls: location.image_urls
+            } as EventSpaceLocationInsert);
+        });
+
+        try {
+            // Execute all promises concurrently
+            const results: any = await Promise.all([...updatePromises, ...insertPromises]);
+
+            console.log('result', results)
+
+            // Error handling
+            for (const result of results) {
+                if (result.error) {
+                    logToFile("server error", result.error.message, result.error.code, req.body.user.email);
+                    return res.status(500).send("Internal server error when processing locations");
                 }
             }
+
+        } catch (error: any) {
+            logToFile("server error", error.message, 500, req.body.user.email);
+            return res.status(500).send("Internal server error");
         }
-
     }
-
     return res.status(event_space_update_result.status).end()
+
 }
 
 

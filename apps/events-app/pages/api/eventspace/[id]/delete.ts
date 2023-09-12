@@ -19,19 +19,19 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     // Check if the current user is authorized to delete this event space
-    const eventSpaceResponse = await supabase
+    const event_space_response = await supabase
         .from('eventspace')
         .select('creator_id')
         .eq('id', id)
         .single();
 
-    if (eventSpaceResponse.error || !eventSpaceResponse.data) {
-        logToFile("server error", eventSpaceResponse.error?.message, eventSpaceResponse.error?.code, req.body?.user?.email || "Unknown user");
+    if (event_space_response.error || !event_space_response.data) {
+        logToFile("server error", event_space_response.error?.message, event_space_response.error?.code, req.body?.user?.email || "Unknown user");
         return res.status(500).send("Internal server error");
     }
 
 
-    if (eventSpaceResponse.data.creator_id !== req.body.user.id) {
+    if (event_space_response.data.creator_id !== req.body.user.id) {
         return res.status(403).send("You are not authorized to delete this event space");
     }
 

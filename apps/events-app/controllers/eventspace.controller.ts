@@ -1,5 +1,5 @@
 import axiosInstance from "../src/axiosInstance"
-import { EventSpaceCreateData, EventSpaceData } from "../types"
+import { EventSpaceType, EventSpaceCreateRequestBody, EventSpaceUpdateRequestBody } from "../types"
 
 
 // gets an event space
@@ -20,12 +20,13 @@ export const fetchAllEventSpaces = async () => {
 
 
 // creates an event space
-export const createEventSpace = async (data: EventSpaceCreateData) => {
+export const createEventSpace = async (data: EventSpaceCreateRequestBody) => {
     return await axiosInstance.post('/api/eventspace/create', data)
 }
 
 // updates an event space
-export const updateEventSpace = async (id: string, data: EventSpaceData) => {
+export const updateEventSpace = async (id: string, data:
+    EventSpaceUpdateRequestBody) => {
     return await axiosInstance.put(`/api/eventspace/${id}/update`, data)
 }
 
