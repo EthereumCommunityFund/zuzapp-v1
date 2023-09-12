@@ -2,6 +2,7 @@ import { BiLeftArrowAlt, BiEditAlt, BiPlus, BiRadioCircle, BiCalendarAlt, BiTime
 import { HiCog, HiSelector } from "react-icons/hi";
 
 import Button from "@/components/ui/buttons/Button";
+import Link from "next/link";
 
 export default function SchedulesDashboardPage() {
   return (
@@ -20,7 +21,9 @@ export default function SchedulesDashboardPage() {
             </div>
           </div>
           <div className="flex justify-between items-start self-stretch">
-            <Button className="flex py-[10px] px-[14px] items-center gap-[10px] rounded-[20px] bg-[#67DAFF20] text-[#67DAFF]" leftIcon={BiPlus}>Add a Schedule</Button>
+            <Link href={"addschedule"}>
+              <Button className="flex py-[10px] px-[14px] items-center gap-[10px] rounded-[20px] bg-[#67DAFF20] text-[#67DAFF]" leftIcon={BiPlus}>Add a Schedule</Button>
+            </Link>
             <div className="flex items-start gap-3">
               <Button className="flex p-[10px] items-center gap-[10px] justify-center" leftIcon={HiSelector}>Sort</Button>
               <Button className="flex p-[10px] items-center gap-[10px] justify-center" leftIcon={HiCog}>Select</Button>

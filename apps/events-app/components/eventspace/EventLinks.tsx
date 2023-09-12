@@ -11,7 +11,6 @@ import { useState } from "react";
 
 export default function EventLinks() {
   const [isLink, setIsLink] = useState(false);
-  const [isLinkAdded, setIsLinkAdded] = useState(false);
 
   const handleChangeSwitch = () => {
     setIsLink(prev => !prev);

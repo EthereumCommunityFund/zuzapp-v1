@@ -11,12 +11,19 @@ export default function ScheduleForm() {
   return (
     <div className="flex flex-col items-center gap-[34px] self-stretch">
       <FormTitle name="Add a Schedule" />
-      <ScheduleFormat />
+      <ScheduleFormat setEventCreated={function (eventCreated: boolean): void {
+        throw new Error("Function not implemented.");
+      }} />
       <ScheduleDescription />
+      <line></line>
       <ScheduleDateTime />
+      <line></line>
       <ScheduleLocation />
+      <line></line>
       <ScheduleRoles />
+      <line></line>
       <ScheduleLabels />
+      <line></line>
       <ScheduleAdvanced />
     </div>
   )
