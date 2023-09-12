@@ -8,11 +8,16 @@ import InputFieldLabel from "../ui/labels/input-field-label";
 import ImageUploadButton from "../ui/buttons/SelectImageButton";
 
 export default function EventLocationForm() {
+  const [isMainLocation, setIsMainLocation] = useState(false);
   const [editorValue, setEditorValue] = useState('');
 
   const handleTextEditorChange = (value: string) => {
     setEditorValue(value);
   };
+
+  const handleSwitchChange = () => {
+    setIsMainLocation(prev => !prev);
+  }
 
   return (
     <div className="flex flex-col p-5 rounded-[10px] border items-start	gap-[30px] self-stretch border-opacity-10 bg-[#2B2E2E]">
@@ -21,8 +26,8 @@ export default function EventLocationForm() {
       </div>
       <div className="flex flex-col justify-center items-start gap-[10px] self-stretch">
         <div className="flex items-center gap-5 self-stretch">
-          {/* <SwitchButton /> */}
-          <EventSpaceLabel1 name="Main Location" />
+          <SwitchButton value={isMainLocation} onClick={handleSwitchChange} />
+          <InputFieldLabel name="Main Location" />
         </div>
         <EventDeatilsDescription1 name="This is the location of the main event" />
       </div>
