@@ -1,5 +1,5 @@
 import Joi, { boolean } from "joi";
-import { EventSpaceData } from "../types";
+import { EventSpaceCreateRequestBody, EventSpaceUpdateRequestBody } from "../types";
 
 const locationSchema = Joi.object({
     id: Joi.string().uuid(),
@@ -20,16 +20,27 @@ const eventspace_update_schema = Joi.object({
     end_date: Joi.date().required(),
     description: Joi.string().required(),
     format: Joi.string().valid('in-person', 'online', 'hybrid').required(),
-    event_type: Joi.array().items(Joi.string()).default(['General']).required(),
-    experience_level: Joi.array().items(Joi.string()).default(['beginner']).required(),
+    event_type: Joi.array().items(Joi.string()).default(['General']),
+    experience_level: Joi.array().items(Joi.string()).default(['Beginner']),
     eventspacelocation: Joi.array().items(locationSchema)
 });
 
-export const validateEventSpaceObject = (body: any): [Joi.ValidationResult<any>, EventSpaceData] => {
+const eventspace_create_schema = Joi.object({
+    name: Joi.string().required(),
+    event_space_type: Joi.string().required(),
+});
+
+export const validateEventSpaceUpdate = (body: any): [Joi.ValidationResult<any>, EventSpaceUpdateRequestBody] => {
     const data = { ...body }
     // remove user object added on to the body by session middleware 
     delete data.user;
     return [eventspace_update_schema.validate(data), data];
+}
+export const validateEventSpaceCreate = (body: any): [Joi.ValidationResult<any>, EventSpaceCreateRequestBody] => {
+    const data = { ...body }
+    // remove user object added on to the body by session middleware 
+    delete data.user;
+    return [eventspace_create_schema.validate(data), data];
 }
 
 

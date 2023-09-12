@@ -1,5 +1,6 @@
 
 
+import { ScheduleType } from "@/types";
 import axiosInstance from "../src/axiosInstance"
 
 
@@ -14,7 +15,7 @@ export const fetchSchedulesByEventSpace = async (eventSpaceId: string) => {
 }
 
 // Creates a new schedule
-export const createSchedule = async (data: any) => { // replace 'any' with the appropriate type
+export const createSchedule = async (data: ScheduleType) => {
     return await axiosInstance.post('/api/schedule/create', data);
 }
 

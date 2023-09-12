@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next"
 import withSession from "../../middlewares/withSession"
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs"
-import { validateEventSpaceObject, validateUUID } from "../../../../validators"
+import { validateEventSpaceUpdate, validateUUID } from "../../../../validators"
 import { formatTimestamp, } from "../../../../utils"
 import { logToFile } from "../../../../utils/logger"
 import { Database, EventSpaceLocationInsert, EventSpaceLocationUpdate } from "@/database.types"
@@ -13,7 +13,7 @@ import { QueryWithID } from "@/types"
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     // validate request body
-    const [validation_result, data] = validateEventSpaceObject(req.body)
+    const [validation_result, data] = validateEventSpaceUpdate(req.body)
     if (validation_result.error) {
         logToFile("user error", validation_result.error.details[0].message, 400, req.body.user.email)
         return res.status(400).json({ error: validation_result.error.details[0].message });
@@ -39,6 +39,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         .eq('id', id)
         .single();
 
+    console.log(event_space_response)
     if (event_space_response.error || !event_space_response.data) {
         logToFile("server error", event_space_response.error?.message, event_space_response.error?.code, req.body?.user?.email || "Unknown user");
         return res.status(500).send("Internal server error");
