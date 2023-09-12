@@ -9,7 +9,7 @@ export default function Tracks() {
       <div className="flex flex-col items-start gap-[44px]">
         <div className="flex flex-col items-start gap-6 self-stretch">
           <span className="text-[39px] font-bold leading-[1.2]">Tracks</span>
-          <Link href={"tracks/add-track"}>
+          <Link href={"addtrack"}>
             <Button variant="light-blue" className="rounded-full" leftIcon={HiPlusCircle}>Add a Track</Button>
           </Link>
           {
