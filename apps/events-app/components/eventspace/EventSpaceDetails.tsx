@@ -19,7 +19,7 @@ export default function EventSpaceDetails() {
         <EventFormat setEventCreated={function (eventCreated: boolean): void {
           throw new Error("Function not implemented.");
         }} />
-        {/* <EventLinks /> */}
+        <EventLinks />
         <EventCategoriesLabs />
         <EditionButtons type={"eventspace"} leftButtonName={"Discard"} rightButtonName={"Save Edit"} leftButtonIcon={CgClose} rightButtonIcon={FaCircleArrowDown} />
       </div>
