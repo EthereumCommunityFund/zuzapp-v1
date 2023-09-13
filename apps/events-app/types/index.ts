@@ -103,8 +103,8 @@ export enum SpaceDashboardCardType {
 export enum InputFieldType {
     Primary,
     Date,
+    Time,
     Wysiwyg,
-    WysiwygMobile,
     Option,
-    Url,
+    Link,
 }

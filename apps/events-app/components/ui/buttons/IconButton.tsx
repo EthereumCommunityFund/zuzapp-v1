@@ -48,7 +48,7 @@ const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
           'inline-flex items-center justify-center rounded font-medium',
           'focus-visible:ring-primary focus:outline-none focus-visible:ring',
           'shadow-sm',
-          'transition-colors duration-75',
+          'transition-colors duration-200',
           'min-h-[28px] min-w-[28px] p-1 md:min-h-[34px] md:min-w-[34px] md:p-2',
           //#region  //*=========== Variants ===========
           [
@@ -64,14 +64,14 @@ const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
               'border-primary border',
               'hover:bg-primary/20 active:bg-primary/20 disabled:bg-primary/20',
               isDarkBg &&
-                'hover:bg-gray-900 active:bg-gray-800 disabled:bg-gray-800',
+              'hover:bg-gray-900 active:bg-gray-800 disabled:bg-gray-800',
             ],
             variant === 'ghost' && [
               'text-primary',
               'shadow-none',
               'hover:bg-primary/20 active:bg-primary/20 disabled:bg-primary/20',
               isDarkBg &&
-                'hover:bg-gray-900 active:bg-gray-800 disabled:bg-gray-800',
+              'hover:bg-gray-900 active:bg-gray-800 disabled:bg-gray-800',
             ],
             variant === 'light' && [
               'bg-white text-gray-700',
@@ -80,15 +80,15 @@ const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
               'active:bg-white/80 disabled:bg-gray-200',
             ],
             variant === 'dark' && [
-              'bg-gray-900 text-white',
+              'bg-buttonDarkNavInactive text-white',
               'border border-gray-600',
-              'hover:bg-gray-800 active:bg-gray-700 disabled:bg-gray-700',
+              'hover:bg-buttonDarkNavHover active:bg-gray-700 disabled:bg-gray-700',
             ],
           ],
           //#endregion  //*======== Variants ===========
           'disabled:cursor-not-allowed',
           isLoading &&
-            'relative text-transparent transition-none hover:text-transparent disabled:cursor-wait',
+          'relative text-transparent transition-none hover:text-transparent disabled:cursor-wait',
           className
         )}
         {...rest}

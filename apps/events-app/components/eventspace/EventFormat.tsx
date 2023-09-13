@@ -11,8 +11,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import Button from "@/components/ui/buttons/Button"
+
 import { set, useForm } from "react-hook-form"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { BsPlusCircleFill } from "react-icons/bs"
@@ -55,7 +54,7 @@ export default function EventFormat({ setEventCreated }: { setEventCreated: (eve
           name="event_space_type"
           render={({ field }) => (
             <FormItem className="space-y-3">
-              <FormLabel className="text-lg">Event Format</FormLabel>
+              <FormLabel className="text-2xl opacity-80 leading-[1.2]">Event Format</FormLabel>
               <FormDescription>
                 The format you select will determine what information will be required going forward
               </FormDescription>
@@ -63,31 +62,31 @@ export default function EventFormat({ setEventCreated }: { setEventCreated: (eve
                 <RadioGroup
                   onValueChange={field.onChange}
                   defaultValue={field.value}
-                  className="flex flex-col md:flex-row justify-between pt-3 md:pt-5"
+                  className="flex flex-col md:flex-row justify-between"
                 >
-                  <FormItem className="flex items-center space-x-3 space-y-0 cursor-pointer">
+                  <FormItem className="flex items-center space-x-3 space-y-0">
                     <FormControl>
                       <RadioGroupItem value="In-Person" />
                     </FormControl>
-                    <FormLabel className="font-semibold text-white/30 text-base">
+                    <FormLabel className="font-semibold text-white/30 text-base cursor-pointer hover:bg-itemHover">
                       In-Person
                       <span className="text-xs block">This is a physical event</span>
                     </FormLabel>
                   </FormItem>
-                  <FormItem className="flex items-center space-x-3 space-y-0 cursor-pointer">
+                  <FormItem className="flex items-center space-x-3 space-y-0">
                     <FormControl>
                       <RadioGroupItem value="Online" />
                     </FormControl>
-                    <FormLabel className="font-semibold text-white/30 text-base">
+                    <FormLabel className="font-semibold text-white/30 text-base cursor-pointer">
                       Online
                       <span className="text-xs block">Specifically Online Event</span>
                     </FormLabel>
                   </FormItem>
-                  <FormItem className="flex items-center space-x-3 space-y-0 cursor-pointer">
+                  <FormItem className="flex items-center space-x-3 space-y-0">
                     <FormControl>
                       <RadioGroupItem value="Hybrid" />
                     </FormControl>
-                    <FormLabel className="font-semibold text-white/30 text-base">
+                    <FormLabel className="font-semibold text-white/30 text-base cursor-pointer">
                       Hybrid
                       <span className="text-xs block">In-Person & Online</span>
                     </FormLabel>

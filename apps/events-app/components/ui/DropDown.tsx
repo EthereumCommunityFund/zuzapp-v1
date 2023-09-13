@@ -1,12 +1,17 @@
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
-import Button from "./buttons/Button"
+
 import { CaretDownIcon } from "@radix-ui/react-icons"
 
-export default function DropDown() {
+interface IProps {
+  title: string
+}
+
+export default function DropDown(props: IProps) {
+  const { title } = props;
   return (
     <DropdownMenu.Root>
-      <DropdownMenu.Trigger>
-        Select Social Media
+      <DropdownMenu.Trigger className='flex rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10 w-inherit justify-between'>
+        {title}<CaretDownIcon />
       </DropdownMenu.Trigger>
       <DropdownMenu.Content>
         <DropdownMenu.Item>Edit</DropdownMenu.Item>

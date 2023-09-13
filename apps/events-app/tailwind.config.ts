@@ -58,9 +58,11 @@ module.exports = {
         textSecondary: "#ffffff70",
         bgPrimary: "#222222",
         componentPrimary: "#2E3131",
-        trackItemHover: "#393C3C",
+        itemHover: "#393C3C",
         inputField: "#242727",
         inputBgActive: "#FFFFFF",
+        buttonDarkNavInactive: "#F1F1F133",
+        buttonDarkNavHover: "#F1F1F166",
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -86,7 +88,11 @@ module.exports = {
       },
       spacing: {
         '2.5': '10px',
-      }
+      },
+      width: {
+        'inherit': 'inherit',
+        'fill-available': '-webkit-fill-available',
+      },
     },
     screens: {
       'sm': '390px',

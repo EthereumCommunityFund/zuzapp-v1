@@ -8,6 +8,7 @@ import ArrowLink from "../ui/links/ArrowLink";
 import MediaLink from "../ui/MediaLink";
 import Button from "../ui/buttons/Button";
 import { useState } from "react";
+import { Label } from "@radix-ui/react-label";
 
 export default function EventLinks() {
   const [isLink, setIsLink] = useState(false);
@@ -18,10 +19,10 @@ export default function EventLinks() {
   return (
     <div className="flex flex-col gap-[34px]">
       <div className="flex flex-col gap-[10px]">
-        <EventSpaceLabel name="Event Links" />
-        <EventDeatilsDescription1 name="Links include social media and other links related to your event" />
+        <Label className="text-2xl opacity-80 leading-[1.2]">Event Links</Label>
+        <Label className="opacity-70 h-[18px] font-normal text-[13px] leading-[18.2px] tracking-[0.13px] self-stretch ">Links include social media and other links related to your event</Label>
       </div>
-      <div className="flex gap-5">
+      <div className="flex gap-5 items-center">
         <SwitchButton value={isLink} onClick={handleChangeSwitch} />
         <InputFieldLabel name="Add Links" />
       </div>

@@ -13,9 +13,9 @@ export default function EventBasics() {
         <SectionInputForm title={"Event Space Name"} placeholder={"ZuConnect"} inputType={InputFieldType.Primary} />
       </div>
       <div>
-        <div className="flex gap-[30px]">
-          <SectionInputForm title={"Start Date"} placeholder={"00-00-0000"} inputType={InputFieldType.Date} />
-          <SectionInputForm title={"End Date"} placeholder={"00-00-0000"} inputType={InputFieldType.Date} />
+        <div className="flex gap-3">
+          <SectionInputForm className="w-1/2" title={"Start Date"} placeholder={"00-00-0000"} inputType={InputFieldType.Date} description="Click & Select or type in a date" />
+          <SectionInputForm className="w-1/2" title={"End Date"} placeholder={"00-00-0000"} inputType={InputFieldType.Date} description="Click & Select or type in a date" />
         </div>
       </div>
       <SectionInputForm title={"Event Tagline"} placeholder={"Coolest Web3 Events"} inputType={InputFieldType.Primary} description={"This will be the short tagline below your event title"} />
