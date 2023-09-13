@@ -95,17 +95,16 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                     tag_id: tagId
                 });
             }
+
+
         });
     }
 
 
     // Remove tags that are no longer associated
-    if (tags) {
-        const tagsToRemove = currentTagIds.filter(tagId => !tags.includes(tagId));
-        await supabase.from('scheduletags').delete().in('tag_id', tagsToRemove);
-    }
-
-
+    console.log("current tags", currentTags)
+    const tagsToRemove = currentTagIds.filter(tagId => !tags.includes(tagId));
+    await supabase.from('scheduletags').delete().in('tag_id', tagsToRemove);
 
     // Handling speakers differentially
     const currentSpeakers = await supabase.from('schedulespeakerrole').select('speaker_id').eq('schedule_id', scheduleId);
@@ -138,15 +137,20 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                     role
                 });
             }
+
+            // Remove speakers that are no longer associated
+
+            if (speakers) {
+                console.log(speakers, "speakers o")
+                const speakersToRemove = currentSpeakerIds.filter(speakerId => !speakers.map(s => s.speaker_name).includes(speakerId));
+                console.log(speakersToRemove)
+                await supabase.from('schedulespeakerrole').delete().in('speaker_id', speakersToRemove);
+            }
+
         });
     }
 
 
-    // Remove speakers that are no longer associated
-    if (speakers) {
-        const speakersToRemove = currentSpeakerIds.filter(speakerId => !speakers.map(s => s.speaker_name).includes(speakerId));
-        await supabase.from('schedulespeakerrole').delete().in('speaker_id', speakersToRemove);
-    }
 
 
     try {

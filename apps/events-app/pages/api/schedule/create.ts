@@ -53,6 +53,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     // Handling tags concurrently
     const tagPromises = tags.map(async (tag: string) => {
+        console.log(tag, "tag")
         let existing_tag = await supabase.from('tags').select('id').eq('name', tag.trim()).single();
 
         let tagId;
@@ -79,8 +80,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const speakerPromises = speakers.map(async (speaker: SpeakerType) => {
         console.log(speaker, "speakerss")
         const { speaker_name, role } = speaker;
-        let existingSpeaker = await supabase.from('speaker').select('id').eq('name', speaker_name.toLowerCase().trim()).single();
-
+        let existingSpeaker = await supabase.from('speaker').select('id').eq('name', speaker_name.trim()).single();
+        console.log('existing speaker', existingSpeaker)
         let speakerId;
         if (!existingSpeaker.data) {
             const newSpeaker = await supabase.from('speaker').insert({ name: speaker_name }).select("id").single();

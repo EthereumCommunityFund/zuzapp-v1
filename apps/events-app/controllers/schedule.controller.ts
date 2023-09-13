@@ -9,10 +9,16 @@ export const fetchSchedule = async (id: string) => {
     return await axiosInstance.get(`/api/schedule/${id}`);
 }
 
-// // Gets all schedules related to an event space
+// Gets all schedules related to an event space
 // export const fetchSchedulesByEventSpace = async (eventSpaceId: string) => {
 //     return await axiosInstance.get(`/api/schedule/fetchByEventSpace/${eventSpaceId}`);
 // }
+
+
+// Gets all schedules related to an event space
+export const fetchScheduleByID = async (id: string) => {
+    return await axiosInstance.get(`/api/schedule/${id}`);
+}
 
 // Creates a new schedule
 export const createSchedule = async (data: ScheduleCreateRequestBody) => {
