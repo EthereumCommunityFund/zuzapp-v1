@@ -66,11 +66,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     // Handling tags differentially  
     let scheduleId = id;
-    const currentTags = await supabase.from('scheduletags').select('tag_id').eq('schedule_id', scheduleId);
+    const currentTags = await supabase.from('scheduletags').select('id').eq('schedule_id', scheduleId);
     let currentTagIds: string[] = [];
 
     if (currentTags.data) {
-        currentTagIds = currentTags.data.map(tag => tag.tag_id);
+        currentTagIds = currentTags.data.map(tag => tag.id);
     }
 
     let tagPromises: Promise<void>[] = []
