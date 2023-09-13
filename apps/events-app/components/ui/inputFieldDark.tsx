@@ -1,29 +1,29 @@
 import { InputFieldType } from "@/types";
 import { HiCalendar } from "react-icons/hi";
-import { Input } from "./input";
+import React from "react";
 
 
-interface IProps {
+type InputFieldDarkProps = {
   type: InputFieldType,
   placeholder: string,
-}
+} & React.HTMLAttributes<HTMLDivElement>;
 
-const defaultProps: IProps = {
+const defaultProps: InputFieldDarkProps = {
   type: InputFieldType.Primary,
   placeholder: "Enter your text here",
 }
 
-export default function InputFieldDark(props: IProps) {
-  const { type, placeholder } = { ...defaultProps, ...props };
+export default function InputFieldDark(props: InputFieldDarkProps) {
+  const { type, placeholder, ...rest } = { ...defaultProps, ...props };
 
   return (
-    <div className="flex gap-2">
+    <div className="flex w-full rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10">
       {
         type === InputFieldType.Date && (
-          <HiCalendar />
+          <HiCalendar className="w-6 h-6" />
         )
       }
-      <Input placeholder={placeholder} />
+      <input className="bg-inputField w-full focus-visible:outline-none" placeholder={placeholder} {...rest} />
     </div>
   )
 }

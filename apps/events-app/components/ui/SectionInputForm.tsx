@@ -3,6 +3,7 @@ import { InputFieldType } from "@/types";
 import SectionInputFormDescription from "./SectionInputFormDescription";
 import InputFieldLabel from "./labels/inputFieldLabel";
 import { Input } from "./input";
+import InputFieldDark from "./inputFieldDark";
 
 interface IProps {
   title: string,
@@ -17,7 +18,7 @@ export default function SectionInputForm(props: IProps) {
   return (
     <div className="flex flex-col gap-[14px] items-start self-stretch">
       <InputFieldLabel name={title} />
-      <Input className="bg-inputField" placeholder={placeholder} />
+      <InputFieldDark type={inputType} placeholder={placeholder} />
       {
         description && (
           <SectionInputFormDescription name={description} />

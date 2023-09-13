@@ -3,11 +3,12 @@ import IconButton from "../ui/buttons/IconButton";
 import { RxPlus } from "react-icons/rx"
 import EventLocationForm from "./EventLocationForm";
 import { useState } from "react";
+import Container from "../ui/Container";
 
 export default function EventLocation() {
-  const [isLocationForm, setIsLocationForm] = useState(false);
+  const [isLocationForm, setIsLocationForm] = useState<boolean>(false);
   return (
-    <div className="flex flex-col px-4 py-5 rounded-2xl border border-opacity-10 border-white gap-6 bg-opacity-10 bg-[#2E3131] w-full">
+    <Container>
       <div className="w-full flex justify-between">
         <div className="text-[25px] font-normal leading-7.5">Locations</div>
         <div className="text-xl text-right font-bold opacity-70">1</div>
@@ -22,6 +23,6 @@ export default function EventLocation() {
           <EventLocationForm />
         )
       }
-    </div>
+    </Container>
   )
 }
