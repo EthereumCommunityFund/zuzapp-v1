@@ -1,5 +1,5 @@
 import axiosInstance from "../src/axiosInstance"
-import { EventSpaceType, EventSpaceCreateRequestBody, EventSpaceUpdateRequestBody } from "../types"
+import { EventSpaceCreateRequestBody, EventSpaceUpdateRequestBody } from "../types"
 
 
 // gets an event space
