@@ -16,9 +16,6 @@ export default function EventSpaceCard(props: IProps) {
 
   const handleEnterSpace = async () => {
     try {
-      // Fetch the details for the selected space
-      const spaceDetails = await fetchEventSpace(eventId);
-
       // Redirect to a new page with the fetched details
       router.push({
         pathname: '/dashboard/events/spacedetails', // Update with your actual route

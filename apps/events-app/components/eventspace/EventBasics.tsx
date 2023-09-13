@@ -5,7 +5,12 @@ import { InputFieldType } from "@/types";
 
 import InputFieldLabel from "../ui/labels/inputFieldLabel";
 
-export default function EventBasics() {
+interface EventBasicsProps {
+  name: string;
+  startDate: number;
+  endDate: number;
+}
+export default function EventBasics({ name }: EventBasicsProps) {
   return (
     <>
       <Label className="text-2xl opacity-80 leading-[1.2]">Event Basics</Label>
@@ -22,11 +27,14 @@ export default function EventBasics() {
       <div>
         <div className="flex flex-col gap-[10px]">
           <InputFieldLabel name="Event Description" />
-          <TextEditor value={""} onChange={function (value: string): void {
-            throw new Error("Function not implemented.");
-          }} />
+          <TextEditor
+            value={''}
+            onChange={function (value: string): void {
+              throw new Error('Function not implemented.');
+            }}
+          />
         </div>
       </div>
     </>
-  )
+  );
 }

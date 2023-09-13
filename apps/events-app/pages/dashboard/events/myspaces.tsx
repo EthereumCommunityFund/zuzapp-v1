@@ -1,31 +1,28 @@
 import EventSpacesTemplate from '@/components/templates/events/EventSpacesTemplate';
 import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
 import { useEffect, useState } from 'react';
-import { fetchUserEventSpaces } from './eventSpaceService';
+import { fetchUserEventSpaces } from './services/eventSpaceService';
 import { EventSpaceDetailsType } from '@/types';
-
+import { useQuery } from 'react-query';
 export default function MyEventSpacesPage() {
   // Make request to get all event spaces
-  const [eventSpaces, setEventSpaces] = useState<EventSpaceDetailsType[]>([]);
 
-  useEffect(() => {
-    const fetchEventSpaces = async () => {
-      try {
-        const eventSpaceDetails = await fetchUserEventSpaces();
-        setEventSpaces(eventSpaceDetails);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    fetchEventSpaces();
-    console.log(eventSpaces, 'eventSpaces');
-  }, []);
-  return (
-    <div className="flex gap-[10px] flex-1 items-center self-stretch">
-      <EventSpacesTemplate eventSpaces={eventSpaces} />
-    </div>
+  const {
+    data: eventSpaces,
+    isLoading,
+    isError,
+  } = useQuery<EventSpaceDetailsType[], Error>(
+    ['eventSpaces'], // Query key
+    () => fetchUserEventSpaces() // Query function
   );
+
+  if (isLoading) {
+    return <p>Loading...</p>;
+  }
+  if (isError) {
+    return <p>Error loading space details</p>;
+  }
+  return <div className="flex gap-[10px] flex-1 items-center self-stretch">{eventSpaces && <EventSpacesTemplate eventSpaces={eventSpaces} />}</div>;
 }
 
 export const getServerSideProps = async (ctx: any) => {
