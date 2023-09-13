@@ -47,7 +47,7 @@ export default function DashboardNavigation() {
           {isAuthenticated && (
             <ul className="flex flex-col gap-[31px]">
               <li className="flex items-center space-x-2">
-                <Link href={'myspaces'}>
+                <Link href={'/dashboard/events/myspaces'}>
                   <Button variant={'primary'} className="rounded-full" leftIcon={FaCog}>
                     My Event Spaces
                   </Button>
