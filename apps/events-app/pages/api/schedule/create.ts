@@ -2,11 +2,11 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { createPagesServerClient } from '@supabase/auth-helpers-nextjs'
 import withSession from "../middlewares/withSession";
-import { Database, ScheduleInsert } from "@/database.types";
+import { Database } from "@/database.types";
 import { logToFile } from "@/utils/logger";
 import { validateScheduleCreation } from "@/validators";
 import { formatTimestamp } from "@/utils";
-import { ScheduleCreateRequestBody } from "@/types";
+import { ScheduleCreateRequestBody, SpeakerType } from "@/types";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
@@ -29,7 +29,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         speakers
     } = validatedData;
 
-    console.log(validatedData.start_time, validatedData.end_time, "timre")
+    // console.log(validatedData.start_time, validatedData.end_time, "timre")
     let start_time = formatTimestamp(validatedData.start_time);
     let end_time = formatTimestamp(validatedData.end_time);
     let date = formatTimestamp(validatedData.date)
@@ -73,7 +73,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     });
 
 
-    type SpeakerType = { speaker_name: string, role: string }
+
 
     // Handling speakers and their roles concurrently
     const speakerPromises = speakers.map(async (speaker: SpeakerType) => {

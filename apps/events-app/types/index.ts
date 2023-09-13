@@ -59,14 +59,40 @@ export type ScheduleCreateRequestBody = {
   rsvp_amount?: number;
   event_space_id: string;
   track_id?: string;
-  tags: string[];
-  speakers: [
-    {
-      speaker_name: string;
-      role: string;
-    },
-  ];
-};
+  tags: string[],
+  speakers: [{
+    speaker_name: string,
+    role: string
+  }]
+}
+
+export type ScheduleUpdateRequestBody = {
+  name: string;
+  format: 'in-person' | 'online' | 'hybrid';
+  description: string;
+  date: number;
+  start_time: number;
+  end_time: number;
+  all_day?: boolean;
+  schedule_frequency: 'once' | 'everyday' | 'weekly';
+  images?: string[];
+  video_call_link?: string;
+  live_stream_url?: string;
+  location_id: string;
+  event_type?: string[];
+  experience_level?: string[];
+  limit_rsvp?: boolean;
+  rsvp_amount?: number;
+  event_space_id: string;
+  track_id?: string;
+  tags?: string[],
+  speakers?: [{
+    speaker_name: string,
+    role: string
+  }]
+}
+
+
 
 export type TrackCreateRequestBody = {
   description: string;
@@ -80,7 +106,12 @@ export type TrackUpdateRequestBody = {
   event_space_id: string;
   image: string | null;
   name: string;
-};
+}
+
+
+
+export type SpeakerType = { speaker_name: string, role: string }
+
 
 export type QueryWithID = {
   [key: string]: string

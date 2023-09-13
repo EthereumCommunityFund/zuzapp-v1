@@ -6,8 +6,6 @@ export type Json =
   | { [key: string]: Json | undefined }
   | Json[]
 
-
-
 export interface Database {
   public: {
     Tables: {
@@ -296,20 +294,20 @@ export interface Database {
         Row: {
           id: string
           role: string
-          schedule_id: string | null
-          speaker_id: string | null
+          schedule_id: string
+          speaker_id: string
         }
         Insert: {
           id?: string
           role: string
-          schedule_id?: string | null
-          speaker_id?: string | null
+          schedule_id: string
+          speaker_id: string
         }
         Update: {
           id?: string
           role?: string
-          schedule_id?: string | null
-          speaker_id?: string | null
+          schedule_id?: string
+          speaker_id?: string
         }
         Relationships: [
           {
@@ -329,18 +327,18 @@ export interface Database {
       scheduletags: {
         Row: {
           id: string
-          schedule_id: string | null
-          tag_id: string | null
+          schedule_id: string
+          tag_id: string
         }
         Insert: {
           id?: string
-          schedule_id?: string | null
-          tag_id?: string | null
+          schedule_id: string
+          tag_id: string
         }
         Update: {
           id?: string
-          schedule_id?: string | null
-          tag_id?: string | null
+          schedule_id?: string
+          tag_id?: string
         }
         Relationships: [
           {
@@ -388,12 +386,15 @@ export interface Database {
       speaker: {
         Row: {
           id: string
+          name: string
         }
         Insert: {
           id?: string
+          name: string
         }
         Update: {
           id?: string
+          name?: string
         }
         Relationships: []
       }

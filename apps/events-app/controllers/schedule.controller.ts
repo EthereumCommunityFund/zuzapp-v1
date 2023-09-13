@@ -1,6 +1,6 @@
 
 
-import { ScheduleCreateRequestBody, ScheduleType } from "@/types";
+import { ScheduleCreateRequestBody, ScheduleUpdateRequestBody } from "@/types";
 import axiosInstance from "../src/axiosInstance"
 
 
@@ -19,10 +19,10 @@ export const createSchedule = async (data: ScheduleCreateRequestBody) => {
     return await axiosInstance.post('/api/schedule/create', data);
 }
 
-// // Updates a schedule
-// export const updateSchedule = async (id: string, data: any) => {
-//     return await axiosInstance.put(`/api/schedule/${id}/update`, data);
-// }
+// Updates a schedule
+export const updateSchedule = async (id: string, data: ScheduleUpdateRequestBody) => {
+    return await axiosInstance.put(`/api/schedule/${id}/update`, data);
+}
 
 // // Deletes a schedule
 // export const deleteSchedule = async (id: string) => {
