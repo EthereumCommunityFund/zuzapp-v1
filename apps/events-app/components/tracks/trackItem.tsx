@@ -9,7 +9,7 @@ export default function TrackItem(props: IProps) {
   const { title } = props;
 
   return (
-    <div className="flex py-3 px-3.5 items-center self-stretch border rounded-2xl border-white/20 bg-[#2E3131] hover:cursor-pointer hover:bg-[#393C3C] duration-200">
+    <div className="flex py-3 px-3.5 items-center self-stretch border rounded-2xl border-white/20 bg-trackItemPrimary hover:cursor-pointer hover:bg-trackItemHover duration-200">
       <div className="flex items-start gap-[10px]">
         <div className="w-[130px] h-[100px] rounded-[10px] border border-[#FFFFFF10] bg-[#222]"></div>
         <div className="flex flex-col w-[382px] justify-center items-start gap-[14px] self-stretch">
