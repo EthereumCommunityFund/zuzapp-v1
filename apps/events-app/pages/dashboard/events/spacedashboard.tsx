@@ -26,9 +26,9 @@ export default function EventSpaceDashboard(props: IProps) {
 
   return (
     <div className="flex flex-col flex-1 p-10 items-center gap-[10px] self-stretch w-full ">
-      <div className="flex px-5 flex-col items-center gap-5 flex-1 w-4/5 md:w-full">
+      <div className="flex px-5 flex-col items-center gap-5 flex-1 md:w-full">
         {
-          <>
+          <div className="w-4/5 max-w-4xl">
             {
               type === SpaceDashboardType.New ? (
                 <div className="flex flex-col gap-5 self-stretch p-4">
@@ -39,8 +39,8 @@ export default function EventSpaceDashboard(props: IProps) {
               ) : (
                 <>
                   {
-                    spaceDashboardCards.map((item, index) => {
-                      return (
+                    spaceDashboardCards.map((item, index) => (
+                      <div className='mb-8'>
                         <EventSpaceDashboardCard
                           key={index}
                           name={item.name}
@@ -49,9 +49,10 @@ export default function EventSpaceDashboard(props: IProps) {
                           cardType={item.cardType}
                           icon={item.icon}
                           buttonIcon={item.buttonIcon}
-                          onCardClick={handleButtonClick} />
-                      )
-                    })
+                          onCardClick={handleButtonClick}
+                        />
+                      </div>
+                    ))
                   }
                 </>
               )
@@ -64,7 +65,7 @@ export default function EventSpaceDashboard(props: IProps) {
               icon={RiSettings5Fill}
               onCardClick={handleButtonClick}
             />
-          </>
+          </div>
         }
       </div>
     </div>
