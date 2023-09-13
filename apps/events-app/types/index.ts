@@ -83,7 +83,7 @@ export type TrackUpdateRequestBody = {
 };
 
 export type QueryWithID = {
-    [key: string]: string
+  [key: string]: string
 }
 
 
