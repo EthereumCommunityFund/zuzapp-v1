@@ -86,12 +86,15 @@ export type QueryWithID = {
   [key: string]: string
 }
 
+type Tables = Database['public']['Tables'];
 
-export enum SubHeaderTabIndex {
-    Dashboard,
-    Track,
-    Schedules
-}
+type ExtractInsertUpdateTypes<T> = {
+  [K in keyof T]: {
+    Insert: T[K]['Insert'];
+    Update: T[K]['Update'];
+    Row: T[K]['Row'];
+  };
+};
 
 export enum SpaceDashboardType {
     New,
