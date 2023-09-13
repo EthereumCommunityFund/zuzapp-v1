@@ -23,7 +23,7 @@ export default function SubHeader() {
 
   useEffect(() => {
     const currentUrl = router.asPath;
-    if (currentUrl.includes('/spacedashboard')) {
+    if (currentUrl.includes('/events')) {
       setActiveTab(SubHeaderTabIndex.Dashboard);
     } else if (currentUrl.includes('/tracks')) {
       setActiveTab(SubHeaderTabIndex.Track);

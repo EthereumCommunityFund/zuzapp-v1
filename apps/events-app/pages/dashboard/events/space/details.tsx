@@ -13,11 +13,15 @@ import { useEffect, useState } from 'react';
 
 import { HiArrowLeft } from 'react-icons/hi';
 
-import { fetchEventSpaceById } from './services/fetchEventSpaceDetails';
+import { fetchEventSpaceById } from '../services/fetchEventSpaceDetails';
 
 export default function EventSpaceDetailsPage() {
   const router = useRouter();
   const { eventId } = router.query;
+
+  const goBackToPreviousPage = () => {
+    router.back();
+  };
 
   const {
     data: eventSpace,
@@ -42,15 +46,14 @@ export default function EventSpaceDetailsPage() {
       <div className="flex items-start gap-8 self-stretch mx-auto">
         <EventSpaceDetailsNavBar />
         <div className="flex flex-col px-5 gap-5 items-start ml-[400px]">
-          <Link href={"spacedashboard"}>
-            <Button
-              className="rounded-[40px] py-2.5 px-3.5 bg-bgPrimary border-none hover:bg-[#363636] duration-200 text-textSecondary hover:text-textSecondary"
-              size="lg"
-              leftIcon={HiArrowLeft}
-            >
-              Back
-            </Button>
-          </Link>
+          <Button
+            className="rounded-[40px] py-2.5 px-3.5 bg-bgPrimary border-none hover:bg-[#363636] duration-200 text-textSecondary hover:text-textSecondary"
+            size="lg"
+            leftIcon={HiArrowLeft}
+            onClick={goBackToPreviousPage}
+          >
+            Back
+          </Button>
           {eventSpace && <EventSpaceDetails eventSpace={eventSpace} />}
           <EventLocation />
         </div>

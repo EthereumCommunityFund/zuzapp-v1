@@ -8,7 +8,7 @@ interface Routes {
 }
 export const eventRoutes: Routes[] = [
     {
-      path: '/dashboard/events/spacedetails',
+      path: '/dashboard/events/space',
       title: 'Event Space Details',
     },
     {
