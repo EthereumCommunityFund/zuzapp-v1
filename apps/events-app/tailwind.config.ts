@@ -59,7 +59,7 @@ module.exports = {
         bgPrimary: "#22222280",
         componentPrimary: "#2E3131",
         trackItemHover: "#393C3C",
-        inputBgInactive: "#242727",
+        inputField: "#242727",
         inputBgActive: "#FFFFFF",
       },
       borderRadius: {

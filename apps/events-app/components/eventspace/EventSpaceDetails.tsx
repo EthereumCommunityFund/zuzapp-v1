@@ -14,7 +14,7 @@ export default function EventSpaceDetails() {
   return (
     <Container>
       <div className="flex flex-col gap-[34px]">
-        <span className="text-[25px] font-normal leading-[1.2]">Event Space Details</span>
+        <span className="text-3xl font-normal leading-[1.2]">Event Space Details</span>
         <EventBasics />
         <EventFormat setEventCreated={function (eventCreated: boolean): void {
           throw new Error("Function not implemented.");
