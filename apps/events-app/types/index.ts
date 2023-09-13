@@ -116,3 +116,10 @@ export enum InputFieldType {
     Option,
     Link,
 }
+
+
+export enum SubHeaderTabIndex {
+  Dashboard,
+  Track,
+  Schedules
+}
