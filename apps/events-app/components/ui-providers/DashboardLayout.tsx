@@ -20,14 +20,14 @@ export const DashboardProvider = ({ children }: { children: React.ReactNode }) =
       <div className="flex relative bg-[#222222] text-white">
         <DashboardNavigation />
         <DashboardHeader />
-        <div className="mt-16 w-full">
-          <div>
+        <div className="mt-16 relative left-[260px] w-[calc(100%-260px)]">
+          <div className="h-[90vh] mx-auto relative">
             {
               checkIfCurrentRouteIsInDashboardRoutes() && (
                 <SubHeader />
               )
             }
-            <div className="flex-1 mx-auto px-10 sm:px-0">
+            <div className="flex-1 mx-auto px-10 sm:px-0 relative top-20 relative">
               {children}
             </div>
           </div>

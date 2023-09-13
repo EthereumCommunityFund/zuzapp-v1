@@ -15,7 +15,7 @@ export default function DashboardHeader() {
   const router = useRouter();
 
   return (
-    <div className="fixed top-0 left-0 w-full">
+    <div className="fixed top-0 left-0 w-full z-50">
       <header className="w-full py-3 px-5 md:px-8 space-x-10 flex sm:justify-between justify-end items-center bg-[#2F3232] ">
         <div>
           <Link href="/">

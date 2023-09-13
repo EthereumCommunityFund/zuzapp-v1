@@ -56,7 +56,7 @@ module.exports = {
         },
         textPrimary: "#ffffff",
         textSecondary: "#ffffff70",
-        bgPrimary: "#22222280",
+        bgPrimary: "#222222",
         componentPrimary: "#2E3131",
         trackItemHover: "#393C3C",
         inputField: "#242727",

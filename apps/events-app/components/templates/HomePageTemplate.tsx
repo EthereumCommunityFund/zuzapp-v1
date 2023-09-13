@@ -23,9 +23,9 @@ export default function HomePageTemplate() {
   const { isAuthenticated, user } = useGlobalContext();
 
   return (
-    <div>
+    <div className="w-4/5 mx-auto mt-16">
       <div
-        className="w-full border border-white/10 rounded-lg mt-5"
+        className="w-full border border-white/10 rounded-2xl mt-5"
         style={{
           backgroundImage: "url('/images/home-page-bg.png')",
           backgroundSize: 'cover',
