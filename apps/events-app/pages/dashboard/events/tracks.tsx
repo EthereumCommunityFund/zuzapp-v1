@@ -8,7 +8,7 @@ export default function Tracks() {
   return (
     <div className="flex flex-col flex-1 items-center gap-[10px] pt-10 px-20 pb-0 self-stretch">
       <div className="flex flex-col items-center gap-[44px] self-stretch mx-auto w-[82%]">
-        <div className="flex flex-col items-start gap-6 self-stretch">
+        <div className="flex flex-col items-start gap-7 self-stretch">
           <span className="text-[50px] font-bold leading-[1.2]">Tracks</span>
           <div className="flex justify-between items-start self-stretch">
             <Link href={"addtrack"}>
@@ -21,8 +21,9 @@ export default function Tracks() {
           </div>
           {
             <div className="flex flex-col items-start gap-[10px] self-stretch">
-              <TrackItem />
-              <TrackItem />
+              <TrackItem title={"Zk Week"} />
+              <TrackItem title={"Track Title"} />
+              <TrackItem title={"Track Title"} />
             </div>
           }
         </div>
