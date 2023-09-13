@@ -41,6 +41,7 @@
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.45.4",
     "react-icons": "^4.10.1",
+    "react-query": "^3.39.3",
     "react-quill": "^2.0.0",
     "styled-components": "^5.3.6",
     "supabase": "^1.93.0",

@@ -1,15 +1,13 @@
-import Image from "next/image";
-import Link from "next/link";
-import { HiLightningBolt, HiOutlineMenuAlt1 } from "react-icons/hi";
-import { FaCog } from "react-icons/fa";
-import { navBarRoutes } from "@/constant/routes";
-import React from "react";
+import Image from 'next/image';
+import Link from 'next/link';
+import { HiLightningBolt, HiOutlineMenuAlt1 } from 'react-icons/hi';
+import { FaCog } from 'react-icons/fa';
+import { navBarRoutes } from '@/constant/routes';
+import React from 'react';
 
-import { useRouter } from "next/router";
-import { useGlobalContext } from "@/context/GlobalContext";
-import Button from "@/components/ui/buttons/Button";
-
-
+import { useRouter } from 'next/router';
+import { useGlobalContext } from '@/context/GlobalContext';
+import Button from '@/components/ui/buttons/Button';
 
 // Create a navigation side menu for the dashboard.
 export default function DashboardNavigation() {
@@ -46,23 +44,21 @@ export default function DashboardNavigation() {
             </ul>
           </div>
           {/* Profile navigation */}
-          {
-            isAuthenticated && (
-              <ul className="flex flex-col gap-[31px]">
-                <li className="flex items-center space-x-2">
-                  <Link href={"my-event-spaces"}>
-                    <Button variant={'primary'} className="rounded-full" leftIcon={FaCog}>My Event Spaces</Button>
-                  </Link>
-                </li>
-                <li className="flex items-center space-x-2">
-                  <Image src="/images/Avatar.png" alt="Avatar" width={32} height={32} />
-                  <Link href="/dashboard/profile">
-                    My Profile
-                  </Link>
-                </li>
-              </ul>
-            )
-          }
+          {isAuthenticated && (
+            <ul className="flex flex-col gap-[31px]">
+              <li className="flex items-center space-x-2">
+                <Link href={'/dashboard/events/myspaces'}>
+                  <Button variant={'primary'} className="rounded-full" leftIcon={FaCog}>
+                    My Event Spaces
+                  </Button>
+                </Link>
+              </li>
+              <li className="flex items-center space-x-2">
+                <Image src="/images/Avatar.png" alt="Avatar" width={32} height={32} />
+                <Link href="/dashboard/profile">My Profile</Link>
+              </li>
+            </ul>
+          )}
         </div>
       </nav>
     </>
