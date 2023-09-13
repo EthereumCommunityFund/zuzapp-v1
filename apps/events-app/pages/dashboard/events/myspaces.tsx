@@ -13,13 +13,13 @@ export default function MyEventSpacesPage() {
       try {
         const eventSpaceDetails = await fetchUserEventSpaces();
         setEventSpaces(eventSpaceDetails);
-        console.log(eventSpaces, 'eventSpaces');
       } catch (error) {
         console.log(error);
       }
     };
 
     fetchEventSpaces();
+    console.log(eventSpaces, 'eventSpaces');
   }, []);
   return (
     <div className="flex gap-[10px] flex-1 items-center self-stretch">
