@@ -1,6 +1,6 @@
 import SectionInputForm from "../ui/SectionInputForm";
 import TextEditor from "../ui/TextEditor";
-import InputFieldLabel from "../ui/labels/input-field-label";
+import InputFieldLabel from "../ui/labels/inputFieldLabel";
 
 export default function ScheduleDescription() {
   return (

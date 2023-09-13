@@ -1,6 +1,6 @@
 import ImageUploadButton from "../ui/buttons/SelectImageButton";
 import ImageUploadButtonDescription from "../ui/labels/image-upload-button-description";
-import InputFieldLabel from "../ui/labels/input-field-label";
+import InputFieldLabel from "../ui/labels/inputFieldLabel";
 
 interface IProps {
   title: string;

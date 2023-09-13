@@ -1,6 +1,6 @@
 import InputWrapper from "./Input-Wrapper";
 import SectionInputFormDescription from "./SectionInputFormDescription";
-import InputFieldLabel from "./labels/input-field-label";
+import InputFieldLabel from "./labels/inputFieldLabel";
 
 interface IProps {
   title: string,
@@ -16,7 +16,7 @@ export default function SectionInputForm(props: IProps) {
     <div className="flex flex-col gap-[14px] items-start self-stretch">
       <InputFieldLabel name={title} />
       <InputWrapper>
-        <input value={defaultValue} className="bg-[#242727] h-4 w-full"></input>
+        <input placeholder={defaultValue} className="text-opacity-50 bg-textSecondary h-4 w-full border-none"></input>
       </InputWrapper>
       {
         description && (

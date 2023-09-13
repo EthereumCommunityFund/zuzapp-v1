@@ -2,7 +2,7 @@ import IconButton from "../ui/buttons/IconButton";
 import SwitchButton from "../ui/buttons/SwitchButton";
 import EventDeatilsDescription1 from "../ui/labels/event-details-description-1";
 import EventSpaceLabel from "../ui/labels/event-space-label";
-import InputFieldLabel from "../ui/labels/input-field-label";
+import InputFieldLabel from "../ui/labels/inputFieldLabel";
 import { GoPlus } from "react-icons/go";
 import ArrowLink from "../ui/links/ArrowLink";
 import MediaLink from "../ui/MediaLink";

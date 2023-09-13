@@ -1,6 +1,6 @@
 import { GoXCircle } from "react-icons/go";
 import SectionInputForm from "../ui/SectionInputForm";
-import InputFieldLabel from "../ui/labels/input-field-label";
+import InputFieldLabel from "../ui/labels/inputFieldLabel";
 
 export default function ScheduleRoles() {
   return (

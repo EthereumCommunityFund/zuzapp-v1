@@ -13,7 +13,13 @@ export default function EventSpaceDetailsPage() {
         <EventSpaceDetailsNavBar />
         <div className="flex flex-col px-5 gap-5 justify-center items-start flex-1">
           <Link href={"spacedashboard"}>
-            <Button leftIcon={HiArrowLeft} variant="light-dark">Back</Button>
+            <Button
+              className="rounded-[40px] py-2.5 px-3.5 bg-bgPrimary border-none hover:bg-[#363636] duration-200 text-textSecondary hover:text-textSecondary"
+              size="lg"
+              leftIcon={HiArrowLeft}
+            >
+              Back
+            </Button>
           </Link>
           <EventSpaceDetails />
           <EventLocation />

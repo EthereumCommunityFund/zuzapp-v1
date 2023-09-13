@@ -1,6 +1,6 @@
 import { useState } from "react";
 import SwitchButton from "../ui/buttons/SwitchButton"
-import InputFieldLabel from "../ui/labels/input-field-label"
+import InputFieldLabel from "../ui/labels/inputFieldLabel"
 import SectionInputForm from "../ui/SectionInputForm";
 
 export default function ScheduleDateTime() {

@@ -1,12 +1,13 @@
 import SectionInputForm from "../ui/SectionInputForm";
 import TextEditor from "../ui/TextEditor";
-import EventSpaceLabel from "../ui/labels/event-space-label";
-import InputFieldLabel from "../ui/labels/input-field-label";
+import { Label } from "../ui/label";
+
+import InputFieldLabel from "../ui/labels/inputFieldLabel";
 
 export default function EventBasics() {
   return (
     <>
-      <EventSpaceLabel name="Event Basics" />
+      <Label className="text-xl opacity-80 leading-[1.2]">Event Basics</Label>
       <div>
         <SectionInputForm title={"Event Space Name"} defaultValue={"ZuConnect"} inputType={"input"} />
       </div>

@@ -99,3 +99,12 @@ export enum SpaceDashboardCardType {
     EditDetails,
     OpenSettings,
 }
+
+export enum InputFieldType {
+    Primary,
+    Date,
+    Wysiwyg,
+    WysiwygMobile,
+    Option,
+    Url,
+}

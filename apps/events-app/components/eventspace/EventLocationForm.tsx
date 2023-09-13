@@ -4,7 +4,7 @@ import InputWrapper from "../ui/Input-Wrapper";
 import TextEditor from "../ui/TextEditor";
 import SwitchButton from "../ui/buttons/SwitchButton";
 import EventDeatilsDescription1 from "../ui/labels/event-details-description-1";
-import InputFieldLabel from "../ui/labels/input-field-label";
+import InputFieldLabel from "../ui/labels/inputFieldLabel";
 import ImageUploadButton from "../ui/buttons/SelectImageButton";
 
 export default function EventLocationForm() {
