@@ -31,7 +31,7 @@ export default function DashboardNavigation() {
       </div>
       {/* Overlay that can close the dashboard menu */}
       <div className={`md:hidden fixed inset-0 bg-black/10 z-10 ${dashboardOpen ? 'block' : 'hidden'}`} onClick={handleClick}></div>
-      <nav className={`dashboard-menu w-64 flex flex-col h-screen border-r border-r-gray-800 bg-[#2F3232] py-8 px-6 transition-transform duration-300 ${dashboardOpen && 'open'}`}>
+      <nav className={`dashboard-menu min-w-[260px] fixed flex flex-col h-screen border-r border-r-gray-800 bg-[#2F3232] py-8 px-6 transition-transform duration-300 ${dashboardOpen && 'open'}`}>
         <div className="flex-1 flex flex-col opacity-70">
           <div className="mt-10 flex-1">
             <ul className="space-y-2">
