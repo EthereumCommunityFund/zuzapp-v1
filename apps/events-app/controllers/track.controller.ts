@@ -6,8 +6,8 @@ export const fetchTrack = async (id: string) => {
     return await axiosInstance.get(`/api/track/${id}`);
 }
 
-export const fetchTracksByEventSpace = async (eventSpaceId: string) => {
-    return await axiosInstance.get(`/api/track/fetchByEventSpace/${eventSpaceId}`);
+export const fetchTracksByEventSpace = async (event_space_id: string) => {
+    return await axiosInstance.get(`/api/track/fetchByEventID/?event_space_id=${event_space_id}`);
 }
 
 export const createTrack = async (data: TrackCreateRequestBody) => {

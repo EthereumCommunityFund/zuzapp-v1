@@ -2,11 +2,11 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { createPagesServerClient } from '@supabase/auth-helpers-nextjs'
 import withSession from "../middlewares/withSession";
-import { Database, ScheduleInsert } from "@/database.types";
+import { Database } from "@/database.types";
 import { logToFile } from "@/utils/logger";
 import { validateScheduleCreation } from "@/validators";
 import { formatTimestamp } from "@/utils";
-import { ScheduleCreateRequestBody } from "@/types";
+import { ScheduleCreateRequestBody, SpeakerType } from "@/types";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
@@ -29,7 +29,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         speakers
     } = validatedData;
 
-    console.log(validatedData.start_time, validatedData.end_time, "timre")
+    // console.log(validatedData.start_time, validatedData.end_time, "timre")
     let start_time = formatTimestamp(validatedData.start_time);
     let end_time = formatTimestamp(validatedData.end_time);
     let date = formatTimestamp(validatedData.date)
@@ -53,6 +53,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     // Handling tags concurrently
     const tagPromises = tags.map(async (tag: string) => {
+        console.log(tag, "tag")
         let existing_tag = await supabase.from('tags').select('id').eq('name', tag.trim()).single();
 
         let tagId;
@@ -73,14 +74,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     });
 
 
-    type SpeakerType = { speaker_name: string, role: string }
+
 
     // Handling speakers and their roles concurrently
     const speakerPromises = speakers.map(async (speaker: SpeakerType) => {
         console.log(speaker, "speakerss")
         const { speaker_name, role } = speaker;
-        let existingSpeaker = await supabase.from('speaker').select('id').eq('name', speaker_name.toLowerCase().trim()).single();
-
+        let existingSpeaker = await supabase.from('speaker').select('id').eq('name', speaker_name.trim()).single();
+        console.log('existing speaker', existingSpeaker)
         let speakerId;
         if (!existingSpeaker.data) {
             const newSpeaker = await supabase.from('speaker').insert({ name: speaker_name }).select("id").single();
