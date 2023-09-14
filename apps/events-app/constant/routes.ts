@@ -1,31 +1,44 @@
+import { SubHeaderTabIndex } from "@/types";
 import { IconType } from "react-icons";
 import { HiCollection, HiHome, HiLightningBolt, HiViewBoards } from "react-icons/hi";
 
 interface Routes {
+    name?: string;
+    tabIndex?: SubHeaderTabIndex;
     path: string;
     title: string;
     icon?: IconType | null;
 }
 export const eventRoutes: Routes[] = [
     {
-      path: '/dashboard/events/space',
+      name: 'Dashboard',
+      tabIndex: SubHeaderTabIndex.SpaceDashboard,
+      path: '/dashboard/events/space/dashbaord',
+      title: 'Event Space Dashboard',
+    },
+    {
+      path: '/dashboard/events/space/details',
       title: 'Event Space Details',
     },
     {
-      path: '/dashboard/events/tracks',
-      title: 'Tracks',
+      name: 'Tracks',
+      tabIndex: SubHeaderTabIndex.SpaceTrack,
+      path: '/dashboard/events/space/tracks',
+      title: 'Tracks Dashboard',
     },
     {
-      path: '/dashboard/events/addtrack',
+      path: '/dashboard/events/space/tracks/addtrack',
       title: 'Add a Track ',
     },
     {
-      path: '/dashboard/events/schedules',
+      name: 'All Schedules',
+      tabIndex: SubHeaderTabIndex.AllSchedules,
+      path: '/dashboard/schedules',
       title: 'Schedules Dashboard',
     },
     {
-      path: '/dashboard/events/addschedule',
-      title: 'Schedules Dashboard',
+      path: '/dashboard/events/space/tracks/schedules',
+      title: 'Add a Schedule',
     }
 ];
 

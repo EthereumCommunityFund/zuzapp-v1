@@ -119,7 +119,7 @@ export enum InputFieldType {
 
 
 export enum SubHeaderTabIndex {
-  Dashboard,
-  Track,
-  Schedules
+  SpaceDashboard,
+  SpaceTrack,
+  AllSchedules
 }

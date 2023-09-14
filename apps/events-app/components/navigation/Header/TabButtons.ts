@@ -2,6 +2,7 @@ import { IconType } from "react-icons";
 import { BiSolidLayout } from "react-icons/bi";
 import { HiMap } from "react-icons/hi";
 import { BsFillTicketFill } from "react-icons/bs";
+import { SubHeaderTabIndex } from "@/types";
 
 interface TabButtons {
     name: string;    
@@ -16,13 +17,13 @@ export const tabButtonLists: TabButtons[] = [
         path: '/dashboard/events/space',
     },
     {
-        name: 'Track',
+        name: 'Tracks',
         icon: HiMap,
-        path: '/dashboard/events/tracks',
+        path: '/dashboard/events/space/tracks',
     },
     {
-        name: 'All Schedules',
+        name: 'Schedules',
         icon: BsFillTicketFill,
-        path: '/dashboard/events/schedules',
+        path: '/dashboard/schedules',
     },
 ]

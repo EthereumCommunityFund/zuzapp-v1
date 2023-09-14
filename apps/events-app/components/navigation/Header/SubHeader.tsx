@@ -11,24 +11,28 @@ import AddToEventButton from "./AddToEvent";
 
 export default function SubHeader() {
   const router = useRouter();
+  const { eventId } = router.query;
   const [activeTab, setActiveTab] = useState<SubHeaderTabIndex>();
 
   const goBackToPreviousPage = () => {
     router.back();
   };
   const goTabButton = (path: string, index: any) => {
-    router.push(path);
+    router.push({
+      pathname: path,
+      query: { eventId: eventId }, // Pass space ID as a query parameter
+    });
     setActiveTab(index);
   }
 
   useEffect(() => {
     const currentUrl = router.asPath;
-    if (currentUrl.includes('/events')) {
-      setActiveTab(SubHeaderTabIndex.Dashboard);
-    } else if (currentUrl.includes('/tracks')) {
-      setActiveTab(SubHeaderTabIndex.Track);
+    if (currentUrl.includes('/events/space/dashboard')) {
+      setActiveTab(SubHeaderTabIndex.SpaceDashboard);
+    } else if (currentUrl.includes('/events/space/tracks')) {
+      setActiveTab(SubHeaderTabIndex.SpaceTrack);
     } else if (currentUrl.includes('/schedules')) {
-      setActiveTab(SubHeaderTabIndex.Schedules);
+      setActiveTab(SubHeaderTabIndex.AllSchedules);
     }
   }, [router]);
 
