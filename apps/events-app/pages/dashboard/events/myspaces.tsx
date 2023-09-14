@@ -24,7 +24,7 @@ export default function MyEventSpacesPage() {
     return <p>Error loading space details</p>;
   }
   return (
-    <div className="flex gap-[10px] flex-1 items-center self-stretch">
+    <div className="flex gap-[10px] flex-1 items-center self-stretch font-inter">
       {eventSpaces && <EventSpacesTemplate eventSpaces={eventSpaces} />}
     </div>
   );
