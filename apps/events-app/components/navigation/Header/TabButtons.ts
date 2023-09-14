@@ -14,7 +14,7 @@ export const tabButtonLists: TabButtons[] = [
     {
         name: 'Dashboard',
         icon: BiSolidLayout,
-        path: '/dashboard/events/space',
+        path: '/dashboard/events/space/dashboard',
     },
     {
         name: 'Tracks',
