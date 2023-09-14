@@ -10,7 +10,7 @@ import { QueryWithID } from "@/types";
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const supabase = createPagesServerClient<Database>({ req, res });
 
-    // Assuming the ID is passed as a query parameter
+
     const { event_space_id } = req.query;
 
     // Validate UUID
