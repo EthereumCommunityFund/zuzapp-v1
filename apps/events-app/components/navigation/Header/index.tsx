@@ -8,6 +8,8 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { dashboardRoutes } from "@/components/navigation/Dashboard/routes";
 import { useRouter } from "next/router";
 import { RxAvatar } from "react-icons/rx";
+import IconButton from "@/components/ui/buttons/IconButton";
+import { HiMenuAlt1 } from "react-icons/hi";
 
 export default function DashboardHeader() {
   const { signIn } = useUserPassportContext()
@@ -15,9 +17,10 @@ export default function DashboardHeader() {
   const router = useRouter();
 
   return (
-    <div className="fixed top-0 left-0 w-full z-50">
+    <div className="fixed top-0 left-0 w-full z-50 border-b border-white/10">
       <header className="w-full py-3 px-5 md:px-8 space-x-10 flex sm:justify-between justify-end items-center bg-[#2F3232] ">
-        <div>
+        <div className="flex gap-2 w-[265px]">
+          <IconButton variant="dark" className=" rounded-full bg-componentPrimary border-none hover:b-- duration-200" icon={HiMenuAlt1} />
           <Link href="/">
             {/* create responsive image */}
             <Image src="/images/Logo.png" alt="Zuzalu Logo" width={150} height={35} />

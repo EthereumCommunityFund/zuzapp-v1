@@ -70,7 +70,7 @@ export default function HomePageTemplate() {
         <h3 className="text-2xl md:text-4xl">Zuzalu Events</h3>
         <div>
           {sampleEvents.map((event, index) => (
-            <div key={index} className="flex flex-col md:flex-row md:justify-between md:items-center border border-white/10 bg-[#2F3232E5] rounded-lg px-3 md:px-5 py-3 mt-5">
+            <div key={index} className="flex flex-col md:flex-row md:justify-between md:items-center border border-white/10 bg-componentPrimary hover:bg-itemHover rounded-lg px-3 md:px-5 py-3 mt-5 duration-200">
               <div className="flex flex-col md:flex-row space-x-3 md:items-center">
                 <div>
                   <Image src="/images/black-img.png" alt="Event" width={150} height={120} />
