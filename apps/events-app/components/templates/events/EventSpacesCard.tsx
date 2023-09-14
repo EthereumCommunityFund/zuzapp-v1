@@ -18,7 +18,7 @@ export default function EventSpaceCard(props: IProps) {
     try {
       // Redirect to a new page with the fetched details
       router.push({
-        pathname: `/dashboard/events/space/details/`, // Update with your actual route
+        pathname: `/dashboard/events/space/dashboard/`, // Update with your actual route
         query: { eventId: eventId }, // Pass space ID as a query parameter
       });
     } catch (error) {
