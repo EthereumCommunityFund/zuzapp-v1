@@ -39,7 +39,11 @@ export const eventRoutes: Routes[] = [
     {
       path: '/dashboard/events/space/tracks/schedules',
       title: 'Add a Schedule',
-    }
+    },
+    {
+      path: '/dashboard/events/create',
+      title: 'Create a EventSpace',
+    },
 ];
 
 export const navBarRoutes: Routes[] = [

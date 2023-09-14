@@ -38,33 +38,48 @@ export default function SubHeader() {
 
   return (
     <div className="flex fixed right-0 left-[260px] h-20 z-[100] bg-bgPrimary border-b border-white/20 px-5 justify-between items-center self-stretch backdrop-blur-20">
-      <div className="flex gap-[10px] items-center self-stretch">
-        <Button
-          className="rounded-[40px] py-2.5 px-3.5 bg-bgPrimary border-none hover:bg-[#363636] duration-200 text-textSecondary hover:text-textSecondary"
-          size="lg"
-          leftIcon={FaCircleArrowLeft}
-          onClick={goBackToPreviousPage}
-        >
-          Exit
-        </Button>
-        <Event name={"ZuConnect"} />
-      </div>
-      <div className="flex box-border h-full">
-        {
-          tabButtonLists.map((tabButton, index: number) => {
-            return (
-              <TabButton
-                key={index}
-                name={tabButton.name}
-                ButtonIcon={tabButton.icon}
-                onClick={() => goTabButton(tabButton.path, index)}
-                isActive={index === activeTab}
-              />
-            )
-          })
-        }
-      </div>
-      <AddToEventButton className="hidden sm:block" />
+      {
+        router.asPath.includes('/events/create') ? (
+          <Button
+            className="rounded-[40px] py-2.5 px-3.5 bg-bgPrimary border-none hover:bg-[#363636] duration-200 text-textSecondary hover:text-textSecondary"
+            size="lg"
+            leftIcon={FaCircleArrowLeft}
+            onClick={goBackToPreviousPage}
+          >
+            Back
+          </Button>
+        ) : (
+          <>
+            <div className="flex gap-[10px] items-center self-stretch">
+              <Button
+                className="rounded-[40px] py-2.5 px-3.5 bg-bgPrimary border-none hover:bg-[#363636] duration-200 text-textSecondary hover:text-textSecondary"
+                size="lg"
+                leftIcon={FaCircleArrowLeft}
+                onClick={goBackToPreviousPage}
+              >
+                Exit
+              </Button>
+              <Event name={"ZuConnect"} />
+            </div>
+            <div className="flex box-border h-full">
+              {
+                tabButtonLists.map((tabButton, index: number) => {
+                  return (
+                    <TabButton
+                      key={index}
+                      name={tabButton.name}
+                      ButtonIcon={tabButton.icon}
+                      onClick={() => goTabButton(tabButton.path, index)}
+                      isActive={index === activeTab}
+                    />
+                  )
+                })
+              }
+            </div>
+            <AddToEventButton className="hidden sm:block" />
+          </>
+        )
+      }
     </div>
   );
 }
