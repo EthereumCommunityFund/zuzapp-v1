@@ -1,11 +1,16 @@
 import { ReactElement, JSXElementConstructor, ReactNode, ReactPortal, PromiseLikeOfReactNode } from "react";
 import EditionButtons from "./buttons/EditionButtons";
+import { CgClose } from "react-icons/cg";
+import { FaCircleArrowDown } from "react-icons/fa6";
+import Container from "./Container";
 
 export default function EditionForm(props: { children: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | PromiseLikeOfReactNode | null | undefined; }) {
       return (
-            <div className="flex flex-col w-[800px] items-center py-5 px-4 gap-8 border border-white border-opacity-10 rounded-2xl bg-[#2E3131]">
-                  {props.children}
-                  <EditionButtons type={"track"} />
+            <div className="py-20">
+                  <Container>
+                        {props.children}
+                        <EditionButtons type={"track"} leftButtonName={"Discard"} rightButtonName={"Add Track"} leftButtonIcon={CgClose} rightButtonIcon={FaCircleArrowDown} />
+                  </Container>
             </div>
       )
 }

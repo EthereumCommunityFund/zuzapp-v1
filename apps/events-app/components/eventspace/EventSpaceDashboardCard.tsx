@@ -4,7 +4,7 @@ import { SpaceDashboardCardType } from "@/types";
 import { LucideIcon } from "lucide-react";
 import { HiCalendar } from "react-icons/hi";
 import { RiSettings5Fill } from "react-icons/ri";
-import { spaceDashboardCards } from "@/constant/spacedashboardcards";
+
 
 
 interface IProps {
@@ -19,6 +19,7 @@ interface IProps {
 
 export default function EventSpaceDashboardCard(props: IProps) {
   const { name, description, buttonName, cardType, buttonIcon, icon, onCardClick } = props;
+
   return (
     <div className="flex flex-col py-5 px-4 items-center gap-8 rounded-2xl border bg-[#2E3131] border-white/10 w-full">
       <div className="flex flex-col items-start gap-[10px] self-stretch">

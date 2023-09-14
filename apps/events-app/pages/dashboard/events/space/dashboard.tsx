@@ -7,6 +7,7 @@ import Button from "@/components/ui/buttons/Button";
 import { HiCalendar } from "react-icons/hi";
 import { RiSettings5Fill } from "react-icons/ri";
 import { SpaceDashboardCardType } from "@/types";
+import { eventRoutes } from "@/constant/routes";
 
 interface IProps {
   type: SpaceDashboardType,
@@ -15,10 +16,14 @@ interface IProps {
 export default function EventSpaceDashboard(props: IProps) {
   const { type } = props;
   const router = useRouter();
+  const { eventId } = router.query;
 
   const handleButtonClick = (type: SpaceDashboardCardType) => {
     if (type === SpaceDashboardCardType.EnterEventDetails || type === SpaceDashboardCardType.EditDetails) {
-      router.push("spacedetails");
+      router.push({
+        pathname: `/dashboard/events/space/details/`, // Update with your actual route
+        query: { eventId: eventId }, // Pass space ID as a query parameter
+      });
     } else if (type === SpaceDashboardCardType.OpenSettings) {
       router.push("settings");
     }
