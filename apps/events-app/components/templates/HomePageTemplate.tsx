@@ -36,10 +36,10 @@ export default function HomePageTemplate() {
         }}
       >
         <div className="px-10 py-10 max-w-[650px]">
-          <h2 className="font-bold text-xl md:text-5xl mb-5">Discover & Experience Extraordinary Events</h2>
+          <h2 className="font-bold font-inter text-xl md:text-5xl mb-5">Discover & Experience Extraordinary Events</h2>
           {isAuthenticated ? (
             <Link href="/dashboard/events/create">
-              <Button size='lg' variant={'primary'} className="rounded-full text-white font-semibold">
+              <Button size='lg' variant={'primary'} className="rounded-full text-xl text-white bg-[#769270] hover:bg-[#92B68B] font-inter font-semibold">
                 Create an Event
               </Button>
             </Link>
@@ -77,7 +77,7 @@ export default function HomePageTemplate() {
                 </div>
                 <div className="space-y-2 mt-2 md:mt-0">
                   <h4 className="text-2xl font-bold">{event.name}</h4>
-                  <h2 className="text-base font-normal opacity-50">{event.description}</h2>
+                  <h2 className="text-base font-semibold opacity-70 font-inter">{event.description}</h2>
                   <div className="flex space-x-2">
                     <p className="flex items-center text-xs md:text-sm text-white/60 bg-white/10 rounded-full py-2 px-3 w-fit font-semibold">
                       <BsCalendar2Fill className="mr-2 text-sm md:text-base" /> {event.date}

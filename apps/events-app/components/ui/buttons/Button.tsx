@@ -150,7 +150,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             />
           </div>
         )}
-        <div className="w-2"></div>
+
         {children}
         {RightIcon && (
           <div
