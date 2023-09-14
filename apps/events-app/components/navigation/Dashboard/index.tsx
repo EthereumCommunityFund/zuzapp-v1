@@ -1,6 +1,5 @@
-import Image from 'next/image';
 import Link from 'next/link';
-import { HiLightningBolt, HiOutlineMenuAlt1 } from 'react-icons/hi';
+import { HiOutlineMenuAlt1 } from 'react-icons/hi';
 import { FaCog } from 'react-icons/fa';
 import { navBarRoutes } from '@/constant/routes';
 import React from 'react';
@@ -52,10 +51,6 @@ export default function DashboardNavigation() {
                     My Event Spaces
                   </Button>
                 </Link>
-              </li>
-              <li className="flex items-center space-x-2">
-                <Image src="/images/Avatar.png" alt="Avatar" width={32} height={32} />
-                <Link href="/dashboard/profile">My Profile</Link>
               </li>
             </ul>
           )}

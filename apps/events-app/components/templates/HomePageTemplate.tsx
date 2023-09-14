@@ -10,10 +10,12 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 export const sampleEvents = [
   {
     name: 'Zu Connect',
-    date: 'Oct 8 - Oct 20',
+    description: 'A Popup Village of Innovation in the Heart of Istanbul',
+    date: 'October 8 - October 20',
   },
   {
     name: 'Zuzalu Town Halls',
+    description: 'Here we post our Town Halls and other events!',
     date: 'Recuring',
   },
 ];
@@ -23,7 +25,7 @@ export default function HomePageTemplate() {
   const { isAuthenticated, user } = useGlobalContext();
 
   return (
-    <div className="w-4/5 mx-auto mt-16">
+    <div className="w-4/5 mx-auto ">
       <div
         className="w-full border border-white/10 rounded-2xl mt-5"
         style={{
@@ -37,8 +39,8 @@ export default function HomePageTemplate() {
           <h2 className="font-bold text-xl md:text-5xl mb-5">Discover & Experience Extraordinary Events</h2>
           {isAuthenticated ? (
             <Link href="/dashboard/events/create">
-              <Button variant={'primary'} className="rounded-full">
-                Create Event
+              <Button size='lg' variant={'primary'} className="rounded-full text-white font-semibold">
+                Create an Event
               </Button>
             </Link>
           ) : (
@@ -75,6 +77,7 @@ export default function HomePageTemplate() {
                 </div>
                 <div className="space-y-2 mt-2 md:mt-0">
                   <h4 className="text-2xl font-bold">{event.name}</h4>
+                  <h2 className="text-base font-normal opacity-50">{event.description}</h2>
                   <div className="flex space-x-2">
                     <p className="flex items-center text-xs md:text-sm text-white/60 bg-white/10 rounded-full py-2 px-3 w-fit font-semibold">
                       <BsCalendar2Fill className="mr-2 text-sm md:text-base" /> {event.date}
@@ -86,7 +89,7 @@ export default function HomePageTemplate() {
                 </div>
               </div>
               <div className="mt-3 md:mt-0">
-                <Button variant={'primary'} className="rounded-full">
+                <Button size='lg' variant={'primary'} className="rounded-full">
                   View Event
                 </Button>
               </div>
