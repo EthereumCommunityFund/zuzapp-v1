@@ -25,7 +25,7 @@ export default function HomePageTemplate() {
   const { isAuthenticated, user } = useGlobalContext();
 
   return (
-    <div className="w-4/5 mx-auto ">
+    <div className="w-5/6 mx-auto ">
       <div
         className="w-full border border-white/10 rounded-2xl mt-5"
         style={{
@@ -36,7 +36,7 @@ export default function HomePageTemplate() {
         }}
       >
         <div className="px-10 py-10 max-w-[650px]">
-          <h2 className="font-bold font-inter text-xl md:text-5xl mb-5">Discover & Experience Extraordinary Events</h2>
+          <h1 className="font-bold font-inter text-3xl md:text-5xl mb-5">Discover & Experience Extraordinary Events</h1>
           {isAuthenticated ? (
             <Link href="/dashboard/events/create">
               <Button size='lg' variant={'primary'} className="rounded-full text-xl text-white bg-[#769270] hover:bg-[#92B68B] font-inter font-semibold">
@@ -67,8 +67,8 @@ export default function HomePageTemplate() {
         </div>
       </div>
       <div className="mt-10">
-        <h3 className="text-2xl md:text-4xl">Zuzalu Events</h3>
-        <div>
+        <h3 className="text-xl md:text-4xl">Zuzalu Events</h3>
+        <div className="mt-3">
           {sampleEvents.map((event, index) => (
             <div key={index} className="flex flex-col md:flex-row md:justify-between md:items-center border border-white/10 bg-componentPrimary hover:bg-itemHover rounded-lg px-3 md:px-5 py-3 mt-5 duration-200">
               <div className="flex flex-col md:flex-row space-x-3 md:items-center">
