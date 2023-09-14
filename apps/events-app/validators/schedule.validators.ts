@@ -1,4 +1,4 @@
-import { ScheduleCreateRequestBody } from "@/types";
+import { ScheduleCreateRequestBody, ScheduleUpdateRequestBody } from "@/types";
 import Joi from "joi";
 
 const speakerSchema = Joi.object({
@@ -24,8 +24,8 @@ const schedule_create_schema = Joi.object({
     rsvp_amount: Joi.number().integer().default(0),
     event_space_id: Joi.string().uuid().required(),
     track_id: Joi.string().uuid().optional(),
-    tags: Joi.array().items(Joi.string()),
-    speakers: Joi.array().items(speakerSchema).optional()
+    tags: Joi.array().items(Joi.string()).default([]),
+    speakers: Joi.array().items(speakerSchema).default([])
 });
 
 
@@ -44,11 +44,11 @@ const schedule_update_schema = Joi.object({
     location_id: Joi.string().uuid().required(),
     event_type: Joi.array().items(Joi.string()),
     experience_level: Joi.array().items(Joi.string()),
-    rsvp_amount: Joi.number().integer().default(0),
+    rsvp_amount: Joi.number().integer().default(50),
     event_space_id: Joi.string().uuid().required(),
     track_id: Joi.string().uuid().optional(),
-    tags: Joi.array().items(Joi.string()),
-    speakers: Joi.array().items(speakerSchema).optional()
+    tags: Joi.array().items(Joi.string()).default([]),
+    speakers: Joi.array().items(speakerSchema).default([])
 });
 
 
@@ -61,7 +61,7 @@ export const validateScheduleCreation = (body: any): [Joi.ValidationResult<any>,
     return [result, result.value];
 };
 
-export const validateScheduleUpdate = (body: any): [Joi.ValidationResult<any>, ScheduleCreateRequestBody] => {
+export const validateScheduleUpdate = (body: any): [Joi.ValidationResult<any>, ScheduleUpdateRequestBody] => {
     let data = { ...body }
     delete data.user
     const result = schedule_update_schema.validate(data);

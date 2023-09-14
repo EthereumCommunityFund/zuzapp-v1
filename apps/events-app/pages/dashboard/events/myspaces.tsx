@@ -21,6 +21,7 @@ export default function MyEventSpacesPage() {
     }
   );
 
+  console.log(eventSpaces, 'eventspaces');
   if (isLoading) {
     return <p>Loading...</p>;
   }
