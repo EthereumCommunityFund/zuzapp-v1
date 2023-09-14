@@ -13,7 +13,12 @@ export default function MyEventSpacesPage() {
     isError,
   } = useQuery<EventSpaceDetailsType[], Error>(
     ['eventSpaces'], // Query key
-    () => fetchUserEventSpaces() // Query function
+    () => fetchUserEventSpaces(),
+    {
+      onSuccess: (data) => {
+        console.log('Event Spaces:', data);
+      },
+    }
   );
 
   if (isLoading) {
