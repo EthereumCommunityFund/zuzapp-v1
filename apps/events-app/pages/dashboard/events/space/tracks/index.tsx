@@ -30,29 +30,29 @@ export default function Tracks() {
   };
 
   // NOT READY YET ON API
-  // const {
-  //   data: trackDetails,
-  //   isLoading,
-  //   isError,
-  // } = useQuery<TrackUpdateRequestBody, Error>(
-  //   ['trackDetails', eventId],
-  //   () => fetchTracksByEventSpaceId(eventId as string),
+  const {
+    data: trackDetails,
+    isLoading,
+    isError,
+  } = useQuery<TrackUpdateRequestBody, Error>(
+    ['trackDetails', eventId],
+    () => fetchTracksByEventSpaceId(eventId as string),
 
-  //   {
-  //     enabled: !!eventId,
-  //   }
-  // );
-  const [trackDetails, setTrackDetails] = useState([]);
-
-  async function fetchTracks(id: string) {
-    try {
-      const result = await fetchTracksByEventSpace(id);
-      console.log(result, 'result');
-    } catch (error) {
-      console.log(error);
+    {
+      enabled: !!eventId,
     }
-  }
-  fetchTracks('2e9d111e-8b0f-4677-99c9-f7945423a093');
+  );
+  // const [trackDetails, setTrackDetails] = useState([]);
+
+  // async function fetchTracks(id: string) {
+  //   try {
+  //     const result = await fetchTracksByEventSpace(id);
+  //     console.log(result, 'result');
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }
+  // fetchTracks('2e9d111e-8b0f-4677-99c9-f7945423a093');
   // useEffect(() => {
   //   const fetchTracks = async () => {
   //     const tracks = await fetchTracksByEventSpaceId(eventId);
@@ -61,6 +61,7 @@ export default function Tracks() {
   //   };
   //   fetchTracks();
   // }, [eventId]);
+
   // if (isLoading) {
   //   return <p>Loading...</p>;
   // }
@@ -86,11 +87,15 @@ export default function Tracks() {
               </Button>
             </div>
           </div>
-          <div className="flex flex-col items-start gap-[10px] self-stretch">
-            {trackDetails && <TrackItemTemplate trackDetails={trackDetails} />}
-            {/* <TrackItem title={'Track Title'} />
+          {isLoading ? (
+            <p>Loading...</p>
+          ) : (
+            <div className="flex flex-col items-start gap-[10px] self-stretch">
+              {trackDetails && <TrackItemTemplate trackDetails={trackDetails} />}
+              {/* <TrackItem title={'Track Title'} />
             <TrackItem title={'Track Title'} /> */}
-          </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

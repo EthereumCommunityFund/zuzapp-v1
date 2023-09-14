@@ -39,8 +39,8 @@ export default function TrackItem(props: IProps) {
       </div>
       <div>
         <div className="w-full">
-          <Button variant="dark" className="bg-white/20 text-white/70 rounded-full" leftIcon={HiArrowRight} onClick={handleEnterTrack}>
-            Enter Space
+          <Button variant="dark" className="bg-white/20 text-white/70 rounded-full" leftIcon={HiArrowRight}>
+            Update Track
           </Button>
         </div>
       </div>
