@@ -14,7 +14,7 @@ interface TrackTemplateProps {
 
 const TrackItemTemplate: React.FC<TrackTemplateProps> = ({ trackDetails }) => {
   return (
-    <div>
+    <div className="flex py-3 px-3.5 items-center self-stretch border rounded-2xl border-white/20 bg-componentPrimary hover:cursor-pointer hover:bg-trackItemHover duration-200 w-full justify-between">
       {trackDetails.map((track) => (
         <TrackItemCard trackTitle={track.name} key={track.id} trackId={track.id} />
       ))}

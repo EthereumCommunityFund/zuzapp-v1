@@ -22,8 +22,8 @@ export default function TrackItem(props: IProps) {
   };
 
   return (
-    <div className="flex py-3 px-3.5 items-center self-stretch border rounded-2xl border-white/20 bg-componentPrimary hover:cursor-pointer hover:bg-trackItemHover duration-200">
-      <div className="flex items-start gap-[10px]">
+    <>
+      <div className="flex items-start gap-2">
         <div className="w-[130px] h-[100px] rounded-[10px] border border-[#FFFFFF10] bg-[#222]"></div>
         <div className="flex flex-col w-[382px] justify-center items-start gap-[14px] self-stretch">
           <span className="text-lg font-semibold leading-[1.2]">{trackTitle}</span>
@@ -44,6 +44,6 @@ export default function TrackItem(props: IProps) {
           </Button>
         </div>
       </div>
-    </div>
+    </>
   );
 }
