@@ -18,6 +18,11 @@ import { Form, FormField, FormItem, FormLabel, FormMessage } from '@/components/
 import { Input } from '@/components/ui/input';
 import Button from '@/components/ui/buttons/Button';
 import { useForm } from 'react-hook-form';
+import ImageUploadForm from '../templates/ImageUploadForm';
+import EditionButtons from '../ui/buttons/EditionButtons';
+import { CgClose } from 'react-icons/cg';
+import { FaCircleArrowDown, FaCircleArrowUp } from 'react-icons/fa6';
+import IconButton from '../ui/buttons/IconButton';
 
 const trackSchema = z.object({
   name: z.string().min(2, {
@@ -48,14 +53,14 @@ export default function AddTrackForm({ onTrackSubmit }: { onTrackSubmit: (values
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-10">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-10 w-full">
         <FormField
           control={form.control}
           name="name"
           render={({ field }) => (
             <FormItem>
               <FormLabel className="text-lg">Track Name</FormLabel>
-              <Input placeholder="ZK week" {...field} />
+              <Input className='bg-pagePrimary' placeholder="What is the name of this track?" {...field} />
               <FormMessage />
             </FormItem>
           )}
@@ -66,7 +71,7 @@ export default function AddTrackForm({ onTrackSubmit }: { onTrackSubmit: (values
           render={({ field }) => (
             <FormItem>
               <FormLabel className="text-lg">Track Description</FormLabel>
-              <Input placeholder="Enter track description" {...field} />
+              <Input className='bg-pagePrimary' placeholder="Enter track description" {...field} />
               <FormMessage />
             </FormItem>
           )}
@@ -76,21 +81,19 @@ export default function AddTrackForm({ onTrackSubmit }: { onTrackSubmit: (values
           name="image"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-lg">Image url</FormLabel>
-              <Input placeholder="Input image url" {...field} />
+              {/* <Input placeholder="Input image url" {...field} /> */}
+              <ImageUploadForm title={'Track'} />
               <FormMessage />
             </FormItem>
           )}
         />
+        <div className='w-full'>
+          <div className='rounded-[10px] w-[130px] h-[100px] bg-pagePrimary relative'>
+            <IconButton variant='dark' className='rounded-full absolute right-[-5px] top-[-5px]' icon={CgClose} />
+          </div>
+        </div>
         <div className="flex justify-center pt-8">
-          <Button
-            type="submit"
-            className="rounded-full"
-            size="lg"
-            // You can set trackCreated to true directly here if needed
-          >
-            Add Track
-          </Button>
+          <EditionButtons type={"track"} leftButtonName={"Discard"} rightButtonName={"Add Track"} leftButtonIcon={CgClose} rightButtonIcon={FaCircleArrowUp} />
         </div>
       </form>
     </Form>
