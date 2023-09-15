@@ -29,8 +29,8 @@ export default function Tracks() {
           <div className="flex justify-between items-start self-stretch">
             <Button variant="light-blue" className="rounded-full font-bold" size="lg" leftIcon={BiSolidPlusCircle} onClick={handleAddTrack}>Add a Track</Button>
             <div className="flex items-start gap-3">
-              <Button variant="ghost" size="lg" leftIcon={HiSelector}>Sort</Button>
-              <Button variant="ghost" size="lg" leftIcon={HiCog}>Select</Button>
+              <Button variant="ghost" size="base" className="font-bold opacity-70" leftIcon={HiSelector}>Sort</Button>
+              <Button variant="ghost" size="base" className="font-bold opacity-70" leftIcon={HiCog}>Select</Button>
             </div>
           </div>
           <div className="flex flex-col items-start gap-[10px] self-stretch">

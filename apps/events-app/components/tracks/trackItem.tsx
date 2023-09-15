@@ -13,12 +13,12 @@ export default function TrackItem(props: IProps) {
       <div className="flex items-start gap-[10px]">
         <div className="w-[130px] h-[100px] rounded-[10px] border border-[#FFFFFF10] bg-[#222]"></div>
         <div className="flex flex-col w-[382px] justify-center items-start gap-[14px] self-stretch">
-          <span className="text-lg font-semibold leading-[1.2]">{title}</span>
+          <span className="text-lg font-bold leading-[1.2]">{title}</span>
           <div className="flex flex-col justify-center items-start gap-[14px] self-stretch">
-            <span className="rounded-full flex px-4 py-1 items-center gap-1 opacity-60 bg-[#FFFFFF10]">
+            <span className="rounded-full flex px-4 py-1 items-center gap-1 opacity-60 bg-[#FFFFFF10] font-bold">
               <HiCalendar /> October 8 - October 23
             </span>
-            <span className="flex items-center gap-1 self-stretch opacity-60">
+            <span className="flex items-center gap-1 self-stretch opacity-60 font-bold">
               <BsFillTicketFill /> Schedules 3
             </span>
           </div>

@@ -39,7 +39,7 @@ export default function EventSpaceDashboard(props: IProps) {
                 <div className="flex flex-col gap-5 self-stretch p-4 mb-8">
                   <Label className="text-3xl font-bold leading-[1.2]">Welcome to your Event Space</Label>
                   <h2 className="opacity-70 font-inter font-bold">First, you'll need to enter the main details of your main event.</h2>
-                  <Button className="w-full flex justify-center font-bold rounded-3xl text-xl leading-[1.2] hover:text-" leftIcon={HiCalendar}>Enter Event Details</Button>
+                  <Button className="w-full flex justify-center font-bold rounded-3xl text-xl leading-[1.2] hover:text-" leftIcon={HiCalendar} onClick={(e) => { handleButtonClick(SpaceDashboardCardType.EditDetails) }}>Enter Event Details</Button>
                 </div>
               ) : (
                 <>
