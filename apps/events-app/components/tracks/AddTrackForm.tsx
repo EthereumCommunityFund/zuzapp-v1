@@ -26,6 +26,8 @@ import { FaCircleArrowUp } from 'react-icons/fa6';
 import IconButton from '../ui/buttons/IconButton';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
 import { BsMap } from 'react-icons/bs';
+import { useRef, useState } from 'react';
+import DragAndDrop from '../ui/dragDrop';
 
 const trackSchema = z.object({
   name: z.string().min(2, {
@@ -85,14 +87,15 @@ export default function AddTrackForm({ onTrackSubmit }: { onTrackSubmit: (values
           render={({ field }) => (
             <FormItem>
 
-              <ImageUploadForm title={'Track'} />
+              {/* <ImageUploadForm title={'Track'} /> */}
+              <DragAndDrop />
               <FormMessage />
             </FormItem>
           )}
         />
         <div className='w-full'>
-          <div className='rounded-[10px] w-[130px] h-[100px] bg-pagePrimary relative'>
-            <IconButton variant='dark' className='rounded-full absolute right-[-5px] top-[-5px]' icon={CgClose} />
+          <div className='rounded-[10px] w-[130px] h-[100px] bg-pagePrimary relative'>            
+            <IconButton variant='dark' className='rounded-full absolute right-[-5px] top-[-5px]' icon={CgClose}/>
           </div>
         </div>
         <div className="flex justify-center pt-8">
@@ -106,6 +109,8 @@ export default function AddTrackForm({ onTrackSubmit }: { onTrackSubmit: (values
           </div>
         </div>
       </form>
+      <>
+    </>
     </Form>
   );
 }
