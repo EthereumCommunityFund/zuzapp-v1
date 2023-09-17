@@ -86,10 +86,8 @@ export default function Tracks() {
           {isLoading ? (
             <p>Loading...</p>
           ) : (
-            <div className="flex flex-col items-start gap-[10px] self-stretch">
+            <div className='w-full'>
               {trackDetails && <TrackItemTemplate trackDetails={trackDetails} />}
-              {/* <TrackItem title={'Track Title'} />
-            <TrackItem title={'Track Title'} /> */}
             </div>
           )}
         </div>
