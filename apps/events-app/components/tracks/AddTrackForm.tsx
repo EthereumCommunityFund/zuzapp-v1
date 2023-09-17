@@ -12,6 +12,7 @@
 //   <ImageUploadForm title={"Track"} />
 // </div>
 
+import Link from 'next/link';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { Form, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
@@ -21,8 +22,10 @@ import { useForm } from 'react-hook-form';
 import ImageUploadForm from '../templates/ImageUploadForm';
 import EditionButtons from '../ui/buttons/EditionButtons';
 import { CgClose } from 'react-icons/cg';
-import { FaCircleArrowDown, FaCircleArrowUp } from 'react-icons/fa6';
+import { FaCircleArrowUp } from 'react-icons/fa6';
 import IconButton from '../ui/buttons/IconButton';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
+import { BsMap } from 'react-icons/bs';
 
 const trackSchema = z.object({
   name: z.string().min(2, {
@@ -81,7 +84,7 @@ export default function AddTrackForm({ onTrackSubmit }: { onTrackSubmit: (values
           name="image"
           render={({ field }) => (
             <FormItem>
-              {/* <Input placeholder="Input image url" {...field} /> */}
+
               <ImageUploadForm title={'Track'} />
               <FormMessage />
             </FormItem>
@@ -93,7 +96,14 @@ export default function AddTrackForm({ onTrackSubmit }: { onTrackSubmit: (values
           </div>
         </div>
         <div className="flex justify-center pt-8">
-          <EditionButtons type={"track"} leftButtonName={"Discard"} rightButtonName={"Add Track"} leftButtonIcon={CgClose} rightButtonIcon={FaCircleArrowUp} />
+          <div className="flex gap-[30px] w-full">
+            <Button className="rounded-full w-1/2 flex justify-center" variant="light-dark" size="lg" type="button" leftIcon={CgClose}>
+              <span>Discard Track</span>
+            </Button>
+            <Button className="rounded-full w-1/2 flex justify-center" variant="light-blue" size="lg" type="submit" leftIcon={FaCircleArrowUp}>
+              <span>Add a Track</span>
+            </Button>
+          </div>
         </div>
       </form>
     </Form>

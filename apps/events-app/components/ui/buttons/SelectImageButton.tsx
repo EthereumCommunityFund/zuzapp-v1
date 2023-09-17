@@ -1,4 +1,4 @@
-import { title } from "process";
+import React from 'react';
 import Button from "./Button";
 import { HiUpload } from "react-icons/hi";
 
