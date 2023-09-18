@@ -5,7 +5,8 @@ import Button from "@/components/ui/buttons/Button";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { BsFillPlusCircleFill } from "react-icons/bs";
-import IconButton from "@/components/ui/buttons/IconButton";
+import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
+import { Database } from "@/database.types";
 
 export default function SchedulesDashboardPage() {
   const router = useRouter();
