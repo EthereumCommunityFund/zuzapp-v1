@@ -28,7 +28,8 @@ import EventLocation from "./EventLocation";
 import { eventCategories } from "@/constant/eventcategories";
 import { GoXCircle } from "react-icons/go";
 import { experienceLevels } from "@/constant/experienceelevels";
-import CustomDatePicker from "../ui/datePicker";
+import CustomDatePicker from "../ui/DatePicker";
+
 
 interface EventSpaceDetailsProps {
   eventSpace: EventSpaceDetailsType;
