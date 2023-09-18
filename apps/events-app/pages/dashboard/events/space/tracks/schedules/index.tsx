@@ -45,7 +45,7 @@ export default function SchedulesDashboardPage() {
               </div>
             </div>
             <div className="flex justify-between items-start self-stretch">
-              <Link href={"addschedule"}>
+              <Link href={"/dashboard/events/space/tracks/schedules/addschedule"}>
                 <Button variant="light-blue" className="flex py-[10px] px-[14px] items-center gap-[10px] rounded-[20px] bg-[#67DAFF20] text-[#67DAFF] text-xl" leftIcon={BsFillPlusCircleFill}>Add a Schedule</Button>
               </Link>
               <div className="flex items-start gap-3">
