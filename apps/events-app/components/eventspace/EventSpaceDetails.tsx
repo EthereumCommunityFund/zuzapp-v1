@@ -2,15 +2,13 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
 
 import { ChangeEvent, useEffect, useState } from 'react';
-import Container from '../ui/Container';
-import EventBasics from './EventBasics';
-import EventCategoriesLabs from './EventCategoriesLabs';
+
 import { EventSpaceDetailsType, InputFieldType } from '@/types';
 import EventFormat from './EventFormat';
 import EventLinks from './EventLinks';
 import EditionButtons from '@/components/ui/buttons/EditionButtons';
 import { CgClose } from 'react-icons/cg';
-import { FaCircleArrowDown, FaCircleArrowUp } from 'react-icons/fa6';
+import { FaCircleArrowUp } from 'react-icons/fa6';
 import SectionInputFormDescription from '../ui/SectionInputFormDescription';
 import InputFieldDark from '../ui/inputFieldDark';
 import TextEditor from '../ui/TextEditor';
@@ -30,6 +28,7 @@ import EventLocation from "./EventLocation";
 import { eventCategories } from "@/constant/eventcategories";
 import { GoXCircle } from "react-icons/go";
 import { experienceLevels } from "@/constant/experienceelevels";
+import CustomDatePicker from "../ui/datePicker";
 
 interface EventSpaceDetailsProps {
   eventSpace: EventSpaceDetailsType;
@@ -47,6 +46,20 @@ const formSchema = z.object({
 const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace }) => {
   const { id, name, event_space_type, status, start_date, end_date, description, format, event_type, experience_level, eventspacelocation } = eventSpace;
   const [selectedEventFormat, setSelectedEventFormat] = useState('');
+
+  const [startDate, setStartDate] = useState<Date>();
+
+  const handleStartDateChange = (selectedDate: Date | null) => {
+    if (selectedDate)
+      setStartDate(selectedDate);
+  }
+
+  const [endDate, setEndDate] = useState<Date>();
+
+  const handleEndDateChange = (selectedDate: Date | null) => {
+    if (selectedDate)
+      setEndDate(selectedDate);
+  }
 
   // const updateEventFormat = (newEventFormat: string) => {
   //   setEventFormat(newEventFormat);
@@ -111,12 +124,12 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace }) => 
             <div className="flex gap-3">
               <div className='flex flex-col gap-[14px] items-start self-stretch w-full'>
                 <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">Start Date</h2>
-                <InputFieldDark type={InputFieldType.Date} placeholder={"00-00-0000"} />
+                <CustomDatePicker selectedDate={startDate} handleDateChange={handleStartDateChange} />
                 <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">Click & Select or type in a date</h3>
               </div>
               <div className='flex flex-col gap-[14px] items-start self-stretch w-full'>
                 <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">End Date</h2>
-                <InputFieldDark type={InputFieldType.Date} placeholder={"00-00-0000"} />
+                <CustomDatePicker selectedDate={endDate} handleDateChange={handleEndDateChange} />
                 <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">Click & Select or type in a date</h3>
               </div>
             </div>
