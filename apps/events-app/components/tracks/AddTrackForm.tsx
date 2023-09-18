@@ -65,7 +65,7 @@ export default function AddTrackForm({ onTrackSubmit }: { onTrackSubmit: (values
           render={({ field }) => (
             <FormItem>
               <FormLabel className="text-lg">Track Name</FormLabel>
-              <Input className='bg-pagePrimary' placeholder="What is the name of this track?" {...field} />
+              <Input className="bg-pagePrimary" placeholder="What is the name of this track?" {...field} />
               <FormMessage />
             </FormItem>
           )}
@@ -76,7 +76,7 @@ export default function AddTrackForm({ onTrackSubmit }: { onTrackSubmit: (values
           render={({ field }) => (
             <FormItem>
               <FormLabel className="text-lg">Track Description</FormLabel>
-              <Input className='bg-pagePrimary' placeholder="Enter track description" {...field} />
+              <Input className="bg-pagePrimary" placeholder="Enter track description" {...field} />
               <FormMessage />
             </FormItem>
           )}
@@ -86,16 +86,17 @@ export default function AddTrackForm({ onTrackSubmit }: { onTrackSubmit: (values
           name="image"
           render={({ field }) => (
             <FormItem>
-
+              <FormLabel className="text-lg">Track Image Url</FormLabel>
+              <Input className="bg-pagePrimary" placeholder="Enter image url" {...field} />
+              <FormMessage />
               {/* <ImageUploadForm title={'Track'} /> */}
               <DragAndDrop />
-              <FormMessage />
             </FormItem>
           )}
         />
-        <div className='w-full'>
-          <div className='rounded-[10px] w-[130px] h-[100px] bg-pagePrimary relative'>            
-            <IconButton variant='dark' className='rounded-full absolute right-[-5px] top-[-5px]' icon={CgClose}/>
+        <div className="w-full">
+          <div className="rounded-[10px] w-[130px] h-[100px] bg-pagePrimary relative">
+            <IconButton variant="dark" className="rounded-full absolute right-[-5px] top-[-5px]" icon={CgClose} />
           </div>
         </div>
         <div className="flex justify-center pt-8">
@@ -109,8 +110,7 @@ export default function AddTrackForm({ onTrackSubmit }: { onTrackSubmit: (values
           </div>
         </div>
       </form>
-      <>
-    </>
+      <></>
     </Form>
   );
 }
