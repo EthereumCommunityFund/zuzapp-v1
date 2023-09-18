@@ -39,15 +39,16 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     console.log(data)
     const response = {
         ...data,
-        tags: data.scheduletags.map((tagObj) => tagObj.tags.name),
-        speakers: data.schedulespeakerrole.map((speakerObj) => ({
+        tags: data.scheduletags.map((tagObj: any) => tagObj.tags.name),
+        speakers: data.schedulespeakerrole.map((speakerObj: any) => ({
             name: speakerObj.speaker.name,
             role: speakerObj.role,
         })),
-    };
-
+    } as any;
     delete response.scheduletags; // cleaning up the extra data
     delete response.schedulespeakerrole; // cleaning up the extra data
+
+
 
     return res.status(200).json(response);
 };

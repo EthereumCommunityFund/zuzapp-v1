@@ -1,19 +1,19 @@
-import EventLocation from '@/components/eventspace/EventLocation';
-import EventSpaceDetails from '@/components/eventspace/EventSpaceDetails';
-import EventSpaceDetailsNavBar from '@/components/eventspace/EventSpaceDetailsNavBar';
-import Button from '@/components/ui/buttons/Button';
+import EventLocation from "@/components/eventspace/EventLocation";
+import EventSpaceDetails from "@/components/eventspace/EventSpaceDetails";
+import EventSpaceDetailsNavBar from "@/components/eventspace/EventSpaceDetailsNavBar";
+import Button from "@/components/ui/buttons/Button";
 
-import { EventSpaceDetailsType } from '@/types';
-import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
+import { EventSpaceDetailsType } from "@/types";
+import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
 
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { useQuery } from 'react-query';
-import { useEffect, useState } from 'react';
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { useQuery } from "react-query";
+import { useEffect, useState } from "react";
 
-import { HiArrowLeft } from 'react-icons/hi';
+import { HiArrowLeft } from "react-icons/hi";
 
-import { fetchEventSpaceById } from '../services/fetchEventSpaceDetails';
+import { fetchEventSpaceById } from "../../../../services/fetchEventSpaceDetails";
 
 export default function EventSpaceDetailsPage() {
   const router = useRouter();
@@ -28,7 +28,7 @@ export default function EventSpaceDetailsPage() {
     isLoading,
     isError,
   } = useQuery<EventSpaceDetailsType, Error>(
-    ['spaceDetails', eventId], // Query key
+    ["spaceDetails", eventId], // Query key
     () => fetchEventSpaceById(eventId as string), // Query function
     {
       enabled: !!eventId, // Only execute the query if eventId is available
@@ -77,7 +77,10 @@ export const getServerSideProps = async (ctx: any) => {
     };
 
   // get profile from session
-  const { data: profile, error } = await supabase.from('profile').select('*').eq('uuid', session.user.id);
+  const { data: profile, error } = await supabase
+    .from("profile")
+    .select("*")
+    .eq("uuid", session.user.id);
 
   return {
     props: {

@@ -34,6 +34,7 @@ function generateRandomLocation(): LocationType {
 
 
 
+
 export const generateRandomEventSpaceUpdateData = (id: string, event_space_type: "tracks" | "schedules"): EventSpaceUpdateRequestBody => {
     const formats = ["in-person", "online", "hybrid"];
     const statuses = ["draft", "published", "archived"];
@@ -47,6 +48,7 @@ export const generateRandomEventSpaceUpdateData = (id: string, event_space_type:
         start_date: Date.now() - getRandomInt(1, 5) * 24 * 60 * 60 * 1000, // Random date within the last 5 days
         end_date: Date.now() + getRandomInt(1, 5) * 24 * 60 * 60 * 1000, // Random date within the next 5 days
         description: `Random event description ${getRandomInt(1, 1000)}`,
+        // @ts-ignore
         format: getRandomElement(formats),
         event_type: [getRandomElement(eventTypes)],
         experience_level: [getRandomElement(experienceLevels)],

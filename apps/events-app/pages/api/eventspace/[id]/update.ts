@@ -4,8 +4,9 @@ import { createPagesServerClient } from "@supabase/auth-helpers-nextjs"
 import { validateEventSpaceUpdate, validateUUID } from "../../../../validators"
 import { formatTimestamp, } from "../../../../utils"
 import { logToFile } from "../../../../utils/logger"
-import { Database, EventSpaceLocationInsert, EventSpaceLocationUpdate } from "@/database.types"
+import { Database } from "@/database.types"
 import { QueryWithID } from "@/types"
+
 
 
 
@@ -79,7 +80,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         const locationsToInsert = locations.filter(loc => !loc.id);
 
         // Prepare promises for the locations to update
-        const updatePromises = locationsToUpdate.map((location: EventSpaceLocationUpdate) => {
+        const updatePromises = locationsToUpdate.map((location: any) => {
             if (location.id) {
                 return supabase.from('eventspacelocation').update({
                     event_space_id: id,
@@ -89,7 +90,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                     address: location.address,
                     capacity: location.capacity,
                     image_urls: location.image_urls
-                } as EventSpaceLocationUpdate).eq('id', location.id);
+                }).eq('id', location.id);
             }
 
         });
@@ -104,7 +105,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 address: location.address,
                 capacity: location.capacity,
                 image_urls: location.image_urls
-            } as EventSpaceLocationInsert);
+            });
         });
 
         try {
