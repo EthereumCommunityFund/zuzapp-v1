@@ -24,10 +24,10 @@ export default function MediaLink(props: IProps) {
         isLink && (
           <div className="flex gap-5 justify-between items-center">
             <div className="flex gap-4 w-fill-available">
-              <InputFieldDark className="w=1/2" type={InputFieldType.Option} placeholder="Social Media" />
+              <InputFieldDark className="z-50" type={InputFieldType.Option} placeholder={"Social Media"} />
               <InputFieldDark type={InputFieldType.Link} placeholder={"Enter Url"} />
             </div>
-            <IconButton className="rounded-[40px] py-2.5 px-3.5 bg-[#F1F1F1] bg-opacity-20 border-none" icon={RxMinus} onClick={() => setIsLink(!isLink)}></IconButton>
+            <IconButton className="rounded-[40px] py-2.5 px-3.5 bg-[#F1F1F1] bg-opacity-20 border-none w-full" icon={RxMinus} onClick={() => setIsLink(!isLink)}></IconButton>
           </div>
         )
       }

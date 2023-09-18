@@ -1,36 +1,201 @@
-import { useState } from 'react';
+import { zodResolver } from "@hookform/resolvers/zod"
+import * as z from "zod"
+
+import { ChangeEvent, useEffect, useState } from 'react';
 import Container from '../ui/Container';
 import EventBasics from './EventBasics';
 import EventCategoriesLabs from './EventCategoriesLabs';
-import { EventSpaceDetailsType } from '@/types';
+import { EventSpaceDetailsType, InputFieldType } from '@/types';
 import EventFormat from './EventFormat';
 import EventLinks from './EventLinks';
 import EditionButtons from '@/components/ui/buttons/EditionButtons';
 import { CgClose } from 'react-icons/cg';
-import { FaCircleArrowDown } from 'react-icons/fa6';
+import { FaCircleArrowDown, FaCircleArrowUp } from 'react-icons/fa6';
+import SectionInputFormDescription from '../ui/SectionInputFormDescription';
+import InputFieldDark from '../ui/inputFieldDark';
+import TextEditor from '../ui/TextEditor';
+import { useForm } from "react-hook-form";
+
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import EventLocation from "./EventLocation";
 
 interface EventSpaceDetailsProps {
   eventSpace: EventSpaceDetailsType;
 }
 
+const formSchema = z.object({
+  name: z.string().min(2, {
+    message: "Event Format is required.",
+  }),
+  event_format: z.enum(["in-person", "online", "hybrid"], {
+    required_error: "You need to select an event type.",
+  }),
+})
+
 const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace }) => {
   const { id, name, event_space_type, status, start_date, end_date, description, format, event_type, experience_level, eventspacelocation } = eventSpace;
+  const [selectedEventFormat, setSelectedEventFormat] = useState('');
+
+  // const updateEventFormat = (newEventFormat: string) => {
+  //   setEventFormat(newEventFormat);
+  // }
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: "",
+      event_format: format,
+    },
+  })
+
+  const handleEventFormatChange = (e: string) => {
+    setSelectedEventFormat(e)
+    // setEventFormat(selectedEventFormat);
+  }
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      // Access the selected event_format from form.getValues()
+      const selectedEventFormat = form.getValues("event_format");
+
+      // Now you can use the selectedEventFormat in your code
+      console.log("Selected Event Format:", selectedEventFormat);
+
+      // Rest of your code...
+    } catch (error) {
+      console.error(error);
+    }
+    // try {
+    //   const result = await createEventSpace(values)
+    //   setEventCreated(true)
+    //   console.log(result)
+    // } catch (error) {
+    //   setEventCreated(false)
+    //   console.log(error)
+    // }
+  }
+
+  useEffect(() => {
+    console.log('Selected Event Format:', selectedEventFormat);
+    // Perform any actions based on the selected event_format here
+  }, [selectedEventFormat]);
+  // const { eventFormat, setEventFormat } = useState<string>('');
+
+  // const updateEventFormat = (newEventFormat: string) => {
+  //   setEventFormat(newEventFormat);
+  // }
 
   return (
-    <Container>
-      <div className="flex flex-col gap-[34px]">
-        <span className="text-[25px] font-normal leading-[1.2]">Event Space Details</span>
-        <EventBasics name={name} startDate={start_date} endDate={end_date} />
-        <EventFormat
-          setEventCreated={function (eventCreated: boolean): void {
-            throw new Error('Function not implemented.');
-          }}
-        />
-        <EventLinks />
-        <EventCategoriesLabs />
-        <EditionButtons type={'eventspace'} leftButtonName={'Discard'} rightButtonName={'Save Edit'} leftButtonIcon={CgClose} rightButtonIcon={FaCircleArrowDown} />
+    <>
+      <div className="flex py-10 px-4 flex-col items-center gap-8 rounded-2xl border border-white border-opacity-10 bg-componentPrimary w-full">
+        <div className="flex flex-col gap-[34px] w-full">
+          <h1 className="text-[25px] font-normal leading-[1.2]">Event Space Details</h1>
+          <h2 className="text-2xl opacity-80 leading-[1.2]">Event Basics</h2>
+          <div className="flex flex-col gap-[10px]">
+            <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">Event Space Name</h2>
+            <InputFieldDark type={InputFieldType.Primary} placeholder={"ZuConnect"} />
+          </div>
+          <div>
+            <div className="flex gap-3">
+              <div className='flex flex-col gap-[14px] items-start self-stretch w-full'>
+                <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">Start Date</h2>
+                <InputFieldDark type={InputFieldType.Date} placeholder={"00-00-0000"} />
+                <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">Click & Select or type in a date</h3>
+              </div>
+              <div className='flex flex-col gap-[14px] items-start self-stretch w-full'>
+                <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">End Date</h2>
+                <InputFieldDark type={InputFieldType.Date} placeholder={"00-00-0000"} />
+                <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">Click & Select or type in a date</h3>
+              </div>
+            </div>
+          </div>
+          <div className="flex flex-col gap-[10px]">
+            <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">Event Tagline</h2>
+            <InputFieldDark type={InputFieldType.Primary} placeholder={"Coolest Web3 Events"} />
+            <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">This will be the short tagline below your event title</h3>
+          </div>
+          <div>
+            <div className="flex flex-col gap-[10px]">
+              <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">Event Description</h2>
+              <TextEditor
+                value={''}
+                onChange={function (value: string): void {
+                  throw new Error('Function not implemented.');
+                }}
+              />
+            </div>
+          </div>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-10">
+              <FormField
+                control={form.control}
+                name="event_format"
+                render={({ field }) => (
+                  <FormItem className="space-y-3">
+                    <FormLabel className="text-2xl opacity-80 leading-[1.2]">Event Format</FormLabel>
+                    <FormDescription>
+                      The format you select will determine what information will be required going forward
+                    </FormDescription>
+                    <FormControl>
+                      <RadioGroup
+                        onValueChange={handleEventFormatChange}
+                        defaultValue={field.value}
+                        className="flex flex-col md:flex-row justify-between"
+                      >
+                        <FormItem className="flex items-center space-x-3 space-y-0">
+                          <FormControl>
+                            <RadioGroupItem value="in-person" />
+                          </FormControl>
+                          <FormLabel className="font-semibold text-white/30 text-base cursor-pointer hover:bg-itemHover">
+                            In-Person
+                            <span className="text-xs block">This is a physical event</span>
+                          </FormLabel>
+                        </FormItem>
+                        <FormItem className="flex items-center space-x-3 space-y-0">
+                          <FormControl>
+                            <RadioGroupItem value="online" />
+                          </FormControl>
+                          <FormLabel className="font-semibold text-white/30 text-base cursor-pointer">
+                            Online
+                            <span className="text-xs block">Specifically Online Event</span>
+                          </FormLabel>
+                        </FormItem>
+                        <FormItem className="flex items-center space-x-3 space-y-0">
+                          <FormControl>
+                            <RadioGroupItem value="hybrid" />
+                          </FormControl>
+                          <FormLabel className="font-semibold text-white/30 text-base cursor-pointer">
+                            Hybrid
+                            <span className="text-xs block">In-Person & Online</span>
+                          </FormLabel>
+                        </FormItem>
+                      </RadioGroup>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </form>
+          </Form>
+          {selectedEventFormat !== "in-person" && <EventLinks />}
+          {/* <EventLinks /> */}
+          <EventCategoriesLabs />
+          <EditionButtons type={'eventspace'} leftButtonName={'Discard'} rightButtonName={'Save Edit'} leftButtonIcon={CgClose} rightButtonIcon={FaCircleArrowUp} />
+        </div>
       </div>
-    </Container>
+      {selectedEventFormat !== "online" && <EventLocation />}
+      {/* <EventLocation /> */}
+    </>
+
   );
 };
 

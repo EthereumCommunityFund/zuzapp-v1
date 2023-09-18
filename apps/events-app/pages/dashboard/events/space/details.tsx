@@ -43,9 +43,9 @@ export default function EventSpaceDetailsPage() {
   }
   return (
     <div className="flex flex-col py-5 px-10 items-center gap-[10px] self-stretch">
-      <div className="flex items-start gap-8 self-stretch mx-auto">
+      <div className="flex items-start gap-8 self-stretch mx-auto w-4/5">
         <EventSpaceDetailsNavBar />
-        <div className="flex flex-col px-5 gap-5 items-start ml-[400px]">
+        <div className="flex flex-col px-5 gap-5 items-start ml-[400px] max-w-[900px] w-full">
           <Button
             className="rounded-[40px] py-2.5 px-3.5 bg-bgPrimary border-none hover:bg-[#363636] duration-200 text-textSecondary hover:text-textSecondary"
             size="lg"
@@ -55,7 +55,6 @@ export default function EventSpaceDetailsPage() {
             Back
           </Button>
           {eventSpace && <EventSpaceDetails eventSpace={eventSpace} />}
-          <EventLocation />
         </div>
       </div>
     </div>
