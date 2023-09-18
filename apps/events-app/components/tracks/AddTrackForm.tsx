@@ -36,6 +36,9 @@ const trackSchema = z.object({
   description: z.string().min(10, {
     message: 'Track description is required and must be at least 10 characters.',
   }),
+  event_space_id: z.string().min(2, {
+    message: 'event_space_id is required',
+  }),
   image: z.string().min(2, {
     message: 'image url is required',
   }),
