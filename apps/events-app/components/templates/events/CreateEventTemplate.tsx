@@ -21,7 +21,7 @@ export default function CreateEventTemplate() {
                     </div>
                 ) : (
                     <>
-                        <h3 className="font-bold text-2xl">Create your space</h3>
+                        <h3 className="font-bold text-2xl">Create your Event Space</h3>
                         <div className="mt-8">
                             <CreateEventsForm setEventCreated={setEventCreated} />
                         </div>

@@ -49,12 +49,12 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           'inline-flex items-center rounded font-medium',
           'focus-visible:ring-primary focus:outline-none focus-visible:ring',
           'shadow-sm',
-          'transition-colors duration-75',
+          'transition-colors duration-200',
           //#region  //*=========== Size ===========
           [
             size === 'base' && ['px-3 py-1.5', 'text-sm'],
             size === 'sm' && ['px-2 py-1', 'text-xs md:text-sm'],
-            size === 'lg' && ['px-4 py-2', 'text-base md:text-lg'],
+            size === 'lg' && ['px-4 py-2', 'text-xl font-sans font-semibold md:text-lg'],
           ],
           //#endregion  //*======== Size ===========
           //#region  //*=========== Variants ===========
@@ -62,7 +62,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             variant === 'primary' && [
               'bg-[#D7FFC4]/20 text-[#D7FFC4]',
               'border-[#D7FFC4]/20 border',
-              'hover:bg-[#D7FFC4]/50 hover:text-white',
+              'hover:bg-[#D7FFC4]/50',
               'active:bg-primary/80',
               'disabled:bg-primary/80',
             ],
@@ -150,7 +150,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             />
           </div>
         )}
-        <div className="w-2"></div>
+
         {children}
         {RightIcon && (
           <div

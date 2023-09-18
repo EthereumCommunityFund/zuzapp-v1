@@ -23,13 +23,19 @@ export const DashboardProvider = ({ children }: { children: React.ReactNode }) =
         <div className="mt-16 relative left-[260px] w-[calc(100%-260px)]">
           <div className="h-[90vh] mx-auto relative">
             {
-              checkIfCurrentRouteIsInDashboardRoutes() && (
-                <SubHeader />
+              checkIfCurrentRouteIsInDashboardRoutes() ? (
+                <>
+                  <SubHeader />
+                  <div className="flex-1 mx-auto px-10 sm:px-0 relative top-20">
+                    {children}
+                  </div>
+                </>
+              ) : (
+                <div className="flex-1 mx-auto px-10 sm:px-0 relative top-10 bg-pagePrimary">
+                  {children}
+                </div>
               )
             }
-            <div className="flex-1 mx-auto px-10 sm:px-0 relative top-20 relative">
-              {children}
-            </div>
           </div>
         </div>
       </div>

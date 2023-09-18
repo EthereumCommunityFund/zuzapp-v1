@@ -31,7 +31,7 @@ export default function EventSpaceDashboardCard(props: IProps) {
                   cardType === (SpaceDashboardCardType.OpenSettings) && <RiSettings5Fill className="opacity-70 w-6 h-6" />
                 )
             }
-            <span className="text-2xl font-bold leading-[1.2]">
+            <span className="text-2xl font-bold">
               {name}
             </span>
           </div>

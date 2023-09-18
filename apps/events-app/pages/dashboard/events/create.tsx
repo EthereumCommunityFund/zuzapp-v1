@@ -1,12 +1,13 @@
 import CreateEventTemplate from "@/components/templates/events/CreateEventTemplate";
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
 import { Database } from "@/database.types";
+import Container from "@/components/ui/Container";
 
 export default function CreateEventsPage() {
   return (
-    <>
+    <div className="mx-auto w-[680px] py-10" >
       <CreateEventTemplate />
-    </>
+    </div>
   );
 }
 

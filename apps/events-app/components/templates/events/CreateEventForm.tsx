@@ -27,25 +27,25 @@ const formSchema = z.object({
   }),
 })
 
-export default function CreateEventsForm({ setEventCreated}: { setEventCreated: (eventCreated: boolean) => void}) {
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
-        defaultValues: {
-            name: "",
-            event_space_type: undefined,
-        },
-      })
-     
-      async function onSubmit(values: z.infer<typeof formSchema>) {
-        try {
-          const result = await createEventSpace(values)
-          setEventCreated(true)
-          console.log(result)
-        } catch (error) {
-          setEventCreated(false)
-          console.log(error)
-        }
-      }
+export default function CreateEventsForm({ setEventCreated }: { setEventCreated: (eventCreated: boolean) => void }) {
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: "",
+      event_space_type: undefined,
+    },
+  })
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      const result = await createEventSpace(values)
+      setEventCreated(true)
+      console.log(result)
+    } catch (error) {
+      setEventCreated(false)
+      console.log(error)
+    }
+  }
 
   return (
     <Form {...form}>
@@ -57,20 +57,20 @@ export default function CreateEventsForm({ setEventCreated}: { setEventCreated: 
             <FormItem>
               <FormLabel className="text-lg">Event Name Space</FormLabel>
               <FormControl>
-                <Input placeholder="ZuConnect" {...field} />
+                <Input placeholder="Type Something" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-         <FormField
+        <FormField
           control={form.control}
           name="event_space_type"
           render={({ field }) => (
             <FormItem className="space-y-3">
               <FormLabel className="text-lg">Event Structure</FormLabel>
               <FormDescription>
-                This will determine the basic structure of your event. Once selected, this cannot be changed. 
+                This will determine the basic structure of your event. Once selected, this cannot be changed.
               </FormDescription>
               <FormControl>
                 <RadioGroup
@@ -83,8 +83,8 @@ export default function CreateEventsForm({ setEventCreated}: { setEventCreated: 
                       <RadioGroupItem value="schedules" />
                     </FormControl>
                     <FormLabel className="font-semibold text-white/30 text-base">
-                        Only Schedules
-                        <span className="text-xs block">No Sub Events</span>
+                      Only Schedules
+                      <span className="text-xs block">No Sub Events</span>
                     </FormLabel>
                   </FormItem>
                   <FormItem className="flex items-center space-x-3 space-y-0 cursor-pointer">
@@ -103,9 +103,9 @@ export default function CreateEventsForm({ setEventCreated}: { setEventCreated: 
           )}
         />
         <div className="flex justify-center pt-8">
-            <Button className="rounded-full" size="lg" type="submit" leftIcon={BsPlusCircleFill}>
-                Create Event Space
-            </Button>
+          <Button className="rounded-full" size="lg" type="submit" leftIcon={BsPlusCircleFill}>
+            Create Event Space
+          </Button>
         </div>
       </form>
     </Form>

@@ -56,7 +56,7 @@ module.exports = {
         },
         textPrimary: "#ffffff",
         textSecondary: "#ffffff70",
-        bgPrimary: "#222222",
+        pagePrimary: "#222222",
         componentPrimary: "#2E3131",
         itemHover: "#393C3C",
         inputField: "#242727",
@@ -85,6 +85,7 @@ module.exports = {
       },
       fontFamily: {
         sans: ['Inter var', ...defaultTheme.fontFamily.sans],
+        inter: ['Inter', 'Inter Placeholder', 'sans-serif'],
       },
       spacing: {
         '2.5': '10px',

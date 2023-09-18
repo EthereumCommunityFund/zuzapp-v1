@@ -49,7 +49,7 @@ const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
           'focus-visible:ring-primary focus:outline-none focus-visible:ring',
           'shadow-sm',
           'transition-colors duration-200',
-          'min-h-[28px] min-w-[28px] p-1 md:min-h-[34px] md:min-w-[34px] md:p-2',
+          'min-h-[40px] min-w-[40px] p-1 md:min-h-[34px] md:min-w-[34px] md:p-2',
           //#region  //*=========== Variants ===========
           [
             variant === 'primary' && [
@@ -86,7 +86,7 @@ const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
             ],
           ],
           //#endregion  //*======== Variants ===========
-          'disabled:cursor-not-allowed',
+
           isLoading &&
           'relative text-transparent transition-none hover:text-transparent disabled:cursor-wait',
           className

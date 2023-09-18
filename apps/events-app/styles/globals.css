@@ -72,6 +72,7 @@
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-[#222222] text-foreground;
   }
@@ -83,7 +84,10 @@
     @apply p-2;
     @apply -translate-x-full;
   }
+
   .dashboard-menu.open {
     @apply translate-x-0;
   }
 }
+
+@import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
