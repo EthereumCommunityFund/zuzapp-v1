@@ -1,6 +1,6 @@
-import { InputFieldType } from "@/types";
+import React, { useState } from "react";
 import { HiCalendar, HiClock, HiLink } from "react-icons/hi";
-import React from "react";
+import { InputFieldType } from "@/types";
 import DropDown from "@/components/ui/DropDown";
 
 
@@ -19,11 +19,17 @@ export default function InputFieldDark({
   placeholder,
   ...rest
 }: InputFieldDarkProps) {
+  const [date, setDate] = useState<Date>();
+
+  const handleDateChange = (selectedDate: Date | null) => {
+    if (selectedDate)
+      setDate(selectedDate);
+  }
+
   return (
     type !== InputFieldType.Wysiwyg && type !== InputFieldType.Option ?
       (
         <div className="flex w-full rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10">
-          {type === InputFieldType.Date && <button><HiCalendar className="w-6 h-6" /></button>}
           {type === InputFieldType.Time && <HiClock className="w-6 h-6" />}
           {type === InputFieldType.Link && <HiLink className="w-6 h-6" />}
           <input className="bg-inputField w-full focus-visible:outline-none" placeholder={placeholder} {...rest} />

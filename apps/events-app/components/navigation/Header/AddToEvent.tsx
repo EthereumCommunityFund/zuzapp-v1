@@ -28,7 +28,7 @@ type AddToEventButton = {
 
 const AddToEventButton: React.FC<AddToEventButton> = (props) => {
   return (
-    <DropdownMenu.Root className={props.className}>
+    <DropdownMenu.Root>
       <DropdownMenu.Trigger>
         <div className='inline-flex pr-3 items-center gap-[10px] rounded-xl border border-[#FFFFFF20] bg-[#FFFFFF20]'>
           <div className='flex w-[37px] py-2.5 justify-center items-center rounded-bl-xl rounded-tl-xl gap-[10px] bg-[#363636]'>

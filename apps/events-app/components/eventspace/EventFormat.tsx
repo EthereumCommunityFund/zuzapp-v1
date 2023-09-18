@@ -19,31 +19,42 @@ import { createEventSpace } from "@/controllers/eventspace.controller"
 
 const formSchema = z.object({
   name: z.string().min(2, {
-    message: "Event name is required.",
+    message: "Event Format is required.",
   }),
-  event_space_type: z.enum(["schedules", "tracks"], {
-    required_error: "You need to select a structure type.",
+  event_format: z.enum(["in-person", "online", "hybrid"], {
+    required_error: "You need to select an event type.",
   }),
 })
 
-export default function EventFormat({ setEventCreated }: { setEventCreated: (eventCreated: boolean) => void }) {
+export default function EventFormat() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
-      event_space_type: undefined,
+      event_format: undefined,
     },
   })
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      const result = await createEventSpace(values)
-      setEventCreated(true)
-      console.log(result)
+      // Access the selected event_format from form.getValues()
+      const selectedEventFormat = form.getValues("event_format");
+
+      // Now you can use the selectedEventFormat in your code
+      console.log("Selected Event Format:", selectedEventFormat);
+
+      // Rest of your code...
     } catch (error) {
-      setEventCreated(false)
-      console.log(error)
+      console.error(error);
     }
+    // try {
+    //   const result = await createEventSpace(values)
+    //   setEventCreated(true)
+    //   console.log(result)
+    // } catch (error) {
+    //   setEventCreated(false)
+    //   console.log(error)
+    // }
   }
 
   return (
@@ -51,7 +62,7 @@ export default function EventFormat({ setEventCreated }: { setEventCreated: (eve
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-10">
         <FormField
           control={form.control}
-          name="event_space_type"
+          name="event_format"
           render={({ field }) => (
             <FormItem className="space-y-3">
               <FormLabel className="text-2xl opacity-80 leading-[1.2]">Event Format</FormLabel>

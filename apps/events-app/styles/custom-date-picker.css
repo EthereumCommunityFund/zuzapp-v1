@@ -1,0 +1,34 @@
+/* CustomDatePicker.css */
+.custom-datepicker .react-datepicker {
+  background-color: black;
+  /* Set the background color to black */
+  color: white;
+  /* Set the text color to white for better visibility */
+}
+
+.custom-datepicker .react-datepicker__header {
+  background-color: #333;
+  /* Darken the header background color */
+}
+
+.custom-datepicker .react-datepicker__day-names {
+  background-color: #555;
+  /* Darken the day names background color */
+}
+
+.custom-datepicker .react-datepicker__day {
+  &:hover {
+    background-color: #666;
+    /* Darken the hover background color */
+  }
+
+  &--selected {
+    background-color: #888;
+    /* Darken the selected date background color */
+  }
+
+  &--today {
+    background-color: #444;
+    /* Darken the today's date background color */
+  }
+}

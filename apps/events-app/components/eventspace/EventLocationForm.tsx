@@ -6,6 +6,13 @@ import SwitchButton from "../ui/buttons/SwitchButton";
 import EventDeatilsDescription1 from "../ui/labels/event-details-description-1";
 import InputFieldLabel from "../ui/labels/inputFieldLabel";
 import ImageUploadButton from "../ui/buttons/SelectImageButton";
+import { Label } from "../ui/label";
+import { Input } from "../ui/input";
+import EditionButtons from "../ui/buttons/EditionButtons";
+import { CgClose } from "react-icons/cg";
+import { FaCircleArrowUp } from "react-icons/fa6";
+import DragAndDrop from "../ui/dragDrop";
+import IconButton from "../ui/buttons/IconButton";
 
 export default function EventLocationForm() {
   const [isMainLocation, setIsMainLocation] = useState(false);
@@ -27,27 +34,21 @@ export default function EventLocationForm() {
       <div className="flex flex-col justify-center items-start gap-[10px] self-stretch">
         <div className="flex items-center gap-5 self-stretch">
           <SwitchButton value={isMainLocation} onClick={handleSwitchChange} />
-          <InputFieldLabel name="Main Location" />
+          <span className="text-lg font-semibold leading-[1.2] text-white self-stretch">Main Location</span>
         </div>
-        <EventDeatilsDescription1 name="This is the location of the main event" />
+        <span className="opacity-70 h-[18px] font-normal text-[13px] leading-[18.2px] tracking-[0.13px] self-stretch">This is the location of the main event</span>
       </div>
       <div className="flex flex-col items-start gap-[14px] self-stretch">
-        <InputFieldLabel name="Location Name" />
-        <InputWrapper>
-          <input placeholder="Name of this location" className="bg-[#242727] h-4 w-full"></input>
-        </InputWrapper>
+        <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Location Name</Label>
+        <Input className=" bg-inputField" placeholder={"Name of this location"} />
       </div>
       <div className="flex flex-col items-start gap-[14px] self-stretch">
-        <InputFieldLabel name="Address" />
-        <InputWrapper>
-          <input placeholder="Type the address" className="bg-[#242727] h-4 w-full"></input>
-        </InputWrapper>
+        <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Address</Label>
+        <Input className=" bg-inputField" placeholder={"Type the address"} />
       </div>
       <div className="flex flex-col items-start gap-[14px] self-stretch">
-        <InputFieldLabel name="Capacity" />
-        <InputWrapper>
-          <input placeholder="Enter a number" className="bg-[#242727] h-4 w-full"></input>
-        </InputWrapper>
+        <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Capacity</Label>
+        <Input className=" bg-inputField" placeholder={"Emter a number"} />
       </div>
       <div className="flex flex-col items-start gap-[14px] self-stretch">
         <InputFieldLabel name="Location Description" />
@@ -56,9 +57,15 @@ export default function EventLocationForm() {
       </div>
       <div className="flex flex-col items-center gap-[10px] self-stretch">
         <InputFieldLabel name="Location Media" />
-        <ImageUploadButton title={""} />
+        <DragAndDrop />
         <EventDeatilsDescription1 name="We recommend using at least a 2160x1080px" />
-      </div >
+      </div>
+      <div className='w-full'>
+        <div className='rounded-[10px] w-[130px] h-[100px] bg-pagePrimary relative bg-inputField'>
+          <IconButton variant='dark' className='rounded-full absolute right-[-5px] top-[-5px]' icon={CgClose} />
+        </div>
+      </div>
+      <EditionButtons type={'addtrack'} leftButtonName={'Discard This Location'} rightButtonName={'Add This Location'} leftButtonIcon={CgClose} rightButtonIcon={FaCircleArrowUp} />
     </div >
   )
 }

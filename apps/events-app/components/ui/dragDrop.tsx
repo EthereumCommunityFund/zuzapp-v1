@@ -58,38 +58,35 @@ export default function DragAndDrop() {
   }
 
   return (
-    <div>
-      <form
-        onDragEnter={handleDragEnter}
-        onSubmit={(e) => e.preventDefault()}
-        onDrop={handleDrop}
-        onDragLeave={handleDragLeave}
-        onDragOver={handleDragOver}
-      >
+    <form
+      className="w-full bg-inputField"
+      onDragEnter={handleDragEnter}
+      onSubmit={(e) => e.preventDefault()}
+      onDrop={handleDrop}
+      onDragLeave={handleDragLeave}
+      onDragOver={handleDragOver}
+    >
 
-        <input
-          placeholder="fileInput"
-          className="hidden"
-          ref={inputRef}
-          type="file"
-          multiple={true}
-          onChange={handleChange}
-          accept="image/*"
-        />
-        <div className="flex flex-col items-start gap-[10px] w-[420px] h-[320px]">
-          <InputFieldLabel name={`Track Image`} />
-          <Button
-            className="flex flex-col py-[100px] px-3 gap-[10px] self-stretch rounded-[6px] border-dashed text-white border-white border-opacity-10 bg-pagePrimary h-full"
-            onClick={openFileExplorer}
-          >
-            <HiUpload />
-            <span className="text-[13px] text-center opacity-50 font-bold leading-[1.2] self-stretch">Track Image</span>
-            <span className=" text-[10px] tracking-[0.2px] font-normal leading-[1.2] opacity-50">DRAG & DROP IMAGE</span>
-          </Button>
-          <ImageUploadButtonDescription name="We recommend using at least a 420 X 320" />
-        </div>
-      </form>
-    </div>
+      <input
+        placeholder="fileInput"
+        className="hidden"
+        ref={inputRef}
+        type="file"
+        multiple={true}
+        onChange={handleChange}
+        accept="image/*"
+      />
+      <div className="w-full">
+        <Button
+          className="flex flex-col rounded-[6px] border-dashed text-white border-white border-opacity-10 bg-pagePrimary h-full w-full"
+          onClick={openFileExplorer}
+        >
+          <HiUpload />
+          <span className="text-[13px] text-center opacity-50 font-bold leading-[1.2] self-stretch">Select Event Header Image</span>
+          <span className=" text-[10px] tracking-[0.2px] font-normal leading-[1.2] opacity-50">DRAG & DROP IMAGE</span>
+        </Button>
+      </div>
+    </form>
   );
 }
 
