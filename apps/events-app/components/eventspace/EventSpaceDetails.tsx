@@ -27,6 +27,9 @@ import {
 } from "@/components/ui/form"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import EventLocation from "./EventLocation";
+import { eventCategories } from "@/constant/eventcategories";
+import { GoXCircle } from "react-icons/go";
+import { experienceLevels } from "@/constant/experienceelevels";
 
 interface EventSpaceDetailsProps {
   eventSpace: EventSpaceDetailsType;
@@ -188,7 +191,42 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace }) => 
           </Form>
           {selectedEventFormat !== "in-person" && <EventLinks />}
           {/* <EventLinks /> */}
-          <EventCategoriesLabs />
+          <div className="flex flex-col gap-[34px]">
+            <div className="flex flex-col gap-2.5">
+              <h2 className="h-6 opacity-70 font-bold text-xl leading-6">Manage Event Categories & Labels</h2>
+              <span className="opacity-70 h-[18px] font-normal text-[13px] leading-[18.2px] tracking-[0.13px] self-stretch">These will be shared as attributes by subsequent Sub-Events & Schedules you create.</span>
+            </div>
+            <div className="flex flex-col gap-6">
+              <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">Add Event Types</h2>
+              <InputFieldDark type={InputFieldType.Primary} placeholder={"Meetups, Workshop, Part, etc"} />
+              <div className="flex gap-2.5">
+                {
+                  eventCategories.map((eventCategory) => (
+                    <div className="flex gap-2.5 items-center rounded-[8px] px-2 py-1.5 bg-white bg-opacity-10">
+                      <button className="flex gap-2.5 items-center"><GoXCircle className="top-0.5 left-0.5 w-4 h-4" />
+                        <span className="text-lg font-semibold leading-[1.2] text-white self-stretch">{eventCategory.name}</span>
+                      </button>
+                    </div>
+                  ))
+                }
+              </div>
+            </div>
+            <div className="flex flex-col gap-6">
+              <span className="text-lg font-semibold leading-[1.2] text-white self-stretch">Experience Levels</span>
+              <InputFieldDark type={InputFieldType.Primary} placeholder={"Begineer, Intermidate, Advanced"} />
+              <div className="flex gap-2.5">
+                {
+                  experienceLevels.map((experienceLevel) => (
+                    <div className="flex gap-2.5 items-center rounded-[8px] px-2 py-1.5 bg-white bg-opacity-10">
+                      <button className="flex gap-2.5 items-center"><GoXCircle className="top-0.5 left-0.5 w-4 h-4" />
+                        <span className="text-lg font-semibold leading-[1.2] text-white self-stretch">{experienceLevel.name}</span>
+                      </button>
+                    </div>
+                  ))
+                }
+              </div>
+            </div>
+          </div>
           <EditionButtons type={'eventspace'} leftButtonName={'Discard'} rightButtonName={'Save Edit'} leftButtonIcon={CgClose} rightButtonIcon={FaCircleArrowUp} />
         </div>
       </div>
