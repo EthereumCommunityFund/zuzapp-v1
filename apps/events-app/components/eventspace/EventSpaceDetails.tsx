@@ -46,15 +46,18 @@ const formSchema = z.object({
 const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace }) => {
   const { id, name, event_space_type, status, start_date, end_date, description, format, event_type, experience_level, eventspacelocation } = eventSpace;
   const [selectedEventFormat, setSelectedEventFormat] = useState('');
-
+  const [eventDescriptionEditorValue, setEventDescriptionEditorValue] = useState<string>('');
   const [startDate, setStartDate] = useState<Date>();
+  const [endDate, setEndDate] = useState<Date>();
+
+  const handleEditorChange = (value: string) => {
+    setEventDescriptionEditorValue(value);
+  }
 
   const handleStartDateChange = (selectedDate: Date | null) => {
     if (selectedDate)
       setStartDate(selectedDate);
   }
-
-  const [endDate, setEndDate] = useState<Date>();
 
   const handleEndDateChange = (selectedDate: Date | null) => {
     if (selectedDate)
@@ -143,10 +146,8 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace }) => 
             <div className="flex flex-col gap-[10px]">
               <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">Event Description</h2>
               <TextEditor
-                value={''}
-                onChange={function (value: string): void {
-                  throw new Error('Function not implemented.');
-                }}
+                value={eventDescriptionEditorValue}
+                onChange={handleEditorChange}
               />
             </div>
           </div>
