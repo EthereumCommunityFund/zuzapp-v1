@@ -18,7 +18,7 @@ export default function TabButton(props: ITabButton) {
   }
 
   return (
-    <button className={`flex box-border h-full p-6 gap-3 font-semibold text-lg leading-5 items-center hover:cursor-pointer hover:text-textPrimary ${isActive? 'border-b-[1px] text-textPrimary': 'text-textSecondary'}`} onClick={handleClick}>
+    <button className={`flex box-border h-full p-6 gap-3 font-semibold text-lg leading-5 items-center hover:cursor-pointer hover:text-textPrimary ${isActive ? 'border-b-[3px] border-white text-textPrimary' : 'text-textSecondary'}`} onClick={handleClick}>
       <ButtonIcon className='w-7 h-7' />
       {name}
     </button>
