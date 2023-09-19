@@ -19,7 +19,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
 
     // Use a join to get the creator_id of the related eventspace
-    const response = await supabase
+    const response: any = await supabase
         .from('eventspacelocation')
         .select('eventspace: event_space_id (creator_id)')
         .eq('id', id)

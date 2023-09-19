@@ -8,7 +8,7 @@ module.exports = {
     './components/**/*.{ts,tsx}',
     './app/**/*.{ts,tsx}',
     './src/**/*.{ts,tsx}',
-	],
+  ],
   theme: {
     container: {
       center: true,
@@ -104,3 +104,5 @@ module.exports = {
   },
   plugins: [require("tailwindcss-animate")],
 }
+
+export { }

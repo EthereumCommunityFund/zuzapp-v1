@@ -1,13 +1,13 @@
-import { use, useEffect, useState } from 'react';
-import AddTrackForm from './AddTrackForm';
-import Button from '@/components/ui/buttons/Button';
-import { HiArrowRight } from 'react-icons/hi';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { TrackCreateRequestBody } from '@/types';
-import { createTrack } from '@/controllers';
-import EditionForm from '../ui/EditionForm';
-import Container from '../ui/Container';
+import { use, useEffect, useState } from "react";
+import AddTrackForm from "./AddTrackForm";
+import Button from "@/components/ui/buttons/Button";
+import { HiArrowRight } from "react-icons/hi";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { TrackCreateRequestBody } from "@/types";
+import { createTrack } from "@/controllers";
+import EditionForm from "../ui/EditionForm";
+import Container from "../ui/Container";
 
 export default function AddTrackTemplate() {
   const [trackCreated, setTrackCreated] = useState(false);
@@ -16,7 +16,11 @@ export default function AddTrackTemplate() {
 
   const handleTrackSubmit = async (values: TrackCreateRequestBody) => {
     try {
-      const result = await createTrack({ ...values, event_space_id: eventId });
+      if (!eventId) return;
+      const result = await createTrack({
+        ...values,
+        event_space_id: eventId as string,
+      });
       setTrackCreated(true);
       console.log(result);
     } catch (error) {
@@ -51,7 +55,11 @@ export default function AddTrackTemplate() {
         <div className="flex flex-col items-center">
           <h3 className="font-bold text-xl">Your Track Has Been Created</h3>
           <Link href={`/dashboard/events/space/tracks?eventId=${eventId}`}>
-            <Button variant="primary" className="mt-8 bg-[#67DBFF]/20 text-[#67DBFF] rounded-full" leftIcon={HiArrowRight}>
+            <Button
+              variant="primary"
+              className="mt-8 bg-[#67DBFF]/20 text-[#67DBFF] rounded-full"
+              leftIcon={HiArrowRight}
+            >
               Go to tracks
             </Button>
           </Link>
