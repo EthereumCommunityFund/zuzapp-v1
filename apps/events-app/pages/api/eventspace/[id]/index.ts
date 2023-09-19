@@ -38,10 +38,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         selectString += `, schedules: schedule (*)`;
     } else if (eventSpaceResult.data.event_space_type === 'tracks') {
         selectString += `,
-        tracks: track (*) {
-            *,
-            schedules: schedule (*)
-        }`;
+        tracks: track (*),
+        schedules: schedule (*)`;
     }
 
     // Fetch the additional data based on the event_space_type

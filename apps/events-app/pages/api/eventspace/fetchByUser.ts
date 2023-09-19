@@ -38,9 +38,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         if (space.event_space_type === 'schedules') {
             selectString += `, schedules: schedule (*)`;
         } else if (space.event_space_type === 'tracks') {
-            selectString += `, tracks: track (*) {
-                schedules: schedule (*)
-            }`;
+            selectString += `, tracks: track (*),  schedules: schedule (*)`;
         }
 
         const { data, error } = await supabase
