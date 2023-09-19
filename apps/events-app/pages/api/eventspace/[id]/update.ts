@@ -23,7 +23,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     const supabase = createPagesServerClient<Database>({ req, res })
     const { id } = req.query as QueryWithID
-    console.log(req.query)
+    // console.log(req.query)
 
 
     // validate uuid
@@ -40,7 +40,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         .eq('id', id)
         .single();
 
-    console.log(event_space_response)
+    // console.log(event_space_response)
     if (event_space_response.error || !event_space_response.data) {
         logToFile("server error", event_space_response.error?.message, event_space_response.error?.code, req.body?.user?.email || "Unknown user");
         return res.status(500).send("Internal server error");
@@ -60,6 +60,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     if (!start_date || !end_date) return;
 
 
+
+
     // update event space
     const event_space_update_result = await supabase.from('eventspace').update({
         ...data,
@@ -74,59 +76,59 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     // update locations
-    if (locations && locations?.length > 0) {
-        // Separate locations into updates and inserts
-        const locationsToUpdate = locations.filter(loc => loc.id);
-        const locationsToInsert = locations.filter(loc => !loc.id);
+    // if (locations && Array.isArray(locations)) {
+    //     // Separate locations into updates and inserts
+    //     const locationsToUpdate = locations.filter(loc => loc.id);
+    //     const locationsToInsert = locations.filter(loc => !loc.id);
 
-        // Prepare promises for the locations to update
-        const updatePromises = locationsToUpdate.map((location: any) => {
-            if (location.id) {
-                return supabase.from('eventspacelocation').update({
-                    event_space_id: id,
-                    name: location.name,
-                    is_main_location: location.is_main_location,
-                    description: location.description,
-                    address: location.address,
-                    capacity: location.capacity,
-                    image_urls: location.image_urls
-                }).eq('id', location.id);
-            }
+    //     // Prepare promises for the locations to update
+    //     const updatePromises = locationsToUpdate.map((location: any) => {
+    //         if (location.id) {
+    //             return supabase.from('eventspacelocation').update({
+    //                 event_space_id: id,
+    //                 name: location.name,
+    //                 is_main_location: location.is_main_location,
+    //                 description: location.description,
+    //                 address: location.address,
+    //                 capacity: location.capacity,
+    //                 image_urls: location.image_urls
+    //             }).eq('id', location.id);
+    //         }
 
-        });
+    //     });
 
-        // Prepare promises for the locations to insert
-        const insertPromises = locationsToInsert.map(location => {
-            return supabase.from('eventspacelocation').insert({
-                event_space_id: id,
-                name: location.name,
-                is_main_location: location.is_main,
-                description: location.description,
-                address: location.address,
-                capacity: location.capacity,
-                image_urls: location.image_urls
-            });
-        });
+    //     // Prepare promises for the locations to insert
+    //     const insertPromises = locationsToInsert.map(location => {
+    //         return supabase.from('eventspacelocation').insert({
+    //             event_space_id: id,
+    //             name: location.name,
+    //             is_main_location: location.is_main,
+    //             description: location.description,
+    //             address: location.address,
+    //             capacity: location.capacity,
+    //             image_urls: location.image_urls
+    //         });
+    //     });
 
-        try {
-            // Execute all promises concurrently
-            const results: any = await Promise.all([...updatePromises, ...insertPromises]);
+    //     try {
+    //         // Execute all promises concurrently
+    //         const results: any = await Promise.all([...updatePromises, ...insertPromises]);
 
-            console.log('result', results)
+    //         // console.log('result', results)
 
-            // Error handling
-            for (const result of results) {
-                if (result.error) {
-                    logToFile("server error", result.error.message, result.error.code, req.body.user.email);
-                    return res.status(500).send("Internal server error when processing locations");
-                }
-            }
+    //         // Error handling
+    //         for (const result of results) {
+    //             if (result.error) {
+    //                 logToFile("server error", result.error.message, result.error.code, req.body.user.email);
+    //                 return res.status(500).send("Internal server error when processing locations");
+    //             }
+    //         }
 
-        } catch (error: any) {
-            logToFile("server error", error.message, 500, req.body.user.email);
-            return res.status(500).send("Internal server error");
-        }
-    }
+    //     } catch (error: any) {
+    //         logToFile("server error", error.message, 500, req.body.user.email);
+    //         return res.status(500).send("Internal server error");
+    //     }
+    // }
     return res.status(event_space_update_result.status).end()
 
 }

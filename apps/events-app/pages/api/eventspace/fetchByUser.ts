@@ -34,7 +34,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         let selectString = `*,
         eventspacelocation: eventspacelocation (*)`;
 
-        console.log('space', space)
+        // console.log('space', space)
         if (space.event_space_type === 'schedules') {
             selectString += `, schedules: schedule (*)`;
         } else if (space.event_space_type === 'tracks') {

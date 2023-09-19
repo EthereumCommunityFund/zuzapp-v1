@@ -5,7 +5,7 @@ const locationSchema = Joi.object({
     id: Joi.string().uuid(),
     name: Joi.string().required(),
     description: Joi.string().allow('', null),
-    is_main: Joi.bool().required(),
+    iis_main_location: Joi.bool().required(),
     address: Joi.string().required(),
     capacity: Joi.number().integer().min(1).required(),
     image_urls: Joi.array().items(Joi.string()).optional()
@@ -14,6 +14,14 @@ const locationSchema = Joi.object({
 const eventspace_update_schema = Joi.object({
     id: Joi.string().uuid(),
     name: Joi.string().required(),
+    tagline: Joi.string().default(""),
+    social_links: Joi.string()
+        .when('format', {
+            is: Joi.valid('online', 'hybrid'),
+            then: Joi.required(),
+            otherwise: Joi.optional()
+        }),
+    extra_links: Joi.string().default(""),
     event_space_type: Joi.string().valid('tracks', 'schedules').required(),
     status: Joi.string().valid('draft', 'published', 'archived').required(),
     start_date: Joi.date().required(),
@@ -22,8 +30,14 @@ const eventspace_update_schema = Joi.object({
     format: Joi.string().valid('in-person', 'online', 'hybrid').required(),
     event_type: Joi.array().items(Joi.string()).default(['General']),
     experience_level: Joi.array().items(Joi.string()).default(['Beginner']),
-    eventspacelocation: Joi.array().items(locationSchema)
+    // eventspacelocation: Joi.array().items(locationSchema)
+    //     .when('format', {
+    //         is: Joi.valid('in-person', 'hybrid'),
+    //         then: Joi.required(),
+    //         otherwise: Joi.optional()
+    //     })
 });
+
 
 const eventspace_create_schema = Joi.object({
     name: Joi.string().required(),

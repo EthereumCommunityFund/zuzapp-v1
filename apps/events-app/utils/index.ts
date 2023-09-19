@@ -24,7 +24,7 @@ function generateRandomLocation(): LocationType {
     return {
         name: getRandomElement(locationNames),
         description: getRandomElement(descriptions),
-        is_main: Math.random() < 0.5,
+        is_main_location: Math.random() < 0.5,
         address: getRandomElement(addresses),
         capacity: getRandomInt(50, 200),
         image_urls: [`https://example.com/image${getRandomInt(1, 5)}.jpg`]
@@ -49,13 +49,12 @@ export const generateRandomEventSpaceUpdateData = (id: string, event_space_type:
         end_date: Date.now() + getRandomInt(1, 5) * 24 * 60 * 60 * 1000, // Random date within the next 5 days
         description: `Random event description ${getRandomInt(1, 1000)}`,
         // @ts-ignore
-        format: getRandomElement(formats),
+        format: "in-person",
         event_type: [getRandomElement(eventTypes)],
         experience_level: [getRandomElement(experienceLevels)],
         status: "draft",
-        eventspacelocation: [generateRandomLocation(), generateRandomLocation(), generateRandomLocation()]
     };
 }
 
 
-
+// eventspacelocation: [generateRandomLocation(), generateRandomLocation(), generateRandomLocation()]
