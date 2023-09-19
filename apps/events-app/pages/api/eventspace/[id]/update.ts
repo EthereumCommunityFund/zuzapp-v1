@@ -54,7 +54,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     let start_date = formatTimestamp(data.start_date);
     let end_date = formatTimestamp(data.end_date)
-    let locations = data?.eventspacelocation
     delete data.eventspacelocation
     console.log(data, "locations")
     if (!start_date || !end_date) return;
@@ -75,60 +74,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         return res.status(500).send("Internal server error");
     }
 
-    // update locations
-    // if (locations && Array.isArray(locations)) {
-    //     // Separate locations into updates and inserts
-    //     const locationsToUpdate = locations.filter(loc => loc.id);
-    //     const locationsToInsert = locations.filter(loc => !loc.id);
 
-    //     // Prepare promises for the locations to update
-    //     const updatePromises = locationsToUpdate.map((location: any) => {
-    //         if (location.id) {
-    //             return supabase.from('eventspacelocation').update({
-    //                 event_space_id: id,
-    //                 name: location.name,
-    //                 is_main_location: location.is_main_location,
-    //                 description: location.description,
-    //                 address: location.address,
-    //                 capacity: location.capacity,
-    //                 image_urls: location.image_urls
-    //             }).eq('id', location.id);
-    //         }
-
-    //     });
-
-    //     // Prepare promises for the locations to insert
-    //     const insertPromises = locationsToInsert.map(location => {
-    //         return supabase.from('eventspacelocation').insert({
-    //             event_space_id: id,
-    //             name: location.name,
-    //             is_main_location: location.is_main,
-    //             description: location.description,
-    //             address: location.address,
-    //             capacity: location.capacity,
-    //             image_urls: location.image_urls
-    //         });
-    //     });
-
-    //     try {
-    //         // Execute all promises concurrently
-    //         const results: any = await Promise.all([...updatePromises, ...insertPromises]);
-
-    //         // console.log('result', results)
-
-    //         // Error handling
-    //         for (const result of results) {
-    //             if (result.error) {
-    //                 logToFile("server error", result.error.message, result.error.code, req.body.user.email);
-    //                 return res.status(500).send("Internal server error when processing locations");
-    //             }
-    //         }
-
-    //     } catch (error: any) {
-    //         logToFile("server error", error.message, 500, req.body.user.email);
-    //         return res.status(500).send("Internal server error");
-    //     }
-    // }
     return res.status(event_space_update_result.status).end()
 
 }
