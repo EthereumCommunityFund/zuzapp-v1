@@ -13,7 +13,7 @@ export const eventRoutes: Routes[] = [
   {
     name: 'Dashboard',
     tabIndex: SubHeaderTabIndex.SpaceDashboard,
-    path: '/dashboard/events/space/dashbaord',
+    path: '/dashboard/events/space/dashboard',
     title: 'Event Space Dashboard',
   },
   {
