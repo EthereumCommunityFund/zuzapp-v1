@@ -3,7 +3,7 @@ import { createPagesBrowserClient } from "@supabase/auth-helpers-nextjs";
 
 
 export const uploadImage = async (
-    event: React.ChangeEvent<HTMLInputElement>,
+    file: File,
     imagePath: 'schedules' | 'tracks' | 'events' | 'profile'
 ): Promise<string> => {
     const supabase = createPagesBrowserClient({
@@ -11,13 +11,7 @@ export const uploadImage = async (
         supabaseKey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
     });
 
-    if (!event.target.files || event.target.files.length === 0) {
-        throw new Error('You must select an image to upload.');
-    }
-
-    const file = event.target.files[0];
     const path = `${imagePath}/${Math.random().toString(36).substr(2)}.${file.name.split('.').pop()}`;
-
     const { error } = await supabase.storage
         .from("image-bucket")
         .upload(path, file);
