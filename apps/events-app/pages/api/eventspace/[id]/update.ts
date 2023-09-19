@@ -66,7 +66,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         ...data,
         start_date,
         end_date
-    }).eq('id', id)
+    }).eq('id', id).select("*").single();
 
 
     if (event_space_update_result.error) {
@@ -75,7 +75,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
 
-    return res.status(event_space_update_result.status).end()
+    return res.status(event_space_update_result.status).json({
+        message: "Event space updated",
+        data: event_space_update_result.data
+    })
 
 }
 

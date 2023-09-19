@@ -60,7 +60,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     // Filter out any null results due to errors
     const filteredData = eventSpacesData.filter(space => space !== null);
 
-    return res.status(200).json(filteredData);
+    return res.status(200).json({ data: filteredData });
 };
 
 

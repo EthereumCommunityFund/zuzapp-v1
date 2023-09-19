@@ -42,7 +42,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     return res.status(result.status).json({
         message: "Event space created",
-        id: result.data
+        data: result.data
     })
 }
 
