@@ -102,7 +102,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
 
-    // Remove tags that are no longer associated
+    // Bug fix Remove tags that are no longer associated
     console.log("current tags", currentTags)
     if (tags && tags?.length > 0) {
         let _tags = tags as String[]
@@ -144,7 +144,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 });
             }
 
-            // Remove speakers that are no longer associated
+            // Bugfix Remove speakers that are no longer associated
 
             if (speakers) {
                 let _speakers = speakers as SpeakerType[]
@@ -169,7 +169,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     return res.status(200).json({
         message: "Schedule updated",
-        id: scheduleId
+        data: scheduleId
     });
 }
 

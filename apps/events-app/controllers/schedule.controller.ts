@@ -10,9 +10,14 @@ export const fetchSchedule = async (id: string) => {
 }
 
 // Gets all schedules related to an event space
-// export const fetchSchedulesByEventSpace = async (eventSpaceId: string) => {
-//     return await axiosInstance.get(`/api/schedule/fetchByEventSpace/${eventSpaceId}`);
-// }
+export const fetchSchedulesByEventSpace = async (eventSpaceId: string) => {
+    return await axiosInstance.get(`/api/schedule/fetchByEventID/?event_space_id=${eventSpaceId}`);
+}
+
+// Gets all schedules related to an event space
+export const fetchSchedulesByTrack = async (trackID: string) => {
+    return await axiosInstance.get(`/api/schedule/fetchByTrackID/?track_id=${trackID}`);
+}
 
 
 // Gets all schedules related to an event space

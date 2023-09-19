@@ -1,14 +1,14 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import withSession from "../../middlewares/withSession";
+import withSession from "../middlewares/withSession";
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
-import { logToFile } from "../../../../utils/logger";
-import { validateUUID } from "../../../../validators";
+import { logToFile } from "../../../utils/logger";
+import { validateUUID } from "../../../validators";
 import { Database } from "@/database.types";
 import { QueryWithID } from "@/types";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const supabase = createPagesServerClient<Database>({ req, res });
-    const { id } = req.query as QueryWithID;
+    const { track_id: id } = req.query as QueryWithID;
 
     // validate uuid
     const errors = validateUUID(id);
@@ -24,9 +24,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         scheduletags: scheduletags!id (tags: tags!id (*)),
         schedulespeakerrole: schedulespeakerrole!id (speaker: speaker!id (*))
     `)
-        .eq("id", id)
-        .single();
-
+        .eq("track_id", id)
     if (error) {
         logToFile("server error", error.message, error.code, "Unknown user");
         return res.status(404).send("Schedule not found");
@@ -37,17 +35,22 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     console.log(data)
-    const response = {
-        ...data,
-        tags: data.scheduletags.map((tagObj: any) => tagObj.tags.name),
-        speakers: data.schedulespeakerrole.map((speakerObj: any) => ({
-            name: speakerObj.speaker.name,
-            role: speakerObj.role,
-        })),
-    } as any;
-    delete response.scheduletags; // cleaning up the extra data
-    delete response.schedulespeakerrole; // cleaning up the extra data
+    let response: any = []
 
+    data.map(item => {
+        let result = {
+            ...item,
+            tags: item.scheduletags.map((tagObj: any) => tagObj.tags.name),
+            speakers: item.schedulespeakerrole.map((speakerObj: any) => ({
+                name: speakerObj.speaker.name,
+                role: speakerObj.role,
+            })),
+        }
+
+        delete result?.scheduletags; // cleaning up the extra data
+        delete result?.schedulespeakerrole; // cleaning up the extra data
+        response.push(result)
+    })
 
 
     return res.status(200).json({ data: response });
