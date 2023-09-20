@@ -1,7 +1,7 @@
 import EventSpacesTemplate from '@/components/templates/events/EventSpacesTemplate';
 import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
 import { useEffect, useState } from 'react';
-import { fetchUserEventSpaces } from './services/eventSpaceService';
+import { fetchUserEventSpaces } from '../../../services/eventSpaceService';
 import { EventSpaceDetailsType } from '@/types';
 import { useQuery } from 'react-query';
 export default function MyEventSpacesPage() {
@@ -28,11 +28,7 @@ export default function MyEventSpacesPage() {
   if (isError) {
     return <p>Error loading space details</p>;
   }
-  return (
-    <div className="flex gap-[10px] flex-1 items-center self-stretch font-inter">
-      {eventSpaces && <EventSpacesTemplate eventSpaces={eventSpaces} />}
-    </div>
-  );
+  return <div className="flex gap-[10px] flex-1 items-center self-stretch font-inter">{eventSpaces && <EventSpacesTemplate eventSpaces={eventSpaces} />}</div>;
 }
 
 export const getServerSideProps = async (ctx: any) => {

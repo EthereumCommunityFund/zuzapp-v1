@@ -1,18 +1,21 @@
-import TrackItem from '@/components/tracks/TrackItemCard';
-import Button from '@/components/ui/buttons/Button';
-import { Database } from '@/database.types';
-import { TrackUpdateRequestBody } from '@/types';
-import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { BiSolidPlusCircle } from 'react-icons/bi';
-import { HiCog, HiPlusCircle, HiSelector } from 'react-icons/hi';
-import { useQuery } from 'react-query';
+import TrackItem from "@/components/tracks/TrackItemCard";
+import Button from "@/components/ui/buttons/Button";
+import { Database } from "@/database.types";
+import { TrackUpdateRequestBody } from "@/types";
+import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { BiSolidPlusCircle } from "react-icons/bi";
+import { HiCog, HiPlusCircle, HiSelector } from "react-icons/hi";
+import { useQuery } from "react-query";
 // import { fetchTracksByEventSpaceId } from '../../services/fetchTracksByEventSpace';
-import TrackItemTemplate from '@/components/tracks/TrackItemTemplate';
-import { useEffect, useState } from 'react';
-import { fetchTrack, fetchTracksByEventSpace } from '@/controllers/track.controller';
-import fetchTracksByEventSpaceId from '../../services/fetchTracksByEventSpace';
+import TrackItemTemplate from "@/components/tracks/TrackItemTemplate";
+import { useEffect, useState } from "react";
+import {
+  fetchTrack,
+  fetchTracksByEventSpace,
+} from "@/controllers/track.controller";
+import fetchTracksByEventSpaceId from "../../../../../services/fetchTracksByEventSpace";
 export default function Tracks() {
   const router = useRouter();
   const { eventId } = router.query;
@@ -25,7 +28,7 @@ export default function Tracks() {
         query: { eventId: eventId },
       });
     } catch (error) {
-      console.error('Error fetching space details', error);
+      console.error("Error fetching space details", error);
     }
   };
 
@@ -34,8 +37,8 @@ export default function Tracks() {
     data: trackDetails,
     isLoading,
     isError,
-  } = useQuery<TrackUpdateRequestBody, Error>(
-    ['trackDetails', eventId],
+  } = useQuery<TrackUpdateRequestBody[], Error>(
+    ["trackDetails", eventId],
     () => fetchTracksByEventSpaceId(eventId as string),
 
     {
@@ -75,19 +78,41 @@ export default function Tracks() {
         <div className="flex flex-col items-start gap-7 self-stretch">
           <span className="text-[50px] font-bold leading-[1.2]">Tracks</span>
           <div className="flex justify-between items-start self-stretch">
-            <Button variant="light-blue" className="rounded-full font-bold" size="lg" leftIcon={BiSolidPlusCircle} onClick={handleAddTrack}>
+            <Button
+              variant="light-blue"
+              className="rounded-full font-bold"
+              size="lg"
+              leftIcon={BiSolidPlusCircle}
+              onClick={handleAddTrack}
+            >
               Add a Track
             </Button>
             <div className="flex items-start gap-3">
-              <Button variant="ghost" size="base" className="font-bold opacity-70" leftIcon={HiSelector}>Sort</Button>
-              <Button variant="ghost" size="base" className="font-bold opacity-70" leftIcon={HiCog}>Select</Button>
+              <Button
+                variant="ghost"
+                size="base"
+                className="font-bold opacity-70"
+                leftIcon={HiSelector}
+              >
+                Sort
+              </Button>
+              <Button
+                variant="ghost"
+                size="base"
+                className="font-bold opacity-70"
+                leftIcon={HiCog}
+              >
+                Select
+              </Button>
             </div>
           </div>
           {isLoading ? (
             <p>Loading...</p>
           ) : (
-            <div className='w-full'>
-              {trackDetails && <TrackItemTemplate trackDetails={trackDetails} />}
+            <div className="w-full">
+              {trackDetails && (
+                <TrackItemTemplate trackDetails={trackDetails} />
+              )}
             </div>
           )}
         </div>
@@ -111,7 +136,10 @@ export const getServerSideProps = async (ctx: any) => {
     };
 
   // get profile from session
-  const { data: profile, error } = await supabase.from('profile').select('*').eq('uuid', session.user.id);
+  const { data: profile, error } = await supabase
+    .from("profile")
+    .select("*")
+    .eq("uuid", session.user.id);
 
   return {
     props: {

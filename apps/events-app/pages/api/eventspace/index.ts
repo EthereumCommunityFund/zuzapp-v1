@@ -6,14 +6,23 @@ import { logToFile } from "../../../utils/logger";
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const supabase = createPagesServerClient<Database>({ req, res });
 
+    // let selectString = `*,
+    // eventspacelocation: eventspacelocation (*)`;
+
+    // // console.log('space', space)
+    // if (space.event_space_type === 'schedules') {
+    //     selectString += `, schedules: schedule (*)`;
+    // } else if (space.event_space_type === 'tracks') {
+    //     selectString += `, tracks: track (*),  schedules: schedule (*)`;
+    // }
+
     const { data, error } = await supabase
         .from('eventspace')
         .select(`
         *,
         eventspacelocation: eventspacelocation (id, name, is_main_location, description, address, capacity, image_urls),
-        tracks: track (*) {
-            schedules: schedule (*)
-        }
+        tracks: track (*),
+        schedules: schedule (*)
         `)
         .filter('status', 'eq', 'published');
 
@@ -24,7 +33,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         return res.status(500).send("Server error");
     }
 
-    return res.status(200).json(data);
+    return res.status(200).json({ data });
 };
 
 export default handler;

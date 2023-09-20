@@ -8,6 +8,7 @@ import { logToFile } from "@/utils/logger";
 import { SpeakerType } from "@/types";
 import { validateScheduleUpdate, validateUUID } from "@/validators";
 import { formatTimestamp } from "@/utils";
+import { array } from "joi";
 
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -101,10 +102,15 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
 
-    // Remove tags that are no longer associated
+    // Bug fix Remove tags that are no longer associated
     console.log("current tags", currentTags)
-    const tagsToRemove = currentTagIds.filter(tagId => !tags.includes(tagId));
-    await supabase.from('scheduletags').delete().in('tag_id', tagsToRemove);
+    if (tags && tags?.length > 0) {
+        let _tags = tags as String[]
+        const tagsToRemove = currentTagIds.filter(tagId => !_tags.includes(tagId));
+        await supabase.from('scheduletags').delete().in('tag_id', tagsToRemove);
+    }
+
+
 
     // Handling speakers differentially
     const currentSpeakers = await supabase.from('schedulespeakerrole').select('speaker_id').eq('schedule_id', scheduleId);
@@ -138,11 +144,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 });
             }
 
-            // Remove speakers that are no longer associated
+            // Bugfix Remove speakers that are no longer associated
 
             if (speakers) {
+                let _speakers = speakers as SpeakerType[]
                 console.log(speakers, "speakers o")
-                const speakersToRemove = currentSpeakerIds.filter(speakerId => !speakers.map(s => s.speaker_name).includes(speakerId));
+                const speakersToRemove = currentSpeakerIds.filter(speakerId => !_speakers.map(s => s.speaker_name).includes(speakerId));
                 console.log(speakersToRemove)
                 await supabase.from('schedulespeakerrole').delete().in('speaker_id', speakersToRemove);
             }
@@ -162,7 +169,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     return res.status(200).json({
         message: "Schedule updated",
-        id: scheduleId
+        data: scheduleId
     });
 }
 

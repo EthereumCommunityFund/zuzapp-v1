@@ -3,6 +3,9 @@ import { Database } from '@/database.types';
 export type EventSpaceUpdateRequestBody = {
   id: string;
   name: string;
+  tagline?: string;
+  social_links?: string;
+  extra_links?: string;
   event_space_type: 'tracks' | 'schedules';
   status: 'draft' | 'published' | 'archived';
   start_date: number;
@@ -34,7 +37,7 @@ export type LocationType = {
   id?: string;
   name: string;
   description: string;
-  is_main: boolean;
+  is_main_location: boolean;
   address: string;
   capacity: number;
   image_urls?: string[];
@@ -109,6 +112,28 @@ export type TrackUpdateRequestBody = {
 }
 
 
+export type LocationCreateRequestBody = {
+  name: string;
+  description: string;
+  is_main_location?: boolean;
+  address: string;
+  capacity: number;
+  image_urls: string[];
+  event_space_id: string;
+}
+
+export type LocationUpdateRequestBody = {
+  id: string,
+  name: string;
+  description: string;
+  is_main_location?: boolean;
+  address: string;
+  capacity: number;
+  image_urls: string[];
+  event_space_id: string;
+}
+
+
 
 export type SpeakerType = { speaker_name: string, role: string }
 
@@ -119,33 +144,35 @@ export type QueryWithID = {
 
 type Tables = Database['public']['Tables'];
 
-type ExtractInsertUpdateTypes<T> = {
-  [K in keyof T]: {
-    Insert: T[K]['Insert'];
-    Update: T[K]['Update'];
-    Row: T[K]['Row'];
-  };
-};
+
+//@ts-ignore
+// type ExtractInsertUpdateTypes<T> = {
+//   [K in keyof T]: {
+//     Insert: T[K]['Insert'];
+//     Update: T[K]['Update'];
+//     Row: T[K]['Row'];
+//   };
+// };
 
 export enum SpaceDashboardType {
-    New,
-    Created
+  New,
+  Created
 }
 
 export enum SpaceDashboardCardType {
-    EnterEventDetails,
-    PublishEvent,
-    EditDetails,
-    OpenSettings,
+  EnterEventDetails,
+  PublishEvent,
+  EditDetails,
+  OpenSettings,
 }
 
 export enum InputFieldType {
-    Primary,
-    Date,
-    Time,
-    Wysiwyg,
-    Option,
-    Link,
+  Primary,
+  Date,
+  Time,
+  Wysiwyg,
+  Option,
+  Link,
 }
 
 

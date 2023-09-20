@@ -36,3 +36,4 @@ yarn-error.log*
 .vercel
 
 /apps/events-app/pages/test
+/apps/events-app/pages/dashboard/image-upload.tsx

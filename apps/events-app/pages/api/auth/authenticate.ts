@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { createPagesServerClient } from '@supabase/auth-helpers-nextjs'
+import { Database } from "@/database.types";
 
 const PASSWORD = process.env.SUPABASE_USER_PASS as string
 

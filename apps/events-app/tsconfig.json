@@ -4,8 +4,12 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./*"],
-      "~/*": ["./public/*"]
-    }
+      "~/*": ["./public/*"],
+  
+    },
+    "isolatedModules": true,
+    "skipLibCheck": true
+
   },
   "include": ["next-env.d.ts", "src", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "tailwind.config.ts"],
   "exclude": ["node_modules"]

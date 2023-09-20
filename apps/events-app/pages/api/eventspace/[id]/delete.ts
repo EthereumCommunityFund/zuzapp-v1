@@ -45,7 +45,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         return res.status(500).send("Internal server error");
     }
 
-    return res.status(status).send("Event space deleted");
+    return res.status(status).send({ message: "Event space deleted" });
 };
 
 export default withSession(handler);

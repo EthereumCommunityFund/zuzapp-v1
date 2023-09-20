@@ -38,10 +38,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         selectString += `, schedules: schedule (*)`;
     } else if (eventSpaceResult.data.event_space_type === 'tracks') {
         selectString += `,
-        tracks: track (*) {
-            *,
-            schedules: schedule (*)
-        }`;
+        tracks: track (*),
+        schedules: schedule (*)`;
     }
 
     // Fetch the additional data based on the event_space_type
@@ -63,7 +61,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         return res.status(404).send("Event space not found");
     }
 
-    return res.status(200).json(data);
+    return res.status(200).json({ data });
 };
 
 

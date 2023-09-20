@@ -5,7 +5,7 @@ import router, { useRouter } from 'next/router';
 
 interface IProps {
   trackTitle: string;
-  trackId: string;
+  trackId?: string;
 }
 
 export default function TrackItem(props: IProps) {
