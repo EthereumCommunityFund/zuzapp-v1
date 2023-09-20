@@ -39,16 +39,16 @@ const AddToEventButton: React.FC<AddToEventButton> = (props) => {
       </DropdownMenu.Trigger>
       <DropdownMenu.Content className='flex top-[10px] flex-col items-center self-stretch bg-[#383B3B] rounded-[10px] border border-white/10 backdrop-blur-[20px] mt-4 mr-4 z-50'>
         <Button
-          className="flex py-[14px] flex-col bg-[#383B3B] hover:bg-[#383B3B] text-textSecondary hover:text-textSecondary self-stretch font-semibold leading-[1.2] border-b-[1px] border-white/10 rounded-tl-[10px] rounded-tr-[10px] border-none"
+          className="flex py-[14px] flex-col bg-[#383B3B] hover:bg-[#383B3B] text-white/80 hover:text-textSecondary self-stretch font-semibold leading-[1.2] border-b-[1px] border-white/10 rounded-tl-[10px] rounded-tr-[10px] border-none text-lg"
         >
           Add to Event
         </Button>
-        <DropdownMenu.Separator className="stroke stroke-white/10" />
+        <DropdownMenu.Separator className='bg-white' />
         <div className='flex pt-1.5 pb-3 px-1.5 flex-col items-center gap-[14px] self-stretch'>
           {
             DropDownMenu.map((item: DropDownMenuItem, index: number) => (
               <Button
-                className="w-full shadow-none rounded-[40px] px-3.5 bg-[#383B3B] border-none hover:bg-[#ffffff10] duration-200 text-textSecondary hover:text-textSecondary"
+                className="w-full shadow-none rounded-[40px] px-3.5 text-lg bg-[#383B3B] border-none hover:bg-[#ffffff10] duration-200 text-textSecondary hover:text-textSecondary"
                 leftIcon={item.icon}
               >
                 {item.label}
