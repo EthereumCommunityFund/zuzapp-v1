@@ -89,9 +89,11 @@ export default function HomePageTemplate() {
                 </div>
               </div>
               <div className="mt-3 md:mt-0">
-                <Button size='lg' variant={'primary'} className="rounded-full">
-                  View Event
-                </Button>
+                <Link href={"eventview"}>
+                  <Button size='lg' variant={'primary'} className="rounded-full">
+                    View Event
+                  </Button>
+                </Link>
               </div>
             </div>
           ))}

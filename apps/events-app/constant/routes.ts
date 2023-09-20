@@ -1,6 +1,8 @@
 import { SubHeaderTabIndex } from "@/types";
 import { IconType } from "react-icons";
-import { HiCollection, HiHome, HiLightningBolt, HiViewBoards } from "react-icons/hi";
+import { HiCollection, HiHome, HiLightningBolt, HiViewBoards, HiMap } from "react-icons/hi";
+import { BiSolidLayout } from "react-icons/bi";
+import { BsFillTicketFill } from "react-icons/bs";
 
 interface Routes {
   name?: string;
@@ -69,3 +71,22 @@ export const navBarRoutes: Routes[] = [
     icon: HiCollection
   },
 ]
+
+export const eventViewRoutes: Routes[] = [
+  {
+    name: 'Aboute',
+    path: '/dashboard/eventview',
+    icon: BiSolidLayout,
+    title: 'Event View About',
+  },
+  {
+    path: '/dashboard/eventview/tracks',
+    title: 'Event View Tracks',
+    icon: HiMap,
+  },
+  {
+    path: '/dashboard/eventview/allschedules',
+    title: 'Tracks Dashboard',
+    icon: BsFillTicketFill
+  },
+];
