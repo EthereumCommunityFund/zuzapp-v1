@@ -3,12 +3,17 @@ import { eventViewRoutes } from "@/constant/routes";
 import { useGlobalContext } from "@/context/GlobalContext";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { FaCog } from "react-icons/fa";
+import { MdOutlineModeEdit } from "react-icons/md";
 import { HiArrowLeft } from "react-icons/hi";
 
 export default function EventViewNavigation() {
     const router = useRouter();
     const routes = eventViewRoutes;
+    const checkIfCurrentRouteIsEventView = () => {
+        const currentRoute = router.pathname === 'dashboard/eventview';
+        if (currentRoute) return false;
+        return true;
+    }
     const { isAuthenticated, user } = useGlobalContext();
     return (
         <div className="flex flex-col min-w-[280px] py-10 px-8 gap-6">
@@ -35,6 +40,14 @@ export default function EventViewNavigation() {
                         </ul>
                     </div>
                 </div>
+                {
+                    checkIfCurrentRouteIsEventView() && (
+                        <div className=" flex flex-col gap-3 rounded-full">
+                            <h2>Organizer</h2>
+                            <Button leftIcon={MdOutlineModeEdit}>Edit Event</Button>
+                        </div>
+                    )
+                }
             </nav>
         </div>
     )
