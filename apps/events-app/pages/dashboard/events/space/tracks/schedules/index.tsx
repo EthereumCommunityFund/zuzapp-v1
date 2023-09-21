@@ -1,21 +1,30 @@
-import { BiLeftArrowAlt, BiEditAlt, BiPlus, BiRadioCircle, BiCalendarAlt, BiTimeFive, BiRadioCircleMarked, BiPlusCircle } from "react-icons/bi";
-import { HiArrowLeft, HiCog, HiSelector } from "react-icons/hi";
+import { BiLeftArrowAlt, BiEditAlt, BiPlus, BiRadioCircle, BiCalendarAlt, BiTimeFive, BiRadioCircleMarked, BiPlusCircle } from 'react-icons/bi';
+import { HiArrowLeft, HiCog, HiSelector } from 'react-icons/hi';
 
-import Button from "@/components/ui/buttons/Button";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import { BsFillPlusCircleFill } from "react-icons/bs";
-import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
-import { Database } from "@/database.types";
+import Button from '@/components/ui/buttons/Button';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { BsFillPlusCircleFill } from 'react-icons/bs';
+import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
+import { Database } from '@/database.types';
 
 export default function SchedulesDashboardPage() {
   const router = useRouter();
-  const { eventId } = router.query;
+  const { eventId, trackId } = router.query;
 
   const goBackToPreviousPage = () => {
     router.back();
   };
-
+  const handleAddSchedule = async () => {
+    try {
+      router.push({
+        pathname: `/dashboard/events/space/tracks/schedules/addschedule`,
+        query: { eventId: eventId, trackId: trackId },
+      });
+    } catch (error) {
+      console.error('Error fetching space details', error);
+    }
+  };
   return (
     <div className="pt-10">
       <div className="flex flex-col items-start gap-10 self-stretch pb-[60px] px-20">
@@ -29,11 +38,7 @@ export default function SchedulesDashboardPage() {
             >
               Back
             </Button>
-            <Button
-              className="rounded-[40px] py-2.5 px-3.5 bg-bgPrimary border-none hover:bg-[#363636] duration-200 text-textSecondary hover:text-textSecondary"
-              size="lg"
-              leftIcon={BiEditAlt}
-            >
+            <Button className="rounded-[40px] py-2.5 px-3.5 bg-bgPrimary border-none hover:bg-[#363636] duration-200 text-textSecondary hover:text-textSecondary" size="lg" leftIcon={BiEditAlt}>
               Edit
             </Button>
           </div>
@@ -46,22 +51,20 @@ export default function SchedulesDashboardPage() {
               </div>
             </div>
             <div className="flex justify-between items-start self-stretch">
-              <Link href={"/dashboard/events/space/tracks/schedules/addschedule"}>
-                <Button variant="light-blue" className="flex py-[10px] px-[14px] items-center gap-[10px] rounded-[20px] bg-[#67DAFF20] text-[#67DAFF] text-xl" leftIcon={BsFillPlusCircleFill}>Add a Schedule</Button>
-              </Link>
+              <Button
+                variant="light-blue"
+                className="flex py-[10px] px-[14px] items-center gap-[10px] rounded-[20px] bg-[#67DAFF20] text-[#67DAFF] text-xl"
+                leftIcon={BsFillPlusCircleFill}
+                onClick={handleAddSchedule}
+              >
+                Add a Schedule
+              </Button>
+
               <div className="flex items-start gap-3">
-                <Button
-                  className="rounded-[40px] py-2.5 px-3.5 bg-bgPrimary border-none hover:bg-[#363636] duration-200 text-textSecondary hover:text-textSecondary"
-                  size="lg"
-                  leftIcon={HiSelector}
-                >
+                <Button className="rounded-[40px] py-2.5 px-3.5 bg-bgPrimary border-none hover:bg-[#363636] duration-200 text-textSecondary hover:text-textSecondary" size="lg" leftIcon={HiSelector}>
                   Sort
                 </Button>
-                <Button
-                  className="rounded-[40px] py-2.5 px-3.5 bg-bgPrimary border-none hover:bg-[#363636] duration-200 text-textSecondary hover:text-textSecondary"
-                  size="lg"
-                  leftIcon={HiCog}
-                >
+                <Button className="rounded-[40px] py-2.5 px-3.5 bg-bgPrimary border-none hover:bg-[#363636] duration-200 text-textSecondary hover:text-textSecondary" size="lg" leftIcon={HiCog}>
                   Select
                 </Button>
               </div>
@@ -77,8 +80,14 @@ export default function SchedulesDashboardPage() {
                 <div className="flex flex-col items-start gap-[10px]">
                   <span className="text-[18px] font-semibold leading-[1.2]">Autonomous World's Assembly</span>
                   <div className="flex items-start gap-[10px]">
-                    <span className="flex h-[29.493px] px-[10px] items-center gap-1 rounded-[10px] opacity-60 bg-[#FFFFFF10]"><BiCalendarAlt />October 8</span>
-                    <span className="flex h-[29.493px] px-[10px] items-center gap-1 rounded-[10px] opacity-60 bg-[#FFFFFF10]"><BiTimeFive />00:00 - 00:00</span>
+                    <span className="flex h-[29.493px] px-[10px] items-center gap-1 rounded-[10px] opacity-60 bg-[#FFFFFF10]">
+                      <BiCalendarAlt />
+                      October 8
+                    </span>
+                    <span className="flex h-[29.493px] px-[10px] items-center gap-1 rounded-[10px] opacity-60 bg-[#FFFFFF10]">
+                      <BiTimeFive />
+                      00:00 - 00:00
+                    </span>
                   </div>
                 </div>
               </div>
@@ -91,8 +100,14 @@ export default function SchedulesDashboardPage() {
                 <div className="flex flex-col items-start gap-[10px]">
                   <span className="text-[18px] font-semibold leading-[1.2]">{`PROGRAMMABLE CRYPTOGRAPHY CONFERENCE (PROGCRYPTO)`}</span>
                   <div className="flex items-start gap-[10px]">
-                    <span className="flex h-[29.493px] px-[10px] items-center gap-1 rounded-[10px] opacity-60 bg-[#FFFFFF10]"><BiCalendarAlt />October 8</span>
-                    <span className="flex h-[29.493px] px-[10px] items-center gap-1 rounded-[10px] opacity-60 bg-[#FFFFFF10]"><BiTimeFive />00:00 - 00:00</span>
+                    <span className="flex h-[29.493px] px-[10px] items-center gap-1 rounded-[10px] opacity-60 bg-[#FFFFFF10]">
+                      <BiCalendarAlt />
+                      October 8
+                    </span>
+                    <span className="flex h-[29.493px] px-[10px] items-center gap-1 rounded-[10px] opacity-60 bg-[#FFFFFF10]">
+                      <BiTimeFive />
+                      00:00 - 00:00
+                    </span>
                   </div>
                 </div>
               </div>
@@ -108,8 +123,14 @@ export default function SchedulesDashboardPage() {
                 <div className="flex flex-col items-start gap-[10px]">
                   <span className="text-[18px] font-semibold leading-[1.2]">Town Hall</span>
                   <div className="flex items-start gap-[10px]">
-                    <span className="flex h-[29.493px] px-[10px] items-center gap-1 rounded-[10px] opacity-60 bg-[#FFFFFF10]"><BiCalendarAlt />October 8</span>
-                    <span className="flex h-[29.493px] px-[10px] items-center gap-1 rounded-[10px] opacity-60 bg-[#FFFFFF10]"><BiTimeFive />00:00 - 00:00</span>
+                    <span className="flex h-[29.493px] px-[10px] items-center gap-1 rounded-[10px] opacity-60 bg-[#FFFFFF10]">
+                      <BiCalendarAlt />
+                      October 8
+                    </span>
+                    <span className="flex h-[29.493px] px-[10px] items-center gap-1 rounded-[10px] opacity-60 bg-[#FFFFFF10]">
+                      <BiTimeFive />
+                      00:00 - 00:00
+                    </span>
                   </div>
                 </div>
               </div>
@@ -125,8 +146,14 @@ export default function SchedulesDashboardPage() {
                 <div className="flex flex-col items-start gap-[10px]">
                   <span className="text-[18px] font-semibold leading-[1.2]">Town Hall</span>
                   <div className="flex items-start gap-[10px]">
-                    <span className="flex h-[29.493px] px-[10px] items-center gap-1 rounded-[10px] opacity-60 bg-[#FFFFFF10]"><BiCalendarAlt />October 8</span>
-                    <span className="flex h-[29.493px] px-[10px] items-center gap-1 rounded-[10px] opacity-60 bg-[#FFFFFF10]"><BiTimeFive />00:00 - 00:00</span>
+                    <span className="flex h-[29.493px] px-[10px] items-center gap-1 rounded-[10px] opacity-60 bg-[#FFFFFF10]">
+                      <BiCalendarAlt />
+                      October 8
+                    </span>
+                    <span className="flex h-[29.493px] px-[10px] items-center gap-1 rounded-[10px] opacity-60 bg-[#FFFFFF10]">
+                      <BiTimeFive />
+                      00:00 - 00:00
+                    </span>
                   </div>
                 </div>
               </div>
@@ -139,8 +166,14 @@ export default function SchedulesDashboardPage() {
                 <div className="flex flex-col items-start gap-[10px]">
                   <span className="text-[18px] font-semibold leading-[1.2]">Town Hall</span>
                   <div className="flex items-start gap-[10px]">
-                    <span className="flex h-[29.493px] px-[10px] items-center gap-1 rounded-[10px] opacity-60 bg-[#FFFFFF10]"><BiCalendarAlt />October 8</span>
-                    <span className="flex h-[29.493px] px-[10px] items-center gap-1 rounded-[10px] opacity-60 bg-[#FFFFFF10]"><BiTimeFive />00:00 - 00:00</span>
+                    <span className="flex h-[29.493px] px-[10px] items-center gap-1 rounded-[10px] opacity-60 bg-[#FFFFFF10]">
+                      <BiCalendarAlt />
+                      October 8
+                    </span>
+                    <span className="flex h-[29.493px] px-[10px] items-center gap-1 rounded-[10px] opacity-60 bg-[#FFFFFF10]">
+                      <BiTimeFive />
+                      00:00 - 00:00
+                    </span>
                   </div>
                 </div>
               </div>

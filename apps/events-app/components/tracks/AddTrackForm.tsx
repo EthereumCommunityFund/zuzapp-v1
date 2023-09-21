@@ -28,6 +28,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { BsMap } from 'react-icons/bs';
 import { useRef, useState } from 'react';
 import DragAndDrop from '../ui/dragDrop';
+import { useRouter } from 'next/router';
 
 const trackSchema = z.object({
   name: z.string().min(2, {
@@ -93,7 +94,7 @@ export default function AddTrackForm({ onTrackSubmit }: { onTrackSubmit: (values
               <Input className="bg-pagePrimary" placeholder="Enter image url" {...field} />
               <FormMessage />
               {/* <ImageUploadForm title={'Track'} /> */}
-              <DragAndDrop />
+              {/* <DragAndDrop  /> */}
             </FormItem>
           )}
         />

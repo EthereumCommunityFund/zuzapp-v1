@@ -18,13 +18,13 @@ interface IProps {
 export default function EventSpaceDashboard(props: IProps) {
   const { type } = props;
   const router = useRouter();
-  const { eventId, isFirst } = router.query;
+  const { eventId, isFirst, eventTitle } = router.query;
 
   const handleButtonClick = (type: SpaceDashboardCardType) => {
     if (type === SpaceDashboardCardType.EnterEventDetails || type === SpaceDashboardCardType.EditDetails) {
       router.push({
         pathname: `/dashboard/events/space/details/`, // Update with your actual route
-        query: { eventId: eventId }, // Pass space ID as a query parameter
+        query: { eventTitle: eventTitle, eventId: eventId }, // Pass space ID as a query parameter
       });
     } else if (type === SpaceDashboardCardType.OpenSettings) {
       router.push('settings');
