@@ -1,24 +1,42 @@
-import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
+"use client"
 
-import { CaretDownIcon } from "@radix-ui/react-icons"
+import React, { useState } from 'react';
+import Dropdown, { Option } from 'react-dropdown';
+import 'react-dropdown/style.css';
+import { IconType } from 'react-icons';
 
 interface IProps {
-  title: string
+  placeholder: string;
+  options: Option[];
+  className: string;
 }
 
-export default function DropDown(props: IProps) {
-  const { title } = props;
+const options: Option[] = [
+  { value: 'Option 1', label: 'Option 1' },
+  { value: 'Option 2', label: 'Option 2' },
+  { value: 'Option 3', label: 'Option 3' },
+];
+
+const MyDropdown: React.FC<IProps> = (props) => {
+  const { placeholder, options, className } = props;
+  const [selectedOption, setSelectedOption] = useState<Option | string | undefined>();
+
+  const handleDropdownChange = (option: Option) => {
+    setSelectedOption(option);
+  };
+
   return (
-    <DropdownMenu.Root>
-      <DropdownMenu.Trigger className='flex rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10 justify-between w-full'>
-        {title}<CaretDownIcon />
-      </DropdownMenu.Trigger>
-      <DropdownMenu.Content>
-        <div>
-          <DropdownMenu.Item className='flex rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10 w-[350px]'>Option 1</DropdownMenu.Item>
-          <DropdownMenu.Item className='flex rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10 w-[350px]'>Option 2</DropdownMenu.Item>
-        </div>
-      </DropdownMenu.Content>
-    </DropdownMenu.Root>
-  )
-}
+    <Dropdown
+      options={options}
+      onChange={handleDropdownChange}
+      value={selectedOption}
+      placeholder={placeholder}
+      baseClassName="bg-white"
+      className='background-color: black'
+      controlClassName={className}
+      placeholderClassName={className}
+    />
+  );
+};
+
+export default MyDropdown;
