@@ -1,6 +1,10 @@
+import { TbTicket } from "react-icons/tb";
+import Speaker from "./Speaker";
+
+
 export default function UserFacingTrack() {
   return (
-    <div className="flex flex-col p-4 rounded-2xl">
+    <div className="flex flex-col p-4 rounded-2xl bg-componentPrimary">
       <div className="flex gap-4">
         <div className="flex flex-col gap-1 rounded-[10px] p-2.5">
           <span className="font-bold">8</span>
@@ -17,9 +21,11 @@ export default function UserFacingTrack() {
             <span>00:00 AM - 00:00 PM</span>
           </div>
           <div className="flex gap-[3px]">
-
+            <Speaker title="Janine Leger" />
+            <Speaker title="QJ" />
           </div>
         </div>
+        <TbTicket />
       </div>
     </div>
   )
