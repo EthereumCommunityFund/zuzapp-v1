@@ -1,6 +1,7 @@
 import TrackItemCard from "@/components/tracks/TrackItemCard";
 import MyDropdown from "@/components/ui/DropDown";
 import Pagination from "@/components/ui/Pagination";
+import Speaker from "@/components/ui/Speaker";
 import Button from "@/components/ui/buttons/Button";
 import { useState } from "react";
 import { BiEditAlt, BiLeftArrow } from "react-icons/bi";
@@ -43,11 +44,31 @@ export default function EventViewTrackDetailsPage() {
         </div>
       </div>
       <div className="flex flex-col gap-5 px-5 py-2.5">
-        <h2 className="p-3.5 gap-[10px] font-bold border">Tracks: Sort & Filter</h2>
-        <div className="p-2.5 gap-5 ">
-          <MyDropdown placeholder={""} options={[]} className={"rounded-full text-opacity-70 bg-componentPrimary"} />
-          <MyDropdown placeholder={""} options={[]} className={"rounded-full text-opacity-70 bg-componentPrimary"} />
-          <MyDropdown placeholder={""} options={[]} className={"rounded-full text-opacity-70 bg-componentPrimary	"} />
+        <h2 className="p-3.5 gap-[10px] font-bold border">Track Details</h2>
+        <div className="flex flex-col gap-[30px] p-3.5">
+          <div className="flex flex-col gap-5"> {/* Organizers */}
+            <span>Organizers</span>
+            <div className="flex gap-[6px]">
+              {
+                <>
+                  <Speaker title="QJ" />
+                  <Speaker title="Janine Leger" />
+                </>
+              }
+            </div>
+          </div>
+          <div className="flex flex-col gap-5"> {/* Speakers */}
+            <span>Speakers</span>
+            <div className="flex flex-col gap-[6px]">
+              {
+                <>
+                  <Speaker title="Janine Leger" />
+                  <Speaker title="Janine Leger" />
+                  <Speaker title="Janine Leger" />
+                </>
+              }
+            </div>
+          </div>
         </div>
       </div>
     </>
