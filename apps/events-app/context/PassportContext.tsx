@@ -21,7 +21,7 @@ import { useRouter } from "next/router";
 
 type UserPassportContextData = {
   signIn: any;
-  // user: User | null
+  // user: User | null;
 };
 
 type UserPassportProviderProps = {

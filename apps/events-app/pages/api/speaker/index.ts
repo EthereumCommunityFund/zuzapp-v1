@@ -8,7 +8,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const supabase = createPagesServerClient<Database>({ req, res });
 
     const { data, error } = await supabase
-        .from('tags')
+        .from('speaker')
         .select('name');
 
     if (error) {
