@@ -34,7 +34,7 @@ export const DashboardProvider = ({ children }: { children: React.ReactNode }) =
           )
         }
         <DashboardHeader />
-        <div className="mt-16 relative left-[260px] w-[calc(100%-260px)]">
+        <div className="mt-16 relative left-[300px] w-[calc(100%-300px)]">
           <div className="h-[90vh] mx-auto relative">
             {
               checkIfCurrentRouteIsInDashboardRoutes() ? (

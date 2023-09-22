@@ -6,6 +6,7 @@ import { BsCalendar2Fill } from 'react-icons/bs';
 import { HiLockClosed } from 'react-icons/hi';
 import { useGlobalContext } from '@/context/GlobalContext';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
+import { useRouter } from 'next/router';
 
 export const sampleEvents = [
   {
@@ -23,6 +24,13 @@ export const sampleEvents = [
 export default function HomePageTemplate() {
   const { signIn } = useUserPassportContext();
   const { isAuthenticated, user } = useGlobalContext();
+  const router = useRouter();
+
+  const handleButtonClick = () => {
+    router.push({
+      pathname: `/dashboard/eventview`, // Update with your actual route
+    });
+  };
 
   return (
     <div className="w-5/6 mx-auto ">
@@ -89,11 +97,9 @@ export default function HomePageTemplate() {
                 </div>
               </div>
               <div className="mt-3 md:mt-0">
-                <Link href={"eventview"}>
-                  <Button size='lg' variant={'primary'} className="rounded-full">
-                    View Event
-                  </Button>
-                </Link>
+                <Button size='lg' variant={'primary'} className="rounded-full" onClick={handleButtonClick}>
+                  View Event
+                </Button>
               </div>
             </div>
           ))}
