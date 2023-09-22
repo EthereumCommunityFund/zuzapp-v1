@@ -24,6 +24,9 @@ export default function UserFacingTrack() {
             <Speaker title="Janine Leger" />
             <Speaker title="QJ" />
           </div>
+          <div>
+            <span className="opacity-70">By: drivenfast</span>
+          </div>
         </div>
         <TbTicket />
       </div>
