@@ -4,74 +4,84 @@ import Button from "../ui/buttons/Button";
 import { HiCalendar } from "react-icons/hi";
 import { GoLocation } from "react-icons/go";
 import { HiUserGroup } from "react-icons/hi";
+import { Label } from "../ui/label";
+import { useState } from "react";
 
 type EventPageProps = {
 	eventName: string;
 }
 
-export default function EventViewPageTemplate(
-) {
+export default function EventViewPageTemplate() {
+	const [showDescription, setShowDescription] = useState<boolean>(false);
+
 	return (
-		<>
-			<div className="dashboard-menu min-w-[260px] fixed flex flex-col h-screen border-r border-r-gray-800 bg-[#2F3232] py-10 px-6 transition-transform duration-300 false"> {/* Information */}
-				<img src="" alt="" width={600} height={600} />
-				<div className="flex flex-col gap-3 border-solid">
-					<div className="flex">
-						<div className="flex flex-col gap-2">
-							<span><FiLock />Zuzalu Residents & Invited Guests</span>
-							<h2 className="font-semibold">ZuConnect</h2>
-							<span className="font-semibold opacity-70">ZuConnect</span>
+		<div className="flex gap-10">
+			<div className="w-2/3 flex flex-col rounded-2xl bg-componentPrimary min-w-[750px]"> {/* Information */}
+				<div className="rounded-xl p-5">
+					<img src="/images/1.png" className="w-full pb-5" alt="" height={600} />
+				</div>
+				<div className="flex flex-col gap-2.5 pb-5 border-b-2 border-white/10 w-full p-5">
+					<div className="flex items-center justify-between w-full pb-5">
+						<div className="flex flex-col gap-3">
+							<div className="flex items-center gap-3 text-[#D7FFC4]/80">
+								<FiLock />
+								<span className="font-bold">Zuzalu Residents & Invited Guests</span>
+							</div>
+							<h2 className="font-semibold text-[30px]">ZuConnect</h2>
+							<span className="text-white/80 font-bold">A Popup Village of Innovation in the Heart of Istanbul</span>
 						</div>
-						<Button leftIcon={BsArrowRightCircleFill}>Apply to Event</Button>
+						<Button size="lg" className="rounded-full" leftIcon={BsArrowRightCircleFill}>Apply to Event</Button>
 					</div>
-					<div className="flex gap-3">
+					<div className="flex gap-3 text-lg">
 						<span className="rounded-full flex px-4 py-1 items-center gap-1 opacity-60 bg-[#FFFFFF10] font-bold">
 							<HiCalendar /> October 8 - October 23
 						</span>
-						<span className="rounded-full flex px-4 py-1 items-center gap-1 opacity-60 bg-[#FFFFFF10] font-bold">
+						<span className="rounded-2xl flex px-4 py-1 items-center gap-1 opacity-60 bg-[#FFFFFF10] font-bold">
 							<GoLocation /> Beyoglu, Istanbul, Turkey
-						</span>
-						<span className="rounded-full flex px-4 py-1 items-center gap-1 opacity-60 bg-[#FFFFFF10] font-bold">
-							<FiLock /> Zuzalu Residents Only
 						</span>
 					</div>
 				</div>
-				<div className="flex flex-col gap-4"> {/* About */}
-					<h3 className='text-base font-semibold'>ABOUT THIS EVENT</h3>
-					<h2 className='text-base font-semibold'>What is ZuConnect?</h2>
-					<p>Embark on a transformative journey at ZuConnect— a two-week popup village in Istanbul where the luminaries of crypto, AI, governance, decentralized science, and culture coalesce. Here, the brightest minds convene to co-work, foster collaborations, and have a joyous time.</p>
-					<Button >Read Description</Button>
+				<div className="flex flex-col gap-4 p-5 border-b-2 border-white/10"> {/* About */}
+					<h3 className='text-lg font-bold text-white/70'>ABOUT THIS EVENT</h3>
+					<h2 className='text-3xl font-bold text-white/80'>What is ZuConnect?</h2>
+					<p className="text-white/70 font-bold">Embark on a transformative journey at ZuConnect— a two-week popup village in Istanbul where the luminaries of crypto, AI, governance, decentralized science, and culture coalesce. Here, the brightest minds convene to co-work, foster collaborations, and have a joyous time.</p>
+					<Button variant="light-dark" size="lg" className="rounded-2xl inline-block text-white/70 font-bold" >Read Description</Button>
 				</div>
-				<div className="flex flex-col gap-2"> {/*Location */}
-					<img src="" alt="" width={600} height={600} />
-					<h2>Soho House Istanbul</h2>
-					<h3>Beyoğlu, Istanbul, Turkey</h3>
-					<Button >View Location</Button>
-				</div>
-			</div>
-			<div>
-				<h2 className="border">Details</h2>
-				<div className="flex flex-col gap-4">
-					<span><HiUserGroup />14 applied</span>
-				</div>
-				<div>
-					<span>Format: InPerson</span>
-					<span>Type: Meetup</span>
-				</div>
-				<div>
-					<span>Links</span>
-					<span>Notion</span>
-				</div>
-				<div>
-					<span>Format: InPerson</span>
-					<span>Type: Meetup</span>
-				</div>
-				<div>
-					<span>Socials</span>
-					<span>Youtube</span>
-					<span>Twitter</span>
+				<div className="flex flex-col gap-3 p-5"> {/*Location */}
+					<h2 className="text-xl text-white/70 font-bold">LOCATION</h2>
+					<img src="/images/1.png" alt="" className="w-full" width={600} height={600} />
+					<h2 className="font-extrabold text-lg">Soho House Istanbul</h2>
+					<h3 className="font-bold text-white/70">Beyoğlu, Istanbul, Turkey</h3>
+					<Button variant="light-dark" className="light-dark text-lg rounded-full inline-block text-white/70 font-bold">View Location</Button>
 				</div>
 			</div>
-		</>
+			<div className="w-1/4 flex flex-col px-10 py-5 gap-5 fixed right-0">
+				<h2 className="border-b pb-3 text-2xl font-bold border-white/10">Details</h2>
+				<div className="flex gap-4 items-center text-lg font-bold">
+					<HiUserGroup className="opacity-80" />
+					<span>14 applied</span>
+				</div>
+				<div className="flex flex-col gap-2 font-semibold text-sm">
+					<div className="flex gap-2 items-center">
+						<Label className="opacity-70">Format: </Label>
+						<Label className="opacity-100 font-bold text-base">In-Person</Label>
+					</div>
+					<div className="flex gap-2 items-center">
+						<Label className="opacity-70">Type: </Label>
+						<Label className="opacity-100 font-bold text-base">Meetup</Label>
+					</div>
+				</div>
+				<div className="flex flex-col gap-2">
+					<Label className="opacity-70">Links </Label>
+					<Label className="opacity-100 font-bold text-base">Notion</Label>
+					<Label className="opacity-100 font-bold text-base">Notion</Label>
+				</div>
+				<div className="flex flex-col gap-2">
+					<Label className="opacity-70">Socials </Label>
+					<Label className="opacity-100 font-bold text-base">Youtube</Label>
+					<Label className="opacity-100 font-bold text-base">Twitter</Label>
+				</div>
+			</div>
+		</div>
 	)
 }

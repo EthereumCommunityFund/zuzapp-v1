@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { MdOutlineModeEdit } from "react-icons/md";
 import { HiArrowLeft, HiOutlineMenuAlt1 } from "react-icons/hi";
+import { BiSolidLeftArrowCircle } from "react-icons/bi";
 import React from "react";
 
 export default function EventViewNavigation() {
@@ -19,7 +20,7 @@ export default function EventViewNavigation() {
   const handleClick = () => {
     setDashboardOpen(!dashboardOpen);
   };
-  const { isAuthenticated, user } = useGlobalContext();
+
   return (
     <>
       {/* Mobile menu button */}
@@ -39,19 +40,19 @@ export default function EventViewNavigation() {
         onClick={handleClick}
       ></div>
       <nav
-        className={`dashboard-menu min-w-[260px] fixed flex flex-col h-screen border-r border-r-gray-800 bg-pagePrimary py-10 px-6 transition-transform duration-300 ${dashboardOpen && "open"
+        className={`z-50 dashboard-menu min-w-[300px] fixed flex flex-col h-screen border-r border-r-gray-800 bg-pagePrimary py-10 pl-10 transition-transform duration-300 ${dashboardOpen && "open"
           }`}
       >
-        <div className="flex-1 flex flex-col gap-5">
+        <div className="flex-1 flex flex-col gap-5 max-w-max">
           <div className="mt-10 flex-1">
-            <Button variant="ghost" size="lg" className="rountded-full opacity-70" leftIcon={HiArrowLeft}>Back to Events</Button>
+            <Button variant="ghost" size="lg" className="rountded-full opacity-70 pb-10 text-base" leftIcon={BiSolidLeftArrowCircle}>Back to Events</Button>
             <div className="flex flex-col gap-3.5">
               <span className="font-semibold">Navigate Event</span>
               <ul className="space-y-3">
                 {routes.map((route, index) => (
                   <li
                     key={index}
-                    className={`flex items-center font-bold space-x-2 py-1 px-3 rounded-2xl hover:opacity-100 duration-200 ${router.pathname === route.path && "bg-white/20"
+                    className={`flex items-center font-bold space-x-2 py-1 px-3 opacity-70 rounded-xl hover:bg-white/20  duration-200 ${router.pathname === route.path && "bg-white/20"
                       }`}
                   >
                     {route.icon && <route.icon size={30} />}
@@ -63,14 +64,14 @@ export default function EventViewNavigation() {
               </ul>
             </div>
           </div>
-          {
+          {/* {
             checkIfCurrentRouteIsEventView() && (
               <div className=" flex flex-col gap-3 rounded-full">
                 <h2>Organizer</h2>
                 <Button leftIcon={MdOutlineModeEdit}>Edit Event</Button>
               </div>
             )
-          }
+          } */}
         </div >
       </nav >
       {/* </div> */}

@@ -7,19 +7,7 @@ import { useQuery } from "react-query";
 export default function EventViewPage() {
   // Make request to get all event spaces
 
-  const {
-    data: eventSpaces,
-    isLoading,
-    isError,
-  } = useQuery<EventSpaceDetailsType[], Error>(
-    ['eventSpaces'], // Query key
-    () => fetchUserEventSpaces(),
-    {
-      onSuccess: (data) => {
-        console.log('Event Spaces:', data);
-      },
-    }
-  );
+
 
 
   return (
