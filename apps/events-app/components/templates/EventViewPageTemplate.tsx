@@ -13,7 +13,7 @@ export default function EventViewPageTemplate(
 ) {
 	return (
 		<>
-			<div className=" rounded-full px-3 py-3 bg-componentPrimary border-solid"> {/* Information */}
+			<div className="dashboard-menu min-w-[260px] fixed flex flex-col h-screen border-r border-r-gray-800 bg-[#2F3232] py-10 px-6 transition-transform duration-300 false"> {/* Information */}
 				<img src="" alt="" width={600} height={600} />
 				<div className="flex flex-col gap-3 border-solid">
 					<div className="flex">

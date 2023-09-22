@@ -1,7 +1,7 @@
 import { SubHeaderTabIndex } from "@/types";
 import { IconType } from "react-icons";
-import { HiCollection, HiHome, HiLightningBolt, HiViewBoards, HiMap } from "react-icons/hi";
-import { BiSolidLayout } from "react-icons/bi";
+import { HiCollection, HiHome, HiLightningBolt, HiViewBoards, HiMap, HiCalendar } from "react-icons/hi";
+import { BiCalendar, BiSolidLayout } from "react-icons/bi";
 import { BsFillTicketFill } from "react-icons/bs";
 
 interface Routes {
@@ -74,17 +74,19 @@ export const navBarRoutes: Routes[] = [
 
 export const eventViewRoutes: Routes[] = [
   {
-    name: 'Aboute',
+    name: 'About',
     path: '/dashboard/eventview',
-    icon: BiSolidLayout,
+    icon: HiCalendar,
     title: 'Event View About',
   },
   {
+    name: 'Tracks',
     path: '/dashboard/eventview/tracks',
     title: 'Event View Tracks',
     icon: HiMap,
   },
   {
+    name: 'All Schedules',
     path: '/dashboard/eventview/allschedules',
     title: 'Tracks Dashboard',
     icon: BsFillTicketFill
