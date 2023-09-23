@@ -10,8 +10,8 @@ export default function UserFacingTrack(props: IProps) {
   const { onClick } = props;
 
   return (
-    <>
-      <div className="text-center border-b-2 p-5 border-stone-800" onClick={onClick}>
+    <div onClick={onClick}>
+      <div className="text-center border-b-2 p-5 border-stone-800">
         <span className="text-lg font-bold w-full">Sunday, October 29</span>
       </div>
       <div className="flex flex-col p-4 rounded-2xl bg-componentPrimary">
@@ -44,6 +44,6 @@ export default function UserFacingTrack(props: IProps) {
           </div>
         </div>
       </div>
-    </>
+    </div>
   )
 }
