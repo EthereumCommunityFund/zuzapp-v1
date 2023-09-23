@@ -12,13 +12,17 @@ export default function EventViewNavigation() {
   const [dashboardOpen, setDashboardOpen] = React.useState(true);
   const router = useRouter();
   const routes = eventViewRoutes;
-  const checkIfCurrentRouteIsEventView = () => {
-    const currentRoute = router.pathname === 'dashboard/eventview';
-    if (currentRoute) return false;
-    return true;
-  }
+
   const handleClick = () => {
     setDashboardOpen(!dashboardOpen);
+  };
+
+  const handleEditEvent = () => {
+    router.push("/dashboard/eventview/");
+  };
+
+  const handleEditSchedules = () => {
+    router.push("/dashboard/eventview/");
   };
 
   return (
@@ -46,7 +50,7 @@ export default function EventViewNavigation() {
         <div className="flex-1 flex flex-col gap-5 max-w-max">
           <div className="mt-10 flex-1">
             <Button variant="ghost" size="lg" className="rountded-full opacity-70 pb-10 text-base" leftIcon={BiSolidLeftArrowCircle}>Back to Events</Button>
-            <div className="flex flex-col gap-3.5">
+            <div className="flex flex-col gap-3.5 pb-10">
               <span className="font-semibold">Navigate Event</span>
               <ul className="space-y-3">
                 {routes.map((route, index) => (
@@ -63,15 +67,29 @@ export default function EventViewNavigation() {
                 ))}
               </ul>
             </div>
+            {
+              router.pathname.includes('dashboard/eventview/tracks') && (
+                <div className="flex flex-col gap-3 rounded-md p-2 bg-black font-bold">
+                  <h2>Organizer</h2>
+                  <Button variant="ghost" className="p-2 w-full gap-3 text-base" onClick={handleEditEvent}>
+                    <MdOutlineModeEdit />
+                    <span>Edit Event</span>
+                  </Button>
+                </div>
+              )
+            }
+            {
+              router.pathname.includes('dashboard/eventview/allschedules') && (
+                <div className="flex flex-col gap-3 rounded-md p-2 bg-black font-bold">
+                  <h2>Organizer</h2>
+                  <Button variant="ghost" className="p-2 w-full gap-3 text-base" onClick={handleEditSchedules}>
+                    <MdOutlineModeEdit />
+                    <span>Edit Schedules</span>
+                  </Button>
+                </div>
+              )
+            }
           </div>
-          {/* {
-            checkIfCurrentRouteIsEventView() && (
-              <div className=" flex flex-col gap-3 rounded-full">
-                <h2>Organizer</h2>
-                <Button leftIcon={MdOutlineModeEdit}>Edit Event</Button>
-              </div>
-            )
-          } */}
         </div >
       </nav >
       {/* </div> */}
