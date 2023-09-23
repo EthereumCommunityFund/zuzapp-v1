@@ -6,10 +6,11 @@ import router, { useRouter } from 'next/router';
 interface IProps {
   trackTitle: string;
   trackId?: string;
+  onClick?: () => void;
 }
 
 export default function TrackItem(props: IProps) {
-  const { trackTitle, trackId } = props;
+  const { trackTitle, trackId, onClick } = props;
   const router = useRouter();
   const { eventId } = router.query;
 
@@ -25,7 +26,7 @@ export default function TrackItem(props: IProps) {
   };
 
   return (
-    <div className="flex items-center justify-between w-full bg-background rounded-2xl py-3.5 px-3 hover:bg-itemHover duration-200">
+    <div className="flex items-center justify-between w-full bg-itemHover rounded-2xl py-3.5 px-3 hover:bg-trackItemHover duration-200" onClick={onClick}>
       <div className="flex items-start gap-2">
         <div className="w-[130px] h-[100px] rounded-[10px] border border-[#FFFFFF10] bg-[#222]"></div>
         <div className="flex flex-col w-[382px] justify-center items-start gap-[14px] self-stretch">

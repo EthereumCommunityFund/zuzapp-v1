@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Dropdown, { Option } from 'react-dropdown';
-import 'react-dropdown/style.css';
+
 import { IconType } from 'react-icons';
 
 interface IProps {
@@ -18,7 +18,7 @@ const options: Option[] = [
 ];
 
 const MyDropdown: React.FC<IProps> = (props) => {
-  const { placeholder, options, className } = props;
+  const { placeholder, className } = props;
   const [selectedOption, setSelectedOption] = useState<Option | string | undefined>();
 
   const handleDropdownChange = (option: Option) => {
@@ -31,10 +31,9 @@ const MyDropdown: React.FC<IProps> = (props) => {
       onChange={handleDropdownChange}
       value={selectedOption}
       placeholder={placeholder}
-      baseClassName="bg-white"
-      className='background-color: black'
       controlClassName={className}
-      placeholderClassName={className}
+      menuClassName='rounded-2xl bg-componentPrimary'
+
     />
   );
 };
