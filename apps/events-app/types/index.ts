@@ -16,6 +16,11 @@ export type EventSpaceUpdateRequestBody = {
   experience_level?: string[];
   eventspacelocation?: LocationType[];
 };
+
+export type EventSpaceStatusUpdateRequestBody = {
+  id: string;
+  status: 'draft' | 'published' | 'archived';
+}
 export type EventSpaceCreateRequestBody = {
   name: string;
   event_space_type: 'tracks' | 'schedules';
