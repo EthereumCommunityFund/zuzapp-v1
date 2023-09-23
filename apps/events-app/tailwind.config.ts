@@ -57,12 +57,14 @@ module.exports = {
         textPrimary: "#ffffff",
         textSecondary: "#ffffff70",
         pagePrimary: "#222222",
-        componentPrimary: "#2E3131",
+        componentPrimary: "#2F3131",
         itemHover: "#393C3C",
         inputField: "#242727",
         inputBgActive: "#FFFFFF",
         buttonDarkNavInactive: "#F1F1F133",
         buttonDarkNavHover: "#F1F1F166",
+        trackItemHover: "#434646",
+        trackDateColor: "#4D5050"
       },
       borderRadius: {
         lg: "var(--radius)",

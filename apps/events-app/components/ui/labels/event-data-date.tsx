@@ -1,13 +1,15 @@
 import { HiCalendar } from "react-icons/hi";
 
-interface IEventData {
+interface IEventDataDate {
   startDate: string;
   endDate: string;
 }
 
-export default function EventData(props: IEventData) {
+export default function EventDataDate(props: IEventDataDate) {
   const { startDate, endDate } = props;
   return (
-    <span><HiCalendar />{startDate} - {endDate}</span>
+    <div className="flex gap-2 items-center bg-trackItemHover py-2 px-3 rounded-xl font-bold opacity-80">
+      <HiCalendar /> <span>{startDate} - {endDate}</span>
+    </div>
   )
 }

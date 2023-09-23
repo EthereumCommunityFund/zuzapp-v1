@@ -8,6 +8,8 @@ interface IEventData {
 export default function EventData(props: IEventData) {
   const { startTime, endTime } = props;
   return (
-    <span><HiClock />{startTime} - {endTime}</span>
+    <div className="flex gap-2 items-center bg-trackItemHover py-2 px-3 rounded-xl font-bold opacity-80">
+      <HiClock /><span>{startTime} - {endTime}</span>
+    </div>
   )
 }
