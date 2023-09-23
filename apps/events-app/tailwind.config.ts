@@ -64,7 +64,8 @@ module.exports = {
         buttonDarkNavInactive: "#F1F1F133",
         buttonDarkNavHover: "#F1F1F166",
         trackItemHover: "#434646",
-        trackDateColor: "#4D5050"
+        trackDateColor: "#4D5050",
+        itemBgPrimary: "#2D2D2D",
       },
       borderRadius: {
         lg: "var(--radius)",

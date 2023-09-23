@@ -17,6 +17,8 @@ export default function EventViewTrackDetailsPage() {
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
+
+
   return (
     <>
       <div className="flex flex-col w-[1000px]">
@@ -70,9 +72,7 @@ export default function EventViewTrackDetailsPage() {
         </div>
         {
           <>
-            <UserFacingTrack />
-            <UserFacingTrack />
-            <UserFacingTrack />
+
           </>
         }
       </div>
