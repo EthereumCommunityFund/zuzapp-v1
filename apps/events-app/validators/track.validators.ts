@@ -10,6 +10,7 @@ const track_create_schema = Joi.object({
 });
 
 const track_update_schema = Joi.object({
+    id: Joi.string().uuid(),
     name: Joi.string().required(),
     description: Joi.string().required(),
     image: Joi.string().required(),

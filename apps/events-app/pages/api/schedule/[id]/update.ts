@@ -48,6 +48,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     } = validatedData;
 
 
+    console.log(validatedData, "validated data")
+
 
     let start_time = formatTimestamp(validatedData.start_time);
     let end_time = formatTimestamp(validatedData.end_time);
