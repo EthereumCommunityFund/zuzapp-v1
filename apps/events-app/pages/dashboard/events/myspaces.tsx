@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { fetchUserEventSpaces } from '../../../services/eventSpaceService';
 import { EventSpaceDetailsType } from '@/types';
 import { useQuery } from 'react-query';
+import { Loader } from '../../../components/ui/Loader';
 export default function MyEventSpacesPage() {
   // Make request to get all event spaces
 
@@ -21,9 +22,8 @@ export default function MyEventSpacesPage() {
     }
   );
 
-  console.log(eventSpaces, 'eventspaces');
   if (isLoading) {
-    return <p>Loading...</p>;
+    return <Loader />;
   }
   if (isError) {
     return <p>Error loading space details</p>;

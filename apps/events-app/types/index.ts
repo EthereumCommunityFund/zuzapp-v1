@@ -20,7 +20,7 @@ export type EventSpaceUpdateRequestBody = {
 export type EventSpaceStatusUpdateRequestBody = {
   id: string;
   status: 'draft' | 'published' | 'archived';
-}
+};
 export type EventSpaceCreateRequestBody = {
   name: string;
   event_space_type: 'tracks' | 'schedules';
@@ -67,20 +67,22 @@ export type ScheduleCreateRequestBody = {
   rsvp_amount?: number;
   event_space_id: string;
   track_id?: string;
-  tags: string[],
-  speakers: [{
-    speaker_name: string,
-    role: string
-  }]
-}
+  tags: string[];
+  speakers: [
+    {
+      speaker_name: string;
+      role: string;
+    },
+  ];
+};
 
 export type ScheduleUpdateRequestBody = {
   name: string;
   format: 'in-person' | 'online' | 'hybrid';
   description: string;
-  date: number;
-  start_time: number;
-  end_time: number;
+  date: string | Date;
+  start_time: string | Date | undefined;
+  end_time: string | Date | undefined;
   all_day?: boolean;
   schedule_frequency: 'once' | 'everyday' | 'weekly';
   images?: string[];
@@ -93,14 +95,14 @@ export type ScheduleUpdateRequestBody = {
   rsvp_amount?: number;
   event_space_id: string;
   track_id?: string;
-  tags?: string[],
-  speakers?: [{
-    speaker_name: string,
-    role: string
-  }]
-}
-
-
+  tags?: string[];
+  speakers?: [
+    {
+      speaker_name: string;
+      role: string;
+    },
+  ];
+};
 
 export type TrackCreateRequestBody = {
   description: string;
@@ -114,8 +116,7 @@ export type TrackUpdateRequestBody = {
   event_space_id: string;
   image: string | null;
   name: string;
-}
-
+};
 
 export type LocationCreateRequestBody = {
   name: string;
@@ -125,10 +126,10 @@ export type LocationCreateRequestBody = {
   capacity: number;
   image_urls: string[];
   event_space_id: string;
-}
+};
 
 export type LocationUpdateRequestBody = {
-  id: string,
+  id: string;
   name: string;
   description: string;
   is_main_location?: boolean;
@@ -136,19 +137,15 @@ export type LocationUpdateRequestBody = {
   capacity: number;
   image_urls: string[];
   event_space_id: string;
-}
+};
 
-
-
-export type SpeakerType = { speaker_name: string, role: string }
-
+export type SpeakerType = { speaker_name: string; role: string };
 
 export type QueryWithID = {
-  [key: string]: string
-}
+  [key: string]: string;
+};
 
 type Tables = Database['public']['Tables'];
-
 
 //@ts-ignore
 // type ExtractInsertUpdateTypes<T> = {
@@ -161,7 +158,7 @@ type Tables = Database['public']['Tables'];
 
 export enum SpaceDashboardType {
   New,
-  Created
+  Created,
 }
 
 export enum SpaceDashboardCardType {
@@ -180,9 +177,8 @@ export enum InputFieldType {
   Link,
 }
 
-
 export enum SubHeaderTabIndex {
   SpaceDashboard,
   SpaceTrack,
-  AllSchedules
+  AllSchedules,
 }

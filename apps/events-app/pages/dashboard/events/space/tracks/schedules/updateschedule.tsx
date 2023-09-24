@@ -20,8 +20,6 @@ import { Label } from '@/components/ui/label';
 import SwitchButton from '@/components/ui/buttons/SwitchButton';
 import { GoXCircle } from 'react-icons/go';
 import InputFieldLabel from '@/components/ui/labels/inputFieldLabel';
-import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
-import { Database } from '@/database.types';
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -32,7 +30,7 @@ const formSchema = z.object({
   }),
 });
 
-export default function AddSchedulePage() {
+export default function UpdateSchedulePage() {
   const [selectedEventFormat, setSelectedEventFormat] = useState('');
 
   const [isAllDay, setIsAllDay] = useState(false);
@@ -290,35 +288,9 @@ export default function AddSchedulePage() {
               )}
             </div>
           </div>
-          <EditionButtons type={'schedule'} leftButtonName={'Discard Schedule'} rightButtonName={'Add Schedule'} leftButtonIcon={CgClose} rightButtonIcon={FaCircleArrowUp} />
+          <EditionButtons type={'schedule'} leftButtonName={'Discard Schedule'} rightButtonName={'Update Schedule'} leftButtonIcon={CgClose} rightButtonIcon={FaCircleArrowUp} />
         </div>
       </div>
     </div>
   );
 }
-
-export const getServerSideProps = async (ctx: any) => {
-  const supabase = createPagesServerClient<Database>(ctx);
-  let {
-    data: { session },
-  } = await supabase.auth.getSession();
-
-  if (!session)
-    return {
-      props: {
-        initialSession: null,
-        user: null,
-      },
-    };
-
-  // get profile from session
-  const { data: profile, error } = await supabase.from('profile').select('*').eq('uuid', session.user.id);
-
-  return {
-    props: {
-      initialSession: session,
-      user: session?.user,
-      profile: profile,
-    },
-  };
-};

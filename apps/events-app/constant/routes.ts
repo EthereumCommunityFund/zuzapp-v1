@@ -1,6 +1,6 @@
-import { SubHeaderTabIndex } from "@/types";
-import { IconType } from "react-icons";
-import { HiCollection, HiHome, HiLightningBolt, HiViewBoards } from "react-icons/hi";
+import { SubHeaderTabIndex } from '@/types';
+import { IconType } from 'react-icons';
+import { HiCollection, HiHome, HiLightningBolt, HiViewBoards } from 'react-icons/hi';
 
 interface Routes {
   name?: string;
@@ -44,28 +44,27 @@ export const eventRoutes: Routes[] = [
     path: '/dashboard/events/space/tracks/schedules/addschedule',
     title: 'Add a Schedule',
   },
-
 ];
 
 export const navBarRoutes: Routes[] = [
   {
     path: '/dashboard/home',
     title: 'Home',
-    icon: HiHome
+    icon: HiHome,
   },
   {
     path: '/dashboard/schedules',
     title: 'Schedules',
-    icon: HiViewBoards
+    icon: HiViewBoards,
   },
   {
     path: '/dashboard/zapps',
     title: 'Zapps',
-    icon: HiLightningBolt
+    icon: HiLightningBolt,
   },
   {
     path: '/dashboard/resources',
     title: 'Resources',
-    icon: HiCollection
+    icon: HiCollection,
   },
-]
+];

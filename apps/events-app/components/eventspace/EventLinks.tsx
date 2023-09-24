@@ -1,21 +1,21 @@
-import IconButton from "../ui/buttons/IconButton";
-import SwitchButton from "../ui/buttons/SwitchButton";
-import EventDeatilsDescription1 from "../ui/labels/event-details-description-1";
-import EventSpaceLabel from "../ui/labels/event-space-label";
-import InputFieldLabel from "../ui/labels/inputFieldLabel";
-import { GoPlus } from "react-icons/go";
-import ArrowLink from "../ui/links/ArrowLink";
-import MediaLink from "../ui/MediaLink";
-import Button from "../ui/buttons/Button";
-import { useState } from "react";
-import { Label } from "@radix-ui/react-label";
+import SwitchButton from '../ui/buttons/SwitchButton';
+import InputFieldLabel from '../ui/labels/inputFieldLabel';
+import MediaLink from '../ui/MediaLink';
+import { Label } from '@radix-ui/react-label';
+import { useState } from 'react';
 
-export default function EventLinks() {
+interface IProps {
+  formData: any;
+  setFormData: any;
+}
+
+export default function EventLinks(props: IProps) {
+  const { setFormData, formData } = props;
   const [isLink, setIsLink] = useState(false);
 
-  const handleChangeSwitch = () => {
-    setIsLink(prev => !prev);
-  }
+  const handleChangeSwitch: any = () => {
+    setIsLink((prev) => !prev);
+  };
   return (
     <div className="flex flex-col gap-[34px]">
       <div className="flex flex-col gap-[10px]">
@@ -26,14 +26,12 @@ export default function EventLinks() {
         <SwitchButton value={isLink} onClick={handleChangeSwitch} />
         <InputFieldLabel name="Add Links" />
       </div>
-      {
-        isLink && (
-          <div className="flex flex-col gap-5">
-            <MediaLink linkType={"Social Media"} />
-            <MediaLink linkType={"Extra Links"} />
-          </div>
-        )
-      }
+      {isLink && (
+        <div className="flex flex-col gap-5">
+          <MediaLink linkType={'Social Media'} formData={formData} setFormData={setFormData} />
+          {/* <MediaLink linkType={"Extra Links"} formData={formData} setFormData={setFormData} /> */}
+        </div>
+      )}
     </div>
-  )
+  );
 }
