@@ -1,5 +1,5 @@
 import axiosInstance from "../src/axiosInstance"
-import { EventSpaceCreateRequestBody, EventSpaceUpdateRequestBody } from "../types"
+import { EventSpaceCreateRequestBody, EventSpaceStatusUpdateRequestBody, EventSpaceUpdateRequestBody } from "../types"
 
 
 // gets an event space
@@ -28,6 +28,11 @@ export const createEventSpace = async (data: EventSpaceCreateRequestBody) => {
 export const updateEventSpace = async (id: string, data:
     EventSpaceUpdateRequestBody) => {
     return await axiosInstance.put(`/api/eventspace/${id}/update`, data)
+}
+// updates an event space status
+export const updateEventSpaceStatus = async (id: string, data:
+    EventSpaceStatusUpdateRequestBody) => {
+    return await axiosInstance.put(`/api/eventspace/${id}/changeStatus`, data)
 }
 
 
