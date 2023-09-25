@@ -1,15 +1,29 @@
 import TrackItemCard from "@/components/tracks/TrackItemCard";
 import MyDropdown from "@/components/ui/DropDown";
+import { List } from "@/components/ui/DropDownMenu";
 import Pagination from "@/components/ui/Pagination";
 import Button from "@/components/ui/buttons/Button";
+import { DropDownMenuItemType } from "@/types";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { Option } from "react-dropdown";
-import { BiLeftArrow } from "react-icons/bi";
+import { BiLeftArrow, BiSolidCategory } from "react-icons/bi";
 
 export default function EventViewTracksPage() {
 	const router = useRouter();
 	const [currentPage, setCurrentPage] = useState(1);
+
+	const categoryList: DropDownMenuItemType[] = [
+		{
+			name: 'Network States',
+		},
+		{
+			name: 'Character Cities',
+		},
+		{
+			name: 'Coordinations',
+		},
+	]
 
 	const handlePageChange = (page: number) => {
 		setCurrentPage(page);
@@ -48,9 +62,10 @@ export default function EventViewTracksPage() {
 			<div className="flex flex-col gap-5 px-5 py-2.5 w-1/4 fixed right-0">
 				<h2 className="p-3.5 gap-[10px] font-bold">Tracks: Sort & Filter</h2>
 				<div className="flex flex-col p-2.5 gap-5 ">
-					<MyDropdown placeholder={"Select Categories"} options={[]} className={"rounded-full opacity-70 bg-componentPrimary"} />
+					{/* <MyDropdown placeholder={"Select Categories"} options={[]} className={"rounded-full opacity-70 bg-componentPrimary"} />
 					<MyDropdown placeholder={"Select Dates"} options={[]} className={"rounded-full opacity-70 bg-componentPrimary"} />
-					<MyDropdown placeholder={"Select Location"} options={[]} className={"rounded-full opacity-70 "} />
+					<MyDropdown placeholder={"Select Location"} options={[]} className={"rounded-full opacity-70 "} /> */}
+					<List data={categoryList} header={"Select Categories"} headerIcon={BiSolidCategory} />
 				</div>
 			</div>
 		</div>
