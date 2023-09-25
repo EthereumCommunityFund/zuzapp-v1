@@ -1,9 +1,19 @@
 module.exports = {
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'ddsckwslfyjnhcythyko.supabase.co',
+        port: '',
+        pathname: '/**',
+      },
+    ],
+  },
   eslint: {
     ignoreDuringBuilds: true,
   },
   reactStrictMode: true,
-  transpilePackages: ["ui"],
+  transpilePackages: ['ui'],
   compiler: {
     styledComponents: true,
   },

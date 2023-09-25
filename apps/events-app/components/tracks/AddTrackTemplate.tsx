@@ -68,7 +68,7 @@ export default function AddTrackTemplate() {
         <>
           <Container className="mx-auto max-w-screen-xl w-[85%]">
             <h2 className="flex font-semibold text-3xl w-full ">Add a Track</h2>
-            <AddTrackForm onTrackSubmit={handleTrackSubmit} />
+            <AddTrackForm onTrackSubmit={handleTrackSubmit as any} />
           </Container>
         </>
       )}

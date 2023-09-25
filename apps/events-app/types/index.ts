@@ -1,4 +1,4 @@
-import { Database } from '@/database.types';
+import { Database } from "@/database.types";
 
 export type EventSpaceUpdateRequestBody = {
   id: string;
@@ -6,12 +6,12 @@ export type EventSpaceUpdateRequestBody = {
   tagline?: string;
   social_links?: string;
   extra_links?: string;
-  event_space_type: 'tracks' | 'schedules';
-  status: 'draft' | 'published' | 'archived';
-  start_date: number;
-  end_date: number;
+  event_space_type: "tracks" | "schedules";
+  status: "draft" | "published" | "archived";
+  start_date: Date;
+  end_date: Date;
   description: string;
-  format: 'in-person' | 'online' | 'hybrid';
+  format: "in-person" | "online" | "hybrid";
   event_type?: string[];
   experience_level?: string[];
   eventspacelocation?: LocationType[];
@@ -19,24 +19,27 @@ export type EventSpaceUpdateRequestBody = {
 
 export type EventSpaceStatusUpdateRequestBody = {
   id: string;
-  status: 'draft' | 'published' | 'archived';
-}
+  status: "draft" | "published" | "archived";
+};
 export type EventSpaceCreateRequestBody = {
   name: string;
-  event_space_type: 'tracks' | 'schedules';
+  event_space_type: "tracks" | "schedules";
 };
 export type EventSpaceDetailsType = {
   id: string;
   name: string;
-  event_space_type: 'tracks' | 'schedules';
-  status: 'draft' | 'published' | 'archived';
-  start_date: number;
-  end_date: number;
+  event_space_type: "tracks" | "schedules";
+  status: "draft" | "published" | "archived";
+  start_date: Date;
+  end_date: Date;
   description: string;
-  format: 'in-person' | 'online' | 'hybrid';
+  format: "in-person" | "online" | "hybrid";
   event_type?: string[];
   experience_level?: string[];
   eventspacelocation?: LocationType[];
+  tagline: string;
+  social_links?: string;
+  extra_links?:string;
 };
 export type LocationType = {
   id?: string;
@@ -50,13 +53,13 @@ export type LocationType = {
 
 export type ScheduleCreateRequestBody = {
   name: string;
-  format: 'in-person' | 'online' | 'hybrid';
+  format: "in-person" | "online" | "hybrid";
   description: string;
-  date: number;
-  start_time: number;
-  end_time: number;
+  date: string | Date;
+  start_time: string | Date;
+  end_time: string | Date;
   all_day?: boolean;
-  schedule_frequency: 'once' | 'everyday' | 'weekly';
+  schedule_frequency: "once" | "everyday" | "weekly";
   images?: string[];
   video_call_link?: string;
   live_stream_url?: string;
@@ -67,22 +70,24 @@ export type ScheduleCreateRequestBody = {
   rsvp_amount?: number;
   event_space_id: string;
   track_id?: string;
-  tags: string[],
-  speakers: [{
-    speaker_name: string,
-    role: string
-  }]
-}
+  tags: string[];
+  speakers: [
+    {
+      speaker_name: string;
+      role: string;
+    },
+  ];
+};
 
 export type ScheduleUpdateRequestBody = {
   name: string;
-  format: 'in-person' | 'online' | 'hybrid';
+  format: "in-person" | "online" | "hybrid";
   description: string;
-  date: number;
-  start_time: number;
-  end_time: number;
+  date: string | Date;
+  start_time: string | Date | undefined;
+  end_time: string | Date | undefined;
   all_day?: boolean;
-  schedule_frequency: 'once' | 'everyday' | 'weekly';
+  schedule_frequency: "once" | "everyday" | "weekly";
   images?: string[];
   video_call_link?: string;
   live_stream_url?: string;
@@ -93,14 +98,12 @@ export type ScheduleUpdateRequestBody = {
   rsvp_amount?: number;
   event_space_id: string;
   track_id?: string;
-  tags?: string[],
-  speakers?: [{
-    speaker_name: string,
-    role: string
-  }]
-}
-
-
+  tags?: string[];
+  speakers?: {
+    speaker_name: string;
+    role: string;
+  }[];
+};
 
 export type TrackCreateRequestBody = {
   description: string;
@@ -114,8 +117,7 @@ export type TrackUpdateRequestBody = {
   event_space_id: string;
   image: string | null;
   name: string;
-}
-
+};
 
 export type LocationCreateRequestBody = {
   name: string;
@@ -125,10 +127,10 @@ export type LocationCreateRequestBody = {
   capacity: number;
   image_urls: string[];
   event_space_id: string;
-}
+};
 
 export type LocationUpdateRequestBody = {
-  id: string,
+  id: string;
   name: string;
   description: string;
   is_main_location?: boolean;
@@ -136,19 +138,15 @@ export type LocationUpdateRequestBody = {
   capacity: number;
   image_urls: string[];
   event_space_id: string;
-}
+};
 
-
-
-export type SpeakerType = { speaker_name: string, role: string }
-
+export type SpeakerType = { speaker_name: string; role: string };
 
 export type QueryWithID = {
-  [key: string]: string
-}
+  [key: string]: string;
+};
 
-type Tables = Database['public']['Tables'];
-
+type Tables = Database["public"]["Tables"];
 
 //@ts-ignore
 // type ExtractInsertUpdateTypes<T> = {
@@ -161,7 +159,7 @@ type Tables = Database['public']['Tables'];
 
 export enum SpaceDashboardType {
   New,
-  Created
+  Created,
 }
 
 export enum SpaceDashboardCardType {
@@ -180,9 +178,8 @@ export enum InputFieldType {
   Link,
 }
 
-
 export enum SubHeaderTabIndex {
   SpaceDashboard,
   SpaceTrack,
-  AllSchedules
+  AllSchedules,
 }

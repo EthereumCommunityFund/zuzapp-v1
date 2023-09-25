@@ -2,8 +2,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 
 import { ChangeEvent, useEffect, useState } from "react";
+import { Input } from "@/components/ui/input";
 
-import { EventSpaceDetailsType, InputFieldType } from "@/types";
+import { EventSpaceDetailsType, InputFieldType, LocationType } from "@/types";
 import EventFormat from "./EventFormat";
 import EventLinks from "./EventLinks";
 import EditionButtons from "@/components/ui/buttons/EditionButtons";
@@ -27,8 +28,11 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import EventLocation from "./EventLocation";
 import { eventCategories } from "@/constant/eventcategories";
 import { GoXCircle } from "react-icons/go";
-import { experienceLevels } from "@/constant/experienceelevels";
+// import { experienceLevels } from "@/constant/experienceelevels";
 import CustomDatePicker from "../ui/DatePicker";
+import { useRouter } from "next/router";
+import { updateEventSpace } from "@/controllers";
+import { useQueryClient } from "react-query";
 
 interface EventSpaceDetailsProps {
   eventSpace: EventSpaceDetailsType;
@@ -38,8 +42,13 @@ const formSchema = z.object({
   name: z.string().min(2, {
     message: "Event Format is required.",
   }),
-  event_format: z.enum(["in-person", "online", "hybrid"], {
+  format: z.enum(["in-person", "online", "hybrid"], {
     required_error: "You need to select an event type.",
+  }),
+  start_date: z.coerce.date(),
+  end_date: z.coerce.date(),
+  description: z.string().min(2, {
+    message: "Description is required.",
   }),
 });
 
@@ -47,7 +56,7 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({
   eventSpace,
 }) => {
   const {
-    id,
+    // id,
     name,
     event_space_type,
     status,
@@ -58,12 +67,48 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({
     event_type,
     experience_level,
     eventspacelocation,
+    tagline,
+    social_links,
+    extra_links,
   } = eventSpace;
+
+  const router = useRouter();
+
+  const queryClient = useQueryClient();
+
+  const [socialLinks, setSocialLinks] = useState(social_links ? JSON.parse(social_links as string) : null);
+  const [extraLinks, setExtraLinks] = useState(extra_links ? JSON.parse(extra_links as string): null);
   const [selectedEventFormat, setSelectedEventFormat] = useState("");
   const [eventDescriptionEditorValue, setEventDescriptionEditorValue] =
     useState<string>("");
   const [startDate, setStartDate] = useState<Date>();
+  const [switchDialogue, setSwitchDialogue] = useState(false);
+  const [tag_line, setTagline] = useState(tagline);
   const [endDate, setEndDate] = useState<Date>();
+  const [eventType, setEventType] = useState<string[]>(event_type as string[]);
+  const [experienceLevels, setExperienceLevels] = useState<string[]>(
+    experience_level as string[]
+  );
+  const [eventItem, setEventItem] = useState("");
+  const [experienceItem, setExperienceItem] = useState("");
+  const [location, setLocation] = useState<LocationType[]>(
+    eventspacelocation as LocationType[]
+  );
+  const { eventId } = router.query;
+
+  interface SocialMediaFormState {
+    socialMediaLinks: { label: string; link: string }[];
+    otherLinks: { label: string; link: string }[];
+    selectedOption: string;
+    selectedOtherOption: string;
+  }
+
+  const [formData, setFormData] = useState<SocialMediaFormState>({
+    socialMediaLinks: [],
+    otherLinks: [],
+    selectedOption: "facebook",
+    selectedOtherOption: "",
+  });
 
   const handleEditorChange = (value: string) => {
     setEventDescriptionEditorValue(value);
@@ -77,15 +122,36 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({
     if (selectedDate) setEndDate(selectedDate);
   };
 
-  // const updateEventFormat = (newEventFormat: string) => {
-  //   setEventFormat(newEventFormat);
-  // }
+  const handleLocationChange = () => {
+    const updatedItems = [...location, {}];
+    // setLocation(updatedItems);
+  };
+
+  const handleRemoveEventType = (index: number) => {
+    const updatedItems = [
+      ...eventType.slice(0, index),
+      ...eventType.slice(index + 1),
+    ];
+    setEventType(updatedItems);
+  };
+
+  const handleRemoveExperienceLevels = (index: number) => {
+    const updatedItems = [
+      ...experienceLevels.slice(0, index),
+      ...experienceLevels.slice(index + 1),
+    ];
+    setExperienceLevels(updatedItems);
+  };
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
-      event_format: format,
+      name,
+      format,
+      start_date: start_date !== undefined ? new Date(start_date) : new Date(),
+      end_date: end_date !== undefined ? new Date(end_date) : new Date(),
+      description,
+      // event_space_type: "tracks",
     },
   });
 
@@ -95,110 +161,145 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({
   };
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    const additionalPayload = {
+      id: eventId as string,
+      status: "draft" as "draft",
+      event_type: eventType,
+      experience_level: experienceLevels,
+      event_space_type: "tracks" as "tracks",
+      tagline: tag_line,
+      social_links: JSON.stringify(socialLinks),
+      extra_links: JSON.stringify(formData.otherLinks),
+    };
+    const payload = { ...values, ...additionalPayload };
+    console.log(payload);
     try {
-      // Access the selected event_format from form.getValues()
-      const selectedEventFormat = form.getValues("event_format");
-
-      // Now you can use the selectedEventFormat in your code
-      console.log("Selected Event Format:", selectedEventFormat);
-
-      // Rest of your code...
+      const result = await updateEventSpace(eventId as string, payload);
+      queryClient.invalidateQueries({ queryKey: ["spaceDetails"] });
+      setSwitchDialogue(true);
+      console.log(result, "result");
     } catch (error) {
-      console.error(error);
+      console.log(error);
     }
-    // try {
-    //   const result = await createEventSpace(values)
-    //   setEventCreated(true)
-    //   console.log(result)
-    // } catch (error) {
-    //   setEventCreated(false)
-    //   console.log(error)
-    // }
   }
 
   useEffect(() => {
     console.log("Selected Event Format:", selectedEventFormat);
-    // Perform any actions based on the selected event_format here
+    console.log(eventSpace);
   }, [selectedEventFormat]);
-  // const { eventFormat, setEventFormat } = useState<string>('');
-
-  // const updateEventFormat = (newEventFormat: string) => {
-  //   setEventFormat(newEventFormat);
-  // }
 
   return (
     <>
-      <div className="flex py-10 px-4 flex-col items-center gap-8 rounded-2xl border border-white border-opacity-10 bg-componentPrimary w-full">
-        <div className="flex flex-col gap-[34px] w-full">
-          <h1 className="text-[25px] font-normal leading-[1.2]">
-            Event Space Details
-          </h1>
-          <h2 className="text-2xl opacity-80 leading-[1.2]">Event Basics</h2>
-          <div className="flex flex-col gap-[10px]">
-            <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-              Event Space Name
-            </h2>
-            <InputFieldDark
-              type={InputFieldType.Primary}
-              placeholder={"ZuConnect"}
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="flex py-10 px-4 flex-col items-center gap-8 rounded-2xl border border-white border-opacity-10 bg-componentPrimary w-full"
+        >
+          <div className="flex flex-col gap-[34px] w-full">
+            <h1 className="text-[25px] font-normal leading-[1.2]">
+              Event Space Details
+            </h1>
+            <h2 className="text-2xl opacity-80 leading-[1.2]">Event Basics</h2>
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-lg">Event Space Name </FormLabel>
+                  <FormControl>
+                    <InputFieldDark
+                      type={InputFieldType.Primary}
+                      placeholder={"ZuConnect"}
+                      defaultValue={name}
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
-          <div>
-            <div className="flex gap-3">
-              <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                  Start Date
-                </h2>
-                <CustomDatePicker
-                  selectedDate={startDate}
-                  handleDateChange={handleStartDateChange}
+            <div>
+              <div className="flex gap-3">
+                <FormField
+                  control={form.control}
+                  name="start_date"
+                  render={({ field }) => (
+                    <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
+                      <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">
+                        Start Date
+                      </h2>
+
+                      <CustomDatePicker
+                        selectedDate={field.value}
+                        handleDateChange={field.onChange}
+                        {...field}
+                      />
+                      {/* <Input placeholder="12-03" {...field} /> */}
+
+                      <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">
+                        Click & Select or type in a date
+                      </h3>
+                      <FormMessage />
+                    </div>
+                  )}
                 />
-                <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">
-                  Click & Select or type in a date
-                </h3>
-              </div>
-              <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                  End Date
-                </h2>
-                <CustomDatePicker
-                  selectedDate={endDate}
-                  handleDateChange={handleEndDateChange}
+                <FormField
+                  control={form.control}
+                  name="end_date"
+                  render={({ field }) => (
+                    <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
+                      <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">
+                        End Date
+                      </h2>
+                      <CustomDatePicker
+                        selectedDate={field.value}
+                        handleDateChange={field.onChange}
+                        {...field}
+                      />
+
+                      <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">
+                        Click & Select or type in a date
+                      </h3>
+                      <FormMessage />
+                    </div>
+                  )}
                 />
-                <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">
-                  Click & Select or type in a date
-                </h3>
               </div>
             </div>
-          </div>
-          <div className="flex flex-col gap-[10px]">
-            <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-              Event Tagline
-            </h2>
-            <InputFieldDark
-              type={InputFieldType.Primary}
-              placeholder={"Coolest Web3 Events"}
-            />
-            <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">
-              This will be the short tagline below your event title
-            </h3>
-          </div>
-          <div>
+
             <div className="flex flex-col gap-[10px]">
               <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                Event Description
+                Event Tagline
               </h2>
-              <TextEditor
-                value={eventDescriptionEditorValue}
-                onChange={handleEditorChange}
+              <InputFieldDark
+                type={InputFieldType.Primary}
+                value={tag_line}
+                onChange={(e) =>
+                  setTagline((e.target as HTMLInputElement).value)
+                }
+                placeholder={"Coolest Web3 Events"}
               />
+              <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">
+                This will be the short tagline below your event title
+              </h3>
             </div>
-          </div>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-10">
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <div className="flex flex-col gap-[10px]">
+                  <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">
+                    Event Description
+                  </h2>
+                  <TextEditor value={field.value} onChange={field.onChange} />
+                </div>
+              )}
+            />
+
+            <div className="space-y-10">
               <FormField
                 control={form.control}
-                name="event_format"
+                name="format"
                 render={({ field }) => (
                   <FormItem className="space-y-3">
                     <FormLabel className="text-2xl opacity-80 leading-[1.2]">
@@ -210,7 +311,7 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({
                     </FormDescription>
                     <FormControl>
                       <RadioGroup
-                        onValueChange={handleEventFormatChange}
+                        onValueChange={field.onChange}
                         defaultValue={field.value}
                         className="flex flex-col md:flex-row justify-between"
                       >
@@ -253,74 +354,136 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({
                   </FormItem>
                 )}
               />
-            </form>
-          </Form>
-          {selectedEventFormat !== "in-person" && <EventLinks />}
-          {/* <EventLinks /> */}
-          <div className="flex flex-col gap-[34px]">
-            <div className="flex flex-col gap-2.5">
-              <h2 className="h-6 opacity-70 font-bold text-xl leading-6">
-                Manage Event Categories & Labels
-              </h2>
-              <span className="opacity-70 h-[18px] font-normal text-[13px] leading-[18.2px] tracking-[0.13px] self-stretch">
-                These will be shared as attributes by subsequent Sub-Events &
-                Schedules you create.
-              </span>
             </div>
-            <div className="flex flex-col gap-6">
-              <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                Add Event Types
-              </h2>
-              <InputFieldDark
-                type={InputFieldType.Primary}
-                placeholder={"Meetups, Workshop, Part, etc"}
+
+            {selectedEventFormat !== "in-person" && (
+              <EventLinks
+                social_links={socialLinks}
+                setSocialLinks={setSocialLinks}
+                extra_links={extraLinks}
+                setExtraLinks={setExtraLinks}
+                formData={formData}
+                setFormData={setFormData}
               />
-              <div className="flex gap-2.5">
-                {eventCategories.map((eventCategory) => (
-                  <div className="flex gap-2.5 items-center rounded-[8px] px-2 py-1.5 bg-white bg-opacity-10">
-                    <button className="flex gap-2.5 items-center">
-                      <GoXCircle className="top-0.5 left-0.5 w-4 h-4" />
-                      <span className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                        {eventCategory.name}
-                      </span>
-                    </button>
-                  </div>
-                ))}
+            )}
+            {/* <EventLinks formData={formData} setFormData={setFormData} /> */}
+            <div className="flex flex-col gap-[34px]">
+              <div className="flex flex-col gap-2.5">
+                <h2 className="h-6 opacity-70 font-bold text-xl leading-6">
+                  Manage Event Categories & Labels
+                </h2>
+                <span className="opacity-70 h-[18px] font-normal text-[13px] leading-[18.2px] tracking-[0.13px] self-stretch">
+                  These will be shared as attributes by subsequent Sub-Events &
+                  Schedules you create.
+                </span>
+              </div>
+
+              <div className="flex flex-col gap-6">
+                <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">
+                  Add Event Types
+                </h2>
+                <div className="flex gap-5">
+                  <InputFieldDark
+                    type={InputFieldType.Primary}
+                    value={eventItem}
+                    onChange={(e) =>
+                      setEventItem((e.target as HTMLInputElement).value)
+                    }
+                    placeholder={"Meetups, Workshops, etc"}
+                  />
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setEventType([...eventType, eventItem]);
+                      setEventItem("");
+                    }}
+                    className="flex gap-2.5 text-lg font-normal leading-[1.2] text-white items-center rounded-[8px] px-2 py-1 bg-white bg-opacity-10"
+                  >
+                    +
+                  </button>
+                </div>
+                <div className="flex gap-2.5">
+                  {eventType?.map((eventCategory, index) => (
+                    <div
+                      key={eventCategory}
+                      className="flex gap-2.5 items-center rounded-[8px] px-2 py-1.5 bg-white bg-opacity-10"
+                    >
+                      <button className="flex gap-2.5 items-center">
+                        <GoXCircle
+                          onClick={() => handleRemoveEventType(index)}
+                          className="top-0.5 left-0.5 w-4 h-4"
+                        />
+                        <span className="text-lg font-semibold leading-[1.2] text-white self-stretch">
+                          {eventCategory}
+                        </span>
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              {/* )}
+            /> */}
+              <div className="flex flex-col gap-6">
+                <span className="text-lg font-semibold leading-[1.2] text-white self-stretch">
+                  Experience Levels
+                </span>
+                <div className="flex gap-5">
+                  <InputFieldDark
+                    type={InputFieldType.Primary}
+                    value={experienceItem}
+                    onChange={(e) =>
+                      setExperienceItem((e.target as HTMLInputElement).value)
+                    }
+                    placeholder={"Beginner, Intermediate, Advanced, etc"}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setExperienceLevels([
+                        ...experienceLevels,
+                        experienceItem,
+                      ]);
+                      setExperienceItem("");
+                    }}
+                    className="flex gap-2.5 text-lg font-normal leading-[1.2] text-white items-center rounded-[8px] px-2 py-1 bg-white bg-opacity-10"
+                  >
+                    +
+                  </button>
+                </div>
+                <div className="flex gap-2.5">
+                  {experienceLevels?.map((experience, index) => (
+                    <div
+                      key={experience}
+                      className="flex gap-2.5 items-center rounded-[8px] px-2 py-1.5 bg-white bg-opacity-10"
+                    >
+                      <button className="flex gap-2.5 items-center">
+                        <GoXCircle
+                          onClick={() => handleRemoveExperienceLevels(index)}
+                          className="top-0.5 left-0.5 w-4 h-4"
+                        />
+                        <span className="text-lg font-semibold leading-[1.2] text-white self-stretch">
+                          {experience}
+                        </span>
+                      </button>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
-            <div className="flex flex-col gap-6">
-              <span className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                Experience Levels
-              </span>
-              <InputFieldDark
-                type={InputFieldType.Primary}
-                placeholder={"Beginner, Intermidate, Advanced"}
-              />
-              <div className="flex gap-2.5">
-                {experienceLevels.map((experienceLevel) => (
-                  <div className="flex gap-2.5 items-center rounded-[8px] px-2 py-1.5 bg-white bg-opacity-10">
-                    <button className="flex gap-2.5 items-center">
-                      <GoXCircle className="top-0.5 left-0.5 w-4 h-4" />
-                      <span className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                        {experienceLevel.name}
-                      </span>
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
+            <EditionButtons
+              type={"eventspace"}
+              leftButtonName={"Discard"}
+              rightButtonName={"Save Edit"}
+              leftButtonIcon={CgClose}
+              rightButtonIcon={FaCircleArrowUp}
+              switchDialogue={switchDialogue}
+            />
           </div>
-          <EditionButtons
-            type={"eventspace"}
-            leftButtonName={"Discard"}
-            rightButtonName={"Save Edit"}
-            leftButtonIcon={CgClose}
-            rightButtonIcon={FaCircleArrowUp}
-          />
-        </div>
-      </div>
+        </form>
+        {/* <EventLocation /> */}
+      </Form>
       {selectedEventFormat !== "online" && <EventLocation />}
-      {/* <EventLocation /> */}
     </>
   );
 };
