@@ -1,18 +1,25 @@
-import EventViewPageTemplate from "@/components/templates/EventViewPageTemplate";
+import InPersonEventViewPageTemplate from "@/components/templates/InPersonEventViewPageTemplate";
+import EventViewPageTemplate from "@/components/templates/InPersonEventViewPageTemplate";
+import OnlineEventViewPageTemplate from "@/components/templates/OnlineEventViewPageTemplate";
 import { fetchUserEventSpaces } from "@/services/eventSpaceService";
-import { EventSpaceDetailsType } from "@/types";
+import { EventSpaceDetailsType, EventTypes } from "@/types";
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
+import { useRouter } from "next/router";
 import { useQuery } from "react-query";
 
 export default function EventViewPage() {
   // Make request to get all event spaces
-
-
+  const router = useRouter();
+  const { eventType } = router.query;
 
 
   return (
     <>
-      <EventViewPageTemplate />
+      {eventType === EventTypes.InPerson ? (
+        <InPersonEventViewPageTemplate />
+      ) : (
+        <OnlineEventViewPageTemplate />
+      )}
     </>
   )
 }

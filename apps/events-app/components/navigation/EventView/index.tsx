@@ -25,6 +25,10 @@ export default function EventViewNavigation() {
     router.push("/dashboard/eventview/");
   };
 
+  const handleBackToEvents = () => {
+    router.push("/dashboard/home");
+  }
+
   return (
     <>
       {/* Mobile menu button */}
@@ -49,7 +53,7 @@ export default function EventViewNavigation() {
       >
         <div className="flex-1 flex flex-col gap-5 max-w-max">
           <div className="mt-10 flex-1">
-            <Button variant="ghost" size="lg" className="rountded-full opacity-70 pb-10 text-base" leftIcon={BiSolidLeftArrowCircle}>Back to Events</Button>
+            <Button variant="ghost" size="lg" className="rountded-full opacity-70 pb-10 text-base" leftIcon={BiSolidLeftArrowCircle} onClick={handleBackToEvents}>Back to Events</Button>
             <div className="flex flex-col gap-3.5 pb-10">
               <span className="font-semibold">Navigate Event</span>
               <ul className="space-y-3">
