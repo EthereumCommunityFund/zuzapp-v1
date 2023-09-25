@@ -33,7 +33,7 @@ export default function DashboardHeader() {
           {
             isAuthenticated ? (
               <Button leftIcon={RxAvatar} variant="light-dark" className="space-x-2 rounded-full">
-                {user.email}
+                {user?.email}
               </Button>
             ) : (
               <Popover>

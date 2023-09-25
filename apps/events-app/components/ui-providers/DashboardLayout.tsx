@@ -1,8 +1,9 @@
 import { useRouter } from "next/router"
 import DashboardNavigation from "../navigation/Dashboard"
 import DashboardHeader from "../navigation/Header"
-import { eventRoutes } from "@/constant/routes"
+import { eventRoutes, eventViewRoutes } from "@/constant/routes"
 import SubHeader from "../navigation/Header/SubHeader"
+import EventViewNavigation from "../navigation/EventView"
 
 export const DashboardProvider = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter()
@@ -14,13 +15,26 @@ export const DashboardProvider = ({ children }: { children: React.ReactNode }) =
     return false;
   }
 
+  const checkIfCurrentRouteIsInEventViewRoutes = () => {
+    const routes = eventViewRoutes;
+    const currentRoute = routes.find(route => route.path === router.pathname);
+    if (currentRoute) return true;
+    return false;
+  }
+
   if (!router.pathname.startsWith("/dashboard")) return <div className="bg-[#222222] text-white relative min-h-screen">{children}</div>
   return (
     <>
       <div className="flex relative bg-[#222222] text-white">
-        <DashboardNavigation />
+        {
+          !checkIfCurrentRouteIsInEventViewRoutes() ? (
+            <DashboardNavigation />
+          ) : (
+            <EventViewNavigation />
+          )
+        }
         <DashboardHeader />
-        <div className="mt-16 relative left-[260px] w-[calc(100%-260px)]">
+        <div className="mt-16 relative left-[300px] w-[calc(100%-300px)]">
           <div className="h-[90vh] mx-auto relative">
             {
               checkIfCurrentRouteIsInDashboardRoutes() ? (

@@ -1,4 +1,5 @@
 import { Database } from "@/database.types";
+import { IconType } from "react-icons";
 
 export type EventSpaceUpdateRequestBody = {
   id: string;
@@ -39,7 +40,7 @@ export type EventSpaceDetailsType = {
   eventspacelocation?: LocationType[];
   tagline: string;
   social_links?: string;
-  extra_links?:string;
+  extra_links?: string;
 };
 export type LocationType = {
   id?: string;
@@ -83,8 +84,8 @@ export type ScheduleUpdateRequestBody = {
   name: string;
   format: "in-person" | "online" | "hybrid";
   description: string;
-  date: string | Date;
-  start_time: string | Date | undefined;
+  date: string | Date | number;
+  start_time: string | Date | number;
   end_time: string | Date | undefined;
   all_day?: boolean;
   schedule_frequency: "once" | "everyday" | "weekly";
@@ -182,4 +183,14 @@ export enum SubHeaderTabIndex {
   SpaceDashboard,
   SpaceTrack,
   AllSchedules,
+}
+
+export enum EventTypes {
+  Online = 'online',
+  InPerson = 'inPerson',
+}
+
+export type DropDownMenuItemType = {
+  icon?: IconType;
+  name: string;
 }

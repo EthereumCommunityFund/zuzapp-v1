@@ -6,15 +6,19 @@ import { BsCalendar2Fill } from 'react-icons/bs';
 import { HiLockClosed } from 'react-icons/hi';
 import { useGlobalContext } from '@/context/GlobalContext';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
+import { useRouter } from 'next/router';
+import { EventTypes } from '@/types';
 
 export const sampleEvents = [
   {
+    type: EventTypes.InPerson,
     name: 'Zu Connect',
     description: 'A Popup Village of Innovation in the Heart of Istanbul',
     date: 'October 8 - October 20',
   },
   {
-    name: 'Zuzalu Town Halls',
+    type: EventTypes.Online,
+    name: 'Zuzalu Meetings',
     description: 'Here we post our Town Halls and other events!',
     date: 'Recuring',
   },
@@ -23,6 +27,15 @@ export const sampleEvents = [
 export default function HomePageTemplate() {
   const { signIn } = useUserPassportContext();
   const { isAuthenticated, user } = useGlobalContext();
+  const router = useRouter();
+
+  const handleButtonClick = async (eventType: EventTypes) => {
+    console.log("EventType", eventType);
+    router.push({
+      pathname: `/dashboard/eventview`, // Update with your actual route
+      query: { eventType }
+    });
+  };
 
   return (
     <div className="w-5/6 mx-auto ">
@@ -89,7 +102,7 @@ export default function HomePageTemplate() {
                 </div>
               </div>
               <div className="mt-3 md:mt-0">
-                <Button size='lg' variant={'primary'} className="rounded-full">
+                <Button size='lg' variant={'primary'} className="rounded-full" onClick={() => event.type && handleButtonClick(event.type)}>
                   View Event
                 </Button>
               </div>

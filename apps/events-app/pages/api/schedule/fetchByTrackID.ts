@@ -46,8 +46,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 role: speakerObj.role,
             })),
         }
-
+        //@ts-ignore
         delete result?.scheduletags; // cleaning up the extra data
+        //@ts-ignore
         delete result?.schedulespeakerrole; // cleaning up the extra data
         response.push(result)
     })

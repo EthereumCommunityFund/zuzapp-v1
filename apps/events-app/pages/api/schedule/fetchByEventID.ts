@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { NextApiRequest, NextApiResponse } from "next";
 import withSession from "../middlewares/withSession";
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
@@ -48,7 +49,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             })),
         }
 
+        //@ts-ignore
         delete result?.scheduletags; // cleaning up the extra data
+        //@ts-ignore
         delete result?.schedulespeakerrole; // cleaning up the extra data
         response.push(result)
     })
