@@ -26,6 +26,7 @@ import {
   EventSpaceDetailsType,
   InputFieldType,
   LocationUpdateRequestBody,
+  ScheduleUpdateRequestBody,
 } from "@/types";
 import TextEditor from "@/components/ui/TextEditor";
 import { Label } from "@/components/ui/label";
@@ -40,7 +41,6 @@ import {
   fetchLocationsByEventSpace,
   createSchedule,
   fetchAllTags,
-  fetchAllSpeakers,
 } from "@/controllers";
 import { useQuery } from "react-query";
 import { fetchEventSpaceById } from "@/services/fetchEventSpaceDetails";
@@ -49,9 +49,14 @@ import dayjs, { Dayjs } from "dayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
+import { v4 as uuidv4 } from "uuid";
 
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
+import {
+  fetchScheduleByID,
+  updateSchedule,
+} from "../../../../../../controllers/schedule.controller";
 
 type Speaker = {
   speaker_name: string;
@@ -64,13 +69,40 @@ type TagItemProp = {
 
 export default function AddSchedulePage() {
   const router = useRouter();
-  const { eventId, trackId } = router.query;
+  const { eventId, trackId, scheduleId } = router.query;
   const [selectedEventFormat, setSelectedEventFormat] = useState("");
-  const [switchDialogue, setSwitchDialogue] = useState(false)
+
+  const [schedule, setSchedule] = useState<ScheduleUpdateRequestBody>({
+    name: "",
+    format: "in-person",
+    description: "",
+    date: "",
+    start_time: "",
+    end_time: "",
+    all_day: false,
+    schedule_frequency: "once",
+    images: [""],
+    video_call_link: "",
+    live_stream_url: "",
+    location_id: "",
+    event_type: [""],
+    experience_level: [""],
+    limit_rsvp: false,
+    rsvp_amount: 1,
+    event_space_id: "",
+    track_id: "",
+    tags: [""],
+    speakers: [
+      {
+        speaker_name: "",
+        role: "",
+      },
+    ],
+  });
+  const [switchDialogue, setSwitchDialogue] = useState(false);
   const [isAllDay, setIsAllDay] = useState(false);
   const [rsvpAmount, setRsvpAmount] = useState(1);
   const [optionTags, setOptionTags] = useState<TagItemProp[]>([]);
-  const [optionSpeakers, setOptionSpeakers] = useState<TagItemProp[]>([]);
   const [tags, setTags] = useState<string[]>([]);
   const [tagItem, setTagItem] = useState<TagItemProp>({ name: "" });
   const [eventItem, setEventItem] = useState({ speaker_name: "", role: "" });
@@ -92,6 +124,7 @@ export default function AddSchedulePage() {
   const [endTime, setEndTime] = useState(dayjs("2023-11-17T23:59"));
 
   const [isLimit, setIsLimit] = useState(false);
+
 
   const formSchema = z.object({
     name: z.string().min(2, {
@@ -127,14 +160,14 @@ export default function AddSchedulePage() {
   const [eventType, setEventType] = useState("");
 
   const handleLimitRSVP = () => {
-    setIsLimit((prev) => !prev);
+    setSchedule({ ...schedule, limit_rsvp: !schedule.limit_rsvp });
   };
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
-      format: undefined,
+      name: schedule?.name,
+      format: schedule?.format,
       date: undefined,
       description: "",
     },
@@ -142,36 +175,36 @@ export default function AddSchedulePage() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const additionalPayload = {
-      event_space_id: eventId as string,
-      start_time: startTime as unknown as Date,
-      end_time: endTime as unknown as Date,
+      event_space_id: schedule.event_space_id,
+      start_time: schedule.start_time as unknown as string,
+      end_time: schedule.end_time as unknown as string,
       event_type:
-        eventType.length > 0
-          ? [eventType]
+        (schedule.event_type as []).length > 0
+          ? schedule.event_type
           : [(eventSpace?.event_type as string[])[0]],
       experience_level:
-        experienceLevel.length > 0
-          ? [experienceLevel]
+        (schedule.experience_level as []).length > 0
+          ? schedule.experience_level
           : [(eventSpace?.experience_level as string[])[0]],
-      tags: tags,
-      schedule_frequency: frequency,
-      location_id: locationId,
-      speakers,
-      video_call_link: videoLink,
-      live_stream_url: liveLink,
-      all_day: isAllDay,
+      tags: schedule.tags,
+      schedule_frequency: schedule.schedule_frequency,
+      location_id: schedule.location_id,
+      speakers: schedule.speakers,
+      video_call_link: schedule.video_call_link,
+      live_stream_url: schedule.live_stream_url,
+      all_day: schedule.all_day,
       // limit_rsvp: isLimit,
       ...(eventSpace?.event_space_type === "tracks" && {
         track_id: trackId as string,
       }),
-      ...(isLimit ? { rsvp_amount: rsvpAmount } : {}),
+      ...(isLimit ? { revp_amount: schedule.rsvp_amount } : {}),
       // isLimit && rsvp_amount: rsvpAmount
     };
     const payload = { ...values, ...additionalPayload };
     console.log(payload);
     try {
-      const result = await createSchedule(payload);
-      setSwitchDialogue(true)
+      const result = await updateSchedule(scheduleId as string, payload);
+      setSwitchDialogue(true);
       console.log(result, "result");
     } catch (error) {
       console.log(error);
@@ -185,15 +218,19 @@ export default function AddSchedulePage() {
 
   const handleRemoveSpeaker = (index: number) => {
     const updatedItems = [
-      ...speakers.slice(0, index),
-      ...speakers.slice(index + 1),
+      ...(schedule.speakers as Speaker[]).slice(0, index),
+      ...(schedule.speakers as Speaker[]).slice(index + 1),
     ];
-    setSpeakers(updatedItems);
+    setSchedule({ ...schedule, speakers: updatedItems as any });
   };
 
   const handleRemoveTag = (index: number) => {
-    const updatedItems = [...tags.slice(0, index), ...tags.slice(index + 1)];
-    setTags(updatedItems);
+    const updatedItems = [
+      ...(schedule.tags as string[]).slice(0, index),
+      ...(schedule.tags as string[]).slice(index + 1),
+    ];
+    console.log(updatedItems)
+    setSchedule({ ...schedule, tags: updatedItems });
   };
 
   const defaultProps = {
@@ -223,19 +260,26 @@ export default function AddSchedulePage() {
       }
     };
 
-    const fetchSpeakers = async() => {
+    const fetchCurrentSchedule = async () => {
       try {
-        const result = await fetchAllSpeakers();
+        const result = await fetchScheduleByID(scheduleId as string);
         console.log(result);
-        setOptionSpeakers(result.data.data);
+        setSchedule(result.data.data);
+        form.reset({
+          name: result.data.data.name,
+          format: result.data.data.format,
+          date: new Date(result.data.data.date),
+          description: result.data.data.description,
+        });
       } catch (error) {
         console.log(error);
       }
-    }
+    };
+
+    fetchCurrentSchedule();
 
     fetchLocationDetails();
     fetchTags();
-    fetchSpeakers()
   }, []);
 
   return (
@@ -279,7 +323,8 @@ export default function AddSchedulePage() {
                       </FormDescription>
                       <FormControl>
                         <RadioGroup
-                          defaultValue={field.value}
+                          onValueChange={field.onChange}
+                          //  defaultValue={field.value}
                           className="flex flex-col md:flex-row justify-between"
                           {...field}
                         >
@@ -406,10 +451,20 @@ export default function AddSchedulePage() {
                             <div className="flex justify-between gap-10 text-white">
                               <TimePicker
                                 label="Start Time"
-                                value={startTime}
-                                className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
-                                onChange={(newValue: any) =>
-                                  setStartTime(newValue)
+                                // slotProps={{ textField: { color: 'white' }}}
+                                value={
+                                  dayjs(
+                                    schedule?.start_time
+                                  ) as unknown as string
+                                }
+                                // className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
+                                onChange={(
+                                  newValue: string | Date | null | undefined
+                                ) =>
+                                  setSchedule({
+                                    ...schedule,
+                                    start_time: newValue as string,
+                                  })
                                 }
                                 sx={{
                                   input: {
@@ -432,10 +487,16 @@ export default function AddSchedulePage() {
                               />
                               <TimePicker
                                 label="End Time"
-                                value={endTime}
-                                className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
-                                onChange={(newValue: any) =>
-                                  setEndTime(newValue)
+                                value={
+                                  dayjs(schedule?.end_time) as unknown as string
+                                }
+                                onChange={(
+                                  newValue: string | Date | null | undefined
+                                ) =>
+                                  setSchedule({
+                                    ...schedule,
+                                    end_time: newValue as string,
+                                  })
                                 }
                                 sx={{
                                   input: {
@@ -478,8 +539,13 @@ export default function AddSchedulePage() {
                         Select Schedule Frequency
                       </Label>
                       <select
-                        value={frequency}
-                        onChange={(e) => setFrequency(e.target.value as any)}
+                        value={schedule.schedule_frequency}
+                        onChange={(e) =>
+                          setSchedule({
+                            ...schedule,
+                            schedule_frequency: e.target.value as any,
+                          })
+                        }
                         className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
                         title="frequency"
                       >
@@ -503,9 +569,14 @@ export default function AddSchedulePage() {
                       </Label>
                       {/* <InputFieldDark type={InputFieldType.Option} placeholder={'The Dome'} /> */}
                       <select
-                        onChange={(e) => setLocationId(e.target.value)}
+                        onChange={(e) =>
+                          setSchedule({
+                            ...schedule,
+                            location_id: e.target.value,
+                          })
+                        }
                         title="location"
-                        value={locationId}
+                        value={schedule.location_id}
                         className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
                       >
                         {savedLocations?.map((location) => (
@@ -524,9 +595,13 @@ export default function AddSchedulePage() {
                       <InputFieldDark
                         type={InputFieldType.Link}
                         placeholder="Type URL"
-                        value={videoLink}
+                        value={schedule.video_call_link}
                         onChange={(e) =>
-                          setVideoLink((e.target as HTMLInputElement).value)
+                          setSchedule({
+                            ...schedule,
+                            video_call_link: (e.target as HTMLInputElement)
+                              .value,
+                          })
                         }
                       />
                     </div>
@@ -538,9 +613,13 @@ export default function AddSchedulePage() {
                       <InputFieldDark
                         type={InputFieldType.Link}
                         placeholder="Type URL"
-                        value={liveLink}
+                        value={schedule.live_stream_url}
                         onChange={(e) =>
-                          setLiveLink((e.target as HTMLInputElement).value)
+                          setSchedule({
+                            ...schedule,
+                            live_stream_url: (e.target as HTMLInputElement)
+                              .value,
+                          })
                         }
                       />
                     </div>
@@ -586,23 +665,22 @@ export default function AddSchedulePage() {
                             }
                             className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
                           >
-                            <option value="once">Speaker</option>
-                            <option value="everyday">Organizer</option>
-                            <option value="weekly">Facilitator</option>
+                            <option value="speaker">Speaker</option>
+                            <option value="organizer">Organizer</option>
+                            <option value="facilitator">Facilitator</option>
                           </select>
                         </div>
 
                         <button
                           type="button"
                           onClick={() => {
-                            // setSchedule({
-                            //   ...schedule,
-                            //   speakers: [
-                            //     ...(schedule.speakers as Speaker[]),
-                            //     eventItem,
-                            //   ],
-                            // });
-                            setSpeakers([...speakers, eventItem])
+                            setSchedule({
+                              ...schedule,
+                              speakers: [
+                                ...(schedule.speakers as Speaker[]),
+                                eventItem,
+                              ],
+                            });
                             setEventItem({ speaker_name: "", role: "" });
                           }}
                           className="flex gap-2.5 mb-2 text-lg font-normal leading-[1.2] text-white items-center rounded-[8px] px-2 py-1 bg-white bg-opacity-10"
@@ -612,7 +690,7 @@ export default function AddSchedulePage() {
                       </div>
 
                       <div className="flex gap-2.5">
-                        {speakers?.map(
+                        {schedule.speakers?.map(
                           (speaker: any, index: number) => (
                             <div
                               key={index}
@@ -627,7 +705,7 @@ export default function AddSchedulePage() {
                                   className="top-0.5 left-0.5 w-4 h-4"
                                 />
                                 <span className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                                  {speaker.speaker_name}
+                                  {speaker.name}
                                 </span>
                               </button>
                             </div>
@@ -648,16 +726,25 @@ export default function AddSchedulePage() {
                     {/* <InputFieldDark type={InputFieldType.Option} placeholder={'Workshop'} /> */}
 
                     <select
-                      onChange={(e) => setEventType(e.target.value)}
-                      defaultValue={eventType}
+                      onChange={(e) =>
+                        setSchedule({
+                          ...schedule,
+                          event_type: [e.target.value],
+                        })
+                      }
+                      // defaultValue={eventType}
+                      value={schedule.event_type}
                       title="category"
                       className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
                     >
-                      {eventSpace?.event_type?.map((category) => (
-                        <option key={category} value={category}>
-                          {category}
-                        </option>
-                      ))}
+                      {eventSpace?.event_type?.map((category, index) => {
+                        const id = uuidv4();
+                        return (
+                          <option key={id} value={category}>
+                            {category}
+                          </option>
+                        );
+                      })}
                     </select>
                   </div>
                   <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
@@ -667,18 +754,27 @@ export default function AddSchedulePage() {
                     {/* <InputFieldDark type={InputFieldType.Option} placeholder={'Beginner'} /> */}
 
                     <select
-                      onChange={(e) => setExperienceLevel(e.target.value)}
+                      onChange={(e) =>
+                        setSchedule({
+                          ...schedule,
+                          experience_level: [e.target.value],
+                        })
+                      }
+                      value={schedule.experience_level}
                       title="category"
                       className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
                     >
-                      {eventSpace?.experience_level?.map((category) => (
-                        <option key={category} value={category}>
-                          {category}
-                        </option>
-                      ))}
+                      {eventSpace?.experience_level?.map((category) => {
+                        const id = uuidv4();
+                        return (
+                          <option key={id} value={category}>
+                            {category}
+                          </option>
+                        );
+                      })}
                     </select>
                   </div>
-                  <div className="flex flex-col items-start gap-6 self-stretch">
+                  {/* <div className="flex flex-col items-start gap-6 self-stretch">
                     <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
                       <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
                         Add Tags
@@ -708,7 +804,13 @@ export default function AddSchedulePage() {
                         <button
                           type="button"
                           onClick={() => {
-                            setTags([...tags, tagItem.name]);
+                            setSchedule({
+                              ...schedule,
+                              tags: [
+                                ...(schedule.tags as string[]),
+                                tagItem.name,
+                              ],
+                            });
                             setTagItem({ name: "" });
                           }}
                           className="flex gap-2.5 text-lg font-normal leading-[1.2] text-white items-center rounded-[8px] px-2 py-1 bg-white bg-opacity-10"
@@ -717,26 +819,32 @@ export default function AddSchedulePage() {
                         </button>
                       </div>
                       <div className="flex gap-2.5">
-                        {tags?.map((tag, index) => (
-                          <div
-                            key={index}
-                            className="flex gap-2.5 items-center rounded-[8px] px-2 py-1.5 bg-white bg-opacity-10"
-                          >
-                            <button className="flex gap-2.5 items-center">
-                              <GoXCircle
-                                onClick={() => handleRemoveTag(index)}
-                                className="top-0.5 left-0.5 w-4 h-4"
-                              />
-                              <span className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                                {tag}
-                              </span>
-                            </button>
-                          </div>
-                        ))}
+                        {schedule.tags?.map((tag, index) => {
+                          const id = uuidv4();
+                          return (
+                            <div
+                              key={id}
+                              className="flex gap-2.5 items-center rounded-[8px] px-2 py-1.5 bg-white bg-opacity-10"
+                            >
+                              <button
+                                type="button"
+                                className="flex gap-2.5 items-center"
+                              >
+                                <GoXCircle
+                                  onClick={() => handleRemoveTag(index)}
+                                  className="top-0.5 left-0.5 w-4 h-4"
+                                />
+                                <span className="text-lg font-semibold leading-[1.2] text-white self-stretch">
+                                  {tag}
+                                </span>
+                              </button>
+                            </div>
+                          );
+                        })}
                       </div>
                     </div>
                     <line />
-                  </div>
+                  </div> */}
                 </div>
                 <div className="w-full">
                   <span className="text-lg opacity-70 self-stretch">
@@ -744,12 +852,15 @@ export default function AddSchedulePage() {
                   </span>
                   <div className="flex flex-col items-center gap-5 self-stretch">
                     <div className="flex items-center gap-5 self-stretch">
-                      <SwitchButton value={isLimit} onClick={handleLimitRSVP} />
+                      <SwitchButton
+                        value={schedule.limit_rsvp}
+                        onClick={handleLimitRSVP}
+                      />
                       <span className="flex-1 text-base font-semibold leading-[1.2]">
                         Limit RSVPs
                       </span>
                     </div>
-                    {isLimit && (
+                    {schedule.limit_rsvp && (
                       <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
                         <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
                           Select an Amount
@@ -759,7 +870,10 @@ export default function AddSchedulePage() {
                           className="bg-gray-600 w-full outline-none px-4 rounded-md py-2"
                           placeholder={"50"}
                           onChange={(e) =>
-                            setRsvpAmount(e.target.value as unknown as number)
+                            setSchedule({
+                              ...schedule,
+                              rsvp_amount: e.target.value as unknown as number,
+                            })
                           }
                         />
                       </div>

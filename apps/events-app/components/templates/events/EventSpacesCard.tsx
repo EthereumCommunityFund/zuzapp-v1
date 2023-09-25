@@ -1,9 +1,7 @@
-
 import { HiArrowRight } from 'react-icons/hi';
 import { useRouter } from 'next/router';
 import Button from '@/components/ui/buttons/Button';
 import { SpaceDashboardType } from '@/types';
-
 
 interface IProps {
   eventTitle: string;
@@ -35,7 +33,7 @@ export default function EventSpaceCard(props: IProps) {
       </div>
       <div>
         <div className="w-full">
-          <Button size='lg' variant="dark" className="bg-white/20 text-white/70 rounded-full hover:font-bold hover:bg-white/20 border-none" leftIcon={HiArrowRight} onClick={handleEnterSpace}>
+          <Button size="lg" variant="dark" className="bg-white/20 text-white/70 rounded-full hover:font-bold hover:bg-white/20 border-none" leftIcon={HiArrowRight} onClick={handleEnterSpace}>
             Enter Space
           </Button>
         </div>

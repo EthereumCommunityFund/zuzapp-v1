@@ -1,17 +1,17 @@
-import Link from "next/link";
+import Link from 'next/link';
 
-import EventSpacesCard from "./EventSpacesCard";
-import Button from "@/components/ui/buttons/Button";
-import { EventSpaceDetailsType } from "@/types";
+import EventSpacesCard from './EventSpacesCard';
+import Button from '@/components/ui/buttons/Button';
+import { EventSpaceDetailsType } from '@/types';
+import { useEventSpace } from '@/context/EventSpaceContext';
 // import { sampleEvents } from "../HomePageTemplate";
 
 interface EventSpacesTemplateProps {
   eventSpaces?: EventSpaceDetailsType[];
 }
 
-const EventSpacesTemplate: React.FC<EventSpacesTemplateProps> = ({
-  eventSpaces,
-}) => {
+const EventSpacesTemplate: React.FC<EventSpacesTemplateProps> = ({ eventSpaces }) => {
+  const { setEventSpace } = useEventSpace();
   return (
     <>
       <div className="w-2/3 mx-auto font-inter">
@@ -24,19 +24,12 @@ const EventSpacesTemplate: React.FC<EventSpacesTemplateProps> = ({
                     } */}
           {eventSpaces &&
             eventSpaces.map((event, index) => (
-              <EventSpacesCard
-                eventTitle={event.name}
-                index={index}
-                key={event.id}
-                eventId={event.id}
-              />
+              <div onClick={() => setEventSpace(event)} key={event.id}>
+                <EventSpacesCard eventTitle={event.name} index={index} key={event.id} eventId={event.id} />
+              </div>
             ))}
           <Link href="/dashboard/events/create" className="w-full">
-            <Button
-              variant="dark"
-              size="lg"
-              className="bg-transparent text-white/70 mt-3 text-[18px] leading-[1.2] border-dashed w-full justify-center py-4 rounded-lg"
-            >
+            <Button variant="dark" size="lg" className="bg-transparent text-white/70 mt-3 text-[18px] leading-[1.2] border-dashed w-full justify-center py-4 rounded-lg">
               Create an Event Space
             </Button>
           </Link>
@@ -44,9 +37,7 @@ const EventSpacesTemplate: React.FC<EventSpacesTemplateProps> = ({
         <div>
           <h3 className="text-[25px] mt-10">Invited Spaces</h3>
           <div className="mt-2 mb-5">
-            <p className="text-white/70 text-sm font-extrabold">
-              No invited spaces
-            </p>
+            <p className="text-white/70 text-sm font-extrabold">No invited spaces</p>
           </div>
         </div>
       </div>
