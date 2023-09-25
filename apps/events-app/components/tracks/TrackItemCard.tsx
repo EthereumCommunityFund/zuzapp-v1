@@ -2,15 +2,10 @@ import { BsFillTicketFill } from 'react-icons/bs';
 import { HiArrowRight, HiCalendar } from 'react-icons/hi';
 import Button from '../ui/buttons/Button';
 import router, { useRouter } from 'next/router';
+import { TrackCreateRequestBody } from '@/types';
 
-interface IProps {
-  trackTitle: string;
-  trackId?: string;
-  onClick?: () => void;
-}
-
-export default function TrackItem(props: IProps) {
-  const { trackTitle, trackId, onClick } = props;
+export default function TrackItem(props: TrackCreateRequestBody) {
+  const { name, event_space_id, description, image } = props;
   const router = useRouter();
   const { eventId } = router.query;
 
@@ -18,7 +13,7 @@ export default function TrackItem(props: IProps) {
     try {
       router.push({
         pathname: `/dashboard/events/space/tracks/schedules`,
-        query: { eventId: eventId, trackId: trackId },
+        query: { eventId: eventId, trackId: event_space_id },
       });
     } catch (error) {
       console.error('Error fetching space details', error);
@@ -26,11 +21,11 @@ export default function TrackItem(props: IProps) {
   };
 
   return (
-    <div className="flex items-center justify-between w-full bg-itemHover rounded-2xl py-3.5 px-3 hover:bg-trackItemHover duration-200" onClick={onClick}>
+    <div className="flex items-center justify-between w-full bg-itemHover rounded-2xl py-3.5 px-3 hover:bg-trackItemHover duration-200" onClick={() => { }}>
       <div className="flex items-start gap-2">
         <div className="w-[130px] h-[100px] rounded-[10px] border border-[#FFFFFF10] bg-[#222]"></div>
         <div className="flex flex-col w-[382px] justify-center items-start gap-[14px] self-stretch">
-          <span className="text-lg font-semibold leading-[1.2]">{trackTitle}</span>
+          <span className="text-lg font-semibold leading-[1.2]">{name}</span>
           <div className="flex flex-col justify-center items-start gap-[14px] self-stretch">
             <span className="rounded-full flex px-4 py-1 items-center gap-1 opacity-60 bg-[#FFFFFF10] font-bold">
               <HiCalendar /> October 8 - October 23

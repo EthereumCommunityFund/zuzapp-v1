@@ -16,7 +16,7 @@ const TrackItemTemplate: React.FC<TrackTemplateProps> = ({ trackDetails }) => {
   return (
     <div className="flex flex-col gap-[10px] w-full">
       {trackDetails.map((track) => (
-        <TrackItemCard trackTitle={track.name} key={track.id} trackId={track.id} trackDescription={track?.description as string} trackImage={track?.image as string} />
+        <TrackItemCard description={track?.description as string} event_space_id={track.event_space_id} image={track?.image as string} name={track.name} key={track.id} />
       ))}
     </div>
   );
