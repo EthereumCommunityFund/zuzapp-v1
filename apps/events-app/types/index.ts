@@ -183,3 +183,8 @@ export enum SubHeaderTabIndex {
   SpaceTrack,
   AllSchedules,
 }
+
+export enum EventTypes {
+  Online = 'online',
+  InPerson = 'inPerson',
+}
