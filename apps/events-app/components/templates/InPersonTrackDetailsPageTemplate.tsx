@@ -5,15 +5,26 @@ import Speaker from "@/components/ui/Speaker";
 import UserFacingTrack from "@/components/ui/UserFacingTrack";
 import Button from "@/components/ui/buttons/Button";
 import { Label } from "@/components/ui/label";
-import EventDataDate from "@/components/ui/labels/event-data-date";
-import EventData from "@/components/ui/labels/event-data-time";
+import { useRouter } from "next/router";
 import { useState } from "react";
-import { BiEditAlt, BiLeftArrow } from "react-icons/bi";
-import { BsFillTicketFill } from "react-icons/bs";
+import { BiEditAlt, BiPlusCircle } from "react-icons/bi";
 import { HiArrowLeft, HiCalendar, HiCog, HiLocationMarker, HiMicrophone, HiTag, HiUserGroup } from "react-icons/hi";
 
-export default function EventViewScheduleDetailsPage() {
+export default function OnlineTrackDetailsPageTemplate() {
+  const router = useRouter();
+  const [currentPage, setCurrentPage] = useState(1);
 
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const handleItemClick = () => {
+    router.push("/dashboard/eventview/tracks/track/schedule");
+  }
+
+  const handleBackToTracksClick = () => {
+    router.push("/dashboard/eventview/tracks");
+  }
   return (
     <div className="flex gap-4">
       <div className="flex flex-col w-[1000px]">
@@ -28,33 +39,37 @@ export default function EventViewScheduleDetailsPage() {
           </Button>
         </div>
         <div className="p-5 gap-[30px] max-w-[1000px]">
-          <div className="flex flex-col gap-[10px] p-2.5 bg-componentPrimary rounded-2xl">
+          <div className="flex flex-col gap-[10px] p-2.5 bg-componentPrimary rounded-xl">
             <div className="flex justify-between">  {/* Tracks and Edit Button */}
-              <Button variant="ghost" className="opacity-70 text-lg" leftIcon={HiArrowLeft}>Back to Schedules</Button>
-              <Button variant="light-dark" className="rounded-xl bg-componentPrimary text-lg" leftIcon={BiEditAlt}>Edit</Button>
+              <Button variant="ghost" className="text-lg font-bold" leftIcon={HiArrowLeft} onClick={handleBackToTracksClick}>Tracks</Button>
+              <Button variant="light-dark" className="rounded-xl" leftIcon={BiEditAlt}>Edit</Button>
             </div>
-            <div className="flex flex-col gap-2.5 p-2.5 "> {/* Schedule Info */}
-              <div className="flex flex-col gap-2.5 p-5">
-                <span className="text-sm">TRACK/THEME</span>
-                <div className="flex items-start">
-                  <EventData startTime={"00:00 AM"} endTime={"00:00 PM"} />
-                </div>
-                <h2 className='text-3xl font-bold'>Opening Meetup (some game to get to know the coworking space + hotels)</h2>
-                <div className="flex gap-[6px]">
-                  <Speaker title={"QJ"} />
-                  <Speaker title={"Janine Leger"} />
-                </div>
-                <div className="flex justify-end">
-                  <h3>By: drivenfast</h3>
-                </div>
-              </div>
-              <Button variant="light-dark" size="lg" className="rounded-2xl justify-center" leftIcon={BsFillTicketFill}>RSVP Schedule</Button>
-            </div>
-            <div className="flex flex-col gap-2.5 px-5 pt-5 pb-[60px]">{/* Schedule Description */}
-              <h2 className="font-bold">Location</h2>
-              <div className="opacity-90">
+            <div className="flex flex-col gap-[10px] p-5 "> {/* Track Info */}
+              <img src="/images/1.png" alt="track image" className=" h-[496px] rounded-[10px]" />
+              <div className="flex flex-col gap-[10px] p-2.5"> {/* Tracks Name */}
+                <h2 className="font-bold text-2xl">Zk Week</h2>
+                <p className="font-bold opacity-70">Public goods in Web3 refer to digital assets or resources that are openly accessible and available to all users on a blockchain network. They are typically funded by the community and are designed to benefit the entire ...</p>
+                <span className="rounded-xl flex px-4 py-1 items-center gap-1 opacity-60 bg-[#FFFFFF10] font-bold justify-start w-[320px] text-lg">
+                  <HiCalendar size={25} /> November 29 - November 11
+                </span>
               </div>
             </div>
+          </div>
+        </div>
+        <div className="p-4 w-full">
+          <Button variant="light-blue" size="lg" className="rounded-xl flex justify-center w-full" leftIcon={BiPlusCircle}>
+            Add a Schedule
+          </Button>
+        </div>
+        <div className="flex flex-col gap-2.5 p-5 w-full">
+          <div className="flex flex-col gap-[10px] overflow-hidden rounded-[10px]">
+            {
+              <>
+                <UserFacingTrack onClick={handleItemClick} />
+                <UserFacingTrack onClick={handleItemClick} />
+                <UserFacingTrack onClick={handleItemClick} />
+              </>
+            }
           </div>
         </div>
       </div>

@@ -192,3 +192,8 @@ export type DropDownMenuItemType = {
   icon?: IconType;
   name: string;
 }
+
+export enum EventTypes {
+  Online = 'online',
+  InPerson = 'inPerson',
+}

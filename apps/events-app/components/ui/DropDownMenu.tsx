@@ -75,9 +75,6 @@ export const List = (props: DropDownMenu) => {
           </Listbox.Options>
         </Transition>
       </Listbox>
-      <div className='w-56 h-10 bg-slate-700 mt-2'>
-
-      </div>
     </>
   )
 }

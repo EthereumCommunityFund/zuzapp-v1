@@ -12,11 +12,7 @@ import { DialogOverlay } from "@radix-ui/react-dialog";
 import Carousel from "../ui/Carousel";
 import ResponsiveCarousel from "../ui/Carousel";
 
-type EventPageProps = {
-	eventName: string;
-}
-
-export default function EventViewPageTemplate() {
+export default function InPersonEventViewPageTemplate() {
 
 	return (
 		<>
