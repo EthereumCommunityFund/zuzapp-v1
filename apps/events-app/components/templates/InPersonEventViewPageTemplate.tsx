@@ -11,6 +11,7 @@ import Image from "next/image";
 import { DialogOverlay } from "@radix-ui/react-dialog";
 import Carousel from "../ui/Carousel";
 import ResponsiveCarousel from "../ui/Carousel";
+import { ArrowRightCircleIcon } from "../ui/icons";
 
 export default function InPersonEventViewPageTemplate() {
 
@@ -31,7 +32,7 @@ export default function InPersonEventViewPageTemplate() {
 								<h2 className="font-semibold text-[30px]">ZuConnect</h2>
 								<span className="text-white/80 font-bold">A Popup Village of Innovation in the Heart of Istanbul</span>
 							</div>
-							<Button size="lg" className="rounded-full" leftIcon={BsArrowRightCircleFill}>Apply to Event</Button>
+							<Button size="lg" className="rounded-full" leftIcon={ArrowRightCircleIcon}>Apply to Event</Button>
 						</div>
 						<div className="flex gap-3 text-lg">
 							<span className="rounded-full flex px-4 py-1 items-center gap-1 opacity-60 bg-[#FFFFFF10] font-bold">
