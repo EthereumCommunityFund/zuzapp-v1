@@ -1,4 +1,5 @@
 import { Database } from '@/database.types';
+import { IconType } from 'react-icons';
 
 export type EventSpaceUpdateRequestBody = {
   id: string;
@@ -180,4 +181,9 @@ export enum SubHeaderTabIndex {
   SpaceDashboard,
   SpaceTrack,
   AllSchedules
+}
+
+export type DropDownMenuItemType = {
+  icon?: IconType;
+  name: string;
 }

@@ -53,7 +53,7 @@ export default function EventViewNavigation() {
             <div className="flex flex-col gap-3.5 pb-10">
               <span className="font-semibold">Navigate Event</span>
               <ul className="space-y-3">
-                {routes.map((route, index) => (
+                {routes.map((route, index) => (route.name &&
                   <li
                     key={index}
                     className={`flex items-center font-bold space-x-2 py-1 px-3 opacity-70 rounded-xl hover:bg-white/20  duration-200 ${router.pathname === route.path && "bg-white/20"

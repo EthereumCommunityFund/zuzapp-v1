@@ -91,4 +91,12 @@ export const eventViewRoutes: Routes[] = [
     title: 'Tracks Dashboard',
     icon: BsFillTicketFill
   },
+  {
+    path: '/dashboard/eventview/tracks/track',
+    title: 'Track View'
+  },
+  {
+    path: '/dashboard/eventview/allschedules/schedule',
+    title: 'Track View'
+  }
 ];

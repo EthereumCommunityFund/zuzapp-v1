@@ -7,8 +7,8 @@ import Button from "@/components/ui/buttons/Button";
 import { Label } from "@/components/ui/label";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import { BiEditAlt, BiLeftArrow, BiPlusCircle } from "react-icons/bi";
-import { HiCalendar, HiCog, HiLocationMarker, HiMicrophone, HiTag, HiUserGroup } from "react-icons/hi";
+import { BiEditAlt, BiPlusCircle } from "react-icons/bi";
+import { HiArrowLeft, HiCalendar, HiCog, HiLocationMarker, HiMicrophone, HiTag, HiUserGroup } from "react-icons/hi";
 
 export default function EventViewTrackDetailsPage() {
   const router = useRouter();
@@ -37,7 +37,7 @@ export default function EventViewTrackDetailsPage() {
         <div className="p-5 gap-[30px] max-w-[1000px]">
           <div className="flex flex-col gap-[10px] p-2.5 bg-componentPrimary rounded-xl">
             <div className="flex justify-between">  {/* Tracks and Edit Button */}
-              <Button variant="ghost" leftIcon={BiLeftArrow}>Tracks</Button>
+              <Button variant="ghost" leftIcon={HiArrowLeft}>Tracks</Button>
               <Button variant="light-dark" className="rounded-xl" leftIcon={BiEditAlt}>Edit</Button>
             </div>
             <div className="flex flex-col gap-[10px] p-5 "> {/* Track Info */}
