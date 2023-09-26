@@ -66,6 +66,13 @@ module.exports = {
         trackItemHover: "#434646",
         trackDateColor: "#4D5050",
         itemBgPrimary: "#2D2D2D",
+        btnPrimary: "#FFFFFF",
+        btnBlue: "#67DAFF",
+        btnRed: "#FF5D5D",
+        btnYellow: "#F3BE6F",
+        btnPrimaryGreen: "#D7FFC4",
+        btnStrongerGreen: "#79916E",
+        btnStrongerGreenHover: "#96B488",
       },
       borderRadius: {
         lg: "var(--radius)",

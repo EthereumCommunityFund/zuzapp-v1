@@ -5,7 +5,7 @@ import { ImSpinner2 } from 'react-icons/im';
 
 import { cn } from '@/lib/utils';
 
-const ButtonVariant = ['primary', 'outline', 'ghost', 'light', 'dark', 'light-blue', 'light-dark', 'red'] as const;
+const ButtonVariant = ['primary', 'outline', 'ghost', 'light', 'dark', 'blue', 'quiet', 'red', 'primaryGreen', 'strongerGreen', 'yellow', 'quiet-SM'] as const;
 const ButtonSize = ['sm', 'base', 'lg'] as const;
 
 type ButtonProps = {
@@ -60,11 +60,10 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           //#region  //*=========== Variants ===========
           [
             variant === 'primary' && [
-              'bg-[#D7FFC4]/20 text-[#D7FFC4]',
-              'border-[#D7FFC4]/20 border',
-              'hover:bg-[#D7FFC4]/50',
-              'active:bg-primary/80',
-              'disabled:bg-primary/80',
+              'bg-btnPrimary/20 text-[#FFFFFF]',
+              'border rounded-[20px]',
+              'hover:bg-btnPrimary/30',
+
             ],
             variant === 'outline' && [
               'text-primary',
@@ -80,33 +79,35 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
               isDarkBg &&
               'hover:bg-gray-900 active:bg-gray-800 disabled:bg-gray-800',
             ],
-            variant === 'light' && [
-              'bg-white text-white bg-opacity-20',
-              'border border-gray-300',
+            variant === 'primaryGreen' && [
+              'bg-btnPrimaryGreen/20 text-btnPrimaryGreen',
               'hover:bg-opacity-30',
-              'active:bg-white/80 disabled:bg-gray-200',
+              'rounded-[20px]'
             ],
-            variant === 'dark' && [
-              'bg-[#0000004D] text-white',
-              'border border-gray-600',
-              'hover:bg-gray-800 active:bg-gray-700 disabled:bg-gray-700',
+            variant === 'strongerGreen' && [
+              'bg-btnStrongerGreen text-white',
+              'hover:bg-btnStrongerGreenHover',
+              'rounded-[20px]'
             ],
-            variant === 'light-blue' && [
-              'bg-[#67DAEF] bg-opacity-20',
-              'text-[#67DAEF]',
+            variant === 'quiet' && [
+              'bg-white/5 text-white',
+              'hover:bg-opacity-10',
+            ],
+            variant === 'blue' && [
+              'bg-btnBlue/20',
+              'text-btnBlue',
               'hover:bg-opacity-30',
-              'active:bg-[#67DAEF]/80 disabled:bg-gray-200'
             ],
-            variant === 'light-dark' && [
-              'bg-white bg-opacity-20',
-              'text-white',
+            variant === 'yellow' && [
+              'bg-btnYellow/20 text-btnYellow',
+              'rounded-[20px]',
               'hover:bg-opacity-30',
             ],
             variant === 'red' && [
-              'bg-[#FF5E5E] bg-opacity-20',
-              'text-[#FF5E5E]',
+              'bg-btnRed/20 ',
+              'text-btnRed',
               'hover:bg-opacity-30',
-            ]
+            ],
           ],
           //#endregion  //*======== Variants ===========
           'disabled:cursor-not-allowed',
