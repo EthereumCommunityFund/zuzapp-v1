@@ -1,5 +1,7 @@
-import { ArrowRightCircleIcon } from '@heroicons/react/24/solid';
+import ArrowCircleRight from './ArrowCircleRight';
+import ArrowCircleLeft from './ArrowCircleLeft';
 
 export {
-  ArrowRightCircleIcon
+  ArrowCircleRight,
+  ArrowCircleLeft
 };

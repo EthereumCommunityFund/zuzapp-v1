@@ -5,8 +5,9 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { MdOutlineModeEdit } from "react-icons/md";
 import { HiArrowLeft, HiOutlineMenuAlt1 } from "react-icons/hi";
-import { BiSolidLeftArrowCircle } from "react-icons/bi";
+
 import React from "react";
+import { ArrowCircleLeft } from "@/components/ui/icons";
 
 export default function EventViewNavigation() {
   const [dashboardOpen, setDashboardOpen] = React.useState(true);
@@ -53,7 +54,7 @@ export default function EventViewNavigation() {
       >
         <div className="flex-1 flex flex-col gap-5 max-w-max">
           <div className="mt-10 flex-1">
-            <Button variant="ghost" size="lg" className="rountded-full opacity-70 pb-10 text-base" leftIcon={BiSolidLeftArrowCircle} onClick={handleBackToEvents}>Back to Events</Button>
+            <Button size="lg" className="rountded-full opacity-70 pb-10 text-base" leftIcon={ArrowCircleLeft} onClick={handleBackToEvents}>Back to Events</Button>
             <div className="flex flex-col gap-3.5 pb-10">
               <span className="font-semibold">Navigate Event</span>
               <ul className="space-y-3">
