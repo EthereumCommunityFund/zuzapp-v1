@@ -54,7 +54,7 @@ export default function EventViewNavigation() {
       >
         <div className="flex-1 flex flex-col gap-5 max-w-max">
           <div className="mt-10 flex-1">
-            <Button size="lg" className="rountded-full opacity-70 pb-10 text-base" leftIcon={ArrowCircleLeft} onClick={handleBackToEvents}>Back to Events</Button>
+            <Button size="lg" variant="quiet-SM" className="pb-10 opacity-80" leftIcon={ArrowCircleLeft} onClick={handleBackToEvents}>Back to Events</Button>
             <div className="flex flex-col gap-3.5 pb-10">
               <span className="font-semibold">Navigate Event</span>
               <ul className="space-y-3">
