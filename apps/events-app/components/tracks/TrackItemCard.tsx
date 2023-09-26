@@ -9,7 +9,7 @@ interface IProps {
   trackId?: string;
   trackDescription?: string;
   trackImage?: string;
-  onClick: () => void;
+  onClick?: () => void;
 }
 
 export default function TrackItem(props: IProps) {
