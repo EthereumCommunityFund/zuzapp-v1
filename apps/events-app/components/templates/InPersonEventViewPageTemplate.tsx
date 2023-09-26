@@ -32,7 +32,7 @@ export default function InPersonEventViewPageTemplate() {
 								<h2 className="font-semibold text-[30px]">ZuConnect</h2>
 								<span className="text-white/80 font-bold">A Popup Village of Innovation in the Heart of Istanbul</span>
 							</div>
-							<Button size="lg" className="rounded-full" leftIcon={ArrowCircleRight}>Apply to Event</Button>
+							<Button variant="primaryGreen" size="lg" className="rounded-full" leftIcon={BsArrowRightCircleFill}>Apply to Event</Button>
 						</div>
 						<div className="flex gap-3 text-lg">
 							<span className="rounded-full flex px-4 py-1 items-center gap-1 opacity-60 bg-[#FFFFFF10] font-bold">
@@ -49,7 +49,7 @@ export default function InPersonEventViewPageTemplate() {
 						<p className="text-white/70 font-bold">Embark on a transformative journey at ZuConnect— a two-week popup village in Istanbul where the luminaries of crypto, AI, governance, decentralized science, and culture coalesce. Here, the brightest minds convene to co-work, foster collaborations, and have a joyous time.</p>
 						<Dialog>
 							<DialogTrigger asChild>
-								<Button variant="light-dark" size="lg" className="rounded-2xl inline-block text-white/70 font-bold">Read Description</Button>
+								<Button size="lg" className="rounded-2xl inline-block text-white/70 font-bold">Read Description</Button>
 							</DialogTrigger>
 							<DialogContent className="w-[700px]">
 								<DialogHeader>
@@ -69,7 +69,7 @@ export default function InPersonEventViewPageTemplate() {
 						<h3 className="font-bold text-white/70">Beyoğlu, Istanbul, Turkey</h3>
 						<Dialog>
 							<DialogTrigger asChild>
-								<Button variant="light-dark" className="light-dark text-lg rounded-full inline-block text-white/70 font-bold">View Location</Button>
+								<Button className="light-dark text-lg rounded-full inline-block text-white/70 font-bold">View Location</Button>
 							</DialogTrigger>
 							<DialogContent>
 								<DialogHeader>
