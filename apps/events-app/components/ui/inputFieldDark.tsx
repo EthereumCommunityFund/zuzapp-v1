@@ -38,7 +38,7 @@ export default function InputFieldDark({
         </div>
       ) : (
         type === InputFieldType.Option ? (
-          <DropDown title={placeholder}></DropDown>
+          <DropDown placeholder={placeholder} options={[]} className={""}></DropDown>
         ) : (
           <></>
         )
