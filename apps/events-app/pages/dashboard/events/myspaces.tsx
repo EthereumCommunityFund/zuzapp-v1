@@ -28,7 +28,7 @@ export default function MyEventSpacesPage() {
   if (isError) {
     return <p>Error loading space details</p>;
   }
-  return <div className="flex gap-[10px] flex-1 items-center self-stretch font-inter">{eventSpaces && <EventSpacesTemplate eventSpaces={eventSpaces} />}</div>;
+  return <div className="flex gap-[10px] flex-1 items-center self-stretch font-inter">{<EventSpacesTemplate eventSpaces={eventSpaces} />}</div>;
 }
 
 export const getServerSideProps = async (ctx: any) => {

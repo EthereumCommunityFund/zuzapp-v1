@@ -3,14 +3,27 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"],
-      "~/*": ["./public/*"],
-  
+      "@/*": [
+        "./*"
+      ],
+      "~/*": [
+        "./public/*"
+      ]
     },
     "isolatedModules": true,
-    "skipLibCheck": true
-
+    "skipLibCheck": true,
+    "jsx": "preserve"
   },
-  "include": ["next-env.d.ts", "src", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "tailwind.config.ts"],
-  "exclude": ["node_modules"]
+  "include": [
+    "next-env.d.ts",
+    "./src/**/*.ts",
+    "src",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "tailwind.config.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }
