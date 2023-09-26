@@ -1,51 +1,53 @@
-import EventLocation from "@/components/eventspace/EventLocation";
-import EventSpaceDetails from "@/components/eventspace/EventSpaceDetails";
-import EventSpaceDetailsNavBar from "@/components/eventspace/EventSpaceDetailsNavBar";
-import Button from "@/components/ui/buttons/Button";
+import EventLocation from '@/components/eventspace/EventLocation';
+import EventSpaceDetails from '@/components/eventspace/EventSpaceDetails';
+import EventSpaceDetailsNavBar from '@/components/eventspace/EventSpaceDetailsNavBar';
+import Button from '@/components/ui/buttons/Button';
 
-import { EventSpaceDetailsType } from "@/types";
-import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
+import { EventSpaceDetailsType } from '@/types';
+import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
 
-import Link from "next/link";
-import { useRouter } from "next/router";
-import { useQuery } from "react-query";
-import { useEffect, useState } from "react";
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { useQuery } from 'react-query';
+import { useEffect, useState } from 'react';
+import { useEventSpace } from '@/context/EventSpaceContext';
+import { HiArrowLeft } from 'react-icons/hi';
 
-import { HiArrowLeft } from "react-icons/hi";
-
-import { fetchEventSpaceById } from "../../../../services/fetchEventSpaceDetails";
+import { fetchEventSpaceById } from '../../../../services/fetchEventSpaceDetails';
+import { Loader } from '@/components/ui/Loader';
 
 export default function EventSpaceDetailsPage() {
   const router = useRouter();
   const { eventId } = router.query;
-
+  const { eventSpace } = useEventSpace();
   const goBackToPreviousPage = () => {
     router.back();
   };
 
-  const {
-    data: eventSpace,
-    isLoading,
-    isError,
-  } = useQuery<EventSpaceDetailsType, Error>(
-    ["spaceDetails", eventId], // Query key
-    () => fetchEventSpaceById(eventId as string), // Query function
-    {
-      enabled: !!eventId, // Only execute the query if eventId is available
-    }
-  );
+  // const {
+  //   data: eventSpace,
+  //   isLoading,
+  //   isError,
+  // } = useQuery<EventSpaceDetailsType, Error>(
+  //   ['spaceDetails', eventId], // Query key
+  //   () => fetchEventSpaceById(eventId as string), // Query function
+  //   {
+  //     enabled: !!eventId,
+  //     refetchOnWindowFocus: false, // Only execute the query if eventId is available
+  //   }
+  // );
 
-  if (isLoading) {
-    return <p>Loading...</p>;
-  }
-  if (isError) {
-    return <p>Error loading space details</p>;
-  }
+  // if (isLoading) {
+  //   return <Loader />;
+  // }
+  // if (isError) {
+  //   return <p>Error loading space details</p>;
+  // }
   return (
     <div className="flex flex-col py-5 px-10 w-full items-center gap-[10px] self-stretch">
-      <div className="flex items-start gap-8 self-stretch mx-auto">
+      <div className="flex items-start gap-8 self-stretch ">
         <EventSpaceDetailsNavBar />
-        <div className="flex flex-col px-5 gap-5 items-start ml-[400px]">
+        <div className="flex flex-col px-5 gap-5 items-start ml-[300px] w-full">
           <Button
             className="rounded-[40px] py-2.5 px-3.5 bg-bgPrimary border-none hover:bg-[#363636] duration-200 text-textSecondary hover:text-textSecondary"
             size="lg"
@@ -77,10 +79,7 @@ export const getServerSideProps = async (ctx: any) => {
     };
 
   // get profile from session
-  const { data: profile, error } = await supabase
-    .from("profile")
-    .select("*")
-    .eq("uuid", session.user.id);
+  const { data: profile, error } = await supabase.from('profile').select('*').eq('uuid', session.user.id);
 
   return {
     props: {

@@ -1,6 +1,6 @@
 import { NextApiResponse } from "next";
 import { EventSpaceUpdateRequestBody, LocationType } from "@/types";
-export const formatTimestamp = (date: number) => {
+export const formatTimestamp = (date: Date) => {
     console.log(date)
     // if (typeof (date) !== "string") return null;
     return new Date(date).toISOString();
@@ -45,8 +45,8 @@ export const generateRandomEventSpaceUpdateData = (id: string, event_space_type:
         id,
         name: `Sample Event ${getRandomInt(1, 100)}`,
         event_space_type: event_space_type,
-        start_date: Date.now() - getRandomInt(1, 5) * 24 * 60 * 60 * 1000, // Random date within the last 5 days
-        end_date: Date.now() + getRandomInt(1, 5) * 24 * 60 * 60 * 1000, // Random date within the next 5 days
+        start_date: Date.now() - getRandomInt(1, 5) * 24 * 60 * 60 * 1000 as unknown as  Date,// Random date within the last 5 days
+        end_date: (Date.now() + getRandomInt(1, 5) * 24 * 60 * 60 * 1000) as unknown as  Date,// Random date within the next 5 days
         description: `Random event description ${getRandomInt(1, 1000)}`,
         // @ts-ignore
         format: "in-person",

@@ -34,7 +34,7 @@ export const List = (props: DropDownMenu) => {
           {selectedPeople.map((person) => person.name).join(', ')}
         </Listbox.Button> */}
         <Listbox.Button className="relative w-full inline-flex justify-between items-center cursor-pointer rounded-2xl bg-slate-600 py-2 px-2 shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
-          <HeaderIcon />
+          {/* <HeaderIcon /> */}
           Select Categories
           <TbChevronDown
             className="h-5 w-5 text-gray-400"

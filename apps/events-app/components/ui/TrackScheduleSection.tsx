@@ -6,7 +6,7 @@ export default function TrackScheduleSection() {
       <h2 className="p-2.5 font-bold">Monday, October 30</h2>
       <div className="flex flex-col gap-2.5 ">
         {
-          <UserFacingTrack />
+          <UserFacingTrack onClick={function (): void { throw new Error("Function not implemented."); }} />
         }
       </div>
     </div>

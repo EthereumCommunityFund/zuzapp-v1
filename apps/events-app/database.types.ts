@@ -250,9 +250,9 @@ export interface Database {
         }
         Update: {
           all_day?: boolean | null
-          date?: string
+          date?: Date
           description?: string | null
-          end_time?: string
+          end_time?: Date
           event_space_id?: string | null
           event_type?: string[] | null
           experience_level?: string[] | null
@@ -265,7 +265,7 @@ export interface Database {
           name?: string
           rsvp_amount?: number | null
           schedule_frequency?: string | null
-          start_time?: string
+          start_time?: Date
           track_id?: string | null
           video_call_link?: string | null
         }

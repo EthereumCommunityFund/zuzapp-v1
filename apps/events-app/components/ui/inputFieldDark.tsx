@@ -7,6 +7,7 @@ import DropDown from "@/components/ui/DropDown";
 type InputFieldDarkProps = {
   type: InputFieldType,
   placeholder: string,
+  value?: string
 } & React.HTMLAttributes<HTMLDivElement>;
 
 const defaultProps: InputFieldDarkProps = {
@@ -17,6 +18,7 @@ const defaultProps: InputFieldDarkProps = {
 export default function InputFieldDark({
   type,
   placeholder,
+  value,
   ...rest
 }: InputFieldDarkProps) {
   const [date, setDate] = useState<Date>();
@@ -32,11 +34,11 @@ export default function InputFieldDark({
         <div className="flex w-full rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10">
           {type === InputFieldType.Time && <HiClock className="w-6 h-6" />}
           {type === InputFieldType.Link && <HiLink className="w-6 h-6" />}
-          <input className="bg-inputField w-full focus-visible:outline-none" placeholder={placeholder} {...rest} />
+          <input className="bg-inputField w-full focus-visible:outline-none" value={value} placeholder={placeholder} {...rest} />
         </div>
       ) : (
         type === InputFieldType.Option ? (
-          <DropDown title={placeholder}></DropDown>
+          <DropDown placeholder={placeholder} options={[]} className={""}></DropDown>
         ) : (
           <></>
         )
