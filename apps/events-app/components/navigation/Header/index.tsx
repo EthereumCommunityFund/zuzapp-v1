@@ -10,6 +10,7 @@ import { useRouter } from "next/router";
 import { RxAvatar } from "react-icons/rx";
 import IconButton from "@/components/ui/buttons/IconButton";
 import { HiMenuAlt1 } from "react-icons/hi";
+import { User } from "@/components/ui/icons";
 
 export default function DashboardHeader() {
   const { signIn } = useUserPassportContext()
@@ -32,7 +33,7 @@ export default function DashboardHeader() {
         <div>
           {
             isAuthenticated ? (
-              <Button leftIcon={RxAvatar} variant="light-dark" className="space-x-2 rounded-full">
+              <Button leftIcon={User} variant="quiet" className="space-x-2 rounded-full">
                 {user?.email}
               </Button>
             ) : (
