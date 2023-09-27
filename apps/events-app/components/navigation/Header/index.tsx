@@ -32,7 +32,7 @@ export default function DashboardHeader() {
         <div>
           {
             isAuthenticated ? (
-              <Button leftIcon={RxAvatar} variant="light-dark" className="space-x-2 rounded-full">
+              <Button leftIcon={RxAvatar} variant="quiet" className="space-x-2 rounded-full">
                 {user?.email}
               </Button>
             ) : (

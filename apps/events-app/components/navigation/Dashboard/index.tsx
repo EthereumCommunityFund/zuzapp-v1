@@ -32,15 +32,13 @@ export default function DashboardNavigation() {
       </div>
       {/* Overlay that can close the dashboard menu */}
       <div
-        className={`md:hidden fixed inset-0 bg-black/10 z-10 ${
-          dashboardOpen ? "block" : "hidden"
-        }`}
+        className={`md:hidden fixed inset-0 bg-black/10 z-10 ${dashboardOpen ? "block" : "hidden"
+          }`}
         onClick={handleClick}
       ></div>
       <nav
-        className={`dashboard-menu min-w-[260px] fixed flex flex-col h-screen border-r border-r-gray-800 bg-[#2F3232] py-10 px-6 transition-transform duration-300 ${
-          dashboardOpen && "open"
-        }`}
+        className={`dashboard-menu min-w-[260px] fixed flex flex-col h-screen border-r border-r-gray-800 bg-[#2F3232] py-10 px-6 transition-transform duration-300 ${dashboardOpen && "open"
+          }`}
       >
         <div className="flex-1 flex flex-col opacity-70">
           <div className="mt-10 flex-1">
@@ -48,9 +46,8 @@ export default function DashboardNavigation() {
               {routes.map((route, index) => (
                 <li
                   key={route.path}
-                  className={`flex items-center space-x-2 py-1 px-3 hover:bg-white/20 rounded-3xl ${
-                    router.pathname === route.path && "bg-white/20"
-                  }`}
+                  className={`flex items-center space-x-2 py-1 px-3 hover:bg-white/20 rounded-3xl ${router.pathname === route.path && "bg-white/20"
+                    }`}
                 >
                   {route.icon && <route.icon size={30} />}
                   <Link href={route.path} className="w-full ">
@@ -67,7 +64,7 @@ export default function DashboardNavigation() {
                 <Link href={"/dashboard/events/myspaces"} className="w-full">
                   <Button
                     size="base"
-                    variant={"primary"}
+                    variant={"primaryGreen"}
                     className="rounded-full w-full text-base"
                     leftIcon={FaCog}
                   >
