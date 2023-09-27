@@ -29,6 +29,8 @@ const eventspace_update_schema = Joi.object({
   format: Joi.string().valid('in-person', 'online', 'hybrid').required(),
   event_type: Joi.array().items(Joi.string()).default(['General']),
   experience_level: Joi.array().items(Joi.string()).default(['Beginner']),
+  image_url: Joi.string()
+
 });
 const eventspace_status_update_schema = Joi.object({
   id: Joi.string().uuid().required(),
