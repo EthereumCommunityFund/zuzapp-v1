@@ -34,7 +34,7 @@ export default function EventViewTrackDetailsPage() {
           <div className="flex flex-col gap-[10px] p-2.5 bg-componentPrimary">
             <div className="flex justify-between">  {/* Tracks and Edit Button */}
               <Button variant="ghost" leftIcon={BiLeftArrow}>Back to Track</Button>
-              <Button variant="light-dark" leftIcon={BiEditAlt}>Edit</Button>
+              <Button variant="quiet" leftIcon={BiEditAlt}>Edit</Button>
             </div>
             <div className="flex flex-col gap-2.5 p-2.5 "> {/* Schedule Info */}
               <div className="flex flex-col gap-2.5 p-5">
@@ -46,7 +46,7 @@ export default function EventViewTrackDetailsPage() {
                 </div>
                 <h3>By: drivenfast</h3>
               </div>
-              <Button variant="light-dark" leftIcon={BsFillTicketFill}>RSVP Schedule</Button>
+              <Button variant="quiet" leftIcon={BsFillTicketFill}>RSVP Schedule</Button>
             </div>
             <div className="flex flex-col gap-2.5 px-5 pt-5 pb-[60px]">{/* Schedule Description */}
               <h2 className="font-bold">Description</h2>

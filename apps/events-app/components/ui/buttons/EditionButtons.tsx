@@ -26,12 +26,12 @@ export default function EditionButtons(props: IEditionButtons) {
   return (
     <>
       <div className="flex gap-[30px] w-full">
-        <Button onClick={() => router.back()} className="rounded-full w-1/2 flex justify-center" variant="light-dark" size="lg" type="button" leftIcon={leftButtonIcon}>
+        <Button onClick={() => router.back()} className="rounded-full w-1/2 flex justify-center" variant="quiet" size="lg" type="button" leftIcon={leftButtonIcon}>
           <span>{leftButtonName}</span>
         </Button>
         <Dialog>
           <DialogTrigger asChild>
-            <Button className="rounded-full w-1/2 flex justify-center" variant="light-blue" size="lg" type="submit" leftIcon={rightButtonIcon}>
+            <Button className="rounded-full w-1/2 flex justify-center" variant="blue" size="lg" type="submit" leftIcon={rightButtonIcon}>
               <span>{rightButtonName}</span>
             </Button>
           </DialogTrigger>

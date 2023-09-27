@@ -31,7 +31,7 @@ export default function EventViewScheduleDetailsPage() {
           <div className="flex flex-col gap-[10px] p-2.5 bg-componentPrimary rounded-2xl">
             <div className="flex justify-between">  {/* Tracks and Edit Button */}
               <Button variant="ghost" className="opacity-70 text-lg" leftIcon={HiArrowLeft}>Back to Schedules</Button>
-              <Button variant="light-dark" className="rounded-xl bg-componentPrimary text-lg" leftIcon={BiEditAlt}>Edit</Button>
+              <Button variant="quiet" className="rounded-xl bg-componentPrimary text-lg" leftIcon={BiEditAlt}>Edit</Button>
             </div>
             <div className="flex flex-col gap-2.5 p-2.5 "> {/* Schedule Info */}
               <div className="flex flex-col gap-2.5 p-5">
@@ -48,7 +48,7 @@ export default function EventViewScheduleDetailsPage() {
                   <h3>By: drivenfast</h3>
                 </div>
               </div>
-              <Button variant="light-dark" size="lg" className="rounded-2xl justify-center" leftIcon={BsFillTicketFill}>RSVP Schedule</Button>
+              <Button variant="quiet" size="lg" className="rounded-2xl justify-center" leftIcon={BsFillTicketFill}>RSVP Schedule</Button>
             </div>
             <div className="flex flex-col gap-2.5 px-5 pt-5 pb-[60px]">{/* Schedule Description */}
               <h2 className="font-bold">Location</h2>

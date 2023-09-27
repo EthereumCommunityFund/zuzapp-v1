@@ -89,7 +89,7 @@ export default function EditTrackForm({
 
   const onSubmit = (values: z.infer<typeof trackSchema>) => {
     const image = payload.image_urls[0]
-    const data = {...values, image, event_space_id: eventId, id: trackId}
+    const data = { ...values, image, event_space_id: eventId, id: trackId }
     onTrackSubmit(data); // Pass the form values to the parent component
   };
 
@@ -110,7 +110,7 @@ export default function EditTrackForm({
                 placeholder="What is the name of this track?"
                 value={field.value}
                 onChange={field.onChange}
-                // {...field}
+              // {...field}
               />
               <FormMessage />
             </FormItem>
@@ -149,7 +149,7 @@ export default function EditTrackForm({
                     icon={CgClose}
                   />
                   <Image src={source as string} alt="" fill className="object-contain" />
-                 
+
                 </div>
               </div>
             ))}
@@ -160,7 +160,7 @@ export default function EditTrackForm({
             <Button
               onClick={handleDeleteTrack}
               className="rounded-full w-1/2 flex justify-center"
-              variant="light-dark"
+              variant="quiet"
               size="lg"
               type="button"
               leftIcon={CgClose}
@@ -169,7 +169,7 @@ export default function EditTrackForm({
             </Button>
             <Button
               className="rounded-full w-1/2 flex justify-center"
-              variant="light-blue"
+              variant="blue"
               size="lg"
               type="submit"
               leftIcon={FaCircleArrowUp}

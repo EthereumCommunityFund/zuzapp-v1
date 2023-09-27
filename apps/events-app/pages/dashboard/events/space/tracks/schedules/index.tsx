@@ -113,7 +113,7 @@ export default function SchedulesDashboardPage() {
             </div>
             <div className="flex justify-between items-start self-stretch">
               <Button
-                variant="light-blue"
+                variant="blue"
                 className="flex py-[10px] px-[14px] items-center gap-[10px] rounded-[20px] bg-[#67DAFF20] text-[#67DAFF] text-xl"
                 leftIcon={BsFillPlusCircleFill}
                 onClick={handleAddSchedule}
