@@ -49,7 +49,7 @@ export default function InPersonEventViewPageTemplate() {
 						<p className="text-white/70 font-bold">Embark on a transformative journey at ZuConnect— a two-week popup village in Istanbul where the luminaries of crypto, AI, governance, decentralized science, and culture coalesce. Here, the brightest minds convene to co-work, foster collaborations, and have a joyous time.</p>
 						<Dialog>
 							<DialogTrigger asChild>
-								<Button size="lg" className="rounded-2xl inline-block text-white/70 font-bold">Read Description</Button>
+								<Button variant="quiet" size="lg" className="rounded-2xl inline-block text-white/70 font-bold hover:text-white">Read Description</Button>
 							</DialogTrigger>
 							<DialogContent className="w-[700px]">
 								<DialogHeader>
