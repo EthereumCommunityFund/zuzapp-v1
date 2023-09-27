@@ -19,13 +19,13 @@ import router from 'next/router';
 import Image from 'next/image';
 import { useQueryClient } from 'react-query';
 
-export default function EventLocationForm({setIsLocationForm}: {setIsLocationForm: React.Dispatch<React.SetStateAction<boolean>>}) {
-  const queryClient = useQueryClient()
+export default function EventLocationForm({ setIsLocationForm }: { setIsLocationForm: React.Dispatch<React.SetStateAction<boolean>> }) {
+  const queryClient = useQueryClient();
   const router = useRouter();
   const { eventId } = router.query;
   const [isMainLocation, setIsMainLocation] = useState(false);
   const [editorValue, setEditorValue] = useState('');
-  const [switchDialogue, setSwitchDialogue] = useState(false)
+  const [switchDialogue, setSwitchDialogue] = useState(false);
   const [payload, setPayload] = useState({
     name: '',
     description: '',
@@ -37,13 +37,9 @@ export default function EventLocationForm({setIsLocationForm}: {setIsLocationFor
   });
 
   const handleRemoveImage = (index: number) => {
-    const updatedItems = [
-        ...payload.image_urls.slice(0, index),
-        ...payload.image_urls.slice(index + 1),
-      ];
-      setPayload({...payload, image_urls: updatedItems})
-}
-
+    const updatedItems = [...payload.image_urls.slice(0, index), ...payload.image_urls.slice(index + 1)];
+    setPayload({ ...payload, image_urls: updatedItems });
+  };
 
   const handleTextEditorChange = (value: string) => {
     setEditorValue(value);
@@ -63,12 +59,12 @@ export default function EventLocationForm({setIsLocationForm}: {setIsLocationFor
 
   const handleCreateEventLocation = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLocationForm(false)
+    setIsLocationForm(false);
     console.log(payload);
     try {
       const result = await createEventSpaceLocation(payload);
-      queryClient.invalidateQueries({ queryKey: ["locationDetails"] });
-      setSwitchDialogue(true)
+      queryClient.invalidateQueries({ queryKey: ['locationDetails'] });
+      setSwitchDialogue(true);
       console.log(result);
     } catch (error) {
       console.log(error);
@@ -77,9 +73,6 @@ export default function EventLocationForm({setIsLocationForm}: {setIsLocationFor
 
   return (
     <form onSubmit={handleCreateEventLocation} className="flex flex-col p-5 rounded-[10px] border items-start	gap-[30px] self-stretch border-opacity-10 bg-[#2B2E2E]">
-      <div className="flex items-center gap-5 opacity-50">
-        <span className="font-sans text-base font-semibold leading-[19.2px]">The Dome</span>
-      </div>
       <div className="flex flex-col justify-center items-start gap-[10px] self-stretch">
         <div className="flex items-center gap-5 self-stretch">
           <SwitchButton value={isMainLocation} onClick={handleSwitchChange} />
@@ -151,7 +144,14 @@ export default function EventLocationForm({setIsLocationForm}: {setIsLocationFor
         </div>
       )}
 
-      <EditionButtons switchDialogue={switchDialogue} type={'location'} leftButtonName={'Discard This Location'} rightButtonName={'Add This Location'} leftButtonIcon={CgClose} rightButtonIcon={FaCircleArrowUp} />
+      <EditionButtons
+        switchDialogue={switchDialogue}
+        type={'location'}
+        leftButtonName={'Discard This Location'}
+        rightButtonName={'Add This Location'}
+        leftButtonIcon={CgClose}
+        rightButtonIcon={FaCircleArrowUp}
+      />
     </form>
   );
 }

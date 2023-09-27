@@ -40,7 +40,7 @@ export default function SchedulesDashboardPage() {
     try {
       router.push({
         pathname: `/dashboard/events/space/tracks/schedules/updateschedule`,
-        query: { eventId: eventId, trackId: trackId, scheduleId: id },
+        query: { eventId: eventId, trackId: trackId, scheduleId: id, trackTitle: trackTitle },
       });
     } catch (error) {
       console.error('Error fetching space details', error);
@@ -54,7 +54,7 @@ export default function SchedulesDashboardPage() {
     try {
       router.push({
         pathname: `/dashboard/events/space/tracks/schedules/addschedule`,
-        query: { eventId: eventId, trackId: trackId },
+        query: { eventId: eventId, trackId: trackId, trackTitle: trackTitle },
       });
     } catch (error) {
       console.error('Error fetching space details', error);
@@ -153,7 +153,7 @@ export default function SchedulesDashboardPage() {
                               </span>
                               <span className="flex items-center p-1 gap-1 rounded-[10px] opacity-60 bg-[#FFFFFF10] white-space-nowrap overflow-hidden text-ellipsis">
                                 <BiTimeFive size={30} />
-                                <span className="ml-2">{formatTime(schedule?.start_time)}</span>
+                                <span className="ml-2">{formatTime(schedule?.start_time)} </span>
                               </span>
                             </div>
                           </div>
