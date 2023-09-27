@@ -5,12 +5,13 @@ import { HiCalendar } from "react-icons/hi";
 import { GoLocation } from "react-icons/go";
 import { HiUserGroup } from "react-icons/hi";
 import { Label } from "../ui/label";
-import { useState } from "react";
+
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
 import Image from "next/image";
 import { DialogOverlay } from "@radix-ui/react-dialog";
 import Carousel from "../ui/Carousel";
 import ResponsiveCarousel from "../ui/Carousel";
+import { LockClosed, LocationMarker, UserGroup } from "../ui/icons";
 
 export default function InPersonEventViewPageTemplate() {
 
@@ -25,7 +26,7 @@ export default function InPersonEventViewPageTemplate() {
 						<div className="flex items-center justify-between w-full pb-5">
 							<div className="flex flex-col gap-3">
 								<div className="flex items-center gap-3 text-[#D7FFC4]/80">
-									<FiLock />
+									<LockClosed />
 									<span className="font-bold">Zuzalu Residents & Invited Guests</span>
 								</div>
 								<h2 className="font-semibold text-[30px]">ZuConnect</h2>
@@ -38,7 +39,7 @@ export default function InPersonEventViewPageTemplate() {
 								<HiCalendar /> October 8 - October 23
 							</span>
 							<span className="rounded-2xl flex px-4 py-1 items-center gap-1 opacity-60 bg-[#FFFFFF10] font-bold">
-								<GoLocation /> Beyoglu, Istanbul, Turkey
+								<LocationMarker /> Beyoglu, Istanbul, Turkey
 							</span>
 						</div>
 					</div>
@@ -82,7 +83,7 @@ export default function InPersonEventViewPageTemplate() {
 				<div className="w-1/4 flex flex-col px-10 py-5 gap-5 fixed right-0">
 					<h2 className="border-b pb-3 text-2xl font-bold border-white/10">Details</h2>
 					<div className="flex gap-4 items-center text-lg font-bold">
-						<HiUserGroup className="opacity-80" />
+						<UserGroup />
 						<span>14 applied</span>
 					</div>
 					<div className="flex flex-col gap-2 font-semibold text-sm">
