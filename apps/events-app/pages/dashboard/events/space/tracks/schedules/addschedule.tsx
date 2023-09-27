@@ -279,6 +279,7 @@ export default function AddSchedulePage() {
                       </FormDescription>
                       <FormControl>
                         <RadioGroup
+                          onValueChange={field.onChange}
                           defaultValue={field.value}
                           className="flex flex-col md:flex-row justify-between"
                           {...field}
@@ -287,7 +288,7 @@ export default function AddSchedulePage() {
                             <FormControl>
                               <RadioGroupItem value="in-person" />
                             </FormControl>
-                            <FormLabel className="font-semibold text-white/30 text-base cursor-pointer hover:bg-itemHover">
+                            <FormLabel className="font-semibold text-white/30 text-base cursor-pointer">
                               In-Person
                               <span className="text-xs block">
                                 This is a physical event
