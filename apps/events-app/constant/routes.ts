@@ -1,8 +1,8 @@
-import { SubHeaderTabIndex } from "@/types";
-import { IconType } from "react-icons";
-import { HiCollection, HiHome, HiLightningBolt, HiViewBoards, HiMap, HiCalendar } from "react-icons/hi";
-import { BiCalendar, BiSolidLayout } from "react-icons/bi";
-import { BsFillTicketFill } from "react-icons/bs";
+import { SubHeaderTabIndex } from '@/types';
+import { IconType } from 'react-icons';
+import { HiCollection, HiHome, HiLightningBolt, HiViewBoards, HiMap, HiCalendar } from 'react-icons/hi';
+import { BiCalendar, BiSolidLayout } from 'react-icons/bi';
+import { BsFillTicketFill } from 'react-icons/bs';
 
 interface Routes {
   name?: string;
@@ -46,31 +46,34 @@ export const eventRoutes: Routes[] = [
     path: '/dashboard/events/space/tracks/schedules/addschedule',
     title: 'Add a Schedule',
   },
-
+  {
+    path: '/dashboard/events/space/tracks/schedules/updateschedule',
+    title: 'Update a Schedule',
+  },
 ];
 
 export const navBarRoutes: Routes[] = [
   {
     path: '/dashboard/home',
     title: 'Home',
-    icon: HiHome
+    icon: HiHome,
   },
   {
     path: '/dashboard/schedules',
     title: 'Schedules',
-    icon: HiViewBoards
+    icon: HiViewBoards,
   },
   {
     path: '/dashboard/zapps',
     title: 'Zapps',
-    icon: HiLightningBolt
+    icon: HiLightningBolt,
   },
   {
     path: '/dashboard/resources',
     title: 'Resources',
-    icon: HiCollection
+    icon: HiCollection,
   },
-]
+];
 
 export const eventViewRoutes: Routes[] = [
   {
@@ -89,14 +92,14 @@ export const eventViewRoutes: Routes[] = [
     name: 'All Schedules',
     path: '/dashboard/eventview/allschedules',
     title: 'Tracks Dashboard',
-    icon: BsFillTicketFill
+    icon: BsFillTicketFill,
   },
   {
     path: '/dashboard/eventview/tracks/track',
-    title: 'Track View'
+    title: 'Track View',
   },
   {
     path: '/dashboard/eventview/allschedules/schedule',
-    title: 'Track View'
-  }
+    title: 'Track View',
+  },
 ];
