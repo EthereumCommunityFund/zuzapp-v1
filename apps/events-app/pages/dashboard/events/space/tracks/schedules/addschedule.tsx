@@ -63,7 +63,7 @@ type TagItemProp = {
   name: string;
 };
 
-export default function AddSchedulePage(props) {
+export default function AddSchedulePage(props: any) {
   console.log(props, "page props");
 
   const optionTags = props.tags;
@@ -74,18 +74,17 @@ export default function AddSchedulePage(props) {
   };
 
   const savedLocations = props.savedLocations;
-  let locationId = null;
-  if (savedLocations.length > 0) {
-    locationId = savedLocations[0].id;
-  }
 
+  const [locationId, setLocationId] = useState(
+    savedLocations.length > 0 ? savedLocations[0].id : ""
+  );
   const router = useRouter();
   const { eventId, trackId, trackTitle } = router.query;
   const [selectedEventFormat, setSelectedEventFormat] = useState("");
   const [switchDialogue, setSwitchDialogue] = useState(false);
   const [isAllDay, setIsAllDay] = useState(false);
   const [rsvpAmount, setRsvpAmount] = useState(1);
-  const [speakers, setSpeakers] = useState<TagItemProp[]>([]);
+  const [speakers, setSpeakers] = useState<any>([]);
   const [tags, setTags] = useState<string[]>([]);
   const [tagItem, setTagItem] = useState<TagItemProp>({ name: "" });
   const [eventItem, setEventItem] = useState({ speaker_name: "", role: "" });
@@ -509,7 +508,7 @@ export default function AddSchedulePage(props) {
                             value={locationId}
                             className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
                           >
-                            {savedLocations?.map((location) => (
+                            {savedLocations?.map((location: any) => (
                               <option key={location.id} value={location.id}>
                                 {location.name}
                               </option>

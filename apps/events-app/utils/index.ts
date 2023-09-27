@@ -48,6 +48,7 @@ export const generateRandomEventSpaceUpdateData = (id: string, event_space_type:
     event_type: [getRandomElement(eventTypes)],
     experience_level: [getRandomElement(experienceLevels)],
     status: 'draft',
+    image_url: "http:imag"
   };
 };
 
