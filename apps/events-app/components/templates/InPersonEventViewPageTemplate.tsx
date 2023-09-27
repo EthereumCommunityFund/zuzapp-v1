@@ -51,14 +51,14 @@ export default function InPersonEventViewPageTemplate() {
 							<DialogTrigger asChild>
 								<Button variant="quiet" size="lg" className="rounded-2xl inline-block text-white/70 font-bold hover:text-white">Read Description</Button>
 							</DialogTrigger>
-							<DialogContent className="w-[700px]">
+							<DialogContent>
 								<DialogHeader>
-									<DialogTitle>About This Event</DialogTitle>
+									<DialogTitle >About This Event</DialogTitle>
 									<DialogDescription className="opacity-80">
 										<h2 className="text-2xl font-bold">What is ZuConnect?</h2>
 									</DialogDescription>
 								</DialogHeader>
-
+								<DialogFooter></DialogFooter>
 							</DialogContent>
 						</Dialog>
 					</div>
