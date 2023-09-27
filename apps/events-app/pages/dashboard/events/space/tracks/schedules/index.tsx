@@ -36,10 +36,10 @@ export default function SchedulesDashboardPage() {
     }
   );
 
-  const handleEnterTrack = async (id: string) => {
+  const handleEnterSchedule = async (id: string) => {
     try {
       router.push({
-        pathname: `/dashboard/events/space/tracks/schedules/updateSchedule`,
+        pathname: `/dashboard/events/space/tracks/schedules/updateschedule`,
         query: { eventId: eventId, trackId: trackId, scheduleId: id },
       });
     } catch (error) {
@@ -113,7 +113,7 @@ export default function SchedulesDashboardPage() {
             </div>
             <div className="flex justify-between items-start self-stretch">
               <Button
-                variant="light-blue"
+                variant="blue"
                 className="flex py-[10px] px-[14px] items-center gap-[10px] rounded-[20px] bg-[#67DAFF20] text-[#67DAFF] text-xl"
                 leftIcon={BsFillPlusCircleFill}
                 onClick={handleAddSchedule}
@@ -159,7 +159,7 @@ export default function SchedulesDashboardPage() {
                           </div>
                         </div>
                         <div className="w-full">
-                          <Button variant="dark" className="bg-white/20 text-white/70 rounded-full" leftIcon={HiArrowRight} onClick={() => handleEnterTrack(schedule.id)}>
+                          <Button variant="dark" className="bg-white/20 text-white/70 rounded-full" leftIcon={HiArrowRight} onClick={() => handleEnterSchedule(schedule.id)}>
                             Update Schedule
                           </Button>
                         </div>
@@ -191,10 +191,7 @@ export const getServerSideProps = async (ctx: any) => {
     };
 
   // get profile from session
-  const { data: profile, error } = await supabase
-    .from("profile")
-    .select("*")
-    .eq("uuid", session.user.id);
+  const { data: profile, error } = await supabase.from('profile').select('*').eq('uuid', session.user.id);
 
   return {
     props: {

@@ -156,7 +156,7 @@ export default function AddTrackForm({
           <div className="flex gap-[30px] w-full">
             <Button
               className="rounded-full w-1/2 flex justify-center"
-              variant="light-dark"
+              variant="quiet"
               size="lg"
               type="button"
               leftIcon={CgClose}
@@ -165,7 +165,7 @@ export default function AddTrackForm({
             </Button>
             <Button
               className="rounded-full w-1/2 flex justify-center"
-              variant="light-blue"
+              variant="blue"
               size="lg"
               type="submit"
               leftIcon={FaCircleArrowUp}

@@ -19,30 +19,30 @@ import { Loader } from '@/components/ui/Loader';
 export default function EventSpaceDetailsPage() {
   const router = useRouter();
   const { eventId } = router.query;
-  const { eventSpace } = useEventSpace();
+  // const { eventSpace } = useEventSpace();
   const goBackToPreviousPage = () => {
     router.back();
   };
 
-  // const {
-  //   data: eventSpace,
-  //   isLoading,
-  //   isError,
-  // } = useQuery<EventSpaceDetailsType, Error>(
-  //   ['spaceDetails', eventId], // Query key
-  //   () => fetchEventSpaceById(eventId as string), // Query function
-  //   {
-  //     enabled: !!eventId,
-  //     refetchOnWindowFocus: false, // Only execute the query if eventId is available
-  //   }
-  // );
+  const {
+    data: eventSpace,
+    isLoading,
+    isError,
+  } = useQuery<EventSpaceDetailsType, Error>(
+    ['spaceDetails', eventId], // Query key
+    () => fetchEventSpaceById(eventId as string), // Query function
+    {
+      enabled: !!eventId,
+      refetchOnWindowFocus: false, // Only execute the query if eventId is available
+    }
+  );
 
-  // if (isLoading) {
-  //   return <Loader />;
-  // }
-  // if (isError) {
-  //   return <p>Error loading space details</p>;
-  // }
+  if (isLoading) {
+    return <Loader />;
+  }
+  if (isError) {
+    return <p>Error loading space details</p>;
+  }
   return (
     <div className="flex flex-col py-5 px-10 w-full items-center gap-[10px] self-stretch">
       <div className="flex items-start gap-8 self-stretch ">

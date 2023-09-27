@@ -19,7 +19,7 @@ export default function BasicPrompt(props: IProps) {
       </div>
       <span className="text-base font-normal leading-[1.2] opacity-70">{description}</span>
       <Link href={link}>
-        <Button variant="light-dark" leftIcon={BsMapFill}>{buttonName}</Button>
+        <Button variant="quiet" leftIcon={BsMapFill}>{buttonName}</Button>
       </Link>
     </div>
   )

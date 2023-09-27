@@ -33,7 +33,7 @@ export default function EventViewTracksPage() {
         </div>
         <div className="flex flex-col gap-2.5 p-[30px]">
           <div>
-            <Button variant="light-blue" size="lg" className="rounded-xl" leftIcon={BiPlusCircle}>
+            <Button variant="blue" size="lg" className="rounded-xl" leftIcon={BiPlusCircle}>
               Add a Schedule
             </Button>
           </div>

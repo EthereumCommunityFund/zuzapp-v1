@@ -1,62 +1,42 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
 
-import Button from "@/components/ui/buttons/Button";
-import { HiArrowLeft } from "react-icons/hi";
-import DetailsBar from "@/components/detailsbar";
-import EditionButtons from "@/components/ui/buttons/EditionButtons";
+import Button from '@/components/ui/buttons/Button';
+import { HiArrowLeft } from 'react-icons/hi';
+import DetailsBar from '@/components/detailsbar';
+import EditionButtons from '@/components/ui/buttons/EditionButtons';
 
-import { CgClose } from "react-icons/cg";
-import { FaCircleArrowUp } from "react-icons/fa6";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { useForm } from "react-hook-form";
-import { useState, useEffect } from "react";
-import FormTitle from "@/components/ui/labels/form-title";
-import InputFieldDark from "@/components/ui/inputFieldDark";
-import {
-  EventSpaceDetailsType,
-  InputFieldType,
-  LocationUpdateRequestBody,
-  ScheduleUpdateRequestBody,
-} from "@/types";
-import TextEditor from "@/components/ui/TextEditor";
-import { Label } from "@/components/ui/label";
-import SwitchButton from "@/components/ui/buttons/SwitchButton";
-import { GoXCircle } from "react-icons/go";
-import InputFieldLabel from "@/components/ui/labels/inputFieldLabel";
-import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
-import { Database } from "@/database.types";
-import CustomDatePicker from "@/components/ui/DatePicker";
-import { useRouter } from "next/router";
-import {
-  fetchLocationsByEventSpace,
-  createSchedule,
-  fetchAllTags,
-} from "@/controllers";
-import { useQuery } from "react-query";
-import { fetchEventSpaceById } from "@/services/fetchEventSpaceDetails";
+import { CgClose } from 'react-icons/cg';
+import { FaCircleArrowUp } from 'react-icons/fa6';
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { useForm } from 'react-hook-form';
+import { useState, useEffect } from 'react';
+import FormTitle from '@/components/ui/labels/form-title';
+import InputFieldDark from '@/components/ui/inputFieldDark';
+import { EventSpaceDetailsType, InputFieldType, LocationUpdateRequestBody, ScheduleUpdateRequestBody } from '@/types';
+import TextEditor from '@/components/ui/TextEditor';
+import { Label } from '@/components/ui/label';
+import SwitchButton from '@/components/ui/buttons/SwitchButton';
+import { GoXCircle } from 'react-icons/go';
+import InputFieldLabel from '@/components/ui/labels/inputFieldLabel';
+import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
+import { Database } from '@/database.types';
+import CustomDatePicker from '@/components/ui/DatePicker';
+import { useRouter } from 'next/router';
+import { fetchLocationsByEventSpace, createSchedule, fetchAllTags } from '@/controllers';
+import { useQuery } from 'react-query';
+import { fetchEventSpaceById } from '@/services/fetchEventSpaceDetails';
 // import timepicker as Timepicker from "react-time-picker";
-import dayjs, { Dayjs } from "dayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { TimePicker } from "@mui/x-date-pickers/TimePicker";
-import { v4 as uuidv4 } from "uuid";
+import dayjs, { Dayjs } from 'dayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+import { v4 as uuidv4 } from 'uuid';
 
-import TextField from "@mui/material/TextField";
-import Autocomplete from "@mui/material/Autocomplete";
-import {
-  fetchScheduleByID,
-  updateSchedule,
-} from "../../../../../../controllers/schedule.controller";
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
+import { fetchScheduleByID, updateSchedule } from '../../../../../../controllers/schedule.controller';
 
 type Speaker = {
   speaker_name: string;
@@ -70,32 +50,32 @@ type TagItemProp = {
 export default function AddSchedulePage() {
   const router = useRouter();
   const { eventId, trackId, scheduleId } = router.query;
-  const [selectedEventFormat, setSelectedEventFormat] = useState("");
+  const [selectedEventFormat, setSelectedEventFormat] = useState('');
 
   const [schedule, setSchedule] = useState<ScheduleUpdateRequestBody>({
-    name: "",
-    format: "in-person",
-    description: "",
-    date: "",
-    start_time: "",
-    end_time: "",
+    name: '',
+    format: 'in-person',
+    description: '',
+    date: '',
+    start_time: '',
+    end_time: '',
     all_day: false,
-    schedule_frequency: "once",
-    images: [""],
-    video_call_link: "",
-    live_stream_url: "",
-    location_id: "",
-    event_type: [""],
-    experience_level: [""],
+    schedule_frequency: 'once',
+    images: [''],
+    video_call_link: '',
+    live_stream_url: '',
+    location_id: '',
+    event_type: [''],
+    experience_level: [''],
     limit_rsvp: false,
     rsvp_amount: 1,
-    event_space_id: "",
-    track_id: "",
-    tags: [""],
+    event_space_id: '',
+    track_id: '',
+    tags: [''],
     speakers: [
       {
-        speaker_name: "",
-        role: "",
+        speaker_name: '',
+        role: '',
       },
     ],
   });
@@ -104,38 +84,33 @@ export default function AddSchedulePage() {
   const [rsvpAmount, setRsvpAmount] = useState(1);
   const [optionTags, setOptionTags] = useState<TagItemProp[]>([]);
   const [tags, setTags] = useState<string[]>([]);
-  const [tagItem, setTagItem] = useState<TagItemProp>({ name: "" });
-  const [eventItem, setEventItem] = useState({ speaker_name: "", role: "" });
+  const [tagItem, setTagItem] = useState<TagItemProp>({ name: '' });
+  const [eventItem, setEventItem] = useState({ speaker_name: '', role: '' });
   const [speakers, setSpeakers] = useState<any>([]);
-  const [frequency, setFrequency] = useState<"once" | "everyday" | "weekly">(
-    "once"
-  );
-  const [savedLocations, setSavedLocations] = useState<
-    LocationUpdateRequestBody[]
-  >([]);
-  const [locationId, setLocationId] = useState("");
-  const [experienceLevel, setExperienceLevel] = useState("");
-  const [videoLink, setVideoLink] = useState("");
-  const [liveLink, setLiveLink] = useState("");
+  const [frequency, setFrequency] = useState<'once' | 'everyday' | 'weekly'>('once');
+  const [savedLocations, setSavedLocations] = useState<LocationUpdateRequestBody[]>([]);
+  const [locationId, setLocationId] = useState('');
+  const [experienceLevel, setExperienceLevel] = useState('');
+  const [videoLink, setVideoLink] = useState('');
+  const [liveLink, setLiveLink] = useState('');
   const handleChangeSwitch = () => {
     setIsAllDay((prev) => !prev);
   };
-  const [startTime, setStartTime] = useState(dayjs("2023-11-17T00:00"));
-  const [endTime, setEndTime] = useState(dayjs("2023-11-17T23:59"));
+  const [startTime, setStartTime] = useState(dayjs('2023-11-17T00:00'));
+  const [endTime, setEndTime] = useState(dayjs('2023-11-17T23:59'));
 
   const [isLimit, setIsLimit] = useState(false);
 
-
   const formSchema = z.object({
     name: z.string().min(2, {
-      message: "Schedule name is required.",
+      message: 'Schedule name is required.',
     }),
-    format: z.enum(["in-person", "online", "hybrid"], {
-      required_error: "You need to select a format.",
+    format: z.enum(['in-person', 'online', 'hybrid'], {
+      required_error: 'You need to select a format.',
     }),
     date: z.coerce.date(),
     description: z.string().min(2, {
-      message: "Description is required.",
+      message: 'Description is required.',
     }),
     // video_call_link: z.string().min(2, {
     //   message: "Video link is required.",
@@ -150,14 +125,14 @@ export default function AddSchedulePage() {
     isLoading,
     isError,
   } = useQuery<EventSpaceDetailsType, Error>(
-    ["spaceDetails", eventId], // Query key
+    ['spaceDetails', eventId], // Query key
     () => fetchEventSpaceById(eventId as string), // Query function
     {
       enabled: !!eventId, // Only execute the query if eventId is available
     }
   );
 
-  const [eventType, setEventType] = useState("");
+  const [eventType, setEventType] = useState('');
 
   const handleLimitRSVP = () => {
     setSchedule({ ...schedule, limit_rsvp: !schedule.limit_rsvp });
@@ -169,7 +144,7 @@ export default function AddSchedulePage() {
       name: schedule?.name,
       format: schedule?.format,
       date: undefined,
-      description: "",
+      description: '',
     },
   });
 
@@ -178,14 +153,8 @@ export default function AddSchedulePage() {
       event_space_id: schedule.event_space_id,
       start_time: schedule.start_time as unknown as string,
       end_time: schedule.end_time as unknown as string,
-      event_type:
-        (schedule.event_type as []).length > 0
-          ? schedule.event_type
-          : [(eventSpace?.event_type as string[])[0]],
-      experience_level:
-        (schedule.experience_level as []).length > 0
-          ? schedule.experience_level
-          : [(eventSpace?.experience_level as string[])[0]],
+      event_type: (schedule.event_type as []).length > 0 ? schedule.event_type : [(eventSpace?.event_type as string[])[0]],
+      experience_level: (schedule.experience_level as []).length > 0 ? schedule.experience_level : [(eventSpace?.experience_level as string[])[0]],
       tags: schedule.tags,
       schedule_frequency: schedule.schedule_frequency,
       location_id: schedule.location_id,
@@ -194,7 +163,7 @@ export default function AddSchedulePage() {
       live_stream_url: schedule.live_stream_url,
       all_day: schedule.all_day,
       // limit_rsvp: isLimit,
-      ...(eventSpace?.event_space_type === "tracks" && {
+      ...(eventSpace?.event_space_type === 'tracks' && {
         track_id: trackId as string,
       }),
       ...(isLimit ? { revp_amount: schedule.rsvp_amount } : {}),
@@ -205,7 +174,7 @@ export default function AddSchedulePage() {
     try {
       const result = await updateSchedule(scheduleId as string, payload);
       setSwitchDialogue(true);
-      console.log(result, "result");
+      console.log(result, 'result');
     } catch (error) {
       console.log(error);
     }
@@ -217,19 +186,13 @@ export default function AddSchedulePage() {
   };
 
   const handleRemoveSpeaker = (index: number) => {
-    const updatedItems = [
-      ...(schedule.speakers as Speaker[]).slice(0, index),
-      ...(schedule.speakers as Speaker[]).slice(index + 1),
-    ];
+    const updatedItems = [...(schedule.speakers as Speaker[]).slice(0, index), ...(schedule.speakers as Speaker[]).slice(index + 1)];
     setSchedule({ ...schedule, speakers: updatedItems as any });
   };
 
   const handleRemoveTag = (index: number) => {
-    const updatedItems = [
-      ...(schedule.tags as string[]).slice(0, index),
-      ...(schedule.tags as string[]).slice(index + 1),
-    ];
-    console.log(updatedItems)
+    const updatedItems = [...(schedule.tags as string[]).slice(0, index), ...(schedule.tags as string[]).slice(index + 1)];
+    console.log(updatedItems);
     setSchedule({ ...schedule, tags: updatedItems });
   };
 
@@ -287,40 +250,26 @@ export default function AddSchedulePage() {
       <DetailsBar />
       <div className="flex flex-col items-start gap-[17px] flex-1">
         <div className="flex items-center gap-[17px] self-stretch">
-          <Button
-            className="rounded-[40px] py-2.5 px-3.5 bg-bgPrimary border-none hover:bg-[#363636] duration-200 text-textSecondary hover:text-textSecondary"
-            size="lg"
-            leftIcon={HiArrowLeft}
-          >
+          <Button className="rounded-[40px] py-2.5 px-3.5 bg-bgPrimary border-none hover:bg-[#363636] duration-200 text-textSecondary hover:text-textSecondary" size="lg" leftIcon={HiArrowLeft}>
             Back
           </Button>
           <div className="flex flex-col gap-[10px]">
             <span className="text-2xl items-start font-bold">ZK Week</span>
-            <span className="text-sm opacity-70">
-              You are adding a schedule for this track
-            </span>
+            <span className="text-sm opacity-70">You are adding a schedule for this track</span>
           </div>
         </div>
         <div className="flex py-5 px-4 flex-col items-center gap-8 self-stretch rounded-2xl border border-[#FFFFFF10] bg-[#2E3131]">
           <div className="flex flex-col items-center gap-[34px] self-stretch w-full">
             <FormTitle name="Add a Schedule" />
             <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-10 w-full"
-              >
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-10 w-full">
                 <FormField
                   control={form.control}
                   name="format"
                   render={({ field }) => (
                     <FormItem className="space-y-3">
-                      <FormLabel className="text-2xl opacity-80 leading-[1.2]">
-                        Schedule Format
-                      </FormLabel>
-                      <FormDescription>
-                        The format you select will determine what information
-                        will be required going forward
-                      </FormDescription>
+                      <FormLabel className="text-2xl opacity-80 leading-[1.2]">Schedule Format</FormLabel>
+                      <FormDescription>The format you select will determine what information will be required going forward</FormDescription>
                       <FormControl>
                         <RadioGroup
                           onValueChange={field.onChange}
@@ -334,9 +283,7 @@ export default function AddSchedulePage() {
                             </FormControl>
                             <FormLabel className="font-semibold text-white/30 text-base cursor-pointer hover:bg-itemHover">
                               In-Person
-                              <span className="text-xs block">
-                                This is a physical event
-                              </span>
+                              <span className="text-xs block">This is a physical event</span>
                             </FormLabel>
                           </FormItem>
                           <FormItem className="flex items-center space-x-3 space-y-0">
@@ -345,9 +292,7 @@ export default function AddSchedulePage() {
                             </FormControl>
                             <FormLabel className="font-semibold text-white/30 text-base cursor-pointer">
                               Online
-                              <span className="text-xs block">
-                                Specifically Online Event
-                              </span>
+                              <span className="text-xs block">Specifically Online Event</span>
                             </FormLabel>
                           </FormItem>
                           <FormItem className="flex items-center space-x-3 space-y-0">
@@ -356,9 +301,7 @@ export default function AddSchedulePage() {
                             </FormControl>
                             <FormLabel className="font-semibold text-white/30 text-base cursor-pointer">
                               Hybrid
-                              <span className="text-xs block">
-                                In-Person & Online
-                              </span>
+                              <span className="text-xs block">In-Person & Online</span>
                             </FormLabel>
                           </FormItem>
                         </RadioGroup>
@@ -372,15 +315,9 @@ export default function AddSchedulePage() {
                   name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                        Schedule Name{" "}
-                      </FormLabel>
+                      <FormLabel className="text-lg font-semibold leading-[1.2] text-white self-stretch">Schedule Name </FormLabel>
                       <FormControl>
-                        <InputFieldDark
-                          type={InputFieldType.Primary}
-                          placeholder={"Enter a name for your event"}
-                          {...field}
-                        />
+                        <InputFieldDark type={InputFieldType.Primary} placeholder={'Enter a name for your event'} {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -392,30 +329,18 @@ export default function AddSchedulePage() {
                     name="description"
                     render={({ field }) => (
                       <div className="flex flex-col gap-[10px]">
-                        <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                          Schedule Description
-                        </h2>
-                        <TextEditor
-                          value={field.value}
-                          onChange={field.onChange}
-                        />
+                        <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">Schedule Description</h2>
+                        <TextEditor value={field.value} onChange={field.onChange} />
                       </div>
                     )}
                   />
                 </div>
                 <div className="w-full">
-                  <h2 className="text-xl opacity-70 self-stretch">
-                    Schedule Date & Times
-                  </h2>
+                  <h2 className="text-xl opacity-70 self-stretch">Schedule Date & Times</h2>
                   <div className="flex flex-col items-start gap-5 self-stretch w-full pt-5">
                     <div className="flex gap-5">
-                      <SwitchButton
-                        value={isAllDay}
-                        onClick={handleChangeSwitch}
-                      />
-                      <span className="text-lg opacity-70 self-stretch">
-                        All Day
-                      </span>
+                      <SwitchButton value={isAllDay} onClick={handleChangeSwitch} />
+                      <span className="text-lg opacity-70 self-stretch">All Day</span>
                     </div>
                     <div className="flex flex-col items-center gap-[30px] self-stretch w-full">
                       {/* <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
@@ -428,19 +353,11 @@ export default function AddSchedulePage() {
                         name="date"
                         render={({ field }) => (
                           <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                            <span className="text-lg opacity-70 self-stretch">
-                              Start Date
-                            </span>
+                            <span className="text-lg opacity-70 self-stretch">Start Date</span>
 
-                            <CustomDatePicker
-                              selectedDate={field.value}
-                              handleDateChange={field.onChange}
-                              {...field}
-                            />
+                            <CustomDatePicker selectedDate={field.value} handleDateChange={field.onChange} {...field} />
 
-                            <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">
-                              Click & Select or type in a date
-                            </h3>
+                            <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">Click & Select or type in a date</h3>
                             <FormMessage />
                           </div>
                         )}
@@ -452,15 +369,9 @@ export default function AddSchedulePage() {
                               <TimePicker
                                 label="Start Time"
                                 // slotProps={{ textField: { color: 'white' }}}
-                                value={
-                                  dayjs(
-                                    schedule?.start_time
-                                  ) as unknown as string
-                                }
+                                value={dayjs(schedule?.start_time) as unknown as string}
                                 // className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
-                                onChange={(
-                                  newValue: string | Date | null | undefined
-                                ) =>
+                                onChange={(newValue: string | Date | null | undefined) =>
                                   setSchedule({
                                     ...schedule,
                                     start_time: newValue as string,
@@ -468,31 +379,27 @@ export default function AddSchedulePage() {
                                 }
                                 sx={{
                                   input: {
-                                    color: "white",
+                                    color: 'white',
                                   },
                                   label: {
-                                    color: "white",
+                                    color: 'white',
                                   },
                                   svg: {
-                                    color: "white", // change the icon color
+                                    color: 'white', // change the icon color
                                   },
-                                  backgroundColor: "#242727",
-                                  color: "white",
-                                  borderRadius: "8px",
-                                  width: "100%",
+                                  backgroundColor: '#242727',
+                                  color: 'white',
+                                  borderRadius: '8px',
+                                  width: '100%',
                                   // borderColor: "white",
                                   // borderWidth: "1px",
-                                  border: "1px solid #1A1A1A",
+                                  border: '1px solid #1A1A1A',
                                 }}
                               />
                               <TimePicker
                                 label="End Time"
-                                value={
-                                  dayjs(schedule?.end_time) as unknown as string
-                                }
-                                onChange={(
-                                  newValue: string | Date | null | undefined
-                                ) =>
+                                value={dayjs(schedule?.end_time) as unknown as string}
+                                onChange={(newValue: string | Date | null | undefined) =>
                                   setSchedule({
                                     ...schedule,
                                     end_time: newValue as string,
@@ -500,21 +407,21 @@ export default function AddSchedulePage() {
                                 }
                                 sx={{
                                   input: {
-                                    color: "white",
+                                    color: 'white',
                                   },
                                   label: {
-                                    color: "white",
+                                    color: 'white',
                                   },
                                   svg: {
-                                    color: "white", // change the icon color
+                                    color: 'white', // change the icon color
                                   },
-                                  backgroundColor: "#242727",
-                                  color: "white",
-                                  borderRadius: "8px",
-                                  width: "100%",
+                                  backgroundColor: '#242727',
+                                  color: 'white',
+                                  borderRadius: '8px',
+                                  width: '100%',
                                   // borderColor: "white",
                                   // borderWidth: "1px",
-                                  border: "1px solid #1A1A1A",
+                                  border: '1px solid #1A1A1A',
                                 }}
                               />
                             </div>
@@ -523,9 +430,7 @@ export default function AddSchedulePage() {
                       )}
                     </div>
                     <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                      <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                        Select a Timezone
-                      </Label>
+                      <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select a Timezone</Label>
                       <select
                         // onChange={(e) => setFrequency(e.target.value as any)}
                         className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
@@ -535,9 +440,7 @@ export default function AddSchedulePage() {
                       </select>
                     </div>
                     <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                      <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                        Select Schedule Frequency
-                      </Label>
+                      <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select Schedule Frequency</Label>
                       <select
                         value={schedule.schedule_frequency}
                         onChange={(e) =>
@@ -559,14 +462,10 @@ export default function AddSchedulePage() {
                   </div>
                 </div>
                 <div className="w-full">
-                  <h2 className="text-xl opacity-70 self-stretch font-semibold">
-                    Location
-                  </h2>
+                  <h2 className="text-xl opacity-70 self-stretch font-semibold">Location</h2>
                   <div className="flex flex-col items-start gap-5 self-stretch w-full pt-5">
                     <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                      <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                        Select Location
-                      </Label>
+                      <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select Location</Label>
                       {/* <InputFieldDark type={InputFieldType.Option} placeholder={'The Dome'} /> */}
                       <select
                         onChange={(e) =>
@@ -589,9 +488,7 @@ export default function AddSchedulePage() {
                   </div>
                   <div className="flex flex-col items-start gap-5 self-stretch w-full pt-5">
                     <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                      <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                        Video Call Link
-                      </h2>
+                      <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">Video Call Link</h2>
                       <InputFieldDark
                         type={InputFieldType.Link}
                         placeholder="Type URL"
@@ -599,17 +496,14 @@ export default function AddSchedulePage() {
                         onChange={(e) =>
                           setSchedule({
                             ...schedule,
-                            video_call_link: (e.target as HTMLInputElement)
-                              .value,
+                            video_call_link: (e.target as HTMLInputElement).value,
                           })
                         }
                       />
                     </div>
 
                     <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                      <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                        Live Stream Link
-                      </h2>
+                      <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">Live Stream Link</h2>
                       <InputFieldDark
                         type={InputFieldType.Link}
                         placeholder="Type URL"
@@ -617,8 +511,7 @@ export default function AddSchedulePage() {
                         onChange={(e) =>
                           setSchedule({
                             ...schedule,
-                            live_stream_url: (e.target as HTMLInputElement)
-                              .value,
+                            live_stream_url: (e.target as HTMLInputElement).value,
                           })
                         }
                       />
@@ -627,33 +520,26 @@ export default function AddSchedulePage() {
                 </div>
                 <line></line>
                 <div className="w-full">
-                  <h2 className="text-xl opacity-70 self-stretch font-semibold pb-5">
-                    Roles
-                  </h2>
+                  <h2 className="text-xl opacity-70 self-stretch font-semibold pb-5">Roles</h2>
                   <div className="flex flex-col gap-6 items-start self-stretch">
                     <div className="flex flex-col gap-6">
                       <div className="flex items-end gap-6 self-stretch">
                         <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                          <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                            Enter Name
-                          </h2>
+                          <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">Enter Name</h2>
                           <InputFieldDark
                             type={InputFieldType.Primary}
                             value={eventItem.speaker_name}
                             onChange={(e) =>
                               setEventItem({
                                 ...eventItem,
-                                speaker_name: (e.target as HTMLInputElement)
-                                  .value,
+                                speaker_name: (e.target as HTMLInputElement).value,
                               })
                             }
-                            placeholder={"Enter the name"}
+                            placeholder={'Enter the name'}
                           />
                         </div>
                         <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                          <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                            Select Role
-                          </h2>
+                          <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select Role</h2>
                           <select
                             title="speaker"
                             value={eventItem.role}
@@ -676,12 +562,9 @@ export default function AddSchedulePage() {
                           onClick={() => {
                             setSchedule({
                               ...schedule,
-                              speakers: [
-                                ...(schedule.speakers as Speaker[]),
-                                eventItem,
-                              ],
+                              speakers: [...(schedule.speakers as Speaker[]), eventItem],
                             });
-                            setEventItem({ speaker_name: "", role: "" });
+                            setEventItem({ speaker_name: '', role: '' });
                           }}
                           className="flex gap-2.5 mb-2 text-lg font-normal leading-[1.2] text-white items-center rounded-[8px] px-2 py-1 bg-white bg-opacity-10"
                         >
@@ -690,39 +573,22 @@ export default function AddSchedulePage() {
                       </div>
 
                       <div className="flex gap-2.5">
-                        {schedule.speakers?.map(
-                          (speaker: any, index: number) => (
-                            <div
-                              key={index}
-                              className="flex gap-2.5 items-center rounded-[8px] px-2 py-1.5 bg-white bg-opacity-10"
-                            >
-                              <button
-                                type="button"
-                                className="flex gap-2.5 items-center"
-                              >
-                                <GoXCircle
-                                  onClick={() => handleRemoveSpeaker(index)}
-                                  className="top-0.5 left-0.5 w-4 h-4"
-                                />
-                                <span className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                                  {speaker.name}
-                                </span>
-                              </button>
-                            </div>
-                          )
-                        )}
+                        {schedule.speakers?.map((speaker: any, index: number) => (
+                          <div key={index} className="flex gap-2.5 items-center rounded-[8px] px-2 py-1.5 bg-white bg-opacity-10">
+                            <button type="button" className="flex gap-2.5 items-center">
+                              <GoXCircle onClick={() => handleRemoveSpeaker(index)} className="top-0.5 left-0.5 w-4 h-4" />
+                              <span className="text-lg font-semibold leading-[1.2] text-white self-stretch">{speaker.name}</span>
+                            </button>
+                          </div>
+                        ))}
                       </div>
                     </div>
                   </div>
                 </div>
                 <div className="w-full flex flex-col gap-6">
-                  <h2 className="text-lg opacity-70 self-stretch font-bold pb-5">
-                    Schedule Labels
-                  </h2>
+                  <h2 className="text-lg opacity-70 self-stretch font-bold pb-5">Schedule Labels</h2>
                   <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                    <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                      Select Event Category
-                    </Label>
+                    <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select Event Category</Label>
                     {/* <InputFieldDark type={InputFieldType.Option} placeholder={'Workshop'} /> */}
 
                     <select
@@ -748,9 +614,7 @@ export default function AddSchedulePage() {
                     </select>
                   </div>
                   <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                    <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                      Select Experience Level
-                    </Label>
+                    <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select Experience Level</Label>
                     {/* <InputFieldDark type={InputFieldType.Option} placeholder={'Beginner'} /> */}
 
                     <select
@@ -847,28 +711,19 @@ export default function AddSchedulePage() {
                   </div> */}
                 </div>
                 <div className="w-full">
-                  <span className="text-lg opacity-70 self-stretch">
-                    Advanced
-                  </span>
+                  <span className="text-lg opacity-70 self-stretch">Advanced</span>
                   <div className="flex flex-col items-center gap-5 self-stretch">
                     <div className="flex items-center gap-5 self-stretch">
-                      <SwitchButton
-                        value={schedule.limit_rsvp}
-                        onClick={handleLimitRSVP}
-                      />
-                      <span className="flex-1 text-base font-semibold leading-[1.2]">
-                        Limit RSVPs
-                      </span>
+                      <SwitchButton value={schedule.limit_rsvp} onClick={handleLimitRSVP} />
+                      <span className="flex-1 text-base font-semibold leading-[1.2]">Limit RSVPs</span>
                     </div>
                     {schedule.limit_rsvp && (
                       <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                        <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                          Select an Amount
-                        </Label>
+                        <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select an Amount</Label>
                         <input
                           type="number"
                           className="bg-gray-600 w-full outline-none px-4 rounded-md py-2"
-                          placeholder={"50"}
+                          placeholder={'50'}
                           onChange={(e) =>
                             setSchedule({
                               ...schedule,
@@ -881,9 +736,9 @@ export default function AddSchedulePage() {
                   </div>
                 </div>
                 <EditionButtons
-                  type={"schedule"}
-                  leftButtonName={"Discard Schedule"}
-                  rightButtonName={"Add Schedule"}
+                  type={'schedule'}
+                  leftButtonName={'Discard Schedule'}
+                  rightButtonName={'Update Schedule'}
                   leftButtonIcon={CgClose}
                   rightButtonIcon={FaCircleArrowUp}
                   switchDialogue={switchDialogue}
@@ -912,10 +767,7 @@ export const getServerSideProps = async (ctx: any) => {
     };
 
   // get profile from session
-  const { data: profile, error } = await supabase
-    .from("profile")
-    .select("*")
-    .eq("uuid", session.user.id);
+  const { data: profile, error } = await supabase.from('profile').select('*').eq('uuid', session.user.id);
 
   return {
     props: {

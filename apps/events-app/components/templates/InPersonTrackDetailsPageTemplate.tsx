@@ -42,7 +42,7 @@ export default function OnlineTrackDetailsPageTemplate() {
           <div className="flex flex-col gap-[10px] p-2.5 bg-componentPrimary rounded-xl">
             <div className="flex justify-between">  {/* Tracks and Edit Button */}
               <Button variant="ghost" className="text-lg font-bold" leftIcon={HiArrowLeft} onClick={handleBackToTracksClick}>Tracks</Button>
-              <Button variant="light-dark" className="rounded-xl" leftIcon={BiEditAlt}>Edit</Button>
+              <Button variant="quiet" className="rounded-xl" leftIcon={BiEditAlt}>Edit</Button>
             </div>
             <div className="flex flex-col gap-[10px] p-5 "> {/* Track Info */}
               <img src="/images/1.png" alt="track image" className=" h-[496px] rounded-[10px]" />
@@ -57,7 +57,7 @@ export default function OnlineTrackDetailsPageTemplate() {
           </div>
         </div>
         <div className="p-4 w-full">
-          <Button variant="light-blue" size="lg" className="rounded-xl flex justify-center w-full" leftIcon={BiPlusCircle}>
+          <Button variant="blue" size="lg" className="rounded-xl flex justify-center w-full" leftIcon={BiPlusCircle}>
             Add a Schedule
           </Button>
         </div>

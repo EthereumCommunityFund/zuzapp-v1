@@ -49,7 +49,7 @@ export default function Tracks() {
         <div className="flex flex-col items-start gap-7 self-stretch">
           <span className="text-[50px] font-bold leading-[1.2]">Tracks</span>
           <div className="flex justify-between items-start self-stretch">
-            <Button variant="light-blue" className="rounded-full font-bold" size="lg" leftIcon={BiSolidPlusCircle} onClick={handleAddTrack}>
+            <Button variant="blue" className="rounded-full font-bold" size="lg" leftIcon={BiSolidPlusCircle} onClick={handleAddTrack}>
               Add a Track
             </Button>
             <div className="flex items-start gap-3">

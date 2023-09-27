@@ -69,7 +69,7 @@ export default function InPersonEventViewPageTemplate() {
 						<h3 className="font-bold text-white/70">Beyoğlu, Istanbul, Turkey</h3>
 						<Dialog>
 							<DialogTrigger asChild>
-								<Button className="light-dark text-lg rounded-full inline-block text-white/70 font-bold">View Location</Button>
+								<Button className="quiet text-lg rounded-full inline-block text-white/70 font-bold">View Location</Button>
 							</DialogTrigger>
 							<DialogContent>
 								<DialogHeader>
