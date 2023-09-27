@@ -37,14 +37,12 @@ export default function EventViewTracksPage() {
 		<div className="flex gap-4">
 			<div className="flex flex-col w-2/3 pb-10 gap-5">
 				<div className="flex px-2.5 rounded-full gap-[10px] h-[60px] justify-between items-center">
-					<img src="/images/1.png" width={100} alt="event" />
+					<img src="/images/1.png" className="rounded-lg" width={100} alt="event" />
 					<div className="flex flex-col gap-2 w-3/4">
 						<h2 className="font-bold text-3xl">ZuConnect</h2>
 						<span className="font-semibold opacity-70">A Popup Village of Innovation in the Heart of Istanbul</span>
 					</div>
-					<Button className="rounded-[20px] text-base w-[150px] h-10 items-center">
-						<span className="mx-auto" >Apply to Event</span>
-					</Button>
+					<Button variant="primaryGreen" className="rounded-[20px] text-base w-[150px] h-10 items-center inline-block">Apply to Event</Button>
 				</div>
 				<div className="p-5">
 					<div className="p-2.5 bg-componentPrimary rounded-2xl">
