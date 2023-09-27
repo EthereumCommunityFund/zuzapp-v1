@@ -233,107 +233,6 @@ export default function AddSchedulePage() {
         </div>
         <div className="flex py-5 px-4 flex-col items-center gap-8 self-stretch rounded-2xl border border-[#FFFFFF10] bg-[#2E3131]">
           <div className="flex flex-col items-center gap-[34px] self-stretch w-full">
-<<<<<<< HEAD
-            <FormTitle name="Add a Schedule" />
-            <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-10 w-full"
-              >
-                <FormField
-                  control={form.control}
-                  name="format"
-                  render={({ field }) => (
-                    <FormItem className="space-y-3">
-                      <FormLabel className="text-2xl opacity-80 leading-[1.2]">
-                        Schedule Format
-                      </FormLabel>
-                      <FormDescription>
-                        The format you select will determine what information
-                        will be required going forward
-                      </FormDescription>
-                      <FormControl>
-                        <RadioGroup
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
-                          className="flex flex-col md:flex-row justify-between"
-                          {...field}
-                        >
-                          <FormItem className="flex items-center space-x-3 space-y-0">
-                            <FormControl>
-                              <RadioGroupItem value="in-person" />
-                            </FormControl>
-                            <FormLabel className="font-semibold text-white/30 text-base cursor-pointer">
-                              In-Person
-                              <span className="text-xs block">
-                                This is a physical event
-                              </span>
-                            </FormLabel>
-                          </FormItem>
-                          <FormItem className="flex items-center space-x-3 space-y-0">
-                            <FormControl>
-                              <RadioGroupItem value="online" />
-                            </FormControl>
-                            <FormLabel className="font-semibold text-white/30 text-base cursor-pointer">
-                              Online
-                              <span className="text-xs block">
-                                Specifically Online Event
-                              </span>
-                            </FormLabel>
-                          </FormItem>
-                          <FormItem className="flex items-center space-x-3 space-y-0">
-                            <FormControl>
-                              <RadioGroupItem value="hybrid" />
-                            </FormControl>
-                            <FormLabel className="font-semibold text-white/30 text-base cursor-pointer">
-                              Hybrid
-                              <span className="text-xs block">
-                                In-Person & Online
-                              </span>
-                            </FormLabel>
-                          </FormItem>
-                        </RadioGroup>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="name"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                        Schedule Name{" "}
-                      </FormLabel>
-                      <FormControl>
-                        <InputFieldDark
-                          type={InputFieldType.Primary}
-                          placeholder={"Enter a name for your event"}
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <div className="w-full">
-                  <FormField
-                    control={form.control}
-                    name="description"
-                    render={({ field }) => (
-                      <div className="flex flex-col gap-[10px]">
-                        <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                          Schedule Description
-                        </h2>
-                        <TextEditor
-                          value={field.value}
-                          onChange={field.onChange}
-                        />
-                      </div>
-                    )}
-                  />
-=======
             <div className="flex flex-col py-5 px-10 items-center gap-[10px] self-stretch w-full">
               <FormTitle name="Add a Schedule" />
               {scheduleAdded ? (
@@ -343,7 +242,6 @@ export default function AddSchedulePage() {
                   <Button onClick={handleEnterTrack} variant="primary" className="mt-8 bg-[#67DBFF]/20 text-[#67DBFF] rounded-full" leftIcon={HiArrowRight}>
                     Go to schedules
                   </Button>
->>>>>>> feat/22/perfect-creation-flow
                 </div>
               ) : (
                 <Form {...form}>
@@ -416,9 +314,6 @@ export default function AddSchedulePage() {
                       />
                     </div>
                     <div className="w-full">
-<<<<<<< HEAD
-                      {/* <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-=======
                       <h2 className="text-xl opacity-70 self-stretch">Schedule Date & Times</h2>
                       <div className="flex flex-col items-start gap-5 self-stretch w-full pt-5">
                         <div className="flex gap-5">
@@ -427,218 +322,10 @@ export default function AddSchedulePage() {
                         </div>
                         <div className="flex flex-col items-center gap-[30px] self-stretch w-full">
                           {/* <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
->>>>>>> feat/22/perfect-creation-flow
                         <span className="text-lg opacity-70 self-stretch">Start Date</span>
                         <InputFieldDark type={InputFieldType.Date} placeholder={'00-00-0000'} />
                         <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">Click & Select or type in a date</h3>
                       </div> */}
-<<<<<<< HEAD
-                      <FormField
-                        control={form.control}
-                        name="date"
-                        render={({ field }) => (
-                          <div className="flex gap-5">
-                            <div className="w-full">
-                              <span className="text-lg opacity-70 self-stretch">
-                                Start Date
-                              </span>
-                              <div>
-                                <CustomDatePicker
-                                  selectedDate={field.value}
-                                  handleDateChange={field.onChange}
-                                  {...field}
-                                />
-                                <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">
-                                  Click & Select or type in a date
-                                </h3>
-                              </div>
-                            </div>
-                            {/* <FormMessage /> */}
-                            {!isAllDay && (
-                              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                <div className="flex gap-5 w-full">
-                                  <div>
-                                    <span className="text-lg opacity-70 self-stretch">
-                                      Start Time
-                                    </span>
-                                    <TimePicker
-                                      value={startTime}
-                                      onChange={(newValue: any) =>
-                                        setStartTime(newValue)
-                                      }
-                                      sx={{
-                                        input: {
-                                          color: "white",
-                                        },
-                                        label: {
-                                          color: "white",
-                                        },
-                                        svg: {
-                                          color: "white", // change the icon color
-                                        },
-                                        backgroundColor: "#242727",
-                                        color: "white",
-                                        borderRadius: "8px",
-                                        width: "100%",
-                                        // borderColor: "white",
-                                        // borderWidth: "1px",
-                                        border: "1px solid #1A1A1A",
-                                      }}
-                                    />
-                                    <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">
-                                      Click & Select or type in a date
-                                    </h3>
-                                  </div>
-                                  <div>
-                                    <span className="text-lg opacity-70 self-stretch">
-                                      End Time
-                                    </span>
-                                    <TimePicker
-                                      value={endTime}
-                                      onChange={(newValue: any) =>
-                                        setEndTime(newValue)
-                                      }
-                                      sx={{
-                                        input: {
-                                          color: "white",
-                                        },
-                                        label: {
-                                          color: "white",
-                                        },
-                                        svg: {
-                                          color: "white", // change the icon color
-                                        },
-                                        backgroundColor: "#242727",
-                                        color: "white",
-                                        borderRadius: "8px",
-                                        width: "100%",
-                                        // borderColor: "white",
-                                        // borderWidth: "1px",
-                                        border: "1px solid #1A1A1A",
-                                      }}
-                                    />
-                                    <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">
-                                      Click & Select or type in a date
-                                    </h3>
-                                  </div>
-
-                                </div>
-                              </LocalizationProvider>
-                            )}
-                          </div>
-                        )}
-                      />
-
-                    </div>
-                    <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                      <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                        Select a Timezone
-                      </Label>
-                      <select
-                        // onChange={(e) => setFrequency(e.target.value as any)}
-                        className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
-                        title="frequency"
-                      >
-                        <option value="once">UTC</option>
-                      </select>
-                    </div>
-                    <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                      <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                        Select Schedule Frequency
-                      </Label>
-                      <select
-                        value={frequency}
-                        onChange={(e) => setFrequency(e.target.value as any)}
-                        className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
-                        title="frequency"
-                      >
-                        <option value="once">Once</option>
-                        <option value="everyday">Everyday</option>
-                        <option value="weekly">Weekly</option>
-                      </select>
-                      {/* <InputFieldDark type={InputFieldType.Option} placeholder={'Only Once'} /> */}
-                    </div>
-                    <line></line>
-                  </div>
-                </div>
-                <div className="w-full">
-                  <h2 className="text-xl opacity-70 self-stretch font-semibold">
-                    Location
-                  </h2>
-                  <div className="flex flex-col items-start gap-5 self-stretch w-full pt-5">
-                    <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                      <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                        Select Location
-                      </Label>
-                      {/* <InputFieldDark type={InputFieldType.Option} placeholder={'The Dome'} /> */}
-                      <select
-                        onChange={(e) => setLocationId(e.target.value)}
-                        title="location"
-                        value={locationId}
-                        className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
-                      >
-                        {savedLocations?.map((location) => (
-                          <option key={location.id} value={location.id}>
-                            {location.name}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-                  <div className="flex flex-col items-start gap-5 self-stretch w-full pt-5">
-                    <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                      <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                        Video Call Link
-                      </h2>
-                      <InputFieldDark
-                        type={InputFieldType.Link}
-                        placeholder="Type URL"
-                        value={videoLink}
-                        onChange={(e) =>
-                          setVideoLink((e.target as HTMLInputElement).value)
-                        }
-                      />
-                    </div>
-
-                    <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                      <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                        Live Stream Link
-                      </h2>
-                      <InputFieldDark
-                        type={InputFieldType.Link}
-                        placeholder="Type URL"
-                        value={liveLink}
-                        onChange={(e) =>
-                          setLiveLink((e.target as HTMLInputElement).value)
-                        }
-                      />
-                    </div>
-                  </div>
-                </div>
-                <line></line>
-                <div className="w-full">
-                  <h2 className="text-xl opacity-70 self-stretch font-semibold pb-5">
-                    Roles
-                  </h2>
-                  <div className="flex flex-col gap-6 items-start self-stretch">
-                    <div className="flex flex-col gap-6">
-                      <div className="flex items-end gap-6 self-stretch">
-                        <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                          <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                            Enter Name
-                          </h2>
-                          <InputFieldDark
-                            type={InputFieldType.Primary}
-                            value={eventItem.speaker_name}
-                            onChange={(e) =>
-                              setEventItem({
-                                ...eventItem,
-                                speaker_name: (e.target as HTMLInputElement)
-                                  .value,
-                              })
-                            }
-                            placeholder={"Enter the name"}
-=======
                           <FormField
                             control={form.control}
                             name="date"
@@ -652,7 +339,6 @@ export default function AddSchedulePage() {
                                 <FormMessage />
                               </div>
                             )}
->>>>>>> feat/22/perfect-creation-flow
                           />
                           {!isAllDay && (
                             <>
