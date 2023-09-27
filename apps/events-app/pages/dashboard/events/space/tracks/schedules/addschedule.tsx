@@ -223,7 +223,7 @@ export default function AddSchedulePage() {
       }
     };
 
-    const fetchSpeakers = async() => {
+    const fetchSpeakers = async () => {
       try {
         const result = await fetchAllSpeakers();
         console.log(result);
@@ -372,7 +372,7 @@ export default function AddSchedulePage() {
                         All Day
                       </span>
                     </div>
-                    <div className="flex flex-col items-center gap-[30px] self-stretch w-full">
+                    <div className="w-full">
                       {/* <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
                         <span className="text-lg opacity-70 self-stretch">Start Date</span>
                         <InputFieldDark type={InputFieldType.Date} placeholder={'00-00-0000'} />
@@ -382,84 +382,98 @@ export default function AddSchedulePage() {
                         control={form.control}
                         name="date"
                         render={({ field }) => (
-                          <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                            <span className="text-lg opacity-70 self-stretch">
-                              Start Date
-                            </span>
+                          <div className="flex gap-5">
+                            <div className="w-full">
+                              <span className="text-lg opacity-70 self-stretch">
+                                Start Date
+                              </span>
+                              <div>
+                                <CustomDatePicker
+                                  selectedDate={field.value}
+                                  handleDateChange={field.onChange}
+                                  {...field}
+                                />
+                                <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">
+                                  Click & Select or type in a date
+                                </h3>
+                              </div>
+                            </div>
+                            {/* <FormMessage /> */}
+                            {!isAllDay && (
+                              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                <div className="flex gap-5 w-full">
+                                  <div>
+                                    <span className="text-lg opacity-70 self-stretch">
+                                      Start Time
+                                    </span>
+                                    <TimePicker
+                                      value={startTime}
+                                      onChange={(newValue: any) =>
+                                        setStartTime(newValue)
+                                      }
+                                      sx={{
+                                        input: {
+                                          color: "white",
+                                        },
+                                        label: {
+                                          color: "white",
+                                        },
+                                        svg: {
+                                          color: "white", // change the icon color
+                                        },
+                                        backgroundColor: "#242727",
+                                        color: "white",
+                                        borderRadius: "8px",
+                                        width: "100%",
+                                        // borderColor: "white",
+                                        // borderWidth: "1px",
+                                        border: "1px solid #1A1A1A",
+                                      }}
+                                    />
+                                    <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">
+                                      Click & Select or type in a date
+                                    </h3>
+                                  </div>
+                                  <div>
+                                    <span className="text-lg opacity-70 self-stretch">
+                                      End Time
+                                    </span>
+                                    <TimePicker
+                                      value={endTime}
+                                      onChange={(newValue: any) =>
+                                        setEndTime(newValue)
+                                      }
+                                      sx={{
+                                        input: {
+                                          color: "white",
+                                        },
+                                        label: {
+                                          color: "white",
+                                        },
+                                        svg: {
+                                          color: "white", // change the icon color
+                                        },
+                                        backgroundColor: "#242727",
+                                        color: "white",
+                                        borderRadius: "8px",
+                                        width: "100%",
+                                        // borderColor: "white",
+                                        // borderWidth: "1px",
+                                        border: "1px solid #1A1A1A",
+                                      }}
+                                    />
+                                    <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">
+                                      Click & Select or type in a date
+                                    </h3>
+                                  </div>
 
-                            <CustomDatePicker
-                              selectedDate={field.value}
-                              handleDateChange={field.onChange}
-                              {...field}
-                            />
-
-                            <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">
-                              Click & Select or type in a date
-                            </h3>
-                            <FormMessage />
+                                </div>
+                              </LocalizationProvider>
+                            )}
                           </div>
                         )}
                       />
-                      {!isAllDay && (
-                        <>
-                          <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <div className="flex justify-between gap-10 text-white">
-                              <TimePicker
-                                label="Start Time"
-                                value={startTime}
-                                className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
-                                onChange={(newValue: any) =>
-                                  setStartTime(newValue)
-                                }
-                                sx={{
-                                  input: {
-                                    color: "white",
-                                  },
-                                  label: {
-                                    color: "white",
-                                  },
-                                  svg: {
-                                    color: "white", // change the icon color
-                                  },
-                                  backgroundColor: "#242727",
-                                  color: "white",
-                                  borderRadius: "8px",
-                                  width: "100%",
-                                  // borderColor: "white",
-                                  // borderWidth: "1px",
-                                  border: "1px solid #1A1A1A",
-                                }}
-                              />
-                              <TimePicker
-                                label="End Time"
-                                value={endTime}
-                                className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
-                                onChange={(newValue: any) =>
-                                  setEndTime(newValue)
-                                }
-                                sx={{
-                                  input: {
-                                    color: "white",
-                                  },
-                                  label: {
-                                    color: "white",
-                                  },
-                                  svg: {
-                                    color: "white", // change the icon color
-                                  },
-                                  backgroundColor: "#242727",
-                                  color: "white",
-                                  borderRadius: "8px",
-                                  width: "100%",
-                                  // borderColor: "white",
-                                  // borderWidth: "1px",
-                                  border: "1px solid #1A1A1A",
-                                }}
-                              />
-                            </div>
-                          </LocalizationProvider>
-                        </>
-                      )}
+
                     </div>
                     <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
                       <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
