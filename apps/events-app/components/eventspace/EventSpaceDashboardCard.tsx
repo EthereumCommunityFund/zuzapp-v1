@@ -37,7 +37,7 @@ export default function EventSpaceDashboardCard(props: IProps) {
           </div>
         }
         <span className="text-[13px] font-normal leading-[1.4] tracking-[0.13px] opacity-70 lining-nums tabular-nums">{description}</span>
-        <Button variant={cardType === SpaceDashboardCardType.EditDetails || cardType === SpaceDashboardCardType.OpenSettings ? 'light-dark' : 'primary'} className="w-full flex justify-center rounded-3xl text-xl" leftIcon={buttonIcon} onClick={(e) => { onCardClick && onCardClick(cardType) }}>{buttonName}</Button>
+        <Button variant={cardType === SpaceDashboardCardType.EditDetails || cardType === SpaceDashboardCardType.OpenSettings ? 'quiet' : 'primaryGreen'} className="w-full flex justify-center rounded-3xl text-xl" leftIcon={buttonIcon} onClick={(e) => { onCardClick && onCardClick(cardType) }}>{buttonName}</Button>
       </div>
     </div>
   )

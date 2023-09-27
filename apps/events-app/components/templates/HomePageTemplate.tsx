@@ -78,14 +78,14 @@ export default function HomePageTemplate() {
           <h1 className="font-bold font-inter text-3xl md:text-5xl mb-5">Discover & Experience Extraordinary Events</h1>
           {isAuthenticated ? (
             <Link href="/dashboard/events/create">
-              <Button size="lg" variant={'primary'} className="rounded-full text-xl text-white bg-[#769270] hover:bg-[#92B68B] font-inter font-semibold">
+              <Button size="lg" variant={'primaryGreen'} className="rounded-full text-xl text-white bg-[#769270] hover:bg-[#92B68B] font-inter font-semibold">
                 Create an Event
               </Button>
             </Link>
           ) : (
             <Dialog>
               <DialogTrigger asChild>
-                <Button variant={'primary'} className="rounded-full">
+                <Button variant={'primaryGreen'} size={'lg'} className="rounded-full">
                   Create Event
                 </Button>
               </DialogTrigger>
@@ -133,7 +133,7 @@ export default function HomePageTemplate() {
                   </div>
                 </div>
                 <div className="mt-3 md:mt-0">
-                  <Button size="lg" variant={'primary'} className="rounded-full">
+                  <Button size="lg" variant={'primaryGreen'} className="rounded-full">
                     View Event
                   </Button>
                 </div>
@@ -162,7 +162,7 @@ export default function HomePageTemplate() {
                 </div>
               </div>
               <div className="mt-3 md:mt-0">
-                <Button size="lg" variant={'primary'} className="rounded-full" onClick={() => event.type && handleButtonClick(event.type)}>
+                <Button size="lg" variant={'primaryGreen'} className="rounded-full" onClick={() => event.type && handleButtonClick(event.type)}>
                   View Event
                 </Button>
               </div>
