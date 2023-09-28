@@ -11,6 +11,10 @@ export const fetchEventSpacesByUser = async () => {
   return await axiosInstance.get(`/api/eventspace/fetchByUser`);
 };
 
+export const fetchInvitedEventSpaces = async () => {
+  return await axiosInstance.get(`/api/eventspace/fetchByInvite`);
+};
+
 // gets publisbed event spaces
 export const fetchAllEventSpaces = async () => {
   return await axiosInstance.get(`/api/eventspace`);
