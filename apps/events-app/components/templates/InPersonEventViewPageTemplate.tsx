@@ -74,7 +74,7 @@ export default function InPersonEventViewPageTemplate() {
 							<DialogContent>
 								<DialogHeader>
 									<DialogTitle>About This Event</DialogTitle>
-									<ResponsiveCarousel />
+									<Carousel />
 								</DialogHeader>
 							</DialogContent>
 						</Dialog>
