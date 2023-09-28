@@ -5,6 +5,7 @@ import "react-datepicker/dist/react-datepicker.css";
 interface DatePickerProps {
   selectedDate: Date | null; // Changed to allow null
   handleDateChange: (date: Date | null) => void;
+  defaultDate: string | undefined;
 }
 
 function range(start: number, end: number, step: number): number[] {
@@ -17,6 +18,7 @@ function range(start: number, end: number, step: number): number[] {
 const CustomDatePicker: React.FC<DatePickerProps> = ({
   selectedDate,
   handleDateChange,
+  defaultDate
 }) => {
   const [startDate, setStartDate] = useState<Date | null>(selectedDate);
 
@@ -48,6 +50,7 @@ const CustomDatePicker: React.FC<DatePickerProps> = ({
           setStartDate(date);
           handleDateChange(date);
         }}
+        value={defaultDate}
         dateFormat="MM-dd-yyyy"
         renderCustomHeader={({ date, changeYear, changeMonth, decreaseMonth, increaseMonth }) => (
           <div

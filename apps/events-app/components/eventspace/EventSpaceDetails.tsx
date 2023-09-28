@@ -163,8 +163,8 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({
     defaultValues: {
       name: name,
       format: format,
-      start_date: start_date !== undefined ? new Date(start_date) : new Date(),
-      end_date: end_date !== undefined ? new Date(end_date) : new Date(),
+      start_date: new Date(),
+      end_date: new Date(),
       description: description,
       tagline: tagline,
       // event_space_type: "tracks",
@@ -277,10 +277,10 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({
                           </h2>
 
                           <CustomDatePicker
+                            defaultDate={start_date?.toString()}
                             selectedDate={field.value}
                             handleDateChange={field.onChange}
-                            {...field}
-                          />
+                            {...field} />
                           {/* <Input placeholder="12-03" {...field} /> */}
 
                           <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">
@@ -299,10 +299,9 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({
                             End Date
                           </h2>
                           <CustomDatePicker
-                            selectedDate={field.value}
+                            defaultDate={undefined} selectedDate={field.value}
                             handleDateChange={field.onChange}
-                            {...field}
-                          />
+                            {...field} />
 
                           <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">
                             Click & Select or type in a date
