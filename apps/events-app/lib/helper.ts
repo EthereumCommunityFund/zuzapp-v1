@@ -11,3 +11,5 @@ export function getFromSessionStorage(key: string): string | null {
   }
   return null;
 }
+
+export const arrayFromLength = (length: number) => Array.from({ length }, (_, i) => i + 1);
