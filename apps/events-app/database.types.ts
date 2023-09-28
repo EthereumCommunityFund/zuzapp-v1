@@ -12,42 +12,54 @@ export interface Database {
       eventspace: {
         Row: {
           creator_id: string
-          description: string
-          end_date: string
-          event_space_type: string
-          event_type: string[]
-          experience_level: string[]
-          format: string
+          description: string | null
+          end_date: string | null
+          event_space_type: string | null
+          event_type: string[] | null
+          experience_level: string[] | null
+          extra_links: string | null
+          format: string | null
           id: string
+          image_url: string | null
           name: string
-          start_date: string
-          status: string
+          social_links: string | null
+          start_date: string | null
+          status: string | null
+          tagline: string | null
         }
         Insert: {
           creator_id: string
-          description?: string
-          end_date?: string
-          event_space_type?: string
-          event_type?: string[]
-          experience_level?: string[]
-          format?: string
+          description?: string | null
+          end_date?: string | null
+          event_space_type?: string | null
+          event_type?: string[] | null
+          experience_level?: string[] | null
+          extra_links?: string | null
+          format?: string | null
           id?: string
+          image_url?: string | null
           name: string
-          start_date?: string
-          status?: string
+          social_links?: string | null
+          start_date?: string | null
+          status?: string | null
+          tagline?: string | null
         }
         Update: {
           creator_id?: string
-          description?: string
-          end_date?: string
-          event_space_type?: string
-          event_type?: string[]
-          experience_level?: string[]
-          format?: string
+          description?: string | null
+          end_date?: string | null
+          event_space_type?: string | null
+          event_type?: string[] | null
+          experience_level?: string[] | null
+          extra_links?: string | null
+          format?: string | null
           id?: string
+          image_url?: string | null
           name?: string
-          start_date?: string
-          status?: string
+          social_links?: string | null
+          start_date?: string | null
+          status?: string | null
+          tagline?: string | null
         }
         Relationships: [
           {
@@ -62,21 +74,24 @@ export interface Database {
         Row: {
           event_space_id: string
           id: string
-          invitee_id: string
+          invitee_email: string
+          invitee_id: string | null
           inviter_id: string
           status: string
         }
         Insert: {
           event_space_id: string
           id?: string
-          invitee_id: string
+          invitee_email: string
+          invitee_id?: string | null
           inviter_id: string
           status?: string
         }
         Update: {
           event_space_id?: string
           id?: string
-          invitee_id?: string
+          invitee_email?: string
+          invitee_id?: string | null
           inviter_id?: string
           status?: string
         }
@@ -212,8 +227,8 @@ export interface Database {
           description: string | null
           end_time: string
           event_space_id: string | null
-          event_type: string[] | null
-          experience_level: string[] | null
+          event_type: string | null
+          experience_level: string | null
           format: string
           id: string
           images: string[] | null
@@ -233,8 +248,8 @@ export interface Database {
           description?: string | null
           end_time: string
           event_space_id?: string | null
-          event_type?: string[] | null
-          experience_level?: string[] | null
+          event_type?: string | null
+          experience_level?: string | null
           format: string
           id?: string
           images?: string[] | null
@@ -250,12 +265,12 @@ export interface Database {
         }
         Update: {
           all_day?: boolean | null
-          date?: Date
+          date?: string
           description?: string | null
-          end_time?: Date
+          end_time?: string
           event_space_id?: string | null
-          event_type?: string[] | null
-          experience_level?: string[] | null
+          event_type?: string | null
+          experience_level?: string | null
           format?: string
           id?: string
           images?: string[] | null
@@ -265,7 +280,7 @@ export interface Database {
           name?: string
           rsvp_amount?: number | null
           schedule_frequency?: string | null
-          start_time?: Date
+          start_time?: string
           track_id?: string | null
           video_call_link?: string | null
         }
