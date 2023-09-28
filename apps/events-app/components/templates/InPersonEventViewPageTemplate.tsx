@@ -12,9 +12,60 @@ import { DialogOverlay } from "@radix-ui/react-dialog";
 import Carousel from "../ui/Carousel";
 import ResponsiveCarousel from "../ui/Carousel";
 import { LockClosed, LocationMarker, UserGroup } from "../ui/icons";
+import { EventSpaceDetailsType } from "@/types";
+import { useEventSpace } from "@/context/EventSpaceContext";
+import { useEffect, useState } from "react";
+import { EventType } from "react-alice-carousel";
 
-export default function InPersonEventViewPageTemplate() {
+interface IInPersonEventViewPageTemplateProps {
+	eventSpace: EventSpaceDetailsType;
+}
 
+interface RenderHTMLStringProps {
+	htmlString: string;
+}
+
+interface IEventLink {
+	name: string;
+	link: string;
+}
+
+export default function InPersonEventViewPageTemplate({ eventSpace }: IInPersonEventViewPageTemplateProps) {
+	const {
+		// id,
+		name,
+		event_space_type,
+		status,
+		start_date,
+		end_date,
+		description,
+		format,
+		event_type,
+		experience_level,
+		eventspacelocation,
+		tagline,
+		social_links,
+		extra_links,
+	} = eventSpace;
+	const startDate = new Date(start_date);
+	const endDate = new Date(end_date);
+	const formattedStartDate = startDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+	const formattedEndDate = endDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+	const [socialLinks, setSocialLinks] = useState<IEventLink[] | undefined>();
+	const [extraLinks, setExtraLinks] = useState<IEventLink[] | undefined>();
+	const { setEventSpace } = useEventSpace();
+
+	useEffect(() => {
+		setEventSpace(eventSpace);
+		if (social_links)
+			setSocialLinks(JSON.parse(social_links));
+		if (extra_links)
+			setExtraLinks(JSON.parse(extra_links));
+	})
+
+	function RenderHTMLString({ htmlString }: RenderHTMLStringProps): JSX.Element {
+		return <div className="h-[500px] overflow-y-auto" dangerouslySetInnerHTML={{ __html: htmlString }} />;
+	}
 	return (
 		<>
 			<div className="flex gap-10">
@@ -29,24 +80,24 @@ export default function InPersonEventViewPageTemplate() {
 									<LockClosed />
 									<span className="font-bold">Zuzalu Residents & Invited Guests</span>
 								</div>
-								<h2 className="font-semibold text-[30px]">ZuConnect</h2>
-								<span className="text-white/80 font-bold">A Popup Village of Innovation in the Heart of Istanbul</span>
+								<h2 className="font-semibold text-[30px]">{name}</h2>
+								<span className="text-white/80 font-bold">{tagline}</span>
 							</div>
 							<Button variant="primaryGreen" size="lg" className="rounded-full" leftIcon={BsArrowRightCircleFill}>Apply to Event</Button>
 						</div>
 						<div className="flex gap-3 text-lg">
 							<span className="rounded-full flex px-4 py-1 items-center gap-1 opacity-60 bg-[#FFFFFF10] font-bold">
-								<HiCalendar /> October 8 - October 23
+								<HiCalendar /> {formattedStartDate} - {formattedEndDate}
 							</span>
 							<span className="rounded-2xl flex px-4 py-1 items-center gap-1 opacity-60 bg-[#FFFFFF10] font-bold">
-								<LocationMarker /> Beyoglu, Istanbul, Turkey
+								<LocationMarker /> {eventspacelocation && eventspacelocation[0].address}
 							</span>
 						</div>
 					</div>
 					<div className="flex flex-col gap-4 p-5 border-b-2 border-white/10"> {/* About */}
 						<h3 className='text-lg font-bold text-white/70'>ABOUT THIS EVENT</h3>
 						<h2 className='text-3xl font-bold text-white/80'>What is ZuConnect?</h2>
-						<p className="text-white/70 font-bold">Embark on a transformative journey at ZuConnect— a two-week popup village in Istanbul where the luminaries of crypto, AI, governance, decentralized science, and culture coalesce. Here, the brightest minds convene to co-work, foster collaborations, and have a joyous time.</p>
+
 						<Dialog>
 							<DialogTrigger asChild>
 								<Button variant="quiet" size="lg" className="rounded-2xl inline-block text-white/70 font-bold hover:text-white">Read Description</Button>
@@ -54,8 +105,8 @@ export default function InPersonEventViewPageTemplate() {
 							<DialogContent>
 								<DialogHeader>
 									<DialogTitle >About This Event</DialogTitle>
-									<DialogDescription className="opacity-80">
-										<h2 className="text-2xl font-bold">What is ZuConnect?</h2>
+									<DialogDescription className="text-white">
+										<RenderHTMLString htmlString={description} />
 									</DialogDescription>
 								</DialogHeader>
 								<DialogFooter></DialogFooter>
@@ -69,7 +120,7 @@ export default function InPersonEventViewPageTemplate() {
 						<h3 className="font-bold text-white/70">Beyoğlu, Istanbul, Turkey</h3>
 						<Dialog>
 							<DialogTrigger asChild>
-								<Button className="quiet text-lg rounded-full inline-block text-white/70 font-bold">View Location</Button>
+								<Button variant="quiet" size="lg" className="rounded-2xl inline-block text-white/70 font-bold hover:text-white">View Location</Button>
 							</DialogTrigger>
 							<DialogContent>
 								<DialogHeader>
@@ -93,18 +144,26 @@ export default function InPersonEventViewPageTemplate() {
 						</div>
 						<div className="flex gap-2 items-center">
 							<Label className="opacity-70">Type: </Label>
-							<Label className="opacity-100 font-bold text-base">Meetup</Label>
+							<Label className="opacity-100 font-bold text-base">{event_type?.join(', ')}</Label>
 						</div>
 					</div>
 					<div className="flex flex-col gap-2">
 						<Label className="opacity-70">Links </Label>
-						<Label className="opacity-100 font-bold text-base">Notion</Label>
-						<Label className="opacity-100 font-bold text-base">Notion</Label>
+						{extraLinks && extraLinks.map((value: IEventLink, idx: number) => (
+							<div className="flex gap-2">
+								<Label key={idx} className="opacity-100 font-bold text-base">{value.name}:</Label>
+								<Label key={idx} className="opacity-100 font-bold text-base">{value.link}</Label>
+							</div>
+						))}
 					</div>
 					<div className="flex flex-col gap-2">
 						<Label className="opacity-70">Socials </Label>
-						<Label className="opacity-100 font-bold text-base">Youtube</Label>
-						<Label className="opacity-100 font-bold text-base">Twitter</Label>
+						{socialLinks && socialLinks.map((value: IEventLink, idx: number) => (
+							<div className="flex gap-2">
+								<Label key={idx} className="opacity-100 font-bold text-base">{value.name}:</Label>
+								<Label key={idx} className="opacity-100 font-bold text-base">{value.link}</Label>
+							</div>
+						))}
 					</div>
 				</div>
 			</div>

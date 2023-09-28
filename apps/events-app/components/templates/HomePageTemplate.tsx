@@ -11,6 +11,7 @@ import { EventSpaceDetailsType, EventTypes } from '@/types';
 import { useQuery } from 'react-query';
 import { fetchPublishedEventSpaces } from '@/services/fetchPublishedEvents';
 import { Loader } from '../ui/Loader';
+import { useEventSpaces } from '@/context/EventSpacesContext';
 
 export const sampleEvents = [
   {
@@ -32,11 +33,13 @@ export default function HomePageTemplate() {
   const { isAuthenticated, user } = useGlobalContext();
   const router = useRouter();
 
-  const handleButtonClick = async (eventType: EventTypes) => {
-    console.log('EventType', eventType);
+  const { eventSpaceList, setEventSpaceList } = useEventSpaces();
+
+  const handleButtonClick = async (eventId: string) => {
+    console.log('EventFormat', eventId);
     router.push({
       pathname: `/dashboard/eventview`, // Update with your actual route
-      query: { eventType },
+      query: { eventId },
     });
   };
 
@@ -50,6 +53,7 @@ export default function HomePageTemplate() {
     {
       onSuccess: (data) => {
         console.log('Event Spaces:', data);
+        setEventSpaceList(data);
       },
     }
   );
@@ -133,13 +137,13 @@ export default function HomePageTemplate() {
                   </div>
                 </div>
                 <div className="mt-3 md:mt-0">
-                  <Button size="lg" variant={'primaryGreen'} className="rounded-full">
+                  <Button size="lg" variant={'primaryGreen'} className="rounded-full" onClick={() => event.id && handleButtonClick(event.id)}>
                     View Event
                   </Button>
                 </div>
               </div>
             ))}
-          {sampleEvents.map((event, index) => (
+          {/* {sampleEvents.map((event, index) => (
             <div
               key={index}
               className="flex flex-col md:flex-row md:justify-between md:items-center border border-white/10 bg-componentPrimary hover:bg-itemHover rounded-lg px-3 md:px-5 py-3 mt-5 duration-200"
@@ -167,7 +171,7 @@ export default function HomePageTemplate() {
                 </Button>
               </div>
             </div>
-          ))}
+          ))} */}
         </div>
       </div>
     </div>
