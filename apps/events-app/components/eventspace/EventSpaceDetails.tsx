@@ -229,7 +229,7 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace }) => 
                         <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
                           <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">Start Date</h2>
 
-                          <CustomDatePicker selectedDate={field.value} handleDateChange={field.onChange} {...field} />
+                          <CustomDatePicker defaultDate={undefined} selectedDate={field.value} handleDateChange={field.onChange} {...field} />
                           {/* <Input placeholder="12-03" {...field} /> */}
 
                           <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">Click & Select or type in a date</h3>
@@ -243,7 +243,7 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace }) => 
                       render={({ field }) => (
                         <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
                           <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">End Date</h2>
-                          <CustomDatePicker selectedDate={field.value} handleDateChange={field.onChange} {...field} />
+                          <CustomDatePicker defaultDate={undefined} selectedDate={field.value} handleDateChange={field.onChange} {...field} />
 
                           <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">Click & Select or type in a date</h3>
                           <FormMessage />
