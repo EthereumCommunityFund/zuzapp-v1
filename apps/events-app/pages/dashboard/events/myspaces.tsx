@@ -5,6 +5,8 @@ import { fetchUserEventSpaces } from '../../../services/eventSpaceService';
 import { EventSpaceDetailsType } from '@/types';
 import { useQuery } from 'react-query';
 import { Loader } from '../../../components/ui/Loader';
+import { arrayFromLength } from '@/lib/helper';
+import { EventTemplateSkeleton } from '@/components/commons/EventTemplateSkeleton';
 export default function MyEventSpacesPage() {
   // Make request to get all event spaces
 
@@ -22,13 +24,19 @@ export default function MyEventSpacesPage() {
     }
   );
 
-  if (isLoading) {
-    return <Loader />;
-  }
+  // if (isLoading) {
+  //   return (
+  //     <div>
+  //       {arrayFromLength(4).map((_, i) => (
+  //         <EventTemplateSkeleton key={i} />
+  //       ))}
+  //     </div>
+  //   );
+  // }
   if (isError) {
     return <p>Error loading space details</p>;
   }
-  return <div className="flex gap-[10px] flex-1 items-center self-stretch font-inter">{<EventSpacesTemplate eventSpaces={eventSpaces} />}</div>;
+  return <div className="flex gap-[10px] flex-1 items-center self-stretch font-inter">{<EventSpacesTemplate eventSpaces={eventSpaces} isLoading={isLoading} />}</div>;
 }
 
 export const getServerSideProps = async (ctx: any) => {

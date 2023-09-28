@@ -30,7 +30,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             {
                 name,
                 event_space_type,
-                creator_id: req.body.user.id
+                creator_id: req.body.user.id,
+                status: "draft",
+                format: "online"
+
             });
 
 
