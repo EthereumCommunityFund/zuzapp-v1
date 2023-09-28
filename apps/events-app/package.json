@@ -16,6 +16,8 @@
     "@hookform/resolvers": "^3.3.1",
     "@mui/material": "^5.14.10",
     "@mui/x-date-pickers": "^6.15.0",
+    "@pcd/eddsa-pcd": "^0.2.0",
+    "@pcd/eddsa-ticket-pcd": "^0.2.0",
     "@pcd/eslint-config-custom": "^0.6.2",
     "@pcd/ethereum-ownership-pcd": "0.6.0",
     "@pcd/passport-interface": "0.6.0",

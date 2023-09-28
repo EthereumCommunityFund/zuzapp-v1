@@ -1,10 +1,10 @@
-import EventSpacesTemplate from '@/components/templates/events/EventSpacesTemplate';
-import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
-import { useEffect, useState } from 'react';
-import { fetchUserEventSpaces } from '../../../services/eventSpaceService';
-import { EventSpaceDetailsType } from '@/types';
-import { useQuery } from 'react-query';
-import { Loader } from '../../../components/ui/Loader';
+import EventSpacesTemplate from "@/components/templates/events/EventSpacesTemplate";
+import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
+import { useEffect, useState } from "react";
+import { fetchUserEventSpaces } from "../../../services/eventSpaceService";
+import { EventSpaceDetailsType } from "@/types";
+import { useQuery } from "react-query";
+import { Loader } from "../../../components/ui/Loader";
 export default function MyEventSpacesPage() {
   // Make request to get all event spaces
 
@@ -13,11 +13,11 @@ export default function MyEventSpacesPage() {
     isLoading,
     isError,
   } = useQuery<EventSpaceDetailsType[], Error>(
-    ['eventSpaces'], // Query key
+    ["eventSpaces"], // Query key
     () => fetchUserEventSpaces(),
     {
       onSuccess: (data) => {
-        console.log('Event Spaces:', data);
+        console.log("Event Spaces:", data);
       },
     }
   );
@@ -28,7 +28,11 @@ export default function MyEventSpacesPage() {
   if (isError) {
     return <p>Error loading space details</p>;
   }
-  return <div className="flex gap-[10px] flex-1 items-center self-stretch font-inter">{<EventSpacesTemplate eventSpaces={eventSpaces} />}</div>;
+  return (
+    <div className="flex gap-[10px] flex-1 items-center self-stretch font-inter">
+      {<EventSpacesTemplate eventSpaces={eventSpaces} />}
+    </div>
+  );
 }
 
 export const getServerSideProps = async (ctx: any) => {
@@ -46,7 +50,10 @@ export const getServerSideProps = async (ctx: any) => {
     };
 
   // get profile from session
-  const { data: profile, error } = await supabase.from('profile').select('*').eq('uuid', session.user.id);
+  const { data: profile, error } = await supabase
+    .from("profile")
+    .select("*")
+    .eq("uuid", session.user.id);
 
   return {
     props: {

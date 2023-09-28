@@ -13,11 +13,19 @@ import {
   useSemaphoreSignatureProof,
   User,
   fetchUser,
+  getWithoutProvingUrl,
 } from "@pcd/passport-interface";
-import { ZUPASS_SERVER_URL, ZUPASS_URL } from "../src/constants";
+import {
+  PASSPORT_SERVER_URL,
+  ZUPASS_SERVER_URL,
+  ZUPASS_URL,
+} from "../src/constants";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import axiosInstance from "../src/axiosInstance";
 import { useRouter } from "next/router";
+
+import { EdDSATicketPCDPackage } from "@pcd/eddsa-ticket-pcd";
+import { EdDSAPCDPackage } from "@pcd/eddsa-pcd";
 
 type UserPassportContextData = {
   signIn: any;
@@ -33,9 +41,7 @@ export const UserPassportContext = createContext({} as UserPassportContextData);
 export function UserPassportContextProvider({
   children,
 }: UserPassportProviderProps) {
-  const supabase = useSupabaseClient();
   const router = useRouter();
-
   // We only do client-side proofs for Zuzalu UUID proofs, which means we can
   // ignore any PendingPCDs that would result from server-side proving
   const [pcdStr, _passportPendingPCDStr] = usePassportPopupMessages();
@@ -76,23 +82,32 @@ export function UserPassportContextProvider({
   }, [signatureProofValid, signatureProof]);
 
   const signIn = async () => {
-    // openSignedZuzaluSignInPopup(
-    //   ZUPASS_URL,
-    //   window.location.origin + "/popup",
-    //   "consumer-client"
-    // );
+    openSignedZuzaluSignInPopup(
+      ZUPASS_URL,
+      window.location.origin + "/popup",
+      "consumer-client"
+    );
 
-    let user: User = {
-      commitment:
-        "2564230506240300597415797788618650300376657081809946093404919780893081810351",
-      email: "donwaleyb@gmail.com",
-      name: "Sly Olawale",
-      // order_id: "BC7AD",
-      role: undefined,
-      uuid: "1cb3ff4f-74ce-4691-8593-aef526124d28",
-      visitor_date_ranges: [],
-    };
-    logInUser(user);
+    // proofUrl = getWithoutProvingUrl(ZUPASS_URL);
+    // const proofUrl = getWithoutProvingUrl(
+    //   ZUPASS_URL,
+    //   `${window.location.origin}/popup`,
+    //   EdDSATicketPCDPackage.name
+    // );
+    // const popupUrl = `/popup?proofUrl=${encodeURIComponent(proofUrl)}`;
+    // window.open(popupUrl, "_blank", "width=360,height=480,top=100,popup");
+
+    // let user: User = {
+    //   commitment:
+    //     "2564230506240300597415797788618650300376657081809946093404919780893081810351",
+    //   email: "donwaleyb@gmail.com",
+    //   name: "Sly Olawale",
+    //   // order_id: "BC7AD",
+    //   role: undefined,
+    //   uuid: "1cb3ff4f-74ce-4691-8593-aef526124d28",
+    //   visitor_date_ranges: [],
+    // };
+    // logInUser(user);
   };
 
   // Once we have the UUID, fetch the user data from Passport.
