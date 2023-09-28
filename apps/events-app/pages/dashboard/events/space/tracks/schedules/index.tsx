@@ -39,7 +39,7 @@ export default function SchedulesDashboardPage() {
   const handleEnterSchedule = async (id: string) => {
     try {
       router.push({
-        pathname: `/dashboard/events/space/tracks/schedules/updateschedule`,
+        pathname: `/dashboard/events/space/tracks/schedules/updateSchedule`,
         query: { eventId: eventId, trackId: trackId, scheduleId: id, trackTitle: trackTitle },
       });
     } catch (error) {

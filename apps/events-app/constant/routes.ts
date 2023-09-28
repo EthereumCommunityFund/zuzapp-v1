@@ -47,7 +47,7 @@ export const eventRoutes: Routes[] = [
     title: 'Add a Schedule',
   },
   {
-    path: '/dashboard/events/space/tracks/schedules/updateschedule',
+    path: '/dashboard/events/space/tracks/schedules/updateSchedule',
     title: 'Update a Schedule',
   },
 ];
