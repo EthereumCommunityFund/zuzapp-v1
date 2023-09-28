@@ -52,8 +52,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   console.log(validatedData, 'validated data');
 
   let start_time = formatTimestamp(validatedData.start_time as Date) as unknown as Date;
-  let end_time = formatTimestamp(validatedData.end_time as Date)as unknown as Date;
-  let date = formatTimestamp(validatedData.date as Date)as unknown as Date;
+  let end_time = formatTimestamp(validatedData.end_time as Date) as unknown as Date;
+  let date = formatTimestamp(validatedData.date as Date) as unknown as Date;
 
   // Update the schedule in the database
   const schedule_update_result = await supabase
@@ -88,11 +88,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   // Handling tags differentially
   let scheduleId = id;
-  const currentTags = await supabase.from('scheduletags').select('id').eq('schedule_id', scheduleId);
+  const currentTags = await supabase.from('scheduletags').select('tag_id').eq('schedule_id', scheduleId);
   let currentTagIds: string[] = [];
 
   if (currentTags.data) {
-    currentTagIds = currentTags.data.map((tag) => tag.id);
+    currentTagIds = currentTags.data.map((tag) => tag.tag_id);
   }
 
   let tagPromises: Promise<void>[] = [];
@@ -111,6 +111,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         tagId = existing_tag.data.id;
       }
 
+      console.log(currentTagIds, "current tag ids")
+
       if (!currentTagIds.includes(tagId)) {
         await supabase.from('scheduletags').insert({
           schedule_id: scheduleId,
@@ -121,12 +123,15 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   // Bug fix Remove tags that are no longer associated
-  console.log('current tags', currentTags);
-  if (tags && tags?.length > 0) {
-    let _tags = tags as String[];
-    const tagsToRemove = currentTagIds.filter((tagId) => !_tags.includes(tagId));
-    await supabase.from('scheduletags').delete().in('tag_id', tagsToRemove);
-  }
+  // console.log('current tags', currentTags);
+  // if (tags && tags?.length > 0) {
+  //   let _tags = tags as String[];
+
+  //   // get all the tag ids 
+
+  //   const tagsToRemove = currentTagIds.filter((tagId) => !_tags.includes(tagId));
+  //   await supabase.from('scheduletags').delete().in('tag_id', tagsToRemove);
+  // }
 
   // Handling speakers differentially
   const currentSpeakers = await supabase.from('schedulespeakerrole').select('speaker_id').eq('schedule_id', scheduleId);
@@ -162,13 +167,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
       // Bugfix Remove speakers that are no longer associated
 
-      if (speakers) {
-        let _speakers = speakers as SpeakerType[];
-        console.log(speakers, 'speakers o');
-        const speakersToRemove = currentSpeakerIds.filter((speakerId) => !_speakers.map((s) => s.speaker_name).includes(speakerId));
-        console.log(speakersToRemove);
-        await supabase.from('schedulespeakerrole').delete().in('speaker_id', speakersToRemove);
-      }
+      // if (speakers) {
+      //   let _speakers = speakers as SpeakerType[];
+      //   console.log(speakers, 'speakers o');
+      //   const speakersToRemove = currentSpeakerIds.filter((speakerId) => !_speakers.map((s) => s.speaker_name).includes(speakerId));
+      //   console.log(speakersToRemove);
+      //   await supabase.from('schedulespeakerrole').delete().in('speaker_id', speakersToRemove);
+      // }
     });
   }
 
