@@ -46,12 +46,12 @@ const formSchema = z.object({
   end_date: z.date().refine((date) => date instanceof Date, {
     message: 'End date is required.',
   }),
-  description: z.string().min(2, {
-    message: 'Description is required.',
+  description: z.string().min(10, {
+    message: 'Description is required and is a minimum of 10 characters',
   }),
-  tagline: z.string().min(2, {
-    message: 'Tagline is required.',
-  }),
+  // tagline: z.string().min(2, {
+  //   message: 'Tagline is required.',
+  // }),
 });
 
 const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace }) => {
@@ -141,7 +141,7 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace }) => 
       start_date: start_date !== undefined ? new Date(start_date) : new Date(),
       end_date: end_date !== undefined ? new Date(end_date) : new Date(),
       description: description,
-      tagline: tagline,
+      // tagline: tagline,
       // event_space_type: "tracks",
     },
   });
@@ -252,19 +252,11 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace }) => 
                     />
                   </div>
                 </div>
-                <FormField
-                  control={form.control}
-                  name="tagline"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-lg">Event Tagline </FormLabel>
-                      <FormControl>
-                        <InputFieldDark type={InputFieldType.Primary} placeholder={'Coolest Web3 Events'} defaultValue={tagline} {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                <div className="flex flex-col gap-[10px]">
+                  <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">Event Tagline</h2>
+                  <InputFieldDark type={InputFieldType.Primary} value={tag_line} onChange={(e) => setTagline((e.target as HTMLInputElement).value)} placeholder={'Coolest Web3 Events'} />
+                  <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">This will be the short tagline below your event title</h3>
+                </div>
                 <FormField
                   control={form.control}
                   name="description"
