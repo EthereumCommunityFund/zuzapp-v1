@@ -32,7 +32,7 @@ export default function SubHeader() {
       setActiveTab(SubHeaderTabIndex.SpaceDashboard);
     } else if (currentUrl.includes('/events/space/tracks')) {
       setActiveTab(SubHeaderTabIndex.SpaceTrack);
-    } else if (currentUrl.includes('/schedules')) {
+    } else if (currentUrl.includes('/events/space/schedules')) {
       setActiveTab(SubHeaderTabIndex.AllSchedules);
     }
   }, [router]);

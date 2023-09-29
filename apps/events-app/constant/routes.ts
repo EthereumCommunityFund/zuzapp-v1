@@ -39,7 +39,7 @@ export const eventRoutes: Routes[] = [
   {
     name: 'All Schedules',
     tabIndex: SubHeaderTabIndex.AllSchedules,
-    path: '/dashboard/schedules',
+    path: '/dashboard/events/space/schdeules',
     title: 'Schedules Dashboard',
   },
   {
@@ -53,6 +53,10 @@ export const eventRoutes: Routes[] = [
   {
     path: '/dashboard/events/space/tracks/schedules/updateSchedule',
     title: 'Update a Schedule',
+  },
+  {
+    path: '/dashboard/events/space/schedules',
+    title: 'Schedules',
   },
 ];
 
