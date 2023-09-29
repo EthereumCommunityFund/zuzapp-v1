@@ -1,3 +1,4 @@
+import EventViewHeader from "@/components/eventview/EventViewHeader";
 import TrackItemCard from "@/components/tracks/TrackItemCard";
 import MyDropdown from "@/components/ui/DropDown";
 import Pagination from "@/components/ui/Pagination";
@@ -6,12 +7,14 @@ import UserFacingTrack from "@/components/ui/UserFacingTrack";
 import Button from "@/components/ui/buttons/Button";
 import EventDataDate from "@/components/ui/labels/event-data-date";
 import EventData from "@/components/ui/labels/event-data-time";
+import { useEventSpace } from "@/context/EventSpaceContext";
 import { useState } from "react";
 import { BiEditAlt, BiLeftArrow } from "react-icons/bi";
 import { BsFillTicketFill } from "react-icons/bs";
 import { HiCalendar } from "react-icons/hi";
 
 export default function EventViewTrackDetailsPage() {
+  const { eventSpace } = useEventSpace();
   const [currentPage, setCurrentPage] = useState(1);
 
   const handlePageChange = (page: number) => {
@@ -22,14 +25,7 @@ export default function EventViewTrackDetailsPage() {
   return (
     <>
       <div className="flex flex-col w-[1000px]">
-        <div className="px-2.5 py-2.5 rounded-full gap-[10px]">
-          <img src="" alt="event" />
-          <div className="flex flex-col">
-            <h2 className="font-bold">ZuConnect</h2>
-            <span className="font-semibold">A Popup Village of Innovation in the Heart of Istanbul</span>
-          </div>
-          <Button>Apply to Event</Button>
-        </div>
+        <EventViewHeader imgPath={eventSpace?.image_url as string} name={eventSpace?.name as string} tagline={eventSpace?.tagline as string} />
         <div className="p-5 gap-[30px] max-w-[1000px]">
           <div className="flex flex-col gap-[10px] p-2.5 bg-componentPrimary">
             <div className="flex justify-between">  {/* Tracks and Edit Button */}

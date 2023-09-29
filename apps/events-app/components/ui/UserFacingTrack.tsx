@@ -2,6 +2,7 @@ import { TbTicket } from "react-icons/tb";
 import Speaker from "./Speaker";
 import EventDataDate from "./labels/event-data-date";
 import { ScheduleUpdateRequestBody } from "@/types";
+import { useEffect, useState } from "react";
 
 interface IUserFacingTrack {
   scheduleData: ScheduleUpdateRequestBody
@@ -10,6 +11,10 @@ interface IUserFacingTrack {
 
 export default function UserFacingTrack(props: IUserFacingTrack) {
   const { scheduleData, onClick } = props;
+  const date = new Date(scheduleData.date);
+  const startTime = new Date(scheduleData.start_time);
+  const endTime = scheduleData.end_time && new Date(scheduleData.end_time);
+
 
   return (
     <div onClick={onClick}>
@@ -20,8 +25,8 @@ export default function UserFacingTrack(props: IUserFacingTrack) {
         <div className="flex justify-between">
           <div>
             <div className="rounded-[10px] p-2.5  text-center bg-trackDateColor">
-              <h2 className="font-bold text-xl">29</h2>
-              <b className="font-bold text-xl">Oct.</b>
+              <h2 className="font-bold text-xl">{date.getDay()}</h2>
+              <b className="font-bold text-xl">{date.getMonth()}</b>
             </div>
           </div>
           <div className="flex flex-col gap-2.5 w-3/4">

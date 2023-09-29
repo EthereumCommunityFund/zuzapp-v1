@@ -1,3 +1,4 @@
+import EventViewHeader from "@/components/eventview/EventViewHeader";
 import TrackItemCard from "@/components/tracks/TrackItemCard";
 import MyDropdown from "@/components/ui/DropDown";
 import { List } from "@/components/ui/DropDownMenu";
@@ -41,14 +42,7 @@ export default function EventViewTracksPage() {
 	return (
 		<div className="flex gap-4">
 			<div className="flex flex-col w-2/3 pb-10 gap-5">
-				<div className="flex px-2.5 rounded-full gap-[10px] h-[60px] justify-between items-center">
-					<img src="/images/1.png" className="rounded-lg" width={100} alt="event" />
-					<div className="flex flex-col gap-2 w-3/4">
-						<h2 className="font-bold text-3xl">ZuConnect</h2>
-						<span className="font-semibold opacity-70">{eventSpace?.tagline}</span>
-					</div>
-					<Button variant="primaryGreen" className="rounded-[20px] text-base w-[150px] h-10 items-center inline-block">Apply to Event</Button>
-				</div>
+				<EventViewHeader imgPath={eventSpace?.image_url as string} name={eventSpace?.name as string} tagline={eventSpace?.tagline as string} />
 				<div className="p-5">
 					<div className="p-2.5 bg-componentPrimary rounded-2xl">
 						<div className="flex flex-col p-2.5 gap-[10px] overflow-hidden">
