@@ -45,7 +45,7 @@ export default function EventViewTracksPage() {
 					<img src="/images/1.png" className="rounded-lg" width={100} alt="event" />
 					<div className="flex flex-col gap-2 w-3/4">
 						<h2 className="font-bold text-3xl">ZuConnect</h2>
-						<span className="font-semibold opacity-70">A Popup Village of Innovation in the Heart of Istanbul</span>
+						<span className="font-semibold opacity-70">{eventSpace?.tagline}</span>
 					</div>
 					<Button variant="primaryGreen" className="rounded-[20px] text-base w-[150px] h-10 items-center inline-block">Apply to Event</Button>
 				</div>

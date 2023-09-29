@@ -12,19 +12,19 @@ import { useEffect, useState } from "react";
 import { BiEditAlt, BiPlusCircle } from "react-icons/bi";
 import { HiArrowLeft, HiCalendar, HiCog, HiLocationMarker, HiMicrophone, HiTag, HiUserGroup } from "react-icons/hi";
 
-interface IOnlineTrackDetailsPageTemplate {
+interface ITrackDetailsPageTemplate {
   trackItem: TrackUpdateRequestBody;
 }
 
-export default function OnlineTrackDetailsPageTemplate(props: IOnlineTrackDetailsPageTemplate) {
+export default function OnlineTrackDetailsPageTemplate(props: ITrackDetailsPageTemplate) {
   const router = useRouter();
-  const [currentPage, setCurrentPage] = useState(1);
+  // const [currentPage, setCurrentPage] = useState(1);
   const { trackItem } = props
   const { eventSpace } = useEventSpace();
 
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
+  // const handlePageChange = (page: number) => {
+  //   setCurrentPage(page);
+  // };
 
   const handleItemClick = () => {
     router.push("/dashboard/eventview/tracks/track/schedule");
@@ -35,7 +35,7 @@ export default function OnlineTrackDetailsPageTemplate(props: IOnlineTrackDetail
   }
 
   useEffect(() => {
-    console.log("eventSpace", eventSpace);
+    console.log("eventSpace Schedules", eventSpace?.schedules);
   })
 
   return (
@@ -44,8 +44,8 @@ export default function OnlineTrackDetailsPageTemplate(props: IOnlineTrackDetail
         <div className="flex px-2.5 rounded-full gap-[10px] h-[60px] justify-between items-center">
           <img src="/images/1.png" width={100} alt="event" />
           <div className="flex flex-col gap-2 w-3/4">
-            <h2 className="font-bold text-3xl">ZuConnect</h2>
-            <span className="font-semibold opacity-70">A Popup Village of Innovation in the Heart of Istanbul</span>
+            <h2 className="font-bold text-3xl">{eventSpace?.name}</h2>
+            <span className="font-semibold opacity-70">{eventSpace?.tagline}</span>
           </div>
           <Button variant="primaryGreen" className="rounded-[20px] text-base w-[150px] h-10 items-center">
             <span className="mx-auto" >Apply to Event</span>
@@ -60,7 +60,7 @@ export default function OnlineTrackDetailsPageTemplate(props: IOnlineTrackDetail
             <div className="flex flex-col gap-[10px] p-5 "> {/* Track Info */}
               <img src={trackItem.image as string} alt="track image" className=" h-[496px] rounded-[10px]" />
               <div className="flex flex-col gap-[10px] p-2.5"> {/* Tracks Name */}
-                <h2 className="font-bold text-2xl">Zk Week</h2>
+                <h2 className="font-bold text-2xl">{trackItem.name}</h2>
                 <p className="font-bold opacity-70">{trackItem.description}</p>
                 <span className="rounded-xl flex px-4 py-1 items-center gap-1 opacity-60 bg-[#FFFFFF10] font-bold justify-start w-[320px] text-lg">
                   <HiCalendar size={25} /> November 29 - November 11
@@ -77,11 +77,11 @@ export default function OnlineTrackDetailsPageTemplate(props: IOnlineTrackDetail
         <div className="flex flex-col gap-2.5 p-5 w-full">
           <div className="flex flex-col gap-[10px] overflow-hidden rounded-[10px]">
             {
-              <>
-                <UserFacingTrack onClick={handleItemClick} />
-                <UserFacingTrack onClick={handleItemClick} />
-                <UserFacingTrack onClick={handleItemClick} />
-              </>
+              eventSpace?.schedules.map((schedule) => (
+                schedule.track_id === trackItem.id && (
+                  <UserFacingTrack scheduleData={schedule} onClick={handleItemClick} />
+                )
+              ))
             }
           </div>
         </div>
