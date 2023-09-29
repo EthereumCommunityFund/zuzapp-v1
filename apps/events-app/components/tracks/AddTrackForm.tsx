@@ -12,6 +12,7 @@ import DragAndDrop from '../ui/dragDrop';
 import InputFieldLabel from '../ui/labels/inputFieldLabel';
 import EventDeatilsDescription1 from '../ui/labels/event-details-description-1';
 import Image from 'next/image';
+import TextEditor from '../ui/TextEditor';
 
 const trackSchema = z.object({
   name: z.string().min(2, {
@@ -63,7 +64,7 @@ export default function AddTrackForm({ onTrackSubmit }: { onTrackSubmit: (values
           render={({ field }) => (
             <FormItem>
               <FormLabel className="text-lg">Track Description</FormLabel>
-              <Input className="bg-pagePrimary" placeholder="Enter track description" {...field} />
+              <TextEditor {...field} />
               <FormMessage />
             </FormItem>
           )}
@@ -73,6 +74,7 @@ export default function AddTrackForm({ onTrackSubmit }: { onTrackSubmit: (values
           <DragAndDrop payload={payload} setPayload={setPayload} />
           <EventDeatilsDescription1 name="We recommend using at least a 2160x1080px" />
         </div>
+
         {payload.image_urls.length > 0 && (
           <div className="flex gap-5">
             {payload.image_urls.map((source, index) => (

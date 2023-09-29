@@ -42,6 +42,7 @@ export type EventSpaceDetailsType = {
   tagline: string;
   social_links?: string;
   extra_links?: string;
+  image_url: string;
   tracks: TrackUpdateRequestBody[];
   schedules: ScheduleUpdateRequestBody[];
 };
@@ -155,12 +156,11 @@ export type LocationUpdateRequestBody = {
 export type InviteCreateRequestBody = {
   invitee_email: string;
   event_space_id: string;
-}
+};
 export type InviteUpdateRequestBody = {
   invite_id: string;
-  status: "accepted" | "declined";
-}
-
+  status: 'accepted' | 'declined';
+};
 
 export type SpeakerType = { speaker_name: string; role: string };
 

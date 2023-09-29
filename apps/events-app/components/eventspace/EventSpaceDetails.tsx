@@ -28,6 +28,7 @@ import { useQueryClient } from 'react-query';
 import Button from '../ui/buttons/Button';
 import Link from 'next/link';
 import { HiArrowRight } from 'react-icons/hi';
+import { EventBanner } from './EventBanner';
 
 interface EventSpaceDetailsProps {
   eventSpace: EventSpaceDetailsType;
@@ -70,6 +71,7 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace }) => 
     tagline,
     social_links,
     extra_links,
+    image_url,
   } = eventSpace;
 
   const router = useRouter();
@@ -78,14 +80,15 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace }) => 
 
   const [socialLinks, setSocialLinks] = useState(social_links && social_links !== 'null' ? JSON.parse(social_links as string) : []);
   const [extraLinks, setExtraLinks] = useState(extra_links && extra_links !== 'null' ? JSON.parse(extra_links as string) : []);
+  const [banner, setBanner] = useState(image_url);
   const [selectedEventFormat, setSelectedEventFormat] = useState('');
   const [eventDescriptionEditorValue, setEventDescriptionEditorValue] = useState<string>('');
   const [startDate, setStartDate] = useState<Date>();
   const [switchDialogue, setSwitchDialogue] = useState(false);
   const [tag_line, setTagline] = useState(tagline);
   const [endDate, setEndDate] = useState<Date>();
-  const [eventType, setEventType] = useState<string[]>(event_type as string[]);
-  const [experienceLevels, setExperienceLevels] = useState<string[]>(experience_level as string[]);
+  const [eventType, setEventType] = useState<string[]>(event_type !== null ? (event_type as string[]) : []);
+  const [experienceLevels, setExperienceLevels] = useState<string[]>(experience_level !== null ? (experience_level as string[]) : []);
   const [eventItem, setEventItem] = useState('');
   const [experienceItem, setExperienceItem] = useState('');
   const [location, setLocation] = useState<LocationType[]>(eventspacelocation as LocationType[]);
@@ -159,6 +162,7 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace }) => 
       experience_level: experienceLevels,
       event_space_type: 'tracks' as 'tracks',
       tagline: tag_line,
+      image_url: banner,
       social_links: JSON.stringify(socialLinks),
       extra_links: JSON.stringify(extraLinks),
     };
@@ -167,10 +171,7 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace }) => 
     console.log(payload);
 
     try {
-      const result = await updateEventSpace(eventId as string, {
-        ...payload,
-        image_url: 'http:rul',
-      });
+      const result = await updateEventSpace(eventId as string, payload);
       setDetailsUpdated(true);
       queryClient.invalidateQueries({ queryKey: ['spaceDetails'] });
       // setSwitchDialogue(true);
@@ -230,7 +231,6 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace }) => 
                           <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">Start Date</h2>
 
                           <CustomDatePicker defaultDate={undefined} selectedDate={field.value} handleDateChange={field.onChange} {...field} />
-                          {/* <Input placeholder="12-03" {...field} /> */}
 
                           <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">Click & Select or type in a date</h3>
                           <FormMessage />
@@ -273,6 +273,8 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace }) => 
                     </FormItem>
                   )}
                 />
+
+                <EventBanner banner={banner} setBanner={setBanner} />
 
                 <div className="space-y-10">
                   <FormField
@@ -350,7 +352,7 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace }) => 
                     <div className="flex gap-2.5">
                       {eventType?.map((eventCategory, index) => (
                         <div key={eventCategory} className="flex gap-2.5 items-center rounded-[8px] px-2 py-1.5 bg-white bg-opacity-10">
-                          <button className="flex gap-2.5 items-center">
+                          <button type="button" className="flex gap-2.5 items-center">
                             <GoXCircle onClick={() => handleRemoveEventType(index)} className="top-0.5 left-0.5 w-4 h-4" />
                             <span className="text-lg font-semibold leading-[1.2] text-white self-stretch">{eventCategory}</span>
                           </button>
@@ -381,7 +383,7 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace }) => 
                     <div className="flex gap-2.5">
                       {experienceLevels?.map((experience, index) => (
                         <div key={experience} className="flex gap-2.5 items-center rounded-[8px] px-2 py-1.5 bg-white bg-opacity-10">
-                          <button className="flex gap-2.5 items-center">
+                          <button type="button" className="flex gap-2.5 items-center">
                             <GoXCircle onClick={() => handleRemoveExperienceLevels(index)} className="top-0.5 left-0.5 w-4 h-4" />
                             <span className="text-lg font-semibold leading-[1.2] text-white self-stretch">{experience}</span>
                           </button>
