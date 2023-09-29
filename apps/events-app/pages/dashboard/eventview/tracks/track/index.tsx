@@ -1,4 +1,4 @@
-import OnlineTrackDetailsPageTemplate from "@/components/templates/OnlineTrackDetailsPageTemplate";
+import TrackDetailsPageTemplate from "@/components/templates/TrackDetailsPageTemplate";
 import TrackItemCard from "@/components/tracks/TrackItemCard";
 import MyDropdown from "@/components/ui/DropDown";
 import Pagination from "@/components/ui/Pagination";
@@ -29,6 +29,6 @@ export default function EventViewTrackDetailsPage() {
     router.push("/dashboard/eventview/tracks");
   }
   return (
-    trackItem && <OnlineTrackDetailsPageTemplate trackItem={trackItem} />
+    trackItem && <TrackDetailsPageTemplate trackItem={trackItem} />
   )
 }

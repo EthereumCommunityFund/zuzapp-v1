@@ -56,7 +56,7 @@ export default function InPersonEventViewPageTemplate({ eventSpace }: IInPersonE
 
 	useEffect(() => {
 		console.log("InPersonEventSpace", eventSpace);
-		// setEventSpace(eventSpace);
+		setEventSpace(eventSpace);
 		if (social_links)
 			setSocialLinks(JSON.parse(social_links));
 		if (extra_links)

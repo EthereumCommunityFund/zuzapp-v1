@@ -7,7 +7,7 @@ import { HiUserGroup } from "react-icons/hi";
 import { Label } from "../ui/label";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
 import { EventSpaceDetailsType } from "@/types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useEventSpace } from "@/context/EventSpaceContext";
 import { LocationMarker, LockClosed } from "../ui/icons";
 
@@ -52,6 +52,15 @@ export default function OnlineEventViewPageTemplate({ eventSpace }: IOnlineEvent
   function RenderHTMLString({ htmlString }: RenderHTMLStringProps): JSX.Element {
     return <div className="h-[500px] overflow-y-auto" dangerouslySetInnerHTML={{ __html: htmlString }} />;
   }
+
+  useEffect(() => {
+    console.log("InPersonEventSpace", eventSpace);
+    setEventSpace(eventSpace);
+    if (social_links)
+      setSocialLinks(JSON.parse(social_links));
+    if (extra_links)
+      setExtraLinks(JSON.parse(extra_links));
+  }, [social_links, extra_links, eventSpace])
 
   return (
     <>
@@ -114,18 +123,26 @@ export default function OnlineEventViewPageTemplate({ eventSpace }: IOnlineEvent
             </div>
             <div className="flex gap-2 items-center">
               <Label className="opacity-70">Type: </Label>
-              <Label className="opacity-100 font-bold text-base">Calls</Label>
+              <Label className="opacity-100 font-bold text-base">{event_type?.join(', ')}</Label>
             </div>
           </div>
           <div className="flex flex-col gap-2">
             <Label className="opacity-70">Links </Label>
-            <Label className="opacity-100 font-bold text-base">Notion</Label>
-            <Label className="opacity-100 font-bold text-base">Notion</Label>
+            {extraLinks && extraLinks.map((value: IEventLink, idx: number) => (
+              <div className="flex gap-2" key={idx}>
+                <Label className="opacity-100 font-bold text-base">{value.name}:</Label>
+                <Label className="opacity-100 font-bold text-base">{value.link}</Label>
+              </div>
+            ))}
           </div>
           <div className="flex flex-col gap-2">
             <Label className="opacity-70">Socials </Label>
-            <Label className="opacity-100 font-bold text-base">Youtube</Label>
-            <Label className="opacity-100 font-bold text-base">Twitter</Label>
+            {socialLinks && socialLinks.map((value: IEventLink, idx: number) => (
+              <div className="flex gap-2" key={idx}>
+                <Label className="opacity-100 font-bold text-base">{value.name}:</Label>
+                <Label className="opacity-100 font-bold text-base">{value.link}</Label>
+              </div>
+            ))}
           </div>
         </div>
       </div>

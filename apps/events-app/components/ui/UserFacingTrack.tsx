@@ -1,18 +1,20 @@
 import { TbTicket } from "react-icons/tb";
 import Speaker from "./Speaker";
 import EventDataDate from "./labels/event-data-date";
+import { ScheduleUpdateRequestBody } from "@/types";
 
-interface IProps {
+interface IUserFacingTrack {
+  scheduleData: ScheduleUpdateRequestBody
   onClick: () => void;
 }
 
-export default function UserFacingTrack(props: IProps) {
-  const { onClick } = props;
+export default function UserFacingTrack(props: IUserFacingTrack) {
+  const { scheduleData, onClick } = props;
 
   return (
     <div onClick={onClick}>
       <div className="text-center border-b-2 p-5 border-stone-800">
-        <span className="text-lg font-bold w-full">Sunday, October 29</span>
+        <span className="text-lg font-bold w-full">{new Date(scheduleData.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
       </div>
       <div className="flex flex-col p-4 rounded-2xl bg-componentPrimary">
         <div className="flex justify-between">
@@ -27,7 +29,7 @@ export default function UserFacingTrack(props: IProps) {
             <span>RECURRING</span>
             <span>TRACK/THEME</span>
           </div> */}
-            <span className="font-bold text-xl">Autonomous World's Assembly</span>
+            <span className="font-bold text-xl">{scheduleData.name}</span>
             <div className="flex gap-2.5">
               <EventDataDate startDate="November 8" endDate="November 29" />
             </div>
