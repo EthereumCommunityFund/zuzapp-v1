@@ -3,7 +3,7 @@ import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
 import withSession from '../../middlewares/withSession';
 import { Database } from '@/database.types';
 import { logToFile } from '@/utils/logger';
-import { SpeakerType } from '@/types';
+import { OrganizerType } from '@/types';
 import { validateScheduleUpdate, validateUUID } from '@/validators';
 import { formatTimestamp } from '@/utils';
 import { array } from 'joi';
@@ -51,9 +51,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   console.log(validatedData, 'validated data');
 
-  let start_time = formatTimestamp(validatedData.start_time as Date) as unknown as Date;
-  let end_time = formatTimestamp(validatedData.end_time as Date) as unknown as Date;
-  let date = formatTimestamp(validatedData.date as Date) as unknown as Date;
+  let start_time = formatTimestamp(validatedData.start_time as Date)
+  let end_time = formatTimestamp(validatedData.end_time as Date)
+  let date = formatTimestamp(validatedData.date as Date)
 
   // Update the schedule in the database
   const schedule_update_result = await supabase
@@ -140,15 +140,20 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     currentSpeakerIds = currentSpeakers.data.map((speaker) => speaker.speaker_id);
   }
 
+  console.log(currentSpeakerIds, 'current speaker id')
+
   let speakerPromises: Promise<void>[] = [];
   if (speakers) {
-    speakerPromises = speakers.map(async (speaker: SpeakerType) => {
-      const { speaker_name, role } = speaker;
-      let existingSpeaker = await supabase.from('speaker').select('id').eq('name', speaker_name.toLowerCase().trim()).single();
+    speakerPromises = speakers.map(async (speaker: OrganizerType) => {
+      const { name, role } = speaker;
+      console.log(name, speaker)
+      let existingSpeaker = await supabase.from('speaker').select('id').eq('name', name.trim()).single();
+
+      console.log(existingSpeaker, "existing speaker")
 
       let speakerId;
       if (!existingSpeaker.data) {
-        const newSpeaker = await supabase.from('speaker').insert({ name: speaker_name }).select('id').single();
+        const newSpeaker = await supabase.from('speaker').insert({ name: name }).select('id').single();
         if (newSpeaker.error || !newSpeaker.data) {
           throw new Error(newSpeaker.error?.message || 'Failed to insert new speaker');
         }
@@ -170,7 +175,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       // if (speakers) {
       //   let _speakers = speakers as SpeakerType[];
       //   console.log(speakers, 'speakers o');
-      //   const speakersToRemove = currentSpeakerIds.filter((speakerId) => !_speakers.map((s) => s.speaker_name).includes(speakerId));
+      //   const speakersToRemove = currentSpeakerIds.filter((speakerId) => !_speakers.map((s) => s.name).includes(speakerId));
       //   console.log(speakersToRemove);
       //   await supabase.from('schedulespeakerrole').delete().in('speaker_id', speakersToRemove);
       // }

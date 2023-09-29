@@ -31,7 +31,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     if (!tracks || tracks.length === 0) {
-        return res.status(404).send("No tracks found for the given event space ID");
+        return res.status(200).json([]);
     }
 
     const trackIds = tracks.map(track => track.id);

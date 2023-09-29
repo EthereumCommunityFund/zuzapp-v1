@@ -24,26 +24,27 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         .select(`
         *,
         scheduletags: scheduletags!id (tags: tags!id (*)),
-        schedulespeakerrole: schedulespeakerrole!id (speaker: speaker!id (*))
+        schedulespeakerrole: schedulespeakerrole!id (role, speaker: speaker!id (name))
     `).eq("event_space_id", id);
 
     if (error) {
         logToFile("server error", error.message, error.code, "Unknown user");
-        return res.status(404).send("Schedule not found");
+        return res.status(error.code).send("Schedule not found");
     }
 
-    if (!data) {
-        return res.status(404).send("Schedule not found");
+    if (!data || data.length === 0) {
+        return res.status(200).send({ data: [] });
     }
 
 
+    c
     let response: any = []
 
     data.map(item => {
         let result = {
             ...item,
             tags: item.scheduletags.map((tagObj: any) => tagObj.tags.name),
-            speakers: item.schedulespeakerrole.map((speakerObj: any) => ({
+            organizers: item.schedulespeakerrole.map((speakerObj: any) => ({
                 name: speakerObj.speaker.name,
                 role: speakerObj.role,
             })),
