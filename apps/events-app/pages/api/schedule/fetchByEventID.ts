@@ -29,7 +29,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     if (error) {
         logToFile("server error", error.message, error.code, "Unknown user");
-        return res.status(error.code).send("Schedule not found");
+        return res.status(404).send("Schedule not found");
     }
 
     if (!data || data.length === 0) {
@@ -37,7 +37,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
 
-    c
+
     let response: any = []
 
     data.map(item => {

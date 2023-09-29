@@ -624,8 +624,6 @@ export default function AddSchedulePage(props: any) {
                             <button
                               type="button"
                               onClick={() => {
-                                if (eventItem.name === "") return;
-                                // console.log("davik", scheduleAdded);
                                 // setScheduleAdded({
                                 //   ...scheduleAdded,
                                 //   organizers: [
