@@ -279,6 +279,15 @@ export default function UpdateSchedulePage() {
       console.error('Error fetching space details', error);
     }
   };
+  function formatDate(dateString: string | number | Date) {
+    const date = new Date(dateString);
+    return new Intl.DateTimeFormat('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    }).format(date);
+  }
+
   return (
     <div className="flex items-start gap-[60px] self-stretch px-10 py-5">
       <DetailsBar />
@@ -397,7 +406,7 @@ export default function UpdateSchedulePage() {
                           render={({ field }) => (
                             <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
                               <span className="text-lg opacity-70 self-stretch">Start Date</span>
-                              <CustomDatePicker selectedDate={field.value} handleDateChange={field.onChange} {...field} />
+                              <CustomDatePicker defaultDate={formatDate(schedule.date?.toString())} selectedDate={field.value} handleDateChange={field.onChange} {...field} />
                               <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">Click & Select or type in a date</h3>
                               <FormMessage />
                             </div>
@@ -621,7 +630,7 @@ export default function UpdateSchedulePage() {
                           </button>
                         </div>
 
-                        <div className="flex gap-2.5">
+                        {/* <div className="flex gap-2.5">
                           {schedule.speakers?.map((speaker: any, index: number) => (
                             <div key={index} className="flex gap-2.5 items-center rounded-[8px] px-2 py-1.5 bg-white bg-opacity-10">
                               <button type="button" className="flex gap-2.5 items-center">
@@ -630,7 +639,7 @@ export default function UpdateSchedulePage() {
                               </button>
                             </div>
                           ))}
-                        </div>
+                        </div> */}
                       </div>
                     </div>
                   </div>
@@ -688,77 +697,70 @@ export default function UpdateSchedulePage() {
                         })}
                       </select>
                     </div>
-                    {/* <div className="flex flex-col items-start gap-6 self-stretch">
-                    <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                      <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                        Add Tags
-                      </Label>
-                      <div className="flex w-full text-white gap-5">
-                        <Autocomplete
-                          {...defaultProps}
-                          id="controlled-demo"
-                          sx={{ color: "white", width: "100%" }}
-                          value={tagItem}
-                          onChange={(event: any, newValue) => {
-                            if (newValue) {
-                              setTagItem({ name: newValue.name });
-                            }
-                          }}
-                          onInputChange={(event, newInputValue) => {
-                            setTagItem({ name: newInputValue });
-                          }}
-                          renderInput={(params) => (
-                            <TextField
-                              {...params}
-                              label="tags"
-                              variant="standard"
-                            />
-                          )}
-                        />
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setSchedule({
-                              ...schedule,
-                              tags: [
-                                ...(schedule.tags as string[]),
-                                tagItem.name,
-                              ],
-                            });
-                            setTagItem({ name: "" });
-                          }}
-                          className="flex gap-2.5 text-lg font-normal leading-[1.2] text-white items-center rounded-[8px] px-2 py-1 bg-white bg-opacity-10"
-                        >
-                          +
-                        </button>
+                    <div className="flex flex-col items-start gap-6 self-stretch">
+                      <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
+                        <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Add Tags</Label>
+                        <div className="flex w-full text-white gap-5">
+                          <Autocomplete
+                            {...defaultProps}
+                            id="controlled-demo"
+                            sx={{ color: 'white', width: '100%' }}
+                            value={tagItem}
+                            onChange={(event: any, newValue) => {
+                              if (newValue) {
+                                setTagItem({ name: newValue.name });
+                              }
+                            }}
+                            onInputChange={(event, newInputValue) => {
+                              setTagItem({ name: newInputValue });
+                            }}
+                            renderInput={(params) => (
+                              <TextField
+                                sx={{
+                                  color: 'white',
+                                  input: {
+                                    color: 'white',
+                                  },
+                                  label: {
+                                    color: 'white',
+                                  },
+                                }}
+                                {...params}
+                                label="tags"
+                                variant="standard"
+                              />
+                            )}
+                          />
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setSchedule({
+                                ...schedule,
+                                tags: [...(schedule.tags as string[]), tagItem.name],
+                              });
+                              setTagItem({ name: '' });
+                            }}
+                            className="flex gap-2.5 text-lg font-normal leading-[1.2] text-white items-center rounded-[8px] px-2 py-1 bg-white bg-opacity-10"
+                          >
+                            +
+                          </button>
+                        </div>
+                        <div className="flex gap-2.5">
+                          {schedule.tags?.map((tag, index) => {
+                            const id = uuidv4();
+                            return (
+                              <div key={id} className="flex gap-2.5 items-center rounded-[8px] px-2 py-1.5 bg-white bg-opacity-10">
+                                <button type="button" className="flex gap-2.5 items-center">
+                                  <GoXCircle onClick={() => handleRemoveTag(index)} className="top-0.5 left-0.5 w-4 h-4" />
+                                  <span className="text-lg font-semibold leading-[1.2] text-white self-stretch">{tag}</span>
+                                </button>
+                              </div>
+                            );
+                          })}
+                        </div>
                       </div>
-                      <div className="flex gap-2.5">
-                        {schedule.tags?.map((tag, index) => {
-                          const id = uuidv4();
-                          return (
-                            <div
-                              key={id}
-                              className="flex gap-2.5 items-center rounded-[8px] px-2 py-1.5 bg-white bg-opacity-10"
-                            >
-                              <button
-                                type="button"
-                                className="flex gap-2.5 items-center"
-                              >
-                                <GoXCircle
-                                  onClick={() => handleRemoveTag(index)}
-                                  className="top-0.5 left-0.5 w-4 h-4"
-                                />
-                                <span className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                                  {tag}
-                                </span>
-                              </button>
-                            </div>
-                          );
-                        })}
-                      </div>
+                      <line />
                     </div>
-                    <line />
-                  </div> */}
                   </div>
                   <div className="w-full">
                     <span className="text-lg opacity-70 self-stretch">Advanced</span>
