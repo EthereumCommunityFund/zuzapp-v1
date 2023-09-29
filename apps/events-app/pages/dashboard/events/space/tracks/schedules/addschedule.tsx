@@ -88,9 +88,12 @@ export default function AddSchedulePage(props: any) {
   const [tags, setTags] = useState<string[]>([]);
   const [tagItem, setTagItem] = useState<TagItemProp>({ name: "" });
   const [eventItem, setEventItem] = useState({ name: "", role: "" });
+
   const [frequency, setFrequency] = useState<"once" | "everyday" | "weekly">(
     "once"
   );
+
+  console.log(eventItem, organizers);
   // const [savedLocations, setSavedLocations] = useState<
   //   LocationUpdateRequestBody[]
   // >([]);
@@ -602,12 +605,13 @@ export default function AddSchedulePage(props: any) {
                               <select
                                 title="Organizer"
                                 value={eventItem.role}
-                                onChange={(e) =>
+                                onChange={(e) => {
+                                  console.log(e.target.value, "role value");
                                   setEventItem({
                                     ...eventItem,
                                     role: e.target.value,
-                                  })
-                                }
+                                  });
+                                }}
                                 className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
                               >
                                 <option value="once">Speaker</option>
@@ -619,14 +623,14 @@ export default function AddSchedulePage(props: any) {
                             <button
                               type="button"
                               onClick={() => {
-                                console.log("davik");
-                                setScheduleAdded({
-                                  ...scheduleAdded,
-                                  organizers: [
-                                    ...(schedule.organizers as Organizer[]),
-                                    eventItem,
-                                  ],
-                                });
+                                // console.log("davik", scheduleAdded);
+                                // setScheduleAdded({
+                                //   ...scheduleAdded,
+                                //   organizers: [
+                                //     ...(scheduleAdded.organizers as Organizer[]),
+                                //     eventItem,
+                                //   ],
+                                // });
                                 setOrganizers([...organizers, eventItem]);
                                 setEventItem({ name: "", role: "" });
                               }}

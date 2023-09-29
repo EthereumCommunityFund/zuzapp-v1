@@ -26,7 +26,7 @@ const schedule_create_schema = Joi.object({
   event_space_id: Joi.string().uuid().required(),
   track_id: Joi.string().uuid(),
   tags: Joi.array().items(Joi.string()).default([]),
-  speakers: Joi.array().items(organizer_schema).default([]),
+  organizers: Joi.array().items(organizer_schema).default([]),
 });
 
 const schedule_update_schema = Joi.object({
