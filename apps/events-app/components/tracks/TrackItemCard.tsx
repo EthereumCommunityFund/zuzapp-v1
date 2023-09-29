@@ -8,12 +8,12 @@ interface IProps {
   trackTitle: string;
   trackId?: string;
   trackDescription?: string;
-  trackImage?: string;
+  trackImage: string;
   onClick?: () => void;
 }
 
 export default function TrackItem(props: IProps) {
-  const { trackTitle, trackId, trackDescription, trackImage, onClick } = props;
+  const { trackTitle, trackId, trackImage, onClick } = props;
   const router = useRouter();
   const { eventId } = router.query;
 

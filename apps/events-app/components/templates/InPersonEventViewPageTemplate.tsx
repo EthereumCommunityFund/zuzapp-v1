@@ -11,7 +11,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import Carousel from "../ui/Carousel";
 import ResponsiveCarousel from "../ui/Carousel";
 import { LockClosed, LocationMarker, UserGroup } from "../ui/icons";
-import { EventSpaceDetailsType } from "@/types";
+import { EventSpaceDetailsType, EventSpaceUpdateRequestBody } from "@/types";
 import { useEventSpace } from "@/context/EventSpaceContext";
 import { useEffect, useState } from "react";
 
@@ -55,7 +55,8 @@ export default function InPersonEventViewPageTemplate({ eventSpace }: IInPersonE
 	const { setEventSpace } = useEventSpace();
 
 	useEffect(() => {
-		setEventSpace(eventSpace);
+		console.log("InPersonEventSpace", eventSpace);
+		// setEventSpace(eventSpace);
 		if (social_links)
 			setSocialLinks(JSON.parse(social_links));
 		if (extra_links)
@@ -65,12 +66,13 @@ export default function InPersonEventViewPageTemplate({ eventSpace }: IInPersonE
 	function RenderHTMLString({ htmlString }: RenderHTMLStringProps): JSX.Element {
 		return <div className="h-[500px] overflow-y-auto" dangerouslySetInnerHTML={{ __html: htmlString }} />;
 	}
+
 	return (
 		<>
 			<div className="flex gap-10">
 				<div className="w-2/3 flex flex-col rounded-2xl bg-componentPrimary min-w-[600px]"> {/* Information */}
 					<div className="rounded-xl p-5">
-						<img src="/images/1.png" className="w-full pb-5" alt="" height={600} />
+						<img src="{image_url}" className="w-full pb-5" alt="" height={600} />
 					</div>
 					<div className="flex flex-col gap-2.5 pb-5 border-b-2 border-white/10 w-full p-5">
 						<div className="flex items-center justify-between w-full pb-5">
