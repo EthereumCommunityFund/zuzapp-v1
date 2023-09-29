@@ -283,7 +283,8 @@ export default function AddSchedulePage(props: any) {
                           </FormDescription>
                           <FormControl>
                             <RadioGroup
-                              defaultValue={field.value}
+                              // defaultValue={field.value}
+                              onValueChange={field.onChange}
                               className="flex flex-col md:flex-row justify-between"
                               {...field}
                             >
@@ -614,15 +615,16 @@ export default function AddSchedulePage(props: any) {
                                 }}
                                 className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
                               >
-                                <option value="once">Speaker</option>
-                                <option value="everyday">Organizer</option>
-                                <option value="weekly">Facilitator</option>
+                                <option value="speaker">Speaker</option>
+                                <option value="organizer">Organizer</option>
+                                <option value="facilitator">Facilitator</option>
                               </select>
                             </div>
 
                             <button
                               type="button"
                               onClick={() => {
+                                if (eventItem.name === "") return;
                                 // console.log("davik", scheduleAdded);
                                 // setScheduleAdded({
                                 //   ...scheduleAdded,
@@ -632,7 +634,7 @@ export default function AddSchedulePage(props: any) {
                                 //   ],
                                 // });
                                 setOrganizers([...organizers, eventItem]);
-                                setEventItem({ name: "", role: "" });
+                                setEventItem({ name: "", role: "speaker" });
                               }}
                               className="flex gap-2.5 mb-2 text-lg font-normal leading-[1.2] text-white items-center rounded-[8px] px-2 py-1 bg-white bg-opacity-10"
                             >
@@ -749,6 +751,7 @@ export default function AddSchedulePage(props: any) {
                             <button
                               type="button"
                               onClick={() => {
+                                if (tagItem.name === "") return;
                                 setTags([...tags, tagItem.name]);
                                 setTagItem({ name: "" });
                               }}
