@@ -67,7 +67,7 @@ export default function OnlineEventViewPageTemplate({ eventSpace }: IOnlineEvent
       <div className="flex gap-10">
         <div className="w-2/3 flex flex-col rounded-2xl bg-componentPrimary min-w-[600px]"> {/* Information */}
           <div className="rounded-xl p-5">
-            <img src="{image_url}" className="w-full pb-5" alt="" height={600} />
+            <img src={eventSpace.image_url} className="w-full pb-5" alt="" height={600} />
           </div>
           <div className="flex flex-col gap-2.5 pb-5 border-b-2 border-white/10 w-full p-5">
             <div className="flex items-center justify-between w-full pb-5">

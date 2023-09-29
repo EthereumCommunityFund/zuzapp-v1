@@ -110,4 +110,8 @@ export const eventViewRoutes: Routes[] = [
     path: '/dashboard/eventview/allschedules/schedule',
     title: 'Track View',
   },
+  {
+    path: '/dashboard/eventview/tracks/track/schedule',
+    title: 'Schedule View',
+  },
 ];
