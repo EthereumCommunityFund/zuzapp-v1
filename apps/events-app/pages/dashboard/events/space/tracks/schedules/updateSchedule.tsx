@@ -111,8 +111,8 @@ export default function UpdateSchedulePage() {
       required_error: 'You need to select a format.',
     }),
     date: z.coerce.date(),
-    description: z.string().min(2, {
-      message: 'Description is required.',
+    description: z.string().min(10, {
+      message: 'Description is required and must be a minimum of 5',
     }),
     video_call_link: z.string().url().min(2, {
       message: 'valid video link is required.',
@@ -279,14 +279,9 @@ export default function UpdateSchedulePage() {
       console.error('Error fetching space details', error);
     }
   };
-  function formatDate(dateString: string | number | Date) {
-    const date = new Date(dateString);
-    return new Intl.DateTimeFormat('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    }).format(date);
-  }
+
+  // const formated = formatDate('2023-09-27T23:00:00+00:00');
+  // console.log(formated, 'formated');
 
   return (
     <div className="flex items-start gap-[60px] self-stretch px-10 py-5">
@@ -406,7 +401,7 @@ export default function UpdateSchedulePage() {
                           render={({ field }) => (
                             <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
                               <span className="text-lg opacity-70 self-stretch">Start Date</span>
-                              <CustomDatePicker defaultDate={formatDate(schedule.date?.toString())} selectedDate={field.value} handleDateChange={field.onChange} {...field} />
+                              <CustomDatePicker defaultDate={undefined} selectedDate={field.value} handleDateChange={field.onChange} {...field} />
                               <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">Click & Select or type in a date</h3>
                               <FormMessage />
                             </div>
