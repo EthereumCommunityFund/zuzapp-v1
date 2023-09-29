@@ -3,6 +3,7 @@ import Speaker from "./Speaker";
 import EventDataDate from "./labels/event-data-date";
 import { ScheduleUpdateRequestBody } from "@/types";
 import { useEffect, useState } from "react";
+import EventDataTime from "./labels/event-data-time";
 
 interface IUserFacingTrack {
   scheduleData: ScheduleUpdateRequestBody
@@ -12,9 +13,14 @@ interface IUserFacingTrack {
 export default function UserFacingTrack(props: IUserFacingTrack) {
   const { scheduleData, onClick } = props;
   const date = new Date(scheduleData.date);
-  const startTime = new Date(scheduleData.start_time);
-  const endTime = scheduleData.end_time && new Date(scheduleData.end_time);
+  const startDate = new Date(scheduleData.start_time).toLocaleDateString('en-US', { month: 'short', day: '2-digit' });
+  const endDate = new Date(scheduleData.end_time).toLocaleDateString('en-US', { month: 'short', day: '2-digit' });
+  const startTime = new Date(scheduleData.start_time).toLocaleTimeString('en-US', { hour: "2-digit", minute: "2-digit" });
+  const endTime = new Date(scheduleData.end_time).toLocaleTimeString('en-US', { hour: "2-digit", minute: "2-digit" });
 
+  useEffect(() => {
+    console.log("Date", date);
+  })
 
   return (
     <div onClick={onClick}>
@@ -25,8 +31,8 @@ export default function UserFacingTrack(props: IUserFacingTrack) {
         <div className="flex justify-between">
           <div>
             <div className="rounded-[10px] p-2.5  text-center bg-trackDateColor">
-              <h2 className="font-bold text-xl">{date.getDay()}</h2>
-              <b className="font-bold text-xl">{date.getMonth()}</b>
+              <h2 className="font-bold text-xl">{date.getDate()}</h2>
+              <b className="font-bold text-xl">{date.toLocaleDateString('en-US', { month: 'short' })}</b>
             </div>
           </div>
           <div className="flex flex-col gap-2.5 w-3/4">
@@ -36,7 +42,8 @@ export default function UserFacingTrack(props: IUserFacingTrack) {
           </div> */}
             <span className="font-bold text-xl">{scheduleData.name}</span>
             <div className="flex gap-2.5">
-              <EventDataDate startDate="November 8" endDate="November 29" />
+              {scheduleData.schedule_frequency !== 'once' && <EventDataDate startDate={startDate} endDate={endDate} />}
+              <EventDataTime startTime={startTime} endTime={endTime} />
             </div>
             <div className="flex gap-[3px]">
               <Speaker title="Janine Leger" />

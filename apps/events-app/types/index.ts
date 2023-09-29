@@ -98,7 +98,7 @@ export type ScheduleUpdateRequestBody = {
   description: string;
   date: string | Date | number;
   start_time: string | Date | number;
-  end_time: string | Date | undefined;
+  end_time: string | Date | number;
   all_day?: boolean;
   schedule_frequency: 'once' | 'everyday' | 'weekly';
   images?: string[];
