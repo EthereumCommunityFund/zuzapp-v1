@@ -3,6 +3,7 @@ import MyDropdown from "@/components/ui/DropDown";
 import { List } from "@/components/ui/DropDownMenu";
 import Pagination from "@/components/ui/Pagination";
 import Button from "@/components/ui/buttons/Button";
+import { useEventSpace } from "@/context/EventSpaceContext";
 import { DropDownMenuItemType } from "@/types";
 import { useRouter } from "next/router";
 import { useState } from "react";
@@ -12,6 +13,7 @@ import { BiLeftArrow, BiSolidCategory } from "react-icons/bi";
 export default function EventViewTracksPage() {
 	const router = useRouter();
 	const [currentPage, setCurrentPage] = useState(1);
+	const { eventSpace } = useEventSpace();
 
 	const categoryList: DropDownMenuItemType[] = [
 		{
@@ -29,8 +31,11 @@ export default function EventViewTracksPage() {
 		setCurrentPage(page);
 	};
 
-	const handleItemClick = () => {
-		router.push("/dashboard/eventview/tracks/track");
+	const handleItemClick = (trackId?: string) => {
+		router.push({
+			pathname: `/dashboard/eventview/tracks/track`,
+			query: { trackId }
+		});
 	}
 
 	return (
@@ -48,7 +53,9 @@ export default function EventViewTracksPage() {
 					<div className="p-2.5 bg-componentPrimary rounded-2xl">
 						<div className="flex flex-col p-2.5 gap-[10px] overflow-hidden">
 							{
-								<TrackItemCard trackTitle={"Zk Week"} onClick={handleItemClick} />
+								eventSpace?.tracks.map((item, idx) => (
+									<TrackItemCard key={idx} trackId={item.id} trackTitle={item.name} trackImage={item.image as string} onClick={() => handleItemClick(item.id)} />
+								))
 							}
 						</div>
 						<div>

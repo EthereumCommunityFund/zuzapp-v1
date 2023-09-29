@@ -5,14 +5,22 @@ import Speaker from "@/components/ui/Speaker";
 import UserFacingTrack from "@/components/ui/UserFacingTrack";
 import Button from "@/components/ui/buttons/Button";
 import { Label } from "@/components/ui/label";
+import { useEventSpace } from "@/context/EventSpaceContext";
+import { TrackUpdateRequestBody } from "@/types";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BiEditAlt, BiPlusCircle } from "react-icons/bi";
 import { HiArrowLeft, HiCalendar, HiCog, HiLocationMarker, HiMicrophone, HiTag, HiUserGroup } from "react-icons/hi";
 
-export default function OnlineTrackDetailsPageTemplate() {
+interface IOnlineTrackDetailsPageTemplate {
+  trackItem: TrackUpdateRequestBody;
+}
+
+export default function OnlineTrackDetailsPageTemplate(props: IOnlineTrackDetailsPageTemplate) {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
+  const { trackItem } = props
+  const { eventSpace } = useEventSpace();
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -25,6 +33,11 @@ export default function OnlineTrackDetailsPageTemplate() {
   const handleBackToTracksClick = () => {
     router.push("/dashboard/eventview/tracks");
   }
+
+  useEffect(() => {
+    console.log("eventSpace", eventSpace);
+  })
+
   return (
     <div className="flex gap-4">
       <div className="flex flex-col w-[1000px]">
@@ -34,7 +47,7 @@ export default function OnlineTrackDetailsPageTemplate() {
             <h2 className="font-bold text-3xl">ZuConnect</h2>
             <span className="font-semibold opacity-70">A Popup Village of Innovation in the Heart of Istanbul</span>
           </div>
-          <Button className="rounded-[20px] text-base w-[150px] h-10 items-center">
+          <Button variant="primaryGreen" className="rounded-[20px] text-base w-[150px] h-10 items-center">
             <span className="mx-auto" >Apply to Event</span>
           </Button>
         </div>
@@ -45,10 +58,10 @@ export default function OnlineTrackDetailsPageTemplate() {
               <Button variant="quiet" className="rounded-xl" leftIcon={BiEditAlt}>Edit</Button>
             </div>
             <div className="flex flex-col gap-[10px] p-5 "> {/* Track Info */}
-              <img src="/images/1.png" alt="track image" className=" h-[496px] rounded-[10px]" />
+              <img src={trackItem.image as string} alt="track image" className=" h-[496px] rounded-[10px]" />
               <div className="flex flex-col gap-[10px] p-2.5"> {/* Tracks Name */}
                 <h2 className="font-bold text-2xl">Zk Week</h2>
-                <p className="font-bold opacity-70">Public goods in Web3 refer to digital assets or resources that are openly accessible and available to all users on a blockchain network. They are typically funded by the community and are designed to benefit the entire ...</p>
+                <p className="font-bold opacity-70">{trackItem.description}</p>
                 <span className="rounded-xl flex px-4 py-1 items-center gap-1 opacity-60 bg-[#FFFFFF10] font-bold justify-start w-[320px] text-lg">
                   <HiCalendar size={25} /> November 29 - November 11
                 </span>

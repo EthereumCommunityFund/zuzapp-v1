@@ -36,7 +36,7 @@ export default function HomePageTemplate() {
   const { eventSpaceList, setEventSpaceList } = useEventSpaces();
 
   const handleButtonClick = async (eventId: string) => {
-    console.log('EventFormat', eventId);
+
     router.push({
       pathname: `/dashboard/eventview`, // Update with your actual route
       query: { eventId },
@@ -52,7 +52,7 @@ export default function HomePageTemplate() {
     () => fetchPublishedEventSpaces(),
     {
       onSuccess: (data) => {
-        console.log('Event Spaces:', data);
+        console.log('HomePageTemplate Event Spaces:', data);
         setEventSpaceList(data);
       },
     }

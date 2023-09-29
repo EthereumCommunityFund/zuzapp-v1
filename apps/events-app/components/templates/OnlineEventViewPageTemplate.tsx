@@ -6,21 +6,65 @@ import { GoLocation } from "react-icons/go";
 import { HiUserGroup } from "react-icons/hi";
 import { Label } from "../ui/label";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
+import { EventSpaceDetailsType } from "@/types";
+import { useState } from "react";
+import { useEventSpace } from "@/context/EventSpaceContext";
+import { LocationMarker, LockClosed } from "../ui/icons";
 
-export default function OnlineEventViewPageTemplate() {
+interface IOnlineEventViewPageTemplateProps {
+  eventSpace: EventSpaceDetailsType;
+}
+
+interface RenderHTMLStringProps {
+  htmlString: string;
+}
+
+interface IEventLink {
+  name: string;
+  link: string;
+}
+
+export default function OnlineEventViewPageTemplate({ eventSpace }: IOnlineEventViewPageTemplateProps) {
+  const {
+    // id,
+    name,
+    event_space_type,
+    status,
+    start_date,
+    end_date,
+    description,
+    format,
+    event_type,
+    experience_level,
+    eventspacelocation,
+    tagline,
+    social_links,
+    extra_links,
+  } = eventSpace;
+  const startDate = new Date(start_date);
+  const endDate = new Date(end_date);
+  const formattedStartDate = startDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+  const formattedEndDate = endDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+  const [socialLinks, setSocialLinks] = useState<IEventLink[] | undefined>();
+  const [extraLinks, setExtraLinks] = useState<IEventLink[] | undefined>();
+  const { setEventSpace } = useEventSpace();
+
+  function RenderHTMLString({ htmlString }: RenderHTMLStringProps): JSX.Element {
+    return <div className="h-[500px] overflow-y-auto" dangerouslySetInnerHTML={{ __html: htmlString }} />;
+  }
 
   return (
     <>
       <div className="flex gap-10">
         <div className="w-2/3 flex flex-col rounded-2xl bg-componentPrimary min-w-[600px]"> {/* Information */}
           <div className="rounded-xl p-5">
-            <img src="/images/ZuMeeting.png" className="w-full pb-5" alt="" height={600} />
+            <img src="{image_url}" className="w-full pb-5" alt="" height={600} />
           </div>
           <div className="flex flex-col gap-2.5 pb-5 border-b-2 border-white/10 w-full p-5">
             <div className="flex items-center justify-between w-full pb-5">
               <div className="flex flex-col gap-3">
                 <div className="flex items-center gap-3 text-[#D7FFC4]/80">
-                  <FiLock />
+                  <LockClosed />
                   <span className="font-bold">Zuzalu Residents & Invited Guests</span>
                 </div>
                 <h2 className="font-semibold text-[30px]">ZuConnect</h2>
@@ -30,10 +74,10 @@ export default function OnlineEventViewPageTemplate() {
             </div>
             <div className="flex gap-3 text-lg">
               <span className="rounded-full flex px-4 py-1 items-center gap-1 opacity-60 bg-[#FFFFFF10] font-bold">
-                <HiCalendar /> October 8 - October 23
+                <HiCalendar /> {formattedStartDate} - {formattedEndDate}
               </span>
               <span className="rounded-2xl flex px-4 py-1 items-center gap-1 opacity-60 bg-[#FFFFFF10] font-bold">
-                <GoLocation /> Beyoglu, Istanbul, Turkey
+                <LocationMarker /> {eventspacelocation && eventspacelocation[0].address}
               </span>
             </div>
           </div>
@@ -49,7 +93,7 @@ export default function OnlineEventViewPageTemplate() {
                 <DialogHeader>
                   <DialogTitle>About This Event</DialogTitle>
                   <DialogDescription className="opacity-80">
-                    <h2 className="text-2xl font-bold">What is ZuConnect?</h2>
+                    <RenderHTMLString htmlString={description} />
                   </DialogDescription>
                 </DialogHeader>
 
