@@ -1,6 +1,6 @@
 interface RenderHTMLStringProps {
   htmlString: string;
-  height: string;
+  height?: string;
 }
 
 export default function RenderHTMLString({ htmlString, height }: RenderHTMLStringProps): JSX.Element {

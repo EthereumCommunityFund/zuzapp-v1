@@ -34,19 +34,15 @@ export default function EventViewTrackDetailsPage() {
   const endTime = currentSchedule && new Date(currentSchedule.end_time).toLocaleTimeString('en-US', { hour: "2-digit", minute: "2-digit" });
   const startDate = currentSchedule && new Date(currentSchedule.start_time).toLocaleDateString('en-US', { month: 'long', day: '2-digit' });
   const endDate = currentSchedule && new Date(currentSchedule.end_time).toLocaleDateString('en-US', { month: 'long', day: '2-digit' });
-  console.log("trackItem", trackItem);
 
-  const [socialLinks, setSocialLinks] = useState<IEventLink[] | undefined>();
-  const [extraLinks, setExtraLinks] = useState<IEventLink[] | undefined>();
+
+
   const { setEventSpace } = useEventSpace();
 
   useEffect(() => {
     console.log("InPersonEventSpace", eventSpace);
     setEventSpace(eventSpace);
-    if (eventSpace?.social_links)
-      setSocialLinks(JSON.parse(eventSpace.social_links));
-    if (eventSpace?.extra_links)
-      setExtraLinks(JSON.parse(eventSpace.extra_links));
+
   }, [eventSpace])
 
   return (

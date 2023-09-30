@@ -3,20 +3,20 @@ import MyDropdown from "@/components/ui/DropDown";
 import Pagination from "@/components/ui/Pagination";
 import UserFacingTrack from "@/components/ui/UserFacingTrack";
 import Button from "@/components/ui/buttons/Button";
+import { useEventSpace } from "@/context/EventSpaceContext";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { BiLeftArrow, BiPlusCircle } from "react-icons/bi";
 
-export default function EventViewTracksPage() {
+export default function EventViewTracksAlleSchedulesPage() {
   const router = useRouter();
-  const [currentPage, setCurrentPage] = useState(1);
+  const { eventSpace } = useEventSpace();
 
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
-
-  const handleItemClick = () => {
-    router.push("/dashboard/eventview/allschedules/schedule");
+  const handleItemClick = (scheduleName: string, trackId?: string) => {
+    router.push({
+      pathname: "/dashboard/eventview/allschedules/schedule",
+      query: { scheduleName, trackId }
+    });
   }
   return (
     <div className="flex gap-4">
@@ -39,11 +39,9 @@ export default function EventViewTracksPage() {
           </div>
           <div className=" p-2.5 gap-[10px] overflow-hidden rounded-[10px]">
             {
-              <>
-                {/* <UserFacingTrack onClick={handleItemClick} />
-                <UserFacingTrack onClick={handleItemClick} />
-                <UserFacingTrack onClick={handleItemClick} /> */}
-              </>
+              eventSpace?.schedules.map((schedule) => (
+                <UserFacingTrack onClick={() => handleItemClick(schedule.name, schedule.track_id)} scheduleData={schedule} />
+              ))
             }
           </div>
         </div>
