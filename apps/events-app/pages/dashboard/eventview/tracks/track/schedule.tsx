@@ -6,36 +6,37 @@ import Speaker from "@/components/ui/Speaker";
 import UserFacingTrack from "@/components/ui/UserFacingTrack";
 import Button from "@/components/ui/buttons/Button";
 import EventDataDate from "@/components/ui/labels/event-data-date";
-import EventData from "@/components/ui/labels/event-data-time";
+import EventDataTime from "@/components/ui/labels/event-data-time";
+
 import { useEventSpace } from "@/context/EventSpaceContext";
-import { useState } from "react";
+import { useRouter } from "next/router";
+
 import { BiEditAlt, BiLeftArrow } from "react-icons/bi";
 import { BsFillTicketFill } from "react-icons/bs";
-import { HiCalendar } from "react-icons/hi";
+import { HiArrowLeft, HiCalendar } from "react-icons/hi";
 
 export default function EventViewTrackDetailsPage() {
   const { eventSpace } = useEventSpace();
-  const [currentPage, setCurrentPage] = useState(1);
-
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
-
+  const router = useRouter();
+  const scheduleName = router.query.scheduleName;
+  const currentSchedule = eventSpace?.schedules.find((scheduleItem) => (scheduleItem.name === scheduleName));
+  const startTime = currentSchedule && new Date(currentSchedule.start_time).toLocaleTimeString('en-US', { hour: "2-digit", minute: "2-digit" });
+  const endTime = currentSchedule && new Date(currentSchedule.end_time).toLocaleTimeString('en-US', { hour: "2-digit", minute: "2-digit" });
 
   return (
-    <>
+    <div className="flex gap-4">
       <div className="flex flex-col w-[1000px]">
         <EventViewHeader imgPath={eventSpace?.image_url as string} name={eventSpace?.name as string} tagline={eventSpace?.tagline as string} />
         <div className="p-5 gap-[30px] max-w-[1000px]">
-          <div className="flex flex-col gap-[10px] p-2.5 bg-componentPrimary">
+          <div className="flex flex-col gap-[10px] p-2.5 bg-componentPrimary rounded-2xl">
             <div className="flex justify-between">  {/* Tracks and Edit Button */}
-              <Button variant="ghost" leftIcon={BiLeftArrow}>Back to Track</Button>
-              <Button variant="quiet" leftIcon={BiEditAlt}>Edit</Button>
+              <Button variant="ghost" className="text-lg font-bold" leftIcon={HiArrowLeft}>Back to Track</Button>
+              <Button variant="quiet" className="rounded-xl" leftIcon={BiEditAlt}>Edit</Button>
             </div>
             <div className="flex flex-col gap-2.5 p-2.5 "> {/* Schedule Info */}
               <div className="flex flex-col gap-2.5 p-5">
-                <EventData startTime={"00:00 AM"} endTime={"00:00 PM"} />
-                <h2 className='text-2xl font-extrabold'>Opening Meetup (some game to get to know the coworking space + hotels)</h2>
+                {startTime && endTime && <EventDataTime startTime={startTime} endTime={endTime} />}
+                <h2 className='text-2xl font-extrabold'>{currentSchedule?.name}</h2>
                 <div className="flex gap-[6px]">
                   <Speaker title={"QJ"} />
                   <Speaker title={"Janine Leger"} />
@@ -72,6 +73,6 @@ export default function EventViewTrackDetailsPage() {
           </>
         }
       </div>
-    </>
+    </div>
   )
 }
