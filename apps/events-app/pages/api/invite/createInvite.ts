@@ -41,7 +41,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         return res.status(409).json({ invite_status: existingInvite[0].status, message: 'Invite already exists' });
     }
 
-    // check if invite has expired
+    // ToDo check if invite has expired
 
 
 

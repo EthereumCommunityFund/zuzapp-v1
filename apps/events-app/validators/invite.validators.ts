@@ -9,7 +9,6 @@ const invite_create_schema = Joi.object({
 });
 
 const invite_update_schema = Joi.object({
-    invite_id: Joi.string().guid({ version: 'uuidv4' }).required(),
     status: Joi.string().valid('accepted', 'declined').required(),
 });
 

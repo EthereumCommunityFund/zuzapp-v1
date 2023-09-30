@@ -158,7 +158,6 @@ export type InviteCreateRequestBody = {
   event_space_id: string;
 };
 export type InviteUpdateRequestBody = {
-  invite_id: string;
   status: 'accepted' | 'declined';
 };
 
