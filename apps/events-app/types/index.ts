@@ -84,9 +84,9 @@ export type ScheduleCreateRequestBody = {
   event_space_id: string;
   track_id?: string;
   tags: string[];
-  speakers: [
+  organizers: [
     {
-      speaker_name: string;
+      name: string;
       role: string;
     },
   ];
@@ -105,15 +105,15 @@ export type ScheduleUpdateRequestBody = {
   video_call_link?: string;
   live_stream_url?: string;
   location_id: string;
-  event_type?: string[];
-  experience_level?: string[];
+  event_type?: string;
+  experience_level?: string;
   limit_rsvp?: boolean;
   rsvp_amount?: number;
   event_space_id: string;
   track_id?: string;
   tags?: string[];
-  speakers?: {
-    speaker_name: string;
+  organizers?: {
+    name: string;
     role: string;
   }[];
 };
@@ -162,7 +162,7 @@ export type InviteUpdateRequestBody = {
   status: 'accepted' | 'declined';
 };
 
-export type SpeakerType = { speaker_name: string; role: string };
+export type OrganizerType = { name: string; role: string };
 
 export type QueryWithID = {
   [key: string]: string;
