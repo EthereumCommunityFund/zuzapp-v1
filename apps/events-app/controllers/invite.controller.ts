@@ -2,8 +2,8 @@ import axiosInstance from "@/src/axiosInstance";
 import { InviteCreateRequestBody, InviteUpdateRequestBody } from "@/types";
 
 
-export const createInvite = async (data: InviteCreateRequestBody) => {
-    return await axiosInstance.post('/api/invite/createInvite', data)
+export const createInvite = async (data: InviteCreateRequestBody, event_space_id: string) => {
+    return await axiosInstance.post(`/api/invite/createInvite/?event_space_id=${event_space_id}`, data)
 }
 
 
@@ -21,7 +21,7 @@ export const updateInvite = async (id: string, data: InviteUpdateRequestBody) =>
 
 }
 
-export const revokeInvite = async (id: string) => {
-    return await axiosInstance.post(`/api/invite/${id}/revoke`)
+export const revokeInvite = async (id: string, event_space_id: string) => {
+    return await axiosInstance.post(`/api/invite/${id}/revoke/event_space_id=${event_space_id}`)
 
 }

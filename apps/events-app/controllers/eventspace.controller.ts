@@ -26,8 +26,8 @@ export const createEventSpace = async (data: EventSpaceCreateRequestBody) => {
 };
 
 // updates an event space
-export const updateEventSpace = async (id: string, data: EventSpaceUpdateRequestBody) => {
-  return await axiosInstance.put(`/api/eventspace/${id}/update`, data);
+export const updateEventSpace = async (id: string, data: EventSpaceUpdateRequestBody, event_space_id: string) => {
+  return await axiosInstance.put(`/api/eventspace/${id}/update/?event_space_id=${id}`, data);
 };
 // updates an event space status
 export const updateEventSpaceStatus = async (id: string, data: EventSpaceStatusUpdateRequestBody) => {
@@ -36,5 +36,5 @@ export const updateEventSpaceStatus = async (id: string, data: EventSpaceStatusU
 
 // deletes an event space
 export const deleteEventSpace = async (id: string) => {
-  return await axiosInstance.delete(`/api/eventspace/${id}/delete`);
+  return await axiosInstance.delete(`/api/eventspace/${id}/delete/?event_space_id=${id}`);
 };

@@ -5,6 +5,7 @@ import withSession from "../middlewares/withSession";
 import { validate_invite_create } from "@/validators/invite.validators";
 import { logToFile } from "@/utils/logger";
 import { Database } from "@/database.types";
+import withAuthorization from "../middlewares/withAuthorization";
 
 
 
@@ -62,4 +63,5 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(200).json({ message: "Invitation sent" });
 };
 
-export default withSession(handler);
+
+export default withSession(withAuthorization("creator", handler));

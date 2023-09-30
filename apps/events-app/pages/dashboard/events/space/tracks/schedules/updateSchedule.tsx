@@ -100,7 +100,7 @@ export default function UpdateSchedulePage() {
       },
     ],
   });
-  const [startDate, setStartDate] = useState<Date | undefined>()
+  const [startDate, setStartDate] = useState<Date | undefined>();
   const [optionTags, setOptionTags] = useState<TagItemProp[]>([]);
   const [tags, setTags] = useState<string[]>([]);
   const [tagItem, setTagItem] = useState<TagItemProp>({ name: "" });
@@ -198,7 +198,7 @@ export default function UpdateSchedulePage() {
       end_time: schedule.end_time as unknown as string,
       event_type:
         (schedule.event_type as unknown as []).length > 0
-          ? (JSON.stringify([schedule.event_type]) )
+          ? JSON.stringify([schedule.event_type])
           : ((eventSpace?.event_type as string[])[0] as unknown as string[]),
       experience_level:
         (schedule.experience_level as unknown as []).length > 0
@@ -221,7 +221,11 @@ export default function UpdateSchedulePage() {
     const payload: any = { ...values, ...additionalPayload };
     console.log(payload);
     try {
-      const result = await updateSchedule(scheduleId as string, payload);
+      const result = await updateSchedule(
+        scheduleId as string,
+        payload,
+        eventId
+      );
       // setSwitchDialogue(true);
       setScheduleUpdated(true);
       console.log(result, "result");
@@ -288,7 +292,7 @@ export default function UpdateSchedulePage() {
           event_type: JSON.parse(result.data.data.event_type)[0],
           experience_level: JSON.parse(result.data.data.experience_level)[0],
         });
-        setStartDate(new Date(result.data.data.date))
+        setStartDate(new Date(result.data.data.date));
 
         form.reset({
           name: result.data.data.name,
@@ -298,7 +302,7 @@ export default function UpdateSchedulePage() {
           video_call_link: result.data.data.video_call_link,
           live_stream_url: result.data.data.live_stream_url,
         });
-        console.log(result.data.data.date)
+        console.log(result.data.data.date);
       } catch (error) {
         console.log(error);
       }
@@ -477,28 +481,30 @@ export default function UpdateSchedulePage() {
                         </span>
                       </div>
                       <div className="flex flex-col items-center gap-[30px] self-stretch w-full">
-                        {schedule.date !== "" &&   <FormField
-                          control={form.control}
-                          name="date"
-                          render={({ field }) => (
-                            <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                              <span className="text-lg opacity-70 self-stretch">
-                                Start Date
-                              </span>
-                              <CustomDatePicker
-                                defaultDate={undefined}
-                                selectedDate={startDate as Date}
-                                handleDateChange={field.onChange}
-                                {...field}
-                              />
-                              <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">
-                                Click & Select or type in a date
-                              </h3>
-                              <FormMessage />
-                            </div>
-                          )}
-                        />}
-                      
+                        {schedule.date !== "" && (
+                          <FormField
+                            control={form.control}
+                            name="date"
+                            render={({ field }) => (
+                              <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
+                                <span className="text-lg opacity-70 self-stretch">
+                                  Start Date
+                                </span>
+                                <CustomDatePicker
+                                  defaultDate={undefined}
+                                  selectedDate={startDate as Date}
+                                  handleDateChange={field.onChange}
+                                  {...field}
+                                />
+                                <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">
+                                  Click & Select or type in a date
+                                </h3>
+                                <FormMessage />
+                              </div>
+                            )}
+                          />
+                        )}
+
                         {!schedule.all_day && (
                           <>
                             <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -740,7 +746,7 @@ export default function UpdateSchedulePage() {
                           <button
                             type="button"
                             onClick={() => {
-                              if(eventItem.name === "") return;
+                              if (eventItem.name === "") return;
                               console.log(eventItem);
                               setSchedule({
                                 ...schedule,
@@ -832,8 +838,7 @@ export default function UpdateSchedulePage() {
                         onChange={(e) =>
                           setSchedule({
                             ...schedule,
-                            experience_level: e.target
-                              .value,
+                            experience_level: e.target.value,
                           })
                         }
                         value={schedule.experience_level}

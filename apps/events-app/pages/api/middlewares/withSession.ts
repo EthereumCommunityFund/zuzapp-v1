@@ -12,10 +12,10 @@ const withSession = (handler: NextApiHandler) => {
         }
         let user = data.session?.user;
 
-        // const errors = validateUUID(user.id);
-        // if (errors.length > 0) {
-        //     return res.status(400).json({ errors });
-        // }
+        const errors = validateUUID(user.id);
+        if (errors.length > 0) {
+            return res.status(400).json({ errors });
+        }
         req.body = {
             ...req.body,
             user
