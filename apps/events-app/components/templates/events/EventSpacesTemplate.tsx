@@ -32,7 +32,7 @@ const EventSpacesTemplate: React.FC<EventSpacesTemplateProps> = ({ eventSpaces, 
               {eventSpaces &&
                 eventSpaces.map((event, index) => (
                   <div onClick={() => setEventSpace(event)} key={event.id}>
-                    <EventSpacesCard eventTitle={event.name} index={index} key={event.id} eventId={event.id} />
+                    <EventSpacesCard eventTitle={event.name} index={index} key={event.id} eventId={event.id} eventStatus={event.status} />
                   </div>
                 ))}
             </>

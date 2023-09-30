@@ -15,6 +15,8 @@ import { HiArrowLeft } from 'react-icons/hi';
 
 import { fetchEventSpaceById } from '../../../../services/fetchEventSpaceDetails';
 import { Loader } from '@/components/ui/Loader';
+import { arrayFromLength } from '@/lib/helper';
+import { DetailsFormSkeleton } from '@/components/commons/DetailsFormSkeleton';
 
 export default function EventSpaceDetailsPage() {
   const router = useRouter();

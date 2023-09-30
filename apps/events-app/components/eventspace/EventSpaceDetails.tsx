@@ -29,6 +29,8 @@ import Button from '../ui/buttons/Button';
 import Link from 'next/link';
 import { HiArrowRight } from 'react-icons/hi';
 import { EventBanner } from './EventBanner';
+import { arrayFromLength } from '@/lib/helper';
+import { DetailsFormSkeleton } from '../commons/DetailsFormSkeleton';
 
 interface EventSpaceDetailsProps {
   eventSpace: EventSpaceDetailsType;

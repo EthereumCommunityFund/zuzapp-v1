@@ -41,14 +41,14 @@ const CustomDatePicker: React.FC<DatePickerProps> = ({ selectedDate, handleDateC
             }}
           >
             <button onClick={decreaseMonth}>&lt;</button>
-            <select value={date.getFullYear()} onChange={(e) => changeYear(Number(e.target.value))}>
+            <select title='year' value={date.getFullYear()} onChange={(e) => changeYear(Number(e.target.value))}>
               {years.map((year) => (
                 <option key={year} value={year}>
                   {year}
                 </option>
               ))}
             </select>
-            <select value={months[date.getMonth()]} onChange={(e) => changeMonth(months.indexOf(e.target.value))}>
+            <select title='year' value={months[date.getMonth()]} onChange={(e) => changeMonth(months.indexOf(e.target.value))}>
               {months.map((month) => (
                 <option key={month} value={month}>
                   {month}
