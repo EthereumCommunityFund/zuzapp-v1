@@ -26,7 +26,7 @@ export const createEventSpace = async (data: EventSpaceCreateRequestBody) => {
 };
 
 // updates an event space
-export const updateEventSpace = async (id: string, data: EventSpaceUpdateRequestBody, event_space_id: string) => {
+export const updateEventSpace = async (id: string, data: EventSpaceUpdateRequestBody) => {
   return await axiosInstance.put(`/api/eventspace/${id}/update/?event_space_id=${id}`, data);
 };
 // updates an event space status
