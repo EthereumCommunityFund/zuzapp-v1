@@ -10,10 +10,11 @@ import { EventTemplateSkeleton } from '@/components/commons/EventTemplateSkeleto
 
 interface EventSpacesTemplateProps {
   eventSpaces?: EventSpaceDetailsType[];
+  invitedSpaces?: EventSpaceDetailsType[];
   isLoading: boolean;
 }
 
-const EventSpacesTemplate: React.FC<EventSpacesTemplateProps> = ({ eventSpaces, isLoading }) => {
+const EventSpacesTemplate: React.FC<EventSpacesTemplateProps> = ({ eventSpaces, isLoading, invitedSpaces }) => {
   const { setEventSpace } = useEventSpace();
   return (
     <>
@@ -46,7 +47,23 @@ const EventSpacesTemplate: React.FC<EventSpacesTemplateProps> = ({ eventSpaces, 
         <div>
           <h3 className="text-[25px] mt-10">Invited Spaces</h3>
           <div className="mt-2 mb-5">
-            <p className="text-white/70 text-sm font-extrabold">No invited spaces</p>
+            {isLoading ? (
+              <div>
+                {arrayFromLength(10).map((_, i) => (
+                  <EventTemplateSkeleton key={i} />
+                ))}
+              </div>
+            ) : (
+              <>
+                {invitedSpaces &&
+                  invitedSpaces.map((event, index) => (
+                    <div onClick={() => setEventSpace(event)} key={event.id}>
+                      <EventSpacesCard eventTitle={event.name} index={index} key={event.id} eventId={event.id} eventStatus={event.status} />
+                    </div>
+                  ))}
+              </>
+            )}
+            {/* <p className="text-white/70 text-sm font-extrabold">No invited spaces</p> */}
           </div>
         </div>
       </div>
