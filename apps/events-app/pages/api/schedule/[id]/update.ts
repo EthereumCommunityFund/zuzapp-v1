@@ -46,10 +46,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     event_space_id,
     track_id,
     tags,
-    speakers,
+    organizers,
   } = validatedData;
 
-  console.log(validatedData, 'validated data');
+  console.log(organizers, 'validated data');
 
   let start_time = formatTimestamp(validatedData.start_time as Date)
   let end_time = formatTimestamp(validatedData.end_time as Date)
@@ -88,11 +88,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   // Handling tags differentially
   let scheduleId = id;
-  const currentTags = await supabase.from('scheduletags').select('tag_id').eq('schedule_id', scheduleId);
-  let currentTagIds: string[] = [];
+  // Delete existing tags for the schedule from the 'scheduletags' table
+  const deleteExistingTagsResult = await supabase
+    .from('scheduletags')
+    .delete()
+    .eq('schedule_id', scheduleId);
 
-  if (currentTags.data) {
-    currentTagIds = currentTags.data.map((tag) => tag.tag_id);
+  if (deleteExistingTagsResult.error) {
+    throw new Error(deleteExistingTagsResult.error.message || 'Failed to delete existing tags');
   }
 
   let tagPromises: Promise<void>[] = [];
@@ -111,74 +114,51 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         tagId = existing_tag.data.id;
       }
 
-      console.log(currentTagIds, "current tag ids")
+      await supabase.from('scheduletags').insert({
+        schedule_id: scheduleId,
+        tag_id: tagId,
+      });
 
-      if (!currentTagIds.includes(tagId)) {
-        await supabase.from('scheduletags').insert({
-          schedule_id: scheduleId,
-          tag_id: tagId,
-        });
-      }
     });
   }
 
-  // Bug fix Remove tags that are no longer associated
-  // console.log('current tags', currentTags);
-  // if (tags && tags?.length > 0) {
-  //   let _tags = tags as String[];
 
-  //   // get all the tag ids 
+  const deleteExistingSpeakerRolesResult = await supabase
+    .from('schedulespeakerrole')
+    .delete()
+    .eq('schedule_id', scheduleId);
 
-  //   const tagsToRemove = currentTagIds.filter((tagId) => !_tags.includes(tagId));
-  //   await supabase.from('scheduletags').delete().in('tag_id', tagsToRemove);
-  // }
-
-  // Handling speakers differentially
-  const currentSpeakers = await supabase.from('schedulespeakerrole').select('speaker_id').eq('schedule_id', scheduleId);
-  let currentSpeakerIds: string[] = [];
-  if (currentSpeakers.data) {
-    currentSpeakerIds = currentSpeakers.data.map((speaker) => speaker.speaker_id);
+  if (deleteExistingSpeakerRolesResult.error) {
+    throw new Error(deleteExistingSpeakerRolesResult.error.message || 'Failed to delete existing speaker roles');
   }
 
-  console.log(currentSpeakerIds, 'current speaker id')
 
   let speakerPromises: Promise<void>[] = [];
-  if (speakers) {
-    speakerPromises = speakers.map(async (speaker: OrganizerType) => {
-      const { name, role } = speaker;
-      console.log(name, speaker)
-      let existingSpeaker = await supabase.from('speaker').select('id').eq('name', name.trim()).single();
+  if (organizers) {
+    speakerPromises = organizers.map(async (organizer: OrganizerType) => {
+      const { name, role } = organizer;
+      console.log(name, organizer)
+      let existingOrganizer = await supabase.from('speaker').select('id').eq('name', name.trim()).single();
 
-      console.log(existingSpeaker, "existing speaker")
+      console.log(existingOrganizer, "existing speaker")
 
       let speakerId;
-      if (!existingSpeaker.data) {
-        const newSpeaker = await supabase.from('speaker').insert({ name: name }).select('id').single();
-        if (newSpeaker.error || !newSpeaker.data) {
-          throw new Error(newSpeaker.error?.message || 'Failed to insert new speaker');
+      if (!existingOrganizer.data) {
+        const newOrganizer = await supabase.from('speaker').insert({ name: name }).select('id').single();
+        if (newOrganizer.error || !newOrganizer.data) {
+          throw new Error(newOrganizer.error?.message || 'Failed to insert new speaker');
         }
-        speakerId = newSpeaker.data.id;
+        speakerId = newOrganizer.data.id;
       } else {
-        speakerId = existingSpeaker.data.id;
+        speakerId = existingOrganizer.data.id;
       }
 
-      if (!currentSpeakerIds.includes(speakerId)) {
-        await supabase.from('schedulespeakerrole').insert({
-          schedule_id: scheduleId,
-          speaker_id: speakerId,
-          role,
-        });
-      }
 
-      // Bugfix Remove speakers that are no longer associated
-
-      // if (speakers) {
-      //   let _speakers = speakers as SpeakerType[];
-      //   console.log(speakers, 'speakers o');
-      //   const speakersToRemove = currentSpeakerIds.filter((speakerId) => !_speakers.map((s) => s.name).includes(speakerId));
-      //   console.log(speakersToRemove);
-      //   await supabase.from('schedulespeakerrole').delete().in('speaker_id', speakersToRemove);
-      // }
+      await supabase.from('schedulespeakerrole').insert({
+        schedule_id: scheduleId,
+        speaker_id: speakerId,
+        role,
+      });
     });
   }
 

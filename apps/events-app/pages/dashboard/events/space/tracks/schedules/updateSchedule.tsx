@@ -211,6 +211,7 @@ export default function UpdateSchedulePage() {
       video_call_link: schedule.video_call_link,
       live_stream_url: schedule.live_stream_url,
       all_day: schedule.all_day,
+      track_id: trackId,
       limit_rsvp: schedule.limit_rsvp,
       ...(eventSpace?.event_space_type === "tracks" && {
         track_id: trackId as string,
@@ -221,6 +222,7 @@ export default function UpdateSchedulePage() {
     const payload: any = { ...values, ...additionalPayload };
     console.log(payload);
     try {
+      console.log(payload, "payload");
       const result = await updateSchedule(
         scheduleId as string,
         payload,
@@ -286,7 +288,7 @@ export default function UpdateSchedulePage() {
     const fetchCurrentSchedule = async () => {
       try {
         const result = await fetchScheduleByID(scheduleId as string);
-        console.log(result);
+        console.log(result, "result");
         setSchedule({
           ...result.data.data,
           event_type: JSON.parse(result.data.data.event_type)[0],
