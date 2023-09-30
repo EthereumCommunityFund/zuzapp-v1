@@ -121,7 +121,7 @@ export default function HomePageTemplate() {
               >
                 <div className="flex flex-col md:flex-row space-x-3 md:items-center">
                   <div>
-                    <Image src="/images/black-img.png" alt="Event" width={150} height={120} />
+                    <Image src={event.image_url} alt="Event" width={150} height={120} />
                   </div>
                   <div className="space-y-2 mt-2 md:mt-0">
                     <h4 className="text-2xl font-bold">{event.name}</h4>

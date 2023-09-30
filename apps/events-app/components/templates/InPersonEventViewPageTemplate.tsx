@@ -14,15 +14,14 @@ import { LockClosed, LocationMarker, UserGroup } from "../ui/icons";
 import { EventSpaceDetailsType, EventSpaceUpdateRequestBody } from "@/types";
 import { useEventSpace } from "@/context/EventSpaceContext";
 import { useEffect, useState } from "react";
+import RenderHTMLString from "../ui/RenderHTMLString";
 
 
 interface IInPersonEventViewPageTemplateProps {
 	eventSpace: EventSpaceDetailsType;
 }
 
-interface RenderHTMLStringProps {
-	htmlString: string;
-}
+
 
 interface IEventLink {
 	name: string;
@@ -63,9 +62,7 @@ export default function InPersonEventViewPageTemplate({ eventSpace }: IInPersonE
 			setExtraLinks(JSON.parse(extra_links));
 	}, [social_links, extra_links, eventSpace])
 
-	function RenderHTMLString({ htmlString }: RenderHTMLStringProps): JSX.Element {
-		return <div className="h-[500px] overflow-y-auto" dangerouslySetInnerHTML={{ __html: htmlString }} />;
-	}
+
 
 	return (
 		<>
@@ -107,7 +104,7 @@ export default function InPersonEventViewPageTemplate({ eventSpace }: IInPersonE
 								<DialogHeader>
 									<DialogTitle >About This Event</DialogTitle>
 									<DialogDescription className="text-white">
-										<RenderHTMLString htmlString={description} />
+										<RenderHTMLString height="500" htmlString={description} />
 									</DialogDescription>
 								</DialogHeader>
 								<DialogFooter></DialogFooter>

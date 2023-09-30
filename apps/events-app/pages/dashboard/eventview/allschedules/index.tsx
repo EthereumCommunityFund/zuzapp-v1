@@ -40,9 +40,9 @@ export default function EventViewTracksPage() {
           <div className=" p-2.5 gap-[10px] overflow-hidden rounded-[10px]">
             {
               <>
+                {/* <UserFacingTrack onClick={handleItemClick} />
                 <UserFacingTrack onClick={handleItemClick} />
-                <UserFacingTrack onClick={handleItemClick} />
-                <UserFacingTrack onClick={handleItemClick} />
+                <UserFacingTrack onClick={handleItemClick} /> */}
               </>
             }
           </div>
