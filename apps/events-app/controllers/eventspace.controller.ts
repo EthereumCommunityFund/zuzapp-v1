@@ -31,7 +31,7 @@ export const updateEventSpace = async (id: string, data: EventSpaceUpdateRequest
 };
 // updates an event space status
 export const updateEventSpaceStatus = async (id: string, data: EventSpaceStatusUpdateRequestBody) => {
-  return await axiosInstance.put(`/api/eventspace/${id}/changeStatus`, data);
+  return await axiosInstance.put(`/api/eventspace/${id}/changeStatus/?event_space_id=${id}`, data);
 };
 
 // deletes an event space
