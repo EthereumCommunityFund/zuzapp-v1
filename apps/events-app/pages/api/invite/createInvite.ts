@@ -8,6 +8,8 @@ import { Database } from "@/database.types";
 import withAuthorization from "../middlewares/withAuthorization";
 
 
+const nodemailer = require('nodemailer')
+
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const supabase = createPagesServerClient<Database>({ req, res });
@@ -54,11 +56,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     // send email
+
+    console.log(nodemailer, "nodemailer")
+
+    // let transporter = nodemailer.createTransport(transport[, defaults])
+
     const inviteLink = `http://${req.headers.host}test/accept-invite?invite_id=${result.data.id}`;
 
     console.log(inviteLink)
-
-
 
     return res.status(200).json({ message: "Invitation sent" });
 };

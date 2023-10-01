@@ -37,6 +37,7 @@
     "@supabase/auth-helpers-nextjs": "^0.7.4",
     "@supabase/auth-helpers-react": "^0.4.2",
     "@supabase/supabase-js": "^2.33.1",
+    "@types/nodemailer": "^6.4.11",
     "@uiball/loaders": "^1.3.0",
     "axios": "^1.4.0",
     "class-variance-authority": "^0.7.0",
@@ -69,6 +70,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",
+    "@babel/preset-env": "^7.22.20",
     "@heroicons/react": "^2.0.18",
     "@pcd/tsconfig": "0.6.0",
     "@svgr/webpack": "^8.0.1",
@@ -85,6 +87,7 @@
     "@types/styled-components": "^5.1.26",
     "@types/uuid": "^9.0.4",
     "autoprefixer": "^10.4.15",
+    "babel-loader": "^9.1.3",
     "eslint": "7.32.0",
     "eslint-config-custom": "*",
     "postcss": "^8.4.29",
