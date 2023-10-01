@@ -122,7 +122,7 @@ export default function HomePageTemplate() {
               ))}
             </div>
           )}
-          {eventSpaces && isAuthenticated &&
+          {eventSpaces &&
             eventSpaces?.map((event, index) => (
               <div
                 key={index}

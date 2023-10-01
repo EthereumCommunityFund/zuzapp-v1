@@ -13,9 +13,25 @@ export default function EventViewPage() {
   // Make request to get all event spaces
   const router = useRouter();
   const { eventId } = router.query;
-  const { eventSpaceList } = useEventSpaces();
+  const { eventSpaceList, setEventSpaceList } = useEventSpaces();
   const eventSpace = eventSpaceList.find((eventSpace) => eventSpace.id === eventId);
   const { isAuthenticated, user } = useGlobalContext();
+
+  const {
+    data: eventSpaces,
+    isLoading,
+    isError,
+  } = useQuery<EventSpaceDetailsType[], Error>(
+    ['eventSpaces'], // Query key
+    () => fetchUserEventSpaces(),
+    {
+      onSuccess: (data) => {
+        console.log('Event Spaces:', data);
+        setEventSpaceList(data);
+      },
+    }
+  );
+
 
   return (
     <>
