@@ -62,7 +62,7 @@ export default function EventLocationForm({ setIsLocationForm }: { setIsLocation
     setIsLocationForm(false);
     console.log(payload);
     try {
-      const result = await createEventSpaceLocation(payload);
+      const result = await createEventSpaceLocation(payload, eventId as string);
       queryClient.invalidateQueries({ queryKey: ['locationDetails'] });
       setSwitchDialogue(true);
       console.log(result);

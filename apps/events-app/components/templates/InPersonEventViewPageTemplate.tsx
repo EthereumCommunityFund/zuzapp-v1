@@ -15,6 +15,9 @@ import { EventSpaceDetailsType, EventSpaceUpdateRequestBody } from "@/types";
 import { useEventSpace } from "@/context/EventSpaceContext";
 import { useEffect, useState } from "react";
 import RenderHTMLString from "../ui/RenderHTMLString";
+import { useQuery } from "react-query";
+import { fetchUserEventSpaces } from "@/services/eventSpaceService";
+import { useEventSpaces } from "@/context/EventSpacesContext";
 
 
 interface IInPersonEventViewPageTemplateProps {

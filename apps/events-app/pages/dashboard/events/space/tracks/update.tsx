@@ -1,17 +1,17 @@
-import AddTrackTemplate from "@/components/tracks/AddTrackTemplate";
-import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
-import { Database } from "@/database.types";
-import EditTrackForm from "@/components/tracks/EditTrackForm";
-import Container from "@/components/ui/Container";
-import { TrackUpdateRequestBody } from "@/types";
-import { updateTrack } from "@/controllers";
-import { useRouter } from "next/router";
-import { useState } from "react";
-import Button from "@/components/ui/buttons/Button";
-import Link from "next/link";
-import { HiArrowRight } from "react-icons/hi";
-import { useQueryClient, useQuery } from "react-query";
-import { fetchTrackById } from "@/services/fetchTrack";
+import AddTrackTemplate from '@/components/tracks/AddTrackTemplate';
+import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
+import { Database } from '@/database.types';
+import EditTrackForm from '@/components/tracks/EditTrackForm';
+import Container from '@/components/ui/Container';
+import { TrackUpdateRequestBody } from '@/types';
+import { updateTrack } from '@/controllers';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
+import Button from '@/components/ui/buttons/Button';
+import Link from 'next/link';
+import { HiArrowRight } from 'react-icons/hi';
+import { useQueryClient, useQuery } from 'react-query';
+import { fetchTrackById } from '@/services/fetchTrack';
 
 export default function Update() {
   const [trackCreated, setTrackCreated] = useState(false);
@@ -32,7 +32,7 @@ export default function Update() {
     isLoading,
     isError,
   } = useQuery<TrackUpdateRequestBody, Error>(
-    ["trackDetails", trackId], // Query key
+    ['trackDetails', trackId], // Query key
     () => fetchTrackById(trackId as string), // Query function
     {
       enabled: !!trackId,
@@ -50,14 +50,18 @@ export default function Update() {
   const handleTrackSubmit = async (values: TrackUpdateRequestBody) => {
     try {
       if (!eventId) return;
-      const result = await updateTrack(trackId as string, {
-        ...values,
-        event_space_id: eventId as string,
-        id: trackId as string,
-      });
+      const result = await updateTrack(
+        trackId as string,
+        {
+          ...values,
+          event_space_id: eventId as string,
+          id: trackId as string,
+        },
+        eventId as string
+      );
       setTrackCreated(true);
       console.log(result);
-      queryClient.invalidateQueries({ queryKey: ["trackDetails"] });
+      queryClient.invalidateQueries({ queryKey: ['trackDetails'] });
     } catch (error) {
       setTrackCreated(false);
       console.error(error);
@@ -70,11 +74,7 @@ export default function Update() {
         <div className="flex flex-col items-center">
           <h3 className="font-bold text-xl">Your Track Has Been Updated</h3>
           <Link href={`/dashboard/events/space/tracks?eventId=${eventId}`}>
-            <Button
-              variant="primary"
-              className="mt-8 bg-[#67DBFF]/20 text-[#67DBFF] rounded-full"
-              leftIcon={HiArrowRight}
-            >
+            <Button variant="primary" className="mt-8 bg-[#67DBFF]/20 text-[#67DBFF] rounded-full" leftIcon={HiArrowRight}>
               Go to tracks
             </Button>
           </Link>
@@ -106,10 +106,7 @@ export const getServerSideProps = async (ctx: any) => {
     };
 
   // get profile from session
-  const { data: profile, error } = await supabase
-    .from("profile")
-    .select("*")
-    .eq("uuid", session.user.id);
+  const { data: profile, error } = await supabase.from('profile').select('*').eq('uuid', session.user.id);
 
   return {
     props: {

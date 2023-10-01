@@ -42,12 +42,17 @@ export default function SchedulesDashboardPage() {
   //   const data = fetchSchedulesByEvenSpaceId(eventId as string);
   //   console.log(data, 'schedules');
   // }, []);
-
   const handleEnterSchedule = async (id: string) => {
     try {
       router.push({
         pathname: `/dashboard/events/space/tracks/schedules/updateSchedule`,
-        query: { eventId: eventId, trackId: trackId, scheduleId: id, trackTitle: trackTitle },
+        query: {
+          eventId: eventId,
+          trackId: trackId,
+          scheduleId: id,
+          trackTitle: trackTitle,
+          quickAccess: 'true',
+        },
       });
     } catch (error) {
       console.error('Error fetching space details', error);
