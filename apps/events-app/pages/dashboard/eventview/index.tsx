@@ -2,6 +2,7 @@ import InPersonEventViewPageTemplate from "@/components/templates/InPersonEventV
 import EventViewPageTemplate from "@/components/templates/InPersonEventViewPageTemplate";
 import OnlineEventViewPageTemplate from "@/components/templates/OnlineEventViewPageTemplate";
 import { useEventSpaces } from "@/context/EventSpacesContext";
+import { useGlobalContext } from "@/context/GlobalContext";
 import { fetchUserEventSpaces } from "@/services/eventSpaceService";
 import { EventSpaceDetailsType, EventTypes } from "@/types";
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
@@ -14,12 +15,18 @@ export default function EventViewPage() {
   const { eventId } = router.query;
   const { eventSpaceList } = useEventSpaces();
   const eventSpace = eventSpaceList.find((eventSpace) => eventSpace.id === eventId);
-
+  const { isAuthenticated, user } = useGlobalContext();
 
   return (
     <>
-      {eventSpace?.format === "in-person" && <InPersonEventViewPageTemplate eventSpace={eventSpace} />}
-      {eventSpace?.format === "online" && <OnlineEventViewPageTemplate eventSpace={eventSpace} />}
+      {
+        isAuthenticated && (
+          <>
+            {eventSpace?.format === "in-person" && <InPersonEventViewPageTemplate eventSpace={eventSpace} />}
+            {eventSpace?.format === "online" && <OnlineEventViewPageTemplate eventSpace={eventSpace} />}
+          </>
+        )
+      }
     </>
   )
 }

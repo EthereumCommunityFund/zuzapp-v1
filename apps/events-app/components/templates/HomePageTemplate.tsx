@@ -113,7 +113,7 @@ export default function HomePageTemplate() {
         <h3 className="text-xl md:text-4xl">Zuzalu Events</h3>
         <div className="mt-3">
           {isLoading && <Loader />}
-          {eventSpaces &&
+          {eventSpaces && isAuthenticated &&
             eventSpaces?.map((event, index) => (
               <div
                 key={index}
