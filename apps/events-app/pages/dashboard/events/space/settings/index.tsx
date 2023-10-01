@@ -16,8 +16,11 @@ const EventSpaceSettings = () => {
   const [invitedEmails, setInvitedEmails] = useState([]);
   const router = useRouter();
 
+  console.log(eventSpace);
+
   const handleSendInvite = async () => {
     if (email === "") return;
+    console.log(eventSpace);
     try {
       await createInvite(
         {
