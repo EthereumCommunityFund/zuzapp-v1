@@ -44,7 +44,7 @@ export default function EditTrackForm({ onTrackSubmit, trackDetails }: { onTrack
   const [payload, setPayload] = useState({ image_urls: [trackDetails.image] });
 
   const handleDeleteTrack = async () => {
-    await deleteTrack(trackId as string);
+    await deleteTrack(trackId as string, eventId as string);
     router.push({
       pathname: `/dashboard/events/space/tracks`,
       query: { eventId: eventId },

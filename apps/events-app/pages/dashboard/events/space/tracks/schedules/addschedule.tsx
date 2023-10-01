@@ -15,6 +15,7 @@ import { useState } from 'react';
 import FormTitle from '@/components/ui/labels/form-title';
 import InputFieldDark from '@/components/ui/inputFieldDark';
 import { EventSpaceDetailsType, InputFieldType, LocationUpdateRequestBody, TrackUpdateRequestBody } from '@/types';
+
 import TextEditor from '@/components/ui/TextEditor';
 import { Label } from '@/components/ui/label';
 import SwitchButton from '@/components/ui/buttons/SwitchButton';
@@ -118,7 +119,6 @@ export default function AddSchedulePage(props: any) {
       enabled: !!eventId, // Only execute the query if eventId is available
     }
   );
-
   const { data: trackDetails } = useQuery<TrackUpdateRequestBody[], Error>(
     ['trackDetails', eventId],
     () => fetchTracksByEventSpaceId(eventId as string),
@@ -130,7 +130,6 @@ export default function AddSchedulePage(props: any) {
       },
     }
   );
-
   const [eventType, setEventType] = useState('');
 
   const handleLimitRSVP = () => {
@@ -305,6 +304,7 @@ export default function AddSchedulePage(props: any) {
                       <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
                         <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select Track</Label>
                         <select
+                          title="trackDetails"
                           className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
                           value={selectedTrackId}
                           onChange={(e) => setSelectedTrackId(e.target.value)}

@@ -11,7 +11,7 @@ import { EventTemplateSkeleton } from '@/components/commons/EventTemplateSkeleto
 interface EventSpacesTemplateProps {
   eventSpaces?: EventSpaceDetailsType[];
   invitedSpaces?: EventSpaceDetailsType[];
-  isLoading: boolean;
+  isLoading?: boolean;
 }
 
 const EventSpacesTemplate: React.FC<EventSpacesTemplateProps> = ({ eventSpaces, isLoading, invitedSpaces }) => {
