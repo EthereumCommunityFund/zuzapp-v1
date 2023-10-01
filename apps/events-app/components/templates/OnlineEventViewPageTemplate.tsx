@@ -10,13 +10,10 @@ import { EventSpaceDetailsType } from "@/types";
 import { useEffect, useState } from "react";
 import { useEventSpace } from "@/context/EventSpaceContext";
 import { LocationMarker, LockClosed } from "../ui/icons";
+import RenderHTMLString from "../ui/RenderHTMLString";
 
 interface IOnlineEventViewPageTemplateProps {
   eventSpace: EventSpaceDetailsType;
-}
-
-interface RenderHTMLStringProps {
-  htmlString: string;
 }
 
 interface IEventLink {
@@ -48,10 +45,6 @@ export default function OnlineEventViewPageTemplate({ eventSpace }: IOnlineEvent
   const [socialLinks, setSocialLinks] = useState<IEventLink[] | undefined>();
   const [extraLinks, setExtraLinks] = useState<IEventLink[] | undefined>();
   const { setEventSpace } = useEventSpace();
-
-  function RenderHTMLString({ htmlString }: RenderHTMLStringProps): JSX.Element {
-    return <div className="h-[500px] overflow-y-auto" dangerouslySetInnerHTML={{ __html: htmlString }} />;
-  }
 
   useEffect(() => {
     console.log("InPersonEventSpace", eventSpace);
@@ -102,7 +95,7 @@ export default function OnlineEventViewPageTemplate({ eventSpace }: IOnlineEvent
                 <DialogHeader>
                   <DialogTitle>About This Event</DialogTitle>
                   <DialogDescription className="opacity-80">
-                    <RenderHTMLString htmlString={description} />
+                    <RenderHTMLString height="500" htmlString={description} />
                   </DialogDescription>
                 </DialogHeader>
 
