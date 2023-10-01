@@ -14,6 +14,7 @@ import { Loader } from '../ui/Loader';
 import { arrayFromLength } from '@/lib/helper';
 import { EventTemplateSkeleton } from '../commons/EventTemplateSkeleton';
 import { HomePageTemplateSkeleton } from '../commons/HomePageTemplateSkeleton';
+import { useEventSpaces } from '@/context/EventSpacesContext';
 
 export const sampleEvents = [
   {
@@ -35,11 +36,13 @@ export default function HomePageTemplate() {
   const { isAuthenticated, user } = useGlobalContext();
   const router = useRouter();
 
-  const handleButtonClick = async (eventType: EventTypes) => {
-    console.log('EventType', eventType);
+  const { eventSpaceList, setEventSpaceList } = useEventSpaces();
+
+  const handleButtonClick = async (eventId: string) => {
+    console.log('EventFormat', eventId);
     router.push({
       pathname: `/dashboard/eventview`, // Update with your actual route
-      query: { eventType },
+      query: { eventId },
     });
   };
 
@@ -53,6 +56,7 @@ export default function HomePageTemplate() {
     {
       onSuccess: (data) => {
         console.log('Event Spaces:', data);
+        setEventSpaceList(data);
       },
     }
   );
@@ -142,7 +146,7 @@ export default function HomePageTemplate() {
                   </div>
                 </div>
                 <div className="mt-3 md:mt-0">
-                  <Button size="lg" variant={'primaryGreen'} className="rounded-full">
+                  <Button size="lg" variant={'primaryGreen'} className="rounded-full" onClick={() => event.id && handleButtonClick(event.id)}>
                     View Event
                   </Button>
                 </div>
