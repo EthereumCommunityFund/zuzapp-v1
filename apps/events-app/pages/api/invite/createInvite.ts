@@ -10,11 +10,28 @@ import mailClient from "@/utils/mailClient";
 import { resolve } from "path";
 import MailClient from "@/utils/mailClient";
 
+const sendInviteEmail = async (mailClient: MailClient, to_email: string, inviteId: string, host: any) => {
+    const inviteLink = `http://${host}/test/accept-invite?invite_id=${inviteId}`;
 
+    const message = {
+        from: process.env.EMAIL_FROM,
+        to: to_email,
+        subject: "You have been invited to collaborate on Zuzapp",
+        html: `<p>${inviteLink}</p>`,
+    };
+
+    try {
+        await mailClient.sendMail(message);
+        return { success: true };
+    } catch (error) {
+        console.error('Error sending email:', error);
+        return { success: false, error };
+    }
+};
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const supabase = createPagesServerClient<Database>({ req, res });
-
+    const mailClient = new MailClient();
     // Validate invitation data
     const [validation_result, validatedData] = validate_invite_create(req.body);
     if (validation_result?.error) {
@@ -40,8 +57,20 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         return res.status(500).send("Internal server error");
     }
 
-    if (existingInvite.length > 0 && (existingInvite[0].status === 'pending' || existingInvite[0].status === 'accepted')) {
-        return res.status(409).json({ invite_status: existingInvite[0].status, message: 'Invite already exists' });
+
+    if (existingInvite.length > 0) {
+        const status = existingInvite[0].status;
+
+        if (status === 'pending') {
+            const emailResult = await sendInviteEmail(mailClient, existingInvite[0].invitee_email, existingInvite[0].id, req.headers.host);
+            if (emailResult.success) {
+                return res.status(200).json({ message: "Invitation re-sent" });
+            } else {
+                return res.status(500).send("Error resending email");
+            }
+        } else if (status === 'accepted') {
+            return res.status(409).json({ invite_status: status, message: 'Invite already exists' });
+        }
     }
 
     // ToDo check if invite has expired
@@ -65,7 +94,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     };
 
 
-    const mailClient = new MailClient();
+
     try {
         const resulter = await mailClient.sendMail(message)
         console.log(resulter, "result");
