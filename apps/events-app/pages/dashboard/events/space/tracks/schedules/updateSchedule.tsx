@@ -1,11 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-
 import Button from '@/components/ui/buttons/Button';
 import { HiArrowLeft, HiArrowRight } from 'react-icons/hi';
 import DetailsBar from '@/components/detailsbar';
 import EditionButtons from '@/components/ui/buttons/EditionButtons';
-
 import { CgClose } from 'react-icons/cg';
 import { FaCircleArrowUp } from 'react-icons/fa6';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
@@ -287,6 +285,8 @@ export default function UpdateSchedulePage() {
       console.error('Error fetching space details', error);
     }
   };
+  const { query } = useRouter();
+  const isQuickAccess = query.quickAccess === 'true';
 
   // const formated = formatDate('2023-09-27T23:00:00+00:00');
   // console.log(formated, 'formated');

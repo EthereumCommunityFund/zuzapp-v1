@@ -63,7 +63,7 @@ const EventSpacesTemplate: React.FC<EventSpacesTemplateProps> = ({ eventSpaces, 
                   ))}
               </>
             )}
-            {/* <p className="text-white/70 text-sm font-extrabold">No invited spaces</p> */}
+            {invitedSpaces?.length === 0 ? <p className="text-white/70 text-sm font-extrabold">No invited spaces</p> : null}
           </div>
         </div>
       </div>
