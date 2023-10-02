@@ -11,11 +11,10 @@ import { FaCircleArrowUp } from 'react-icons/fa6';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { useForm } from 'react-hook-form';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import FormTitle from '@/components/ui/labels/form-title';
 import InputFieldDark from '@/components/ui/inputFieldDark';
 import { EventSpaceDetailsType, InputFieldType, LocationUpdateRequestBody, TrackUpdateRequestBody } from '@/types';
-
 import TextEditor from '@/components/ui/TextEditor';
 import { Label } from '@/components/ui/label';
 import SwitchButton from '@/components/ui/buttons/SwitchButton';
@@ -28,6 +27,7 @@ import { useRouter } from 'next/router';
 import { fetchLocationsByEventSpace, createSchedule, fetchAllTags, fetchAllSpeakers } from '@/controllers';
 import { useQuery } from 'react-query';
 import { fetchEventSpaceById } from '@/services/fetchEventSpaceDetails';
+import fetchTracksByEventSpaceId from '@/services/fetchTracksByEventSpace';
 // import timepicker as Timepicker from "react-time-picker";
 import dayjs, { Dayjs } from 'dayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -37,7 +37,8 @@ import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import Link from 'next/link';
-import fetchTracksByEventSpaceId from '@/services/fetchTracksByEventSpace';
+import { Loader } from '@/components/ui/Loader';
+import { toast } from '@/components/ui/use-toast';
 
 type Organizer = {
   name: string;
@@ -72,6 +73,7 @@ export default function AddSchedulePage(props: any) {
   const [tags, setTags] = useState<string[]>([]);
   const [tagItem, setTagItem] = useState<TagItemProp>({ name: '' });
   const [eventItem, setEventItem] = useState({ name: '', role: '' });
+
   const [frequency, setFrequency] = useState<'once' | 'everyday' | 'weekly'>('once');
 
   console.log(eventItem, organizers);
@@ -89,36 +91,8 @@ export default function AddSchedulePage(props: any) {
   const [endTime, setEndTime] = useState(dayjs('2023-11-17T23:59'));
   const [isLimit, setIsLimit] = useState(false);
   const [scheduleAdded, setScheduleAdded] = useState(false);
-  const formSchema = z.object({
-    name: z.string().min(2, {
-      message: 'Schedule name is required.',
-    }),
-    format: z.enum(['in-person', 'online', 'hybrid'], {
-      required_error: 'You need to select a format.',
-    }),
-    date: z.coerce.date(),
-    description: z.string().min(10, {
-      message: 'Description is required and should be a minimum of 10 characters',
-    }),
-    video_call_link: z.string().url().min(2, {
-      message: 'Video link is required.',
-    }),
-    live_stream_url: z.string().url().min(2, {
-      message: 'Video link is required.',
-    }),
-  });
-
-  const {
-    data: eventSpace,
-    isLoading,
-    isError,
-  } = useQuery<EventSpaceDetailsType, Error>(
-    ['spaceDetails', eventId], // Query key
-    () => fetchEventSpaceById(eventId as string), // Query function
-    {
-      enabled: !!eventId, // Only execute the query if eventId is available
-    }
-  );
+  const isQuickAccess = query.quickAccess === 'true';
+  const [selectedTrackId, setSelectedTrackId] = useState('');
   const { data: trackDetails } = useQuery<TrackUpdateRequestBody[], Error>(
     ['trackDetails', eventId],
     () => fetchTracksByEventSpaceId(eventId as string),
@@ -130,36 +104,99 @@ export default function AddSchedulePage(props: any) {
       },
     }
   );
+  const {
+    data: eventSpace,
+    isLoading,
+    isError,
+  } = useQuery<EventSpaceDetailsType, Error>(
+    ['spaceDetails', eventId], // Query key
+    () => fetchEventSpaceById(eventId as string), // Query function
+    {
+      enabled: !!eventId, // Only execute the query if eventId is available
+    }
+  );
+
   const [eventType, setEventType] = useState('');
 
   const handleLimitRSVP = () => {
     setIsLimit((prev) => !prev);
   };
 
+  const formSchema = z.object({
+    name: z.string().min(2, {
+      message: 'Schedule name is required.',
+    }),
+    format: z
+      .enum(['in-person', 'online', 'hybrid'], {
+        required_error: 'You need to select a format.',
+      })
+      .default(() => eventSpace?.format ?? 'in-person'),
+    date: z
+      .date({
+        required_error: 'You need to select a valid date for this schedule.',
+        invalid_type_error: 'You need to select a valid date for this schedule.',
+      })
+      .refine(
+        (date) => {
+          if (date) {
+            const today = dayjs();
+            const selectedDate = dayjs(date);
+            return selectedDate.isAfter(today);
+          }
+          return false;
+        },
+        {
+          message: 'You cannot create a schedule in the past.',
+        }
+      ),
+    description: z.string().min(10, {
+      message: 'Description is required and should be a minimum of 10 characters',
+    }),
+    video_call_link: z.string().optional().or(z.literal('')),
+    live_stream_url: z.string().optional().or(z.literal('')),
+  });
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: '',
-      format: undefined,
+      format: eventSpace?.format,
       date: undefined,
       description: '',
       video_call_link: '',
       live_stream_url: '',
     },
   });
-
-  const isQuickAccess = query.quickAccess === 'true';
-  const [selectedTrackId, setSelectedTrackId] = useState('');
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    if (values.format !== 'in-person' && (!values.video_call_link || values.video_call_link === '')) {
+      form.setError('video_call_link', {
+        message: 'Video call link is required for online or hybrid events',
+      });
+      return;
+    }
+    if (values.format !== 'in-person' && (!values.live_stream_url || values.live_stream_url === '')) {
+      form.setError('live_stream_url', {
+        message: 'Live stream link is required for in-person or hybrid events',
+      });
+      return;
+    }
+    if (values.format === 'in-person' && locationId === '') {
+      toast({
+        title: 'Error',
+        description: 'Location is required for in-person events',
+        variant: 'destructive',
+      });
+      return;
+    }
     const additionalPayload = {
       event_space_id: eventId as string,
       start_time: startTime as unknown as Date,
       end_time: endTime as unknown as Date,
-      event_type: eventType.length > 0 ? [eventType] : [(eventSpace?.event_type as string[])[0]],
-      experience_level: experienceLevel.length > 0 ? [experienceLevel] : [(eventSpace?.experience_level as string[])[0]],
+      event_type: eventType.length > 0 ? [eventType] : eventSpace?.event_type?.[0] ? [eventSpace?.event_type[0]] : [eventSpace?.event_type || 'Meetup'],
+      experience_level: experienceLevel.length > 0 ? [experienceLevel] : eventSpace?.experience_level?.[0] ? [eventSpace?.experience_level[0]] : [eventSpace?.experience_level || 'Beginner'],
       tags: tags,
       schedule_frequency: frequency,
-      location_id: locationId,
+      location_id: locationId === '' ? '403a376c-7ac7-4460-b15d-6cc5eabf5e6c' : locationId,
       organizers,
       all_day: isAllDay,
       limit_rsvp: isLimit,
@@ -169,15 +206,25 @@ export default function AddSchedulePage(props: any) {
       ...(isLimit ? { rsvp_amount: rsvpAmount } : {}),
       // isLimit && rsvp_amount: rsvpAmount
     };
-    const payload = { ...values, ...additionalPayload };
-    console.log(payload);
+    const payload = {
+      ...values,
+      ...additionalPayload,
+      video_call_link: values.video_call_link === '' ? 'https://youtube.com' : values.video_call_link,
+      live_stream_url: values.live_stream_url === '' ? 'https://youtube.com' : values.live_stream_url,
+    };
+    console.log(payload, 'payload');
     try {
-      const result = await createSchedule(payload, eventId as string);
-      // setSwitchDialogue(true);
+      const result = await createSchedule(payload as any, eventId as string);
+      setSwitchDialogue(true);
       setScheduleAdded(true);
       console.log(result, 'result');
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
+      toast({
+        title: 'Error',
+        description: error?.response.data?.error,
+        variant: 'destructive',
+      });
     }
   }
 
@@ -206,6 +253,23 @@ export default function AddSchedulePage(props: any) {
       console.error('Error fetching space details', error);
     }
   };
+
+  useEffect(() => {
+    console.log(form.formState.errors);
+    //get the first item from the errors object
+    const firstError = Object.values(form.formState.errors)[0];
+    if (firstError) {
+      toast({
+        title: 'Error',
+        description: firstError?.message,
+        variant: 'destructive',
+      });
+    }
+  }, [form.formState.errors]);
+
+  if (isLoading) {
+    return <Loader />;
+  }
 
   return (
     <div className="flex items-start gap-[60px] self-stretch px-10 py-5">
@@ -239,44 +303,39 @@ export default function AddSchedulePage(props: any) {
                 </div>
               ) : (
                 <Form {...form}>
-                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-10 w-full mt-10">
+                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-10 w-full">
                     <FormField
                       control={form.control}
                       name="format"
                       render={({ field }) => (
                         <FormItem className="space-y-3">
                           <FormLabel className="text-2xl opacity-80 leading-[1.2]">Schedule Format</FormLabel>
-                          <FormDescription>The format you select will determine what information will be required going forward</FormDescription>
+                          <FormDescription>The format has been inherited from the event space.</FormDescription>
                           <FormControl>
-                            <RadioGroup
-                              // defaultValue={field.value}
-                              onValueChange={field.onChange}
-                              className="flex flex-col md:flex-row justify-between"
-                              {...field}
-                            >
-                              <FormItem className="flex items-center space-x-3 space-y-0">
+                            <RadioGroup onValueChange={field.onChange} defaultValue={eventSpace?.format} className="flex flex-col md:flex-row justify-between">
+                              <FormItem className="flex items-center space-x-3 space-y-0 p-3 hover:bg-btnPrimaryGreen/20 rounded-md focus:bg-btnPrimaryGreen/20">
                                 <FormControl>
                                   <RadioGroupItem value="in-person" />
                                 </FormControl>
-                                <FormLabel className="font-semibold text-white/30 text-base cursor-pointer hover:bg-itemHover">
+                                <FormLabel className="font-semibold text-white/60 text-base">
                                   In-Person
                                   <span className="text-xs block">This is a physical event</span>
                                 </FormLabel>
                               </FormItem>
-                              <FormItem className="flex items-center space-x-3 space-y-0">
+                              <FormItem className="flex items-center space-x-3 space-y-0 p-3 hover:bg-btnPrimaryGreen/20 rounded-md">
                                 <FormControl>
                                   <RadioGroupItem value="online" />
                                 </FormControl>
-                                <FormLabel className="font-semibold text-white/30 text-base cursor-pointer">
+                                <FormLabel className="font-semibold text-white/60 text-base ">
                                   Online
                                   <span className="text-xs block">Specifically Online Event</span>
                                 </FormLabel>
                               </FormItem>
-                              <FormItem className="flex items-center space-x-3 space-y-0">
+                              <FormItem className="flex items-center space-x-3 space-y-0 p-3 hover:bg-btnPrimaryGreen/20 rounded-md">
                                 <FormControl>
                                   <RadioGroupItem value="hybrid" />
                                 </FormControl>
-                                <FormLabel className="font-semibold text-white/30 text-base cursor-pointer">
+                                <FormLabel className="font-semibold text-white/60 text-base">
                                   Hybrid
                                   <span className="text-xs block">In-Person & Online</span>
                                 </FormLabel>
@@ -343,10 +402,10 @@ export default function AddSchedulePage(props: any) {
                         </div>
                         <div className="flex flex-col items-center gap-[30px] self-stretch w-full">
                           {/* <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                        <span className="text-lg opacity-70 self-stretch">Start Date</span>
-                        <InputFieldDark type={InputFieldType.Date} placeholder={'00-00-0000'} />
-                        <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">Click & Select or type in a date</h3>
-                      </div> */}
+                            <span className="text-lg opacity-70 self-stretch">Start Date</span>
+                            <InputFieldDark type={InputFieldType.Date} placeholder={'00-00-0000'} />
+                            <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">Click & Select or type in a date</h3>
+                          </div> */}
                           <FormField
                             control={form.control}
                             name="date"
@@ -450,12 +509,14 @@ export default function AddSchedulePage(props: any) {
                       <div className="flex flex-col items-start gap-5 self-stretch w-full pt-5">
                         <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
                           <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select Location</Label>
+                          {/* <InputFieldDark type={InputFieldType.Option} placeholder={'The Dome'} /> */}
                           <select
                             onChange={(e) => setLocationId(e.target.value)}
                             title="location"
                             value={locationId}
                             className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
                           >
+                            {savedLocations.length === 0 && <option value="">No saved locations</option>}
                             {savedLocations?.map((location: any) => (
                               <option key={location.id} value={location.id}>
                                 {location.name}
@@ -574,14 +635,13 @@ export default function AddSchedulePage(props: any) {
                       <h2 className="text-lg opacity-70 self-stretch font-bold pb-5">Schedule Labels</h2>
                       <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
                         <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select Event Category</Label>
-                        {/* <InputFieldDark type={InputFieldType.Option} placeholder={'Workshop'} /> */}
-
                         <select
                           onChange={(e) => setEventType(e.target.value)}
                           defaultValue={eventType}
                           title="category"
                           className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
                         >
+                          {eventSpace?.event_type?.length === 0 || (eventSpace?.event_type === null && <option value="">No saved categories</option>)}
                           {eventSpace?.event_type?.map((category) => (
                             <option key={category} value={category}>
                               {category}
@@ -599,6 +659,7 @@ export default function AddSchedulePage(props: any) {
                           title="category"
                           className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
                         >
+                          {eventSpace?.experience_level?.length === 0 || (eventSpace?.experience_level === null && <option value="">No saved experience levels</option>)}
                           {eventSpace?.experience_level?.map((category) => (
                             <option key={category} value={category}>
                               {category}

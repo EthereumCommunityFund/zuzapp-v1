@@ -3,7 +3,7 @@ import SwitchButton from "../ui/buttons/SwitchButton";
 import InputFieldLabel from "../ui/labels/inputFieldLabel";
 import MediaLink from "../ui/MediaLink";
 import { Label } from "@radix-ui/react-label";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import LinksField from "./LinksField";
 
 interface IProps {
@@ -29,6 +29,13 @@ export default function EventLinks(props: any) {
   const handleChangeSwitch: any = () => {
     setIsLink((prev) => !prev);
   };
+  useEffect(() => {
+  // setIsLink to true if social_links or extra_links is not empty
+  if (social_links.length > 0 || extra_links.length > 0) {
+    setIsLink(true);
+  }
+  }, [social_links, extra_links]);
+
   return (
     <div className="flex flex-col gap-[34px]">
       <div className="flex flex-col gap-[10px]">

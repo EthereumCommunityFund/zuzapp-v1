@@ -17,10 +17,11 @@ interface IEditionButtons {
   leftButtonIcon: IconType;
   rightButtonIcon: IconType;
   switchDialogue: boolean;
+  isLoading: boolean
 }
 
 export default function EditionButtons(props: IEditionButtons) {
-  const { type, leftButtonName, rightButtonName, leftButtonIcon, rightButtonIcon, switchDialogue } = props;
+  const { type, leftButtonName, rightButtonName, leftButtonIcon, rightButtonIcon, switchDialogue, isLoading } = props;
   const router = useRouter();
   const { eventId } = router.query;
   return (
@@ -31,7 +32,7 @@ export default function EditionButtons(props: IEditionButtons) {
         </Button>
         <Dialog>
           <DialogTrigger asChild>
-            <Button className="rounded-full w-1/2 flex justify-center" variant="blue" size="lg" type="submit" leftIcon={rightButtonIcon}>
+            <Button isLoading={isLoading} className="rounded-full w-1/2 flex justify-center" variant="blue" size="lg" type="submit" leftIcon={rightButtonIcon}>
               <span>{rightButtonName}</span>
             </Button>
           </DialogTrigger>

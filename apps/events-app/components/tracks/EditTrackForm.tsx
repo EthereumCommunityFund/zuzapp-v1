@@ -23,6 +23,7 @@ import InputFieldLabel from '../ui/labels/inputFieldLabel';
 import EventDeatilsDescription1 from '../ui/labels/event-details-description-1';
 import Image from 'next/image';
 import TextEditor from '../ui/TextEditor';
+import { toast } from '../ui/use-toast';
 
 const trackSchema = z.object({
   name: z.string().min(2, {
@@ -66,13 +67,25 @@ export default function EditTrackForm({ onTrackSubmit, trackDetails }: { onTrack
 
   const onSubmit = (values: z.infer<typeof trackSchema>) => {
     const image = payload.image_urls[0];
+    if (!image) {
+      toast({
+        title: "Error",
+        description: "Select at least one image",
+        variant: 'destructive'
+      })
+      return;
+    }
     const data = { ...values, image, event_space_id: eventId, id: trackId };
     onTrackSubmit(data); // Pass the form values to the parent component
   };
+  const onSubmitWithEnter = (values: z.infer<typeof trackSchema>) => {
+    return null;
+  }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-10 w-full">
+      <form onSubmit={form.handleSubmit(onSubmitWithEnter)} 
+        className="space-y-10 w-full">
         <FormField
           control={form.control}
           name="name"
@@ -107,12 +120,13 @@ export default function EditTrackForm({ onTrackSubmit, trackDetails }: { onTrack
           <DragAndDrop payload={payload} setPayload={setPayload} />
           <EventDeatilsDescription1 name="We recommend using at least a 2160x1080px" />
         </div>
+        {payload.image_urls.length == 0 && (<p className='text-sm text-btnRed'>Select at least one image</p>)}
         {payload.image_urls.length > 0 && (
-          <div className="flex gap-5">
+          <div className="flex space-x-3">
             {payload.image_urls.map((source, index) => (
-              <div className="w-full" key={index}>
+              <div className="" key={index}>
                 <div className="rounded-[10px] w-[130px] h-[100px] bg-pagePrimary relative">
-                  <IconButton variant="dark" className="rounded-full absolute right-[-5px] top-[-5px]" onClick={() => handleRemoveImage(index)} icon={CgClose} />
+                  <IconButton variant="dark" className="rounded-full absolute right-[-5px] top-[-5px] z-10 bg-gray-400" onClick={() => handleRemoveImage(index)} icon={CgClose} />
                   <Image src={source as string} alt="" fill className="object-contain" />
                 </div>
               </div>
@@ -124,7 +138,10 @@ export default function EditTrackForm({ onTrackSubmit, trackDetails }: { onTrack
             <Button onClick={handleDeleteTrack} className="rounded-full w-1/2 flex justify-center" variant="quiet" size="lg" type="button" leftIcon={CgClose}>
               <span>Discard Track</span>
             </Button>
-            <Button className="rounded-full w-1/2 flex justify-center" variant="blue" size="lg" type="submit" leftIcon={FaCircleArrowUp}>
+            <Button className="rounded-full w-1/2 flex justify-center" variant="blue" size="lg" 
+              // type="submit" 
+              onClick={() => form.handleSubmit(onSubmit)()}
+              leftIcon={FaCircleArrowUp}>
               <span>Update Track</span>
             </Button>
           </div>
