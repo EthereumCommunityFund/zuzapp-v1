@@ -11,7 +11,7 @@ export default function EditionForm(props: {
     <div className="py-20">
       <Container>
         {props.children}
-        <EditionButtons switchDialogue type={"track"} leftButtonName={"Discard"} rightButtonName={"Add Track"} leftButtonIcon={CgClose} rightButtonIcon={FaCircleArrowDown} />
+        <EditionButtons switchDialogue type={'track'} leftButtonName={'Discard'} rightButtonName={'Add Track'} leftButtonIcon={CgClose} rightButtonIcon={FaCircleArrowDown} isLoading={false} />
       </Container>
     </div>
   );

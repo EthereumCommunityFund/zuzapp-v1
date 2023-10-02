@@ -14,8 +14,6 @@ import fetchSpaceInvites from '@/services/fetchSpaceInvites';
 import { v4 } from 'uuid';
 import { HiXCircle } from 'react-icons/hi';
 import { DialogHeader, DialogFooter, Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/dialog';
-import { Link } from 'lucide-react';
-import { BsMap } from 'react-icons/bs';
 
 const EventSpaceSettings = () => {
   const router = useRouter();
@@ -41,13 +39,14 @@ const EventSpaceSettings = () => {
 
   const handleSendInvite = async () => {
     if (email === '') return;
+    if (eventId === undefined) return;
     try {
       await createInvite(
         {
           invitee_email: email,
-          event_space_id: eventSpace?.id as string,
+          event_space_id: eventId as string,
         },
-        eventSpace?.id as string
+        eventId as string
       );
       setEmail('');
       queryClient.invalidateQueries({ queryKey: ['inviteDetails'] });
