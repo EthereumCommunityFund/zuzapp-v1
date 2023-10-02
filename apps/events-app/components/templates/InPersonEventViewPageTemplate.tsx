@@ -106,8 +106,8 @@ export default function InPersonEventViewPageTemplate({ eventSpace }: IInPersonE
 							<DialogContent>
 								<DialogHeader>
 									<DialogTitle >About This Event</DialogTitle>
-									<DialogDescription className="text-white">
-										<RenderHTMLString height="500" htmlString={description} />
+									<DialogDescription className="opacity-80">
+										<h2 className="text-2xl font-bold">What is ZuConnect?</h2>
 									</DialogDescription>
 								</DialogHeader>
 								<DialogFooter></DialogFooter>
