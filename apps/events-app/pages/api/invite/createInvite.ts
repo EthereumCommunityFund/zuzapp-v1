@@ -29,9 +29,25 @@ const sendInviteEmail = async (mailClient: MailClient, to_email: string, inviteI
     }
 };
 
+const processInvite = async (message: any) => {
+    console.log(process.env.NODE_ENV)
+    if (process.env.NODE_ENV === 'production') {
+        const mailClient = new MailClient();
+        try {
+            await mailClient.sendMail(message);
+            console.log('Email sent');
+        } catch (error) {
+            console.error('Error sending email:', error);
+        }
+    } else {
+        console.log('Dev environment - email not sent:', message);
+        console.log(message.html)
+    }
+};
+
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const supabase = createPagesServerClient<Database>({ req, res });
-    const mailClient = new MailClient();
+
     // Validate invitation data
     const [validation_result, validatedData] = validate_invite_create(req.body);
     if (validation_result?.error) {
@@ -62,13 +78,17 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         const status = existingInvite[0].status;
 
         if (status === 'pending') {
-            const emailResult = await sendInviteEmail(mailClient, existingInvite[0].invitee_email, existingInvite[0].id, req.headers.host);
-            if (emailResult.success) {
-                return res.status(200).json({ message: "Invitation re-sent" });
-            } else {
-                return res.status(500).send("Error resending email");
-            }
-        } else if (status === 'accepted') {
+            const inviteLink = `http://${req.headers.host}test/accept-invite?invite_id=${existingInvite[0].id}`;
+            const message = {
+                from: process.env.EMAIL_FROM,
+                to: existingInvite[0].invitee_email,
+                subject: "You have been invited to collaborate on Zuzapp",
+                html: `<p>${inviteLink}</p>`,
+            };
+            await processInvite(message);
+            return res.status(200).json({ message: "Invitation re-sent" });
+        }
+        else if (status === 'accepted') {
             return res.status(409).json({ invite_status: status, message: 'Invite already exists' });
         }
     }
@@ -83,7 +103,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         return res.status(500).send("Internal server error");
     }
 
-    const inviteLink = `http://${req.headers.host}test/accept-invite?invite_id=${result.data.id}`;
+    const inviteLink = `http://${req.headers.host}/dashboard/events/accept-invite?invite_id=${result.data.id}`;
 
     const message = {
         from: "victor@ecf.network",
@@ -93,15 +113,18 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         html: `<p>${inviteLink}</p>`,
     };
 
+    await processInvite(message);
+    return res.status(200).json({ message: "Invitation sent" });
 
 
-    try {
-        const resulter = await mailClient.sendMail(message)
-        console.log(resulter, "result");
-        return res.status(200).json({ message: "Invitation sent" });
-    } catch (error) {
-        return res.status(500).send("Error sending email");
-    }
+
+    // try {
+    //     const resulter = await mailClient.sendMail(message)
+    //     console.log(resulter, "result");
+    //     return res.status(200).json({ message: "Invitation sent" });
+    // } catch (error) {
+    //     return res.status(500).send("Error sending email");
+    // }
 
 
 
