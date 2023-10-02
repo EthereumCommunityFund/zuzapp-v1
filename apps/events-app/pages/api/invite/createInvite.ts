@@ -57,7 +57,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         if (status === 'pending') {
             const inviteLink = `http://${req.headers.host}test/accept-invite?invite_id=${existingInvite[0].id}`;
             const message = {
-                from: process.env.EMAIL_FROM,
+                from: "victor@ecf.network",
                 to: existingInvite[0].invitee_email,
                 subject: "You have been invited to collaborate on Zuzapp",
                 html: `Follow this link to accept the invite <br/> <p>${inviteLink}</p>`,
