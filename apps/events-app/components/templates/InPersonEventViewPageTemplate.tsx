@@ -11,72 +11,14 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import Carousel from "../ui/Carousel";
 import ResponsiveCarousel from "../ui/Carousel";
 import { LockClosed, LocationMarker, UserGroup } from "../ui/icons";
-<<<<<<< HEAD
-import { EventSpaceDetailsType, EventSpaceUpdateRequestBody } from "@/types";
-import { useEventSpace } from "@/context/EventSpaceContext";
-import { useEffect, useState } from "react";
-import RenderHTMLString from "../ui/RenderHTMLString";
-import { useQuery } from "react-query";
-import { fetchUserEventSpaces } from "@/services/eventSpaceService";
-import { useEventSpaces } from "@/context/EventSpacesContext";
-
-
-interface IInPersonEventViewPageTemplateProps {
-	eventSpace: EventSpaceDetailsType;
-}
-
-
-
-interface IEventLink {
-	name: string;
-	link: string;
-}
-
-export default function InPersonEventViewPageTemplate({ eventSpace }: IInPersonEventViewPageTemplateProps) {
-	const {
-		// id,
-		name,
-		event_space_type,
-		status,
-		start_date,
-		end_date,
-		description,
-		format,
-		event_type,
-		experience_level,
-		eventspacelocation,
-		tagline,
-		social_links,
-		extra_links,
-	} = eventSpace;
-	const startDate = new Date(start_date);
-	const endDate = new Date(end_date);
-	const formattedStartDate = startDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-	const formattedEndDate = endDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-	const [socialLinks, setSocialLinks] = useState<IEventLink[] | undefined>();
-	const [extraLinks, setExtraLinks] = useState<IEventLink[] | undefined>();
-	const { setEventSpace } = useEventSpace();
-
-	useEffect(() => {
-		console.log("InPersonEventSpace", eventSpace);
-		setEventSpace(eventSpace);
-		if (social_links)
-			setSocialLinks(JSON.parse(social_links));
-		if (extra_links)
-			setExtraLinks(JSON.parse(extra_links));
-	}, [social_links, extra_links, eventSpace])
-
-
-=======
 import { EventSpaceDetailsType } from "@/types";
 import { useEventSpace } from "@/context/EventSpaceContext";
 import { useEffect, useState } from "react";
-import { EventType } from "react-alice-carousel";
+
 
 interface IInPersonEventViewPageTemplateProps {
 	eventSpace: EventSpaceDetailsType;
 }
->>>>>>> 507f92f (Add live data to eventview avout page)
 
 interface RenderHTMLStringProps {
 	htmlString: string;
@@ -118,7 +60,7 @@ export default function InPersonEventViewPageTemplate({ eventSpace }: IInPersonE
 			setSocialLinks(JSON.parse(social_links));
 		if (extra_links)
 			setExtraLinks(JSON.parse(extra_links));
-	})
+	}, [social_links, extra_links, eventSpace])
 
 	function RenderHTMLString({ htmlString }: RenderHTMLStringProps): JSX.Element {
 		return <div className="h-[500px] overflow-y-auto" dangerouslySetInnerHTML={{ __html: htmlString }} />;
@@ -207,35 +149,24 @@ export default function InPersonEventViewPageTemplate({ eventSpace }: IInPersonE
 					<div className="flex flex-col gap-2">
 						<Label className="opacity-70">Links </Label>
 						{extraLinks && extraLinks.map((value: IEventLink, idx: number) => (
-<<<<<<< HEAD
-							<div className="flex gap-2" key={idx}>
-								<Label className="opacity-100 font-bold text-base">{value.name}:</Label>
-								<Label className="opacity-100 font-bold text-base">{value.link}</Label>
-=======
 							<div className="flex gap-2">
 								<Label key={idx} className="opacity-100 font-bold text-base">{value.name}:</Label>
 								<Label key={idx} className="opacity-100 font-bold text-base">{value.link}</Label>
->>>>>>> 507f92f (Add live data to eventview avout page)
 							</div>
 						))}
 					</div>
 					<div className="flex flex-col gap-2">
 						<Label className="opacity-70">Socials </Label>
 						{socialLinks && socialLinks.map((value: IEventLink, idx: number) => (
-<<<<<<< HEAD
-							<div className="flex gap-2" key={idx}>
-								<Label className="opacity-100 font-bold text-base">{value.name}:</Label>
-								<Label className="opacity-100 font-bold text-base">{value.link}</Label>
-=======
+
 							<div className="flex gap-2">
 								<Label key={idx} className="opacity-100 font-bold text-base">{value.name}:</Label>
 								<Label key={idx} className="opacity-100 font-bold text-base">{value.link}</Label>
->>>>>>> 507f92f (Add live data to eventview avout page)
 							</div>
 						))}
 					</div>
 				</div>
 			</div>
 		</>
-	)
+	);
 }
