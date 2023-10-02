@@ -49,35 +49,40 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     organizers,
   } = validatedData;
 
-  console.log(organizers, 'validated data');
+  let validatedFields: any = {
+    name,
+    format,
+    description,
+    all_day,
+    schedule_frequency,
+    images,
+    video_call_link,
+    live_stream_url,
+    location_id,
+    event_type,
+    experience_level,
+    rsvp_amount,
+    limit_rsvp,
+    event_space_id,
+    track_id,
+  };
 
   let start_time = formatTimestamp(validatedData.start_time as Date)
   let end_time = formatTimestamp(validatedData.end_time as Date)
   let date = formatTimestamp(validatedData.date as Date)
 
+  let insertData: any = { start_time, end_time, date };
+
+  for (let key in validatedFields) {
+    if (validatedFields[key] !== undefined) {
+      insertData[key] = validatedFields[key];
+    }
+  }
+
   // Update the schedule in the database
   const schedule_update_result = await supabase
     .from('schedule')
-    .update({
-      name,
-      format,
-      description,
-      date,
-      start_time,
-      end_time,
-      all_day,
-      schedule_frequency,
-      images,
-      video_call_link,
-      live_stream_url,
-      location_id,
-      event_type,
-      experience_level,
-      rsvp_amount,
-      limit_rsvp,
-      event_space_id,
-      track_id,
-    })
+    .update(insertData)
     .eq('id', id)
     .single();
 

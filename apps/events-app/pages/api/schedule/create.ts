@@ -28,28 +28,49 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         name, format, description, all_day,
         schedule_frequency, images, video_call_link, live_stream_url, location_id,
         event_type, experience_level, rsvp_amount, limit_rsvp, event_space_id, track_id, tags,
-        organizers: speakers
+        organizers
     } = validatedData;
 
+    let validatedFields: any = {
+        name,
+        format,
+        description,
+        all_day,
+        schedule_frequency,
+        images,
+        video_call_link,
+        live_stream_url,
+        location_id,
+        event_type,
+        experience_level,
+        rsvp_amount,
+        limit_rsvp,
+        event_space_id,
+        track_id,
+    };
     // console.log(validatedData.start_time, validatedData.end_time, "timre")
     let start_time = formatTimestamp(validatedData.start_time as Date);
     let end_time = formatTimestamp(validatedData.end_time as Date);
     let date = formatTimestamp(validatedData.date as Date)
+    let insertData: any = { start_time, end_time, date };
 
-    console.log(start_time, end_time)
+    // Loop through validatedFields and only include defined properties in insertData
+    for (let key in validatedFields) {
+        if (validatedFields[key] !== undefined) {
+            insertData[key] = validatedFields[key];
+        }
+    }
 
-    const schedule_insert_result = await supabase.from('schedule').insert({
-        name,
-        format, description, date, start_time, end_time, all_day,
-        schedule_frequency, images, video_call_link, live_stream_url, location_id,
-        event_type, experience_level, rsvp_amount, limit_rsvp, event_space_id, track_id
-    }).select("id").single();
+    const schedule_insert_result = await supabase
+        .from('schedule')
+        .insert(insertData)
+        .select("id")
+        .single();
 
     if (schedule_insert_result.error || !schedule_insert_result.data) {
         logToFile("server error", schedule_insert_result.error.message, 500, req.body.user.email);
         return res.status(500).send("Internal server error");
     }
-
 
     const scheduleId = schedule_insert_result.data.id;
 
@@ -79,13 +100,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
 
     // Handling speakers and their roles concurrently
-    const speakerPromises = speakers.map(async (speaker: OrganizerType) => {
+    const organizerPromises = organizers.map(async (speaker: OrganizerType) => {
         console.log(speaker, "speakerss")
         const { name, role } = speaker;
-        let existingSpeaker = await supabase.from('speaker').select('id').eq('name', name.trim()).single();
-        console.log('existing speaker', existingSpeaker)
+        let existingOrganizer = await supabase.from('speaker').select('id').eq('name', name.trim()).single();
+        console.log('existing speaker', existingOrganizer)
         let speakerId;
-        if (!existingSpeaker.data) {
+        if (!existingOrganizer.data) {
             const newSpeaker = await supabase.from('speaker').insert({ name: name }).select("id").single();
             if (newSpeaker.error || !newSpeaker.data) {
                 throw new Error(newSpeaker.error?.message || "Failed to insert new speaker");
@@ -93,7 +114,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             speakerId = newSpeaker.data.id;
             console.log(speakerId, "speaker id")
         } else {
-            speakerId = existingSpeaker.data.id;
+            speakerId = existingOrganizer.data.id;
             console.log(speakerId, "speaker id")
         }
 
@@ -109,7 +130,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     });
 
     try {
-        await Promise.all([...tagPromises, ...speakerPromises]);
+        await Promise.all([...tagPromises, ...organizerPromises]);
     } catch (error: any) {
         logToFile("server error", error.message, 500, req.body.user.email);
         return res.status(500).send("Internal server error");
