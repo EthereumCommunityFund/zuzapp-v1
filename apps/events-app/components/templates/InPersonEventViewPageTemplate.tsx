@@ -11,7 +11,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import Carousel from "../ui/Carousel";
 import ResponsiveCarousel from "../ui/Carousel";
 import { LockClosed, LocationMarker, UserGroup } from "../ui/icons";
-import { EventSpaceDetailsType } from "@/types";
+import { EventSpaceDetailsType, EventSpaceUpdateRequestBody } from "@/types";
 import { useEventSpace } from "@/context/EventSpaceContext";
 import { useEffect, useState } from "react";
 
@@ -55,7 +55,8 @@ export default function InPersonEventViewPageTemplate({ eventSpace }: IInPersonE
 	const { setEventSpace } = useEventSpace();
 
 	useEffect(() => {
-		setEventSpace(eventSpace);
+		console.log("InPersonEventSpace", eventSpace);
+		// setEventSpace(eventSpace);
 		if (social_links)
 			setSocialLinks(JSON.parse(social_links));
 		if (extra_links)
@@ -65,6 +66,7 @@ export default function InPersonEventViewPageTemplate({ eventSpace }: IInPersonE
 	function RenderHTMLString({ htmlString }: RenderHTMLStringProps): JSX.Element {
 		return <div className="h-[500px] overflow-y-auto" dangerouslySetInnerHTML={{ __html: htmlString }} />;
 	}
+
 	return (
 		<>
 			<div className="flex gap-10">

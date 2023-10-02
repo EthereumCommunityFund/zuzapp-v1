@@ -1,10 +1,5 @@
-<<<<<<< HEAD
-import { EventSpaceDetailsType, EventSpaceUpdateRequestBody } from '@/types';
-=======
 import { EventSpaceDetailsType } from '@/types';
->>>>>>> 507f92f (Add live data to eventview avout page)
 import React, { createContext, useContext, useState, ReactNode } from 'react';
-
 interface EventSpacesContextProps {
   eventSpaceList: EventSpaceDetailsType[];
   setEventSpaceList: React.Dispatch<React.SetStateAction<EventSpaceDetailsType[]>>;

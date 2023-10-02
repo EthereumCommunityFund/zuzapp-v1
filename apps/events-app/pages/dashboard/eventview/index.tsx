@@ -37,8 +37,12 @@ export default function EventViewPage() {
   return (
     <>
       {eventSpace?.format === "in-person" && <InPersonEventViewPageTemplate eventSpace={eventSpace} />}
+<<<<<<< HEAD
       {eventSpace?.format === "online" && <OnlineEventViewPageTemplate />}
 >>>>>>> 507f92f (Add live data to eventview avout page)
+=======
+      {eventSpace?.format === "online" && <OnlineEventViewPageTemplate eventSpace={eventSpace} />}
+>>>>>>> d44dd1a (Pass live data to trackItem)
     </>
   )
 }
