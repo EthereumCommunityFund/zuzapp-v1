@@ -10,27 +10,7 @@ import mailClient from "@/utils/mailClient";
 import { resolve } from "path";
 import MailClient from "@/utils/mailClient";
 
-const sendInviteEmail = async (mailClient: MailClient, to_email: string, inviteId: string, host: any) => {
-    const inviteLink = `http://${host}/test/accept-invite?invite_id=${inviteId}`;
-
-    const message = {
-        from: process.env.EMAIL_FROM,
-        to: to_email,
-        subject: "You have been invited to collaborate on Zuzapp",
-        html: `<p>${inviteLink}</p>`,
-    };
-
-    try {
-        await mailClient.sendMail(message);
-        return { success: true };
-    } catch (error) {
-        console.error('Error sending email:', error);
-        return { success: false, error };
-    }
-};
-
 const processInvite = async (message: any) => {
-    console.log(process.env.NODE_ENV)
     if (process.env.NODE_ENV === 'production') {
         const mailClient = new MailClient();
         try {
