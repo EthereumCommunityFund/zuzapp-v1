@@ -6,14 +6,15 @@ import TabButton from './TabButton';
 import Event from './Event';
 import Button from '@/components/ui/buttons/Button';
 import { SubHeaderTabIndex } from '@/types';
-import { useEventSpace } from '@/context/EventSpaceContext';
 import AddToEventButton from './AddToEvent';
 import { HiArrowLeft } from 'react-icons/hi';
+import useEventDetails from '@/hooks/eventSpaceDetails';
 
 export default function SubHeader() {
   const router = useRouter();
   const { eventId } = router.query;
-  const { eventSpace } = useEventSpace();
+  // const { eventSpace } = useEventSpace();
+  const { eventSpace } = useEventDetails();
   const [activeTab, setActiveTab] = useState<SubHeaderTabIndex>();
   const goBackToPreviousPage = () => {
     router.back();
@@ -32,13 +33,13 @@ export default function SubHeader() {
       setActiveTab(SubHeaderTabIndex.SpaceDashboard);
     } else if (currentUrl.includes('/events/space/tracks')) {
       setActiveTab(SubHeaderTabIndex.SpaceTrack);
-    } else if (currentUrl.includes('/schedules')) {
+    } else if (currentUrl.includes('/events/space/schedules')) {
       setActiveTab(SubHeaderTabIndex.AllSchedules);
     }
   }, [router]);
 
   return (
-    <div className="flex fixed right-0 left-[260px] h-20 z-[100] bg-bgPrimary border-b border-white/20 px-5 justify-between items-center self-stretch backdrop-blur-20">
+    <div className="flex fixed right-0 left-[260px] h-20 z-[100] bg-bgPrimary border-b border-white/20 px-5 justify-between items-center self-stretch backdrop-blur-20 bg-pagePrimary">
       {router.asPath.includes('/events/create') ? (
         <Button
           className="rounded-[40px] py-2.5 px-3.5 bg-bgPrimary border-none hover:bg-[#363636] duration-200 text-textSecondary hover:text-textSecondary"

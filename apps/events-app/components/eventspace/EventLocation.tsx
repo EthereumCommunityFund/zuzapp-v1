@@ -39,7 +39,7 @@ export default function EventLocation() {
 
   const handleDeleteLocation = async (id: string, index: number) => {
     try {
-      const result = await deleteEventSpaceLocation(id);
+      const result = await deleteEventSpaceLocation(id, eventId as string);
       console.log(result);
       const updatedItems = [...savedLocations.slice(0, index), ...savedLocations.slice(index + 1)];
       setSavedLocations(updatedItems);

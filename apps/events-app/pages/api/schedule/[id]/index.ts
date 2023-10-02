@@ -22,7 +22,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         .select(`
         *,
         scheduletags: scheduletags!id (tags: tags!id (*)),
-        schedulespeakerrole: schedulespeakerrole!id (speaker: speaker!id (*))
+        schedulespeakerrole: schedulespeakerrole!id (role, speaker: speaker!id (name))
     `)
         .eq("id", id)
         .single();
@@ -36,11 +36,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         return res.status(404).send("Schedule not found");
     }
 
-    console.log(data)
+    console.log(data.schedulespeakerrole, "schedule speaker role")
     const response = {
         ...data,
         tags: data.scheduletags.map((tagObj: any) => tagObj.tags.name),
-        speakers: data.schedulespeakerrole.map((speakerObj: any) => ({
+        organizers: data.schedulespeakerrole.map((speakerObj: any) => ({
             name: speakerObj.speaker.name,
             role: speakerObj.role,
         })),

@@ -1,23 +1,28 @@
 "use client"
 
 import React from 'react';
-import { Carousel } from 'react-responsive-carousel';
-import 'react-responsive-carousel/lib/styles/carousel.min.css'; // Import carousel styles
+import AliceCarousel from 'react-alice-carousel';
+import 'react-alice-carousel/lib/alice-carousel.css';
 
-const ResponsiveCarousel: React.FC = () => {
+interface GalleryProps {
+  imgUrls: string[];
+}
+
+const handleDragStart = (e: React.DragEvent<HTMLImageElement>) => e.preventDefault();
+
+
+const Carousel: React.FC<GalleryProps> = ({ imgUrls }) => {
+  const items: any = [];
+  imgUrls.forEach((imgUrl, idx) => {
+    items.push(
+      <img key={idx} alt='333' src={imgUrl} onDragStart={handleDragStart} className='w-[500px] h-[430px]' role="presentation" />
+    )
+  })
   return (
-    <Carousel className='w-[500px] h-[500px] mx-auto'>
-      <div>
-        <img src="/images/2.png" alt="Slide 1" />
-      </div>
-      <div>
-        <img src="/images/3.png" alt="Slide 2" />
-      </div>
-      <div>
-        <img src="/images/4.png" alt="Slide 3" />
-      </div>
-    </Carousel>
+    <div className='w-[500px] h-[450px]'>
+      <AliceCarousel touchTracking disableDotsControls mouseTracking items={items} />
+    </div>
   );
-};
+}
 
-export default ResponsiveCarousel;
+export default Carousel;

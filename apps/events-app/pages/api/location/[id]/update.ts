@@ -5,12 +5,14 @@ import { Database } from "@/database.types";
 import { logToFile } from "@/utils/logger";
 import { validateLocationUpdate, validateUUID } from "@/validators";  // Ensure this path is correct
 import { QueryWithID } from "@/types";
+import withAuthorization from "../../middlewares/withAuthorization";
 
-const updateLocationHandler = async (req: NextApiRequest, res: NextApiResponse) => {
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const supabase = createPagesServerClient<Database>({ req, res });
 
     const { id } = req.query as QueryWithID
 
+    console.log(req.query)
 
     // validate uuid
     const errors = validateUUID(id);
@@ -46,4 +48,5 @@ const updateLocationHandler = async (req: NextApiRequest, res: NextApiResponse) 
     return res.status(result.status).json({ message: "Location updated", data: result.data });
 }
 
-export default withSession(updateLocationHandler);
+
+export default withSession(withAuthorization("collaborator", handler));

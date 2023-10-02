@@ -11,6 +11,10 @@ export const fetchEventSpacesByUser = async () => {
   return await axiosInstance.get(`/api/eventspace/fetchByUser`);
 };
 
+export const fetchInvitedEventSpaces = async () => {
+  return await axiosInstance.get(`/api/eventspace/fetchByInvite`);
+};
+
 // gets publisbed event spaces
 export const fetchAllEventSpaces = async () => {
   return await axiosInstance.get(`/api/eventspace`);
@@ -23,14 +27,14 @@ export const createEventSpace = async (data: EventSpaceCreateRequestBody) => {
 
 // updates an event space
 export const updateEventSpace = async (id: string, data: EventSpaceUpdateRequestBody) => {
-  return await axiosInstance.put(`/api/eventspace/${id}/update`, data);
+  return await axiosInstance.put(`/api/eventspace/${id}/update/?event_space_id=${id}`, data);
 };
 // updates an event space status
 export const updateEventSpaceStatus = async (id: string, data: EventSpaceStatusUpdateRequestBody) => {
-  return await axiosInstance.put(`/api/eventspace/${id}/changeStatus`, data);
+  return await axiosInstance.put(`/api/eventspace/${id}/changeStatus/?event_space_id=${id}`, data);
 };
 
 // deletes an event space
 export const deleteEventSpace = async (id: string) => {
-  return await axiosInstance.delete(`/api/eventspace/${id}/delete`);
+  return await axiosInstance.delete(`/api/eventspace/${id}/delete/?event_space_id=${id}`);
 };

@@ -51,22 +51,24 @@ const AddToEventButton: React.FC<AddToEventButton> = (props) => {
         <DropdownMenu.Separator className="stroke stroke-white/10" />
         <div className="flex pt-1.5 pb-3 px-1.5 flex-col items-center gap-[14px] self-stretch">
           {DropDownMenu.map((item: DropDownMenuItem, index: number) => {
-            const id = v4()
+            const id = v4();
             return (
-            <Button
-            key={id}
-              onClick={() => {
-                let path = item.path;
-                if (eventId) path += `?eventId=${eventId}`;
-                if (trackId) path += `&trackId=${trackId}`;
-                router.push(path);
-              }}
-              className="w-full shadow-none rounded-[40px] px-3.5 bg-[#383B3B] border-none hover:bg-[#ffffff10] duration-200 text-textSecondary hover:text-textSecondary"
-              leftIcon={item.icon}
-            >
-              {item.label}
-            </Button>
-          )})}
+              <Button
+                key={id}
+                onClick={() => {
+                  let path = item.path;
+                  if (eventId) path += `?eventId=${eventId}`;
+                  if (trackId) path += `${eventId ? '&' : '?'}trackId=${trackId}`;
+                  if (item.label === 'Add a Schedule') path += `${eventId || trackId ? '&' : '?'}quickAccess=true`;
+                  router.push(path);
+                }}
+                className="w-full shadow-none rounded-[40px] px-3.5 bg-[#383B3B] border-none hover:bg-[#ffffff10] duration-200 text-textSecondary hover:text-textSecondary"
+                leftIcon={item.icon}
+              >
+                {item.label}
+              </Button>
+            );
+          })}
         </div>
       </DropdownMenu.Content>
     </DropdownMenu.Root>

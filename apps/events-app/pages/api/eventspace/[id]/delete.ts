@@ -5,12 +5,15 @@ import { Database } from "@/database.types";
 import { logToFile } from "../../../../utils/logger";
 import { validateUUID } from "../../../../validators";
 import { QueryWithID } from "@/types";
+import withAuthorization from "../../middlewares/withAuthorization";
 
 
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const supabase = createPagesServerClient<Database>({ req, res });
     const { id } = req.query as QueryWithID;
+
+
 
     // validate uuid
     const errors = validateUUID(id);
@@ -48,4 +51,4 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(status).send({ message: "Event space deleted" });
 };
 
-export default withSession(handler);
+export default withSession(withAuthorization('creator', handler));

@@ -86,7 +86,7 @@ export default function EventLocationEdit({
     // setSelectedLocation(null);
     console.log(payload);
     try {
-      const result = await updateEventSpaceLocation(savedLocation.id as string, payload);
+      const result = await updateEventSpaceLocation(savedLocation.id as string, payload, eventId as string);
       setLocationUpdated(true);
       console.log(result, 'location updated');
       console.log(locationUpdated);

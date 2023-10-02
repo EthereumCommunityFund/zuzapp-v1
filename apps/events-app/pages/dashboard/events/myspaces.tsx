@@ -4,10 +4,9 @@ import { useEffect, useState } from 'react';
 import { fetchUserEventSpaces } from '../../../services/eventSpaceService';
 import { EventSpaceDetailsType } from '@/types';
 import { useQuery } from 'react-query';
-import { Loader } from '../../../components/ui/Loader';
-export default function MyEventSpacesPage() {
-  // Make request to get all event spaces
+import { fetchInvitedEvents } from '@/services/fetchInvitedEvents';
 
+export default function MyEventSpacesPage() {
   const {
     data: eventSpaces,
     isLoading,
@@ -22,13 +21,20 @@ export default function MyEventSpacesPage() {
     }
   );
 
-  if (isLoading) {
-    return <Loader />;
-  }
+  const { data: invitedSpaces } = useQuery<EventSpaceDetailsType[], Error>(
+    ['invitedSpaces'], // Query key
+    () => fetchInvitedEvents(),
+    {
+      onSuccess: (data) => {
+        console.log('Event Spaces:', data);
+      },
+    }
+  );
+
   if (isError) {
     return <p>Error loading space details</p>;
   }
-  return <div className="flex gap-[10px] flex-1 items-center self-stretch font-inter">{<EventSpacesTemplate eventSpaces={eventSpaces} />}</div>;
+  return <div className="flex gap-[10px] flex-1 items-center self-stretch font-inter">{<EventSpacesTemplate eventSpaces={eventSpaces} invitedSpaces={invitedSpaces} isLoading={isLoading} />}</div>;
 }
 
 export const getServerSideProps = async (ctx: any) => {

@@ -44,6 +44,17 @@ export default function EventSpaceDashboard(props: IProps) {
 
     if (!name || !eventspacelocation || eventspacelocation.length === 0 || !tracks || tracks.length === 0 || !schedules || schedules.length === 0) {
       console.error('Event space does not meet the minimum requirements for publishing');
+      setDialogContent({
+        title: 'Error!',
+        description: 'Event space does not meet the minimum requirements for publishing.',
+        buttonLabel: 'Edit Event',
+        buttonAction: () =>
+          router.push({
+            pathname: '/dashboard/events/space/details/',
+            query: { eventId: eventId },
+          }),
+      });
+      setDialogOpen(true);
       return;
     }
 
@@ -88,7 +99,10 @@ export default function EventSpaceDashboard(props: IProps) {
         query: { eventId: eventId },
       });
     } else if (type === SpaceDashboardCardType.OpenSettings) {
-      router.push('settings');
+      router.push({
+        pathname: `settings`,
+        query: { eventId: eventId },
+      });
     }
   };
 
@@ -102,7 +116,7 @@ export default function EventSpaceDashboard(props: IProps) {
                 <Label className="text-3xl font-bold leading-[1.2]">Welcome to your Event Space</Label>
                 <h2 className="opacity-70 font-inter font-bold">First, you'll need to enter the main details of your main event.</h2>
                 <Button
-                  variant='primaryGreen'
+                  variant="primaryGreen"
                   className="w-full flex justify-center font-bold rounded-3xl text-xl leading-[1.2] duration-300"
                   leftIcon={HiCalendar}
                   onClick={(e) => {

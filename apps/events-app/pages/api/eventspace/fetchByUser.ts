@@ -25,6 +25,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         return res.status(500).send("Server error");
     }
 
+
+
+
     // Check if there's no data
     if (!eventSpacesResult.data || eventSpacesResult.data.length === 0) {
         return res.status(200).json([]);

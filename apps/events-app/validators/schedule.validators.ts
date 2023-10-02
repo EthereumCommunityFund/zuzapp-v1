@@ -1,8 +1,8 @@
 import { ScheduleCreateRequestBody, ScheduleUpdateRequestBody } from '@/types';
 import Joi from 'joi';
 
-const speakerSchema = Joi.object({
-  speaker_name: Joi.string().required(),
+const organizer_schema = Joi.object({
+  name: Joi.string().required(),
   role: Joi.string().required(),
 });
 
@@ -16,16 +16,17 @@ const schedule_create_schema = Joi.object({
   all_day: Joi.boolean().default(false),
   schedule_frequency: Joi.string().valid('once', 'everyday', 'weekly').required(),
   images: Joi.array().items(Joi.string().uri()).default([]),
-  video_call_link: Joi.string().uri().optional(),
-  live_stream_url: Joi.string().uri().optional(),
+  video_call_link: Joi.string().uri(),
+  live_stream_url: Joi.string().uri(),
   location_id: Joi.string().uuid().required(),
   event_type: Joi.array().items(Joi.string()),
   experience_level: Joi.array().items(Joi.string()),
   rsvp_amount: Joi.number().integer().default(0),
+  limit_rsvp: Joi.bool().optional(),
   event_space_id: Joi.string().uuid().required(),
-  track_id: Joi.string().uuid().optional(),
+  track_id: Joi.string().uuid(),
   tags: Joi.array().items(Joi.string()).default([]),
-  speakers: Joi.array().items(speakerSchema).default([]),
+  organizers: Joi.array().items(organizer_schema).default([]),
 });
 
 const schedule_update_schema = Joi.object({
@@ -46,16 +47,17 @@ const schedule_update_schema = Joi.object({
   all_day: Joi.boolean().default(false),
   schedule_frequency: Joi.string().valid('once', 'everyday', 'weekly').required(),
   images: Joi.array().items(Joi.string().uri()).default([]),
-  video_call_link: Joi.string().uri().optional(),
-  live_stream_url: Joi.string().uri().optional(),
+  video_call_link: Joi.string().uri(),
+  live_stream_url: Joi.string().uri(),
   location_id: Joi.string().uuid().required(),
   event_type: Joi.string(),
   experience_level: Joi.string(),
+  limit_rsvp: Joi.bool().optional(),
   rsvp_amount: Joi.number().integer().default(50),
   event_space_id: Joi.string().uuid().required(),
-  track_id: Joi.string().uuid().optional(),
+  track_id: Joi.string().uuid(),
   tags: Joi.array().items(Joi.string()).default([]),
-  speakers: Joi.array().items(speakerSchema).default([]),
+  organizers: Joi.array().items(organizer_schema).default([]),
 });
 
 export const validateScheduleCreation = (body: any): [Joi.ValidationResult<any>, ScheduleCreateRequestBody] => {

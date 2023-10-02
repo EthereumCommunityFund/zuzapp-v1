@@ -42,6 +42,7 @@ export type EventSpaceDetailsType = {
   tagline: string;
   social_links?: string;
   extra_links?: string;
+  image_url: string;
   tracks: TrackUpdateRequestBody[];
   schedules: ScheduleUpdateRequestBody[];
 };
@@ -83,9 +84,9 @@ export type ScheduleCreateRequestBody = {
   event_space_id: string;
   track_id?: string;
   tags: string[];
-  speakers: [
+  organizers: [
     {
-      speaker_name: string;
+      name: string;
       role: string;
     },
   ];
@@ -97,22 +98,22 @@ export type ScheduleUpdateRequestBody = {
   description: string;
   date: string | Date | number;
   start_time: string | Date | number;
-  end_time: string | Date | undefined;
+  end_time: string | Date | number;
   all_day?: boolean;
   schedule_frequency: 'once' | 'everyday' | 'weekly';
   images?: string[];
   video_call_link?: string;
   live_stream_url?: string;
   location_id: string;
-  event_type?: string[];
-  experience_level?: string[];
+  event_type?: string;
+  experience_level?: string;
   limit_rsvp?: boolean;
   rsvp_amount?: number;
   event_space_id: string;
   track_id?: string;
   tags?: string[];
-  speakers?: {
-    speaker_name: string;
+  organizers?: {
+    name: string;
     role: string;
   }[];
 };
@@ -152,7 +153,15 @@ export type LocationUpdateRequestBody = {
   event_space_id: string;
 };
 
-export type SpeakerType = { speaker_name: string; role: string };
+export type InviteCreateRequestBody = {
+  invitee_email: string;
+  event_space_id: string;
+};
+export type InviteUpdateRequestBody = {
+  status: 'accepted' | 'declined';
+};
+
+export type OrganizerType = { name: string; role: string };
 
 export type QueryWithID = {
   [key: string]: string;

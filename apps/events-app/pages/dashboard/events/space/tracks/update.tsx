@@ -50,14 +50,18 @@ export default function Update() {
   const handleTrackSubmit = async (values: TrackUpdateRequestBody) => {
     try {
       if (!eventId) return;
-      const result = await updateTrack(trackId as string, {
-        ...values,
-        event_space_id: eventId as string,
-        id: trackId as string,
-      });
+      const result = await updateTrack(
+        trackId as string,
+        {
+          ...values,
+          event_space_id: eventId as string,
+          id: trackId as string,
+        },
+        eventId as string
+      );
       setTrackCreated(true);
       console.log(result);
-      queryClient.invalidateQueries({ queryKey: ["trackDetails"] });
+      queryClient.invalidateQueries({ queryKey: ['trackDetails'] });
     } catch (error) {
       setTrackCreated(false);
       console.error(error);

@@ -11,6 +11,10 @@ import { EventSpaceDetailsType, EventTypes } from '@/types';
 import { useQuery } from 'react-query';
 import { fetchPublishedEventSpaces } from '@/services/fetchPublishedEvents';
 import { Loader } from '../ui/Loader';
+import { arrayFromLength } from '@/lib/helper';
+import { EventTemplateSkeleton } from '../commons/EventTemplateSkeleton';
+import { HomePageTemplateSkeleton } from '../commons/HomePageTemplateSkeleton';
+import { useEventSpace, useEventSpaces } from '@/context/EventSpaceContext';
 
 export const sampleEvents = [
   {
@@ -32,11 +36,13 @@ export default function HomePageTemplate() {
   const { isAuthenticated, user } = useGlobalContext();
   const router = useRouter();
 
-  const handleButtonClick = async (eventType: EventTypes) => {
-    console.log('EventType', eventType);
+  const { eventSpaceList, setEventSpaceList } = useEventSpace();
+
+  const handleButtonClick = async (eventId: string) => {
+
     router.push({
-      pathname: `/dashboard/eventview`, // Update with your actual route
-      query: { eventType },
+      pathname: `/dashboard/eventview/about`, // Update with your actual route
+      query: { eventId },
     });
   };
 
@@ -49,7 +55,8 @@ export default function HomePageTemplate() {
     () => fetchPublishedEventSpaces(),
     {
       onSuccess: (data) => {
-        console.log('Event Spaces:', data);
+        console.log('HomePageTemplate Event Spaces:', data);
+        setEventSpaceList(data);
       },
     }
   );
@@ -108,7 +115,13 @@ export default function HomePageTemplate() {
       <div className="mt-10">
         <h3 className="text-xl md:text-4xl">Zuzalu Events</h3>
         <div className="mt-3">
-          {isLoading && <Loader />}
+          {isLoading && (
+            <div>
+              {arrayFromLength(1).map((_, i) => (
+                <HomePageTemplateSkeleton key={i} />
+              ))}
+            </div>
+          )}
           {eventSpaces &&
             eventSpaces?.map((event, index) => (
               <div
@@ -117,7 +130,7 @@ export default function HomePageTemplate() {
               >
                 <div className="flex flex-col md:flex-row space-x-3 md:items-center">
                   <div>
-                    <Image src="/images/black-img.png" alt="Event" width={150} height={120} />
+                    <img src={event.image_url ? event.image_url : `/images/black-img.png`} className='rounded-xl' alt="Event" width={150} height={120} />
                   </div>
                   <div className="space-y-2 mt-2 md:mt-0">
                     <h4 className="text-2xl font-bold">{event.name}</h4>
@@ -133,13 +146,13 @@ export default function HomePageTemplate() {
                   </div>
                 </div>
                 <div className="mt-3 md:mt-0">
-                  <Button size="lg" variant={'primaryGreen'} className="rounded-full">
+                  <Button size="lg" variant={'primaryGreen'} className="rounded-full" onClick={() => event.id && handleButtonClick(event.id)}>
                     View Event
                   </Button>
                 </div>
               </div>
             ))}
-          {sampleEvents.map((event, index) => (
+          {/* {sampleEvents.map((event, index) => (
             <div
               key={index}
               className="flex flex-col md:flex-row md:justify-between md:items-center border border-white/10 bg-componentPrimary hover:bg-itemHover rounded-lg px-3 md:px-5 py-3 mt-5 duration-200"
@@ -167,7 +180,7 @@ export default function HomePageTemplate() {
                 </Button>
               </div>
             </div>
-          ))}
+          ))} */}
         </div>
       </div>
     </div>

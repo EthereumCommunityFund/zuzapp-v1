@@ -25,3 +25,6 @@ export const ZUZALU_SEMAPHORE_GROUP_URL = IS_PROD
 export const PCDPASS_SEMAPHORE_GROUP_URL = IS_PROD
   ? "https://api.pcdpass.xyz/semaphore/5"
   : "http://localhost:3002/semaphore/5";
+
+
+export const PASSPORT_SERVER_URL = "https://api.pcd-passport.com/"

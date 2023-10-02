@@ -58,9 +58,10 @@ import {
   updateSchedule,
 } from "../../../../../../controllers/schedule.controller";
 import Link from "next/link";
+import { toast } from "@/components/ui/use-toast";
 
-type Speaker = {
-  speaker_name: string;
+type Organizer = {
+  name: string;
   role: string;
 };
 
@@ -86,28 +87,29 @@ export default function UpdateSchedulePage() {
     video_call_link: "",
     live_stream_url: "",
     location_id: "",
-    event_type: [""],
-    experience_level: [""],
+    event_type: "",
+    experience_level: "",
     limit_rsvp: false,
     rsvp_amount: 1,
     event_space_id: "",
     track_id: "",
     tags: [""],
-    speakers: [
+    organizers: [
       {
-        speaker_name: "",
+        name: "",
         role: "",
       },
     ],
   });
-  const [switchDialogue, setSwitchDialogue] = useState(false);
-  const [isAllDay, setIsAllDay] = useState(false);
-  const [rsvpAmount, setRsvpAmount] = useState(1);
+  const [startDate, setStartDate] = useState<Date | undefined>();
   const [optionTags, setOptionTags] = useState<TagItemProp[]>([]);
   const [tags, setTags] = useState<string[]>([]);
   const [tagItem, setTagItem] = useState<TagItemProp>({ name: "" });
-  const [eventItem, setEventItem] = useState({ speaker_name: "", role: "" });
-  const [speakers, setSpeakers] = useState<any>([]);
+  const [eventItem, setEventItem] = useState({
+    name: "",
+    role: "speaker",
+  });
+  const [organizers, setOrganizers] = useState<any>([]);
   const [frequency, setFrequency] = useState<"once" | "everyday" | "weekly">(
     "once"
   );
@@ -116,10 +118,9 @@ export default function UpdateSchedulePage() {
   >([]);
   const [locationId, setLocationId] = useState("");
   const [experienceLevel, setExperienceLevel] = useState("");
-  const [videoLink, setVideoLink] = useState("");
-  const [liveLink, setLiveLink] = useState("");
+  const [initialEvent, setInitialEvent] = useState("");
   const handleChangeSwitch = () => {
-    setIsAllDay((prev) => !prev);
+    setSchedule({ ...schedule, all_day: !schedule.all_day });
   };
   const [startTime, setStartTime] = useState(dayjs("2023-11-17T00:00"));
   const [endTime, setEndTime] = useState(dayjs("2023-11-17T23:59"));
@@ -133,16 +134,25 @@ export default function UpdateSchedulePage() {
     format: z.enum(["in-person", "online", "hybrid"], {
       required_error: "You need to select a format.",
     }),
-    date: z.coerce.date(),
-    description: z.string().min(2, {
-      message: "Description is required.",
+    date: z.date({
+      required_error: "You need to select a valid date for this schedule.",
+      invalid_type_error: "You need to select a valid date for this schedule.",
+    }).refine((date) => {
+      if (date) {
+        console.log(date, `date`)
+        const today = dayjs();
+        const selectedDate = dayjs(date);
+        return selectedDate.isAfter(today);
+        }
+        return false;
+        }, {
+          message: "You need to select a valid date for this schedule.",
+        }),
+    description: z.string().min(10, {
+      message: "Description is required and must be a minimum of 5",
     }),
-    // video_call_link: z.string().min(2, {
-    //   message: "Video link is required.",
-    // }),
-    // live_stream_url: z.string().min(2, {
-    //   message: "Video link is required.",
-    // }),
+    video_call_link: z.string().optional().or(z.literal("")),
+    live_stream_url: z.string().optional().or(z.literal("")),
   });
 
   const {
@@ -168,42 +178,86 @@ export default function UpdateSchedulePage() {
     defaultValues: {
       name: schedule?.name,
       format: schedule?.format,
-      date: undefined,
+      date: schedule?.date !== "" ? new Date(schedule?.date) : new Date(),
       description: "",
+      video_call_link: schedule?.video_call_link,
+      live_stream_url: schedule?.live_stream_url,
     },
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    if(values.format !== "in-person" && (!values.video_call_link || values.video_call_link === "")) {
+      form.setError("video_call_link", {
+        message: "Video call link is required for online or hybrid events"
+      })
+      return;
+    }
+    if(values.format !== "in-person" && (!values.live_stream_url || values.live_stream_url === "")) {
+      form.setError("live_stream_url", {
+        message: "Live stream link is required for in-person or hybrid events"
+      })
+      return;
+    }
+    if(values.format === "in-person" && (locationId === "")) {
+      toast({
+        title: "Error",
+        description: "Location is required for in-person events",
+        variant: "destructive",
+      })
+      return;
+    }
+    const updatedOrganizers = (schedule.organizers as any).map((user: any) => {
+      if (user.name) {
+        return {
+          ...user,
+          name: user.name,
+          role: "speaker",
+          // name: undefined, // this will remove the name key from the object
+        };
+      } else {
+        return {
+          ...user,
+        };
+      }
+    });
+    console.log(updatedOrganizers);
+
     const additionalPayload = {
       event_space_id: schedule.event_space_id,
       start_time: schedule.start_time as unknown as string,
       end_time: schedule.end_time as unknown as string,
       event_type:
-        (schedule.event_type as []).length > 0
-          ? schedule.event_type
-          : [(eventSpace?.event_type as string[])[0]],
+        (schedule.event_type as unknown as []).length > 0
+          ? JSON.stringify([schedule.event_type])
+          : ((eventSpace?.event_type as string[])[0] as unknown as string[]),
       experience_level:
-        (schedule.experience_level as []).length > 0
-          ? schedule.experience_level
+        (schedule.experience_level as unknown as []).length > 0
+          ? (JSON.stringify([schedule.experience_level]) as unknown as string[])
           : [(eventSpace?.experience_level as string[])[0]],
       tags: schedule.tags,
       schedule_frequency: schedule.schedule_frequency,
       location_id: schedule.location_id,
-      speakers: schedule.speakers,
+      organizers: updatedOrganizers,
       video_call_link: schedule.video_call_link,
       live_stream_url: schedule.live_stream_url,
       all_day: schedule.all_day,
-      // limit_rsvp: isLimit,
+      track_id: trackId,
+      limit_rsvp: schedule.limit_rsvp,
       ...(eventSpace?.event_space_type === "tracks" && {
         track_id: trackId as string,
       }),
-      ...(isLimit ? { revp_amount: schedule.rsvp_amount } : {}),
+      ...(schedule.limit_rsvp ? { rsvp_amount: schedule.rsvp_amount } : {}),
       // isLimit && rsvp_amount: rsvpAmount
     };
-    const payload = { ...values, ...additionalPayload };
+    const payload: any = { ...values, ...additionalPayload };
     console.log(payload);
     try {
-      const result = await updateSchedule(scheduleId as string, payload);
+      console.log(payload, "payload");
+      const result = await updateSchedule(
+        scheduleId as string,
+        payload,
+        eventId as string
+      );
       // setSwitchDialogue(true);
       setScheduleUpdated(true);
       console.log(result, "result");
@@ -219,10 +273,10 @@ export default function UpdateSchedulePage() {
 
   const handleRemoveSpeaker = (index: number) => {
     const updatedItems = [
-      ...(schedule.speakers as Speaker[]).slice(0, index),
-      ...(schedule.speakers as Speaker[]).slice(index + 1),
+      ...(schedule.organizers as Organizer[]).slice(0, index),
+      ...(schedule.organizers as Organizer[]).slice(index + 1),
     ];
-    setSchedule({ ...schedule, speakers: updatedItems as any });
+    setSchedule({ ...schedule, organizers: updatedItems as any });
   };
 
   const handleRemoveTag = (index: number) => {
@@ -264,23 +318,46 @@ export default function UpdateSchedulePage() {
     const fetchCurrentSchedule = async () => {
       try {
         const result = await fetchScheduleByID(scheduleId as string);
-        console.log(result);
-        setSchedule(result.data.data);
+        console.log(result, "result");
+        setSchedule({
+          ...result.data.data,
+          event_type: JSON.parse(result.data.data.event_type)[0],
+          experience_level: JSON.parse(result.data.data.experience_level)[0],
+        });
+        setStartDate(new Date(result.data.data.date));
+
         form.reset({
           name: result.data.data.name,
           format: result.data.data.format,
           date: new Date(result.data.data.date),
           description: result.data.data.description,
+          video_call_link: result.data.data.video_call_link,
+          live_stream_url: result.data.data.live_stream_url,
         });
+        console.log(result.data.data.date);
       } catch (error) {
         console.log(error);
       }
     };
 
     fetchCurrentSchedule();
+
     fetchLocationDetails();
     fetchTags();
   }, []);
+
+  useEffect(() => {
+    console.log(form.formState.errors);
+    //get the first item from the errors object
+    const firstError = Object.values(form.formState.errors)[0]
+    if (firstError) {
+      toast({
+        title: "Error",
+        description: firstError?.message,
+        variant: "destructive",
+      })
+    }
+  }, [form.formState.errors]);
 
   const handleEnterTrack = async () => {
     try {
@@ -292,6 +369,10 @@ export default function UpdateSchedulePage() {
       console.error("Error fetching space details", error);
     }
   };
+
+  // const formated = formatDate('2023-09-27T23:00:00+00:00');
+  // console.log(formated, 'formated');
+
   return (
     <div className="flex items-start gap-[60px] self-stretch px-10 py-5">
       <DetailsBar />
@@ -301,6 +382,7 @@ export default function UpdateSchedulePage() {
             className="rounded-[40px] py-2.5 px-3.5 bg-bgPrimary border-none hover:bg-[#363636] duration-200 text-textSecondary hover:text-textSecondary"
             size="lg"
             leftIcon={HiArrowLeft}
+            onClick={() => router.back()}
           >
             Back
           </Button>
@@ -317,7 +399,7 @@ export default function UpdateSchedulePage() {
             {scheduleUpdated ? (
               <div className="flex flex-col items-center">
                 <h3 className="font-bold text-xl">
-                  Your Schedule Has Been Added
+                  Your Schedule Has Been Updated
                 </h3>
 
                 <Button
@@ -354,33 +436,33 @@ export default function UpdateSchedulePage() {
                             className="flex flex-col md:flex-row justify-between"
                             {...field}
                           >
-                            <FormItem className="flex items-center space-x-3 space-y-0">
+                            <FormItem className="flex items-center space-x-3 space-y-0 p-3 hover:bg-btnPrimaryGreen/20 rounded-md focus:bg-btnPrimaryGreen/20">
                               <FormControl>
                                 <RadioGroupItem value="in-person" />
                               </FormControl>
-                              <FormLabel className="font-semibold text-white/30 text-base cursor-pointer hover:bg-itemHover">
+                              <FormLabel className="font-semibold text-white/60 text-base">
                                 In-Person
                                 <span className="text-xs block">
                                   This is a physical event
                                 </span>
                               </FormLabel>
                             </FormItem>
-                            <FormItem className="flex items-center space-x-3 space-y-0">
+                            <FormItem className="flex items-center space-x-3 space-y-0 p-3 hover:bg-btnPrimaryGreen/20 rounded-md">
                               <FormControl>
                                 <RadioGroupItem value="online" />
                               </FormControl>
-                              <FormLabel className="font-semibold text-white/30 text-base cursor-pointer">
+                              <FormLabel className="font-semibold text-white/60 text-base ">
                                 Online
                                 <span className="text-xs block">
                                   Specifically Online Event
                                 </span>
                               </FormLabel>
                             </FormItem>
-                            <FormItem className="flex items-center space-x-3 space-y-0">
+                            <FormItem className="flex items-center space-x-3 space-y-0 p-3 hover:bg-btnPrimaryGreen/20 rounded-md">
                               <FormControl>
                                 <RadioGroupItem value="hybrid" />
                               </FormControl>
-                              <FormLabel className="font-semibold text-white/30 text-base cursor-pointer">
+                              <FormLabel className="font-semibold text-white/60 text-base">
                                 Hybrid
                                 <span className="text-xs block">
                                   In-Person & Online
@@ -436,7 +518,7 @@ export default function UpdateSchedulePage() {
                     <div className="flex flex-col items-start gap-5 self-stretch w-full pt-5">
                       <div className="flex gap-5">
                         <SwitchButton
-                          value={isAllDay}
+                          value={schedule.all_day}
                           onClick={handleChangeSwitch}
                         />
                         <span className="text-lg opacity-70 self-stretch">
@@ -444,27 +526,31 @@ export default function UpdateSchedulePage() {
                         </span>
                       </div>
                       <div className="flex flex-col items-center gap-[30px] self-stretch w-full">
-                        <FormField
-                          control={form.control}
-                          name="date"
-                          render={({ field }) => (
-                            <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                              <span className="text-lg opacity-70 self-stretch">
-                                Start Date
-                              </span>
-                              <CustomDatePicker
-                                selectedDate={field.value}
-                                handleDateChange={field.onChange}
-                                {...field}
-                              />
-                              <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">
-                                Click & Select or type in a date
-                              </h3>
-                              <FormMessage />
-                            </div>
-                          )}
-                        />
-                        {!isAllDay && (
+                        {schedule.date !== "" && (
+                          <FormField
+                            control={form.control}
+                            name="date"
+                            render={({ field }) => (
+                              <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
+                                <span className="text-lg opacity-70 self-stretch">
+                                  Start Date
+                                </span>
+                                <CustomDatePicker
+                                  defaultDate={undefined}
+                                  selectedDate={startDate as Date}
+                                  handleDateChange={field.onChange}
+                                  {...field}
+                                />
+                                <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">
+                                  Click & Select or type in a date
+                                </h3>
+                                <FormMessage />
+                              </div>
+                            )}
+                          />
+                        )}
+
+                        {!schedule.all_day && (
                           <>
                             <LocalizationProvider dateAdapter={AdapterDayjs}>
                               <div className="flex justify-between gap-10 text-white">
@@ -610,38 +696,46 @@ export default function UpdateSchedulePage() {
                     </div>
                     <div className="flex flex-col items-start gap-5 self-stretch w-full pt-5">
                       <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                        <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                          Video Call Link
-                        </h2>
-                        <InputFieldDark
-                          type={InputFieldType.Link}
-                          placeholder="Type URL"
-                          value={schedule.video_call_link}
-                          onChange={(e) =>
-                            setSchedule({
-                              ...schedule,
-                              video_call_link: (e.target as HTMLInputElement)
-                                .value,
-                            })
-                          }
+                        <FormField
+                          control={form.control}
+                          name="video_call_link"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-lg font-semibold leading-[1.2] text-white self-stretch">
+                                Video Call Link
+                              </FormLabel>
+                              <FormControl>
+                                <InputFieldDark
+                                  type={InputFieldType.Link}
+                                  placeholder={"Type URL"}
+                                  {...field}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
                         />
                       </div>
 
                       <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                        <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                          Live Stream Link
-                        </h2>
-                        <InputFieldDark
-                          type={InputFieldType.Link}
-                          placeholder="Type URL"
-                          value={schedule.live_stream_url}
-                          onChange={(e) =>
-                            setSchedule({
-                              ...schedule,
-                              live_stream_url: (e.target as HTMLInputElement)
-                                .value,
-                            })
-                          }
+                        <FormField
+                          control={form.control}
+                          name="live_stream_url"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-lg font-semibold leading-[1.2] text-white self-stretch">
+                                Live Stream Link
+                              </FormLabel>
+                              <FormControl>
+                                <InputFieldDark
+                                  type={InputFieldType.Link}
+                                  placeholder={"Type URL"}
+                                  {...field}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
                         />
                       </div>
                     </div>
@@ -660,14 +754,16 @@ export default function UpdateSchedulePage() {
                             </h2>
                             <InputFieldDark
                               type={InputFieldType.Primary}
-                              value={eventItem?.speaker_name}
-                              onChange={(e) =>
+                              value={eventItem?.name}
+                              onChange={(e) => {
+                                console.log(
+                                  (e.target as HTMLInputElement).value
+                                );
                                 setEventItem({
                                   ...eventItem,
-                                  speaker_name: (e.target as HTMLInputElement)
-                                    .value,
-                                })
-                              }
+                                  name: (e.target as HTMLInputElement).value,
+                                });
+                              }}
                               placeholder={"Enter the name"}
                             />
                           </div>
@@ -695,14 +791,20 @@ export default function UpdateSchedulePage() {
                           <button
                             type="button"
                             onClick={() => {
+                              if (eventItem.name === "") return;
+                              console.log(eventItem);
                               setSchedule({
                                 ...schedule,
-                                speakers: [
-                                  ...(schedule.speakers as Speaker[]),
+                                organizers: [
+                                  ...(schedule.organizers as Organizer[]),
                                   eventItem,
                                 ],
                               });
-                              setEventItem({ speaker_name: "", role: "" });
+                              setOrganizers([...organizers, eventItem]);
+                              setEventItem({
+                                name: "",
+                                role: "speaker",
+                              });
                             }}
                             className="flex gap-2.5 mb-2 text-lg font-normal leading-[1.2] text-white items-center rounded-[8px] px-2 py-1 bg-white bg-opacity-10"
                           >
@@ -711,8 +813,8 @@ export default function UpdateSchedulePage() {
                         </div>
 
                         <div className="flex gap-2.5">
-                          {schedule.speakers?.map(
-                            (speaker: any, index: number) => (
+                          {schedule.organizers?.map(
+                            (organizer: any, index: number) => (
                               <div
                                 key={index}
                                 className="flex gap-2.5 items-center rounded-[8px] px-2 py-1.5 bg-white bg-opacity-10"
@@ -726,7 +828,9 @@ export default function UpdateSchedulePage() {
                                     className="top-0.5 left-0.5 w-4 h-4"
                                   />
                                   <span className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                                    {speaker.name}
+                                    {organizer.name
+                                      ? organizer.name
+                                      : organizer.name}
                                   </span>
                                 </button>
                               </div>
@@ -746,14 +850,16 @@ export default function UpdateSchedulePage() {
                       </Label>
 
                       <select
-                        onChange={(e) =>
+                        onChange={(e) => {
                           setSchedule({
                             ...schedule,
-                            event_type: [e.target.value],
-                          })
-                        }
-                        defaultValue={eventType}
+                            event_type: e.target.value,
+                          });
+                          // setInitialEvent(e.target.value)
+                          console.log(schedule.event_type);
+                        }}
                         value={schedule.event_type}
+                        // value={schedule.event_type}
                         title="category"
                         className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
                       >
@@ -777,14 +883,10 @@ export default function UpdateSchedulePage() {
                         onChange={(e) =>
                           setSchedule({
                             ...schedule,
-                            experience_level: [e.target.value],
+                            experience_level: e.target.value,
                           })
                         }
-                        value={
-                          schedule.experience_level
-                            ? schedule.experience_level[0]
-                            : ""
-                        }
+                        value={schedule.experience_level}
                         title="category"
                         className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
                       >
@@ -798,77 +900,87 @@ export default function UpdateSchedulePage() {
                         })}
                       </select>
                     </div>
-                    {/* <div className="flex flex-col items-start gap-6 self-stretch">
-                    <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                      <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                        Add Tags
-                      </Label>
-                      <div className="flex w-full text-white gap-5">
-                        <Autocomplete
-                          {...defaultProps}
-                          id="controlled-demo"
-                          sx={{ color: "white", width: "100%" }}
-                          value={tagItem}
-                          onChange={(event: any, newValue) => {
-                            if (newValue) {
-                              setTagItem({ name: newValue.name });
-                            }
-                          }}
-                          onInputChange={(event, newInputValue) => {
-                            setTagItem({ name: newInputValue });
-                          }}
-                          renderInput={(params) => (
-                            <TextField
-                              {...params}
-                              label="tags"
-                              variant="standard"
-                            />
-                          )}
-                        />
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setSchedule({
-                              ...schedule,
-                              tags: [
-                                ...(schedule.tags as string[]),
-                                tagItem.name,
-                              ],
-                            });
-                            setTagItem({ name: "" });
-                          }}
-                          className="flex gap-2.5 text-lg font-normal leading-[1.2] text-white items-center rounded-[8px] px-2 py-1 bg-white bg-opacity-10"
-                        >
-                          +
-                        </button>
-                      </div>
-                      <div className="flex gap-2.5">
-                        {schedule.tags?.map((tag, index) => {
-                          const id = uuidv4();
-                          return (
-                            <div
-                              key={id}
-                              className="flex gap-2.5 items-center rounded-[8px] px-2 py-1.5 bg-white bg-opacity-10"
-                            >
-                              <button
-                                type="button"
-                                className="flex gap-2.5 items-center"
+                    <div className="flex flex-col items-start gap-6 self-stretch">
+                      <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
+                        <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
+                          Add Tags
+                        </Label>
+                        <div className="flex w-full text-white gap-5">
+                          <Autocomplete
+                            {...defaultProps}
+                            id="controlled-demo"
+                            sx={{ color: "white", width: "100%" }}
+                            value={tagItem}
+                            onChange={(event: any, newValue) => {
+                              if (newValue) {
+                                setTagItem({ name: newValue.name });
+                              }
+                            }}
+                            onInputChange={(event, newInputValue) => {
+                              setTagItem({ name: newInputValue });
+                            }}
+                            renderInput={(params) => (
+                              <TextField
+                                sx={{
+                                  color: "white",
+                                  input: {
+                                    color: "white",
+                                  },
+                                  label: {
+                                    color: "white",
+                                  },
+                                }}
+                                {...params}
+                                label="tags"
+                                variant="standard"
+                              />
+                            )}
+                          />
+                          <button
+                            type="button"
+                            onClick={() => {
+                              if (tagItem.name === "") return;
+                              setSchedule({
+                                ...schedule,
+                                tags: [
+                                  ...(schedule.tags as string[]),
+                                  tagItem.name,
+                                ],
+                              });
+                              setTagItem({ name: "" });
+                            }}
+                            className="flex gap-2.5 text-lg font-normal leading-[1.2] text-white items-center rounded-[8px] px-2 py-1 bg-white bg-opacity-10"
+                          >
+                            +
+                          </button>
+                        </div>
+                        <div className="flex gap-2.5">
+                          {schedule.tags?.map((tag, index) => {
+                            const id = uuidv4();
+                            return (
+                              <div
+                                key={id}
+                                className="flex gap-2.5 items-center rounded-[8px] px-2 py-1.5 bg-white bg-opacity-10"
                               >
-                                <GoXCircle
-                                  onClick={() => handleRemoveTag(index)}
-                                  className="top-0.5 left-0.5 w-4 h-4"
-                                />
-                                <span className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                                  {tag}
-                                </span>
-                              </button>
-                            </div>
-                          );
-                        })}
+                                <button
+                                  type="button"
+                                  className="flex gap-2.5 items-center"
+                                >
+                                  <GoXCircle
+                                    onClick={() => handleRemoveTag(index)}
+                                    className="top-0.5 left-0.5 w-4 h-4"
+                                  />
+                                  <span className="text-lg font-semibold leading-[1.2] text-white self-stretch">
+                                    {tag}
+                                  </span>
+                                </button>
+                              </div>
+                            );
+                          })}
+                        </div>
                       </div>
+                      <line />
                     </div>
-                    <line />
-                  </div> */}
                   </div>
                   <div className="w-full">
                     <span className="text-lg opacity-70 self-stretch">
@@ -893,6 +1005,7 @@ export default function UpdateSchedulePage() {
                             type="number"
                             className="bg-gray-600 w-full outline-none px-4 rounded-md py-2"
                             placeholder={"50"}
+                            value={schedule.rsvp_amount}
                             onChange={(e) =>
                               setSchedule({
                                 ...schedule,

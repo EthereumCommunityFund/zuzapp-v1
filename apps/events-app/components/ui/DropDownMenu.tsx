@@ -4,20 +4,14 @@ import { Listbox } from '@headlessui/react'
 import { TbChevronDown } from 'react-icons/tb'
 import { DropDownMenuItemType } from '@/types'
 import { IconType } from 'react-icons'
-import { LucideIcon } from 'lucide-react'
 
-const people = [
-  { id: 1, name: 'Durward Reynolds' },
-  { id: 2, name: 'Kenton Towne' },
-  { id: 3, name: 'Therese Wunsch' },
-  { id: 4, name: 'Benedict Kessler' },
-  { id: 5, name: 'Katelyn Rohan' },
-]
+
+
 
 type DropDownMenu = {
   data: DropDownMenuItemType[];
   header: string;
-  headerIcon?: IconType;
+  headerIcon?: any;
 }
 
 export const List = (props: DropDownMenu) => {
@@ -29,15 +23,17 @@ export const List = (props: DropDownMenu) => {
 
   return (
     <>
-      <Listbox as={"div"} className={"w-56 relative"} value={selectedPeople} onChange={setSelectedPeople} multiple>
+      <Listbox as={"div"} className={"w-72 relative"} value={selectedPeople} onChange={setSelectedPeople} multiple>
         {/* <Listbox.Button>
           {selectedPeople.map((person) => person.name).join(', ')}
         </Listbox.Button> */}
-        <Listbox.Button className="relative w-full inline-flex justify-between items-center cursor-pointer rounded-2xl bg-slate-600 py-2 px-2 shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
-          {/* <HeaderIcon /> */}
-          Select Categories
+        <Listbox.Button className="relative w-full inline-flex justify-between item-center cursor-pointer rounded-2xl bg-slate-600 py-2 px-2 shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
+          <div className='flex gap-2 items-center font-semibold pl-2'>
+            {HeaderIcon && <HeaderIcon />}
+            {header}
+          </div>
           <TbChevronDown
-            className="h-5 w-5 text-gray-400"
+            className="h-5 w-5 text-gray-40 font-extrabold"
             aria-hidden="true"
           />
 
@@ -51,7 +47,7 @@ export const List = (props: DropDownMenu) => {
           leaveFrom="transform opacity-100 scale-100"
           leaveTo="transform opacity-0 scale-95"
         >
-          <Listbox.Options className={"w-56 absolute right-0 z-10 mt-2 pb-2 bg-slate-500 origin-top-right rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"}>
+          <Listbox.Options className={"absolute right-0 z-10 mt-2 w-full pb-2 bg-componentPrimary origin-top-right rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"}>
             {data.map((item, idx) => (
               <Listbox.Option key={idx} value={item} className={"block pt-2 px-2 text-sm"}>
                 {({ selected }) => (

@@ -3,7 +3,7 @@ import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
 import withSession from '../../middlewares/withSession';
 import { Database } from '@/database.types';
 import { logToFile } from '@/utils/logger';
-import { SpeakerType } from '@/types';
+import { OrganizerType } from '@/types';
 import { validateScheduleUpdate, validateUUID } from '@/validators';
 import { formatTimestamp } from '@/utils';
 import { array } from 'joi';
@@ -46,38 +46,43 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     event_space_id,
     track_id,
     tags,
-    speakers,
+    organizers,
   } = validatedData;
 
-  console.log(validatedData, 'validated data');
+  let validatedFields: any = {
+    name,
+    format,
+    description,
+    all_day,
+    schedule_frequency,
+    images,
+    video_call_link,
+    live_stream_url,
+    location_id,
+    event_type,
+    experience_level,
+    rsvp_amount,
+    limit_rsvp,
+    event_space_id,
+    track_id,
+  };
 
-  let start_time = formatTimestamp(validatedData.start_time as Date) as unknown as Date;
-  let end_time = formatTimestamp(validatedData.end_time as Date)as unknown as Date;
-  let date = formatTimestamp(validatedData.date as Date)as unknown as Date;
+  let start_time = formatTimestamp(validatedData.start_time as Date)
+  let end_time = formatTimestamp(validatedData.end_time as Date)
+  let date = formatTimestamp(validatedData.date as Date)
+
+  let insertData: any = { start_time, end_time, date };
+
+  for (let key in validatedFields) {
+    if (validatedFields[key] !== undefined) {
+      insertData[key] = validatedFields[key];
+    }
+  }
 
   // Update the schedule in the database
   const schedule_update_result = await supabase
     .from('schedule')
-    .update({
-      name,
-      format,
-      description,
-      date,
-      start_time,
-      end_time,
-      all_day,
-      schedule_frequency,
-      images,
-      video_call_link,
-      live_stream_url,
-      location_id,
-      event_type,
-      experience_level,
-      rsvp_amount,
-      limit_rsvp,
-      event_space_id,
-      track_id,
-    })
+    .update(insertData)
     .eq('id', id)
     .single();
 
@@ -88,11 +93,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   // Handling tags differentially
   let scheduleId = id;
-  const currentTags = await supabase.from('scheduletags').select('id').eq('schedule_id', scheduleId);
-  let currentTagIds: string[] = [];
+  // Delete existing tags for the schedule from the 'scheduletags' table
+  const deleteExistingTagsResult = await supabase
+    .from('scheduletags')
+    .delete()
+    .eq('schedule_id', scheduleId);
 
-  if (currentTags.data) {
-    currentTagIds = currentTags.data.map((tag) => tag.id);
+  if (deleteExistingTagsResult.error) {
+    throw new Error(deleteExistingTagsResult.error.message || 'Failed to delete existing tags');
   }
 
   let tagPromises: Promise<void>[] = [];
@@ -111,64 +119,51 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         tagId = existing_tag.data.id;
       }
 
-      if (!currentTagIds.includes(tagId)) {
-        await supabase.from('scheduletags').insert({
-          schedule_id: scheduleId,
-          tag_id: tagId,
-        });
-      }
+      await supabase.from('scheduletags').insert({
+        schedule_id: scheduleId,
+        tag_id: tagId,
+      });
+
     });
   }
 
-  // Bug fix Remove tags that are no longer associated
-  console.log('current tags', currentTags);
-  if (tags && tags?.length > 0) {
-    let _tags = tags as String[];
-    const tagsToRemove = currentTagIds.filter((tagId) => !_tags.includes(tagId));
-    await supabase.from('scheduletags').delete().in('tag_id', tagsToRemove);
+
+  const deleteExistingSpeakerRolesResult = await supabase
+    .from('schedulespeakerrole')
+    .delete()
+    .eq('schedule_id', scheduleId);
+
+  if (deleteExistingSpeakerRolesResult.error) {
+    throw new Error(deleteExistingSpeakerRolesResult.error.message || 'Failed to delete existing speaker roles');
   }
 
-  // Handling speakers differentially
-  const currentSpeakers = await supabase.from('schedulespeakerrole').select('speaker_id').eq('schedule_id', scheduleId);
-  let currentSpeakerIds: string[] = [];
-  if (currentSpeakers.data) {
-    currentSpeakerIds = currentSpeakers.data.map((speaker) => speaker.speaker_id);
-  }
 
   let speakerPromises: Promise<void>[] = [];
-  if (speakers) {
-    speakerPromises = speakers.map(async (speaker: SpeakerType) => {
-      const { speaker_name, role } = speaker;
-      let existingSpeaker = await supabase.from('speaker').select('id').eq('name', speaker_name.toLowerCase().trim()).single();
+  if (organizers) {
+    speakerPromises = organizers.map(async (organizer: OrganizerType) => {
+      const { name, role } = organizer;
+      console.log(name, organizer)
+      let existingOrganizer = await supabase.from('speaker').select('id').eq('name', name.trim()).single();
+
+      console.log(existingOrganizer, "existing speaker")
 
       let speakerId;
-      if (!existingSpeaker.data) {
-        const newSpeaker = await supabase.from('speaker').insert({ name: speaker_name }).select('id').single();
-        if (newSpeaker.error || !newSpeaker.data) {
-          throw new Error(newSpeaker.error?.message || 'Failed to insert new speaker');
+      if (!existingOrganizer.data) {
+        const newOrganizer = await supabase.from('speaker').insert({ name: name }).select('id').single();
+        if (newOrganizer.error || !newOrganizer.data) {
+          throw new Error(newOrganizer.error?.message || 'Failed to insert new speaker');
         }
-        speakerId = newSpeaker.data.id;
+        speakerId = newOrganizer.data.id;
       } else {
-        speakerId = existingSpeaker.data.id;
+        speakerId = existingOrganizer.data.id;
       }
 
-      if (!currentSpeakerIds.includes(speakerId)) {
-        await supabase.from('schedulespeakerrole').insert({
-          schedule_id: scheduleId,
-          speaker_id: speakerId,
-          role,
-        });
-      }
 
-      // Bugfix Remove speakers that are no longer associated
-
-      if (speakers) {
-        let _speakers = speakers as SpeakerType[];
-        console.log(speakers, 'speakers o');
-        const speakersToRemove = currentSpeakerIds.filter((speakerId) => !_speakers.map((s) => s.speaker_name).includes(speakerId));
-        console.log(speakersToRemove);
-        await supabase.from('schedulespeakerrole').delete().in('speaker_id', speakersToRemove);
-      }
+      await supabase.from('schedulespeakerrole').insert({
+        schedule_id: scheduleId,
+        speaker_id: speakerId,
+        role,
+      });
     });
   }
 

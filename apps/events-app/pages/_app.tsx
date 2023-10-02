@@ -8,6 +8,9 @@ import '../styles/quill.css';
 import { DashboardProvider } from '@/components/ui-providers/DashboardLayout';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { EventSpaceProvider } from '@/context/EventSpaceContext';
+import { EventSpacesProvider } from '@/context/EventSpacesContext';
+import { Toaster } from '@/components/ui/toaster';
+
 
 /**
  * This component wraps all pages in this Next.js application.
@@ -21,13 +24,14 @@ const App = ({ Component, pageProps }: { Component: any; pageProps: any }) => {
       <SessionContextProvider supabaseClient={supabaseClient} initialSession={pageProps.initialSession}>
         <GlobalProvider user={pageProps.user}>
           <UserPassportContextProvider>
-            <EventSpaceProvider>
-              <DashboardProvider>
-                <QueryClientProvider client={queryClient}>
+            <QueryClientProvider client={queryClient}>
+              <EventSpaceProvider>
+                <DashboardProvider>
                   <Component {...pageProps} />
-                </QueryClientProvider>
-              </DashboardProvider>
-            </EventSpaceProvider>
+                  <Toaster />
+                </DashboardProvider>
+              </EventSpaceProvider>
+            </QueryClientProvider>
           </UserPassportContextProvider>
         </GlobalProvider>
       </SessionContextProvider>

@@ -5,6 +5,7 @@ import { logToFile } from "../../../../utils/logger";
 import { validateUUID } from "../../../../validators";
 import withSession from "../../middlewares/withSession";
 import { QueryWithID } from "@/types";
+import withAuthorization from "../../middlewares/withAuthorization";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const supabase = createPagesServerClient<Database>({ req, res });
@@ -52,4 +53,5 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(status).send({ message: "Event space location deleted" });
 };
 
-export default withSession(handler);
+
+export default withSession(withAuthorization("creator", handler));

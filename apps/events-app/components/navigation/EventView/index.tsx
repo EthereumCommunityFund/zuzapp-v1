@@ -61,7 +61,7 @@ export default function EventViewNavigation() {
                 {routes.map((route, index) => (route.name &&
                   <li
                     key={index}
-                    className={`flex items-center font-bold space-x-2 py-1 px-3 opacity-70 rounded-xl hover:bg-white/20  duration-200 ${router.pathname === route.path && "bg-white/20"
+                    className={`flex items-center font-bold space-x-2 py-1 px-3 opacity-70 rounded-xl hover:bg-white/20  duration-200 ${router.pathname.includes(route.path) && "bg-white/20"
                       }`}
                   >
                     {route.icon && <route.icon size={30} />}

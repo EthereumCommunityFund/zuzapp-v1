@@ -91,7 +91,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             ],
             variant === 'quiet' && [
               'bg-white/5 text-white',
-              'hover:bg-opacity-10',
+              'hover:bg-white/10',
             ],
             variant === 'blue' && [
               'bg-btnBlue/20',

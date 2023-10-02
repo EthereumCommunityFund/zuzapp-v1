@@ -26,16 +26,16 @@ export const fetchScheduleByID = async (id: string) => {
 }
 
 // Creates a new schedule
-export const createSchedule = async (data: ScheduleCreateRequestBody) => {
-    return await axiosInstance.post('/api/schedule/create', data);
+export const createSchedule = async (data: ScheduleCreateRequestBody, event_space_id: string) => {
+    return await axiosInstance.post(`/api/schedule/create/?event_space_id=${event_space_id}`, data);
 }
 
 // Updates a schedule
-export const updateSchedule = async (id: string, data: ScheduleUpdateRequestBody) => {
-    return await axiosInstance.put(`/api/schedule/${id}/update`, data);
+export const updateSchedule = async (id: string, data: ScheduleUpdateRequestBody, event_space_id: string) => {
+    return await axiosInstance.put(`/api/schedule/${id}/update/?event_space_id=${event_space_id}`, data);
 }
 
-// // Deletes a schedule
-// export const deleteSchedule = async (id: string) => {
-//     return await axiosInstance.delete(`/api/schedule/${id}/delete`);
-// }
+// Deletes a schedule
+export const deleteSchedule = async (id: string, event_space_id: string) => {
+    return await axiosInstance.delete(`/api/schedule/${id}/delete/?event_space_id=${event_space_id}`);
+}

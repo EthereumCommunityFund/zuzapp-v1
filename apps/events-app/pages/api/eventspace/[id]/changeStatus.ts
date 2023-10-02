@@ -5,6 +5,7 @@ import { validateEventSpaceStatusUpdate, validateUUID } from '../../../../valida
 import { logToFile } from '../../../../utils/logger';
 import { Database } from '@/database.types';
 import { QueryWithID } from '@/types';
+import withAuthorization from '../../middlewares/withAuthorization';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   // validate request body
@@ -57,4 +58,4 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   });
 };
 
-export default withSession(handler);
+export default withSession(withAuthorization("collaborator", handler));

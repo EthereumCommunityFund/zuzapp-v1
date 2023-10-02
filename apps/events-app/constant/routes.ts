@@ -33,9 +33,13 @@ export const eventRoutes: Routes[] = [
     title: 'Add a Track ',
   },
   {
+    path: '/dashboard/events/space/tracks/update',
+    title: 'Update a Track ',
+  },
+  {
     name: 'All Schedules',
     tabIndex: SubHeaderTabIndex.AllSchedules,
-    path: '/dashboard/schedules',
+    path: '/dashboard/events/space/schdeules',
     title: 'Schedules Dashboard',
   },
   {
@@ -47,8 +51,12 @@ export const eventRoutes: Routes[] = [
     title: 'Add a Schedule',
   },
   {
-    path: '/dashboard/events/space/tracks/schedules/updateschedule',
+    path: '/dashboard/events/space/tracks/schedules/updateSchedule',
     title: 'Update a Schedule',
+  },
+  {
+    path: '/dashboard/events/space/schedules',
+    title: 'Schedules',
   },
 ];
 
@@ -78,7 +86,7 @@ export const navBarRoutes: Routes[] = [
 export const eventViewRoutes: Routes[] = [
   {
     name: 'About',
-    path: '/dashboard/eventview',
+    path: '/dashboard/eventview/about',
     icon: HiCalendar,
     title: 'Event View About',
   },
@@ -101,5 +109,9 @@ export const eventViewRoutes: Routes[] = [
   {
     path: '/dashboard/eventview/allschedules/schedule',
     title: 'Track View',
+  },
+  {
+    path: '/dashboard/eventview/tracks/track/schedule',
+    title: 'Schedule View',
   },
 ];

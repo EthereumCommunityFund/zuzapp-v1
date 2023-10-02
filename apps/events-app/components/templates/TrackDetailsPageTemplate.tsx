@@ -5,39 +5,43 @@ import Speaker from "@/components/ui/Speaker";
 import UserFacingTrack from "@/components/ui/UserFacingTrack";
 import Button from "@/components/ui/buttons/Button";
 import { Label } from "@/components/ui/label";
+import { useEventSpace } from "@/context/EventSpaceContext";
+import { TrackUpdateRequestBody } from "@/types";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BiEditAlt, BiPlusCircle } from "react-icons/bi";
 import { HiArrowLeft, HiCalendar, HiCog, HiLocationMarker, HiMicrophone, HiTag, HiUserGroup } from "react-icons/hi";
+import EventViewHeader from "../eventview/EventViewHeader";
 
-export default function OnlineTrackDetailsPageTemplate() {
+interface ITrackDetailsPageTemplate {
+  trackItem: TrackUpdateRequestBody;
+}
+
+export default function OnlineTrackDetailsPageTemplate(props: ITrackDetailsPageTemplate) {
   const router = useRouter();
-  const [currentPage, setCurrentPage] = useState(1);
+  const { trackItem } = props
+  const { eventSpace } = useEventSpace();
 
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
-
-  const handleItemClick = () => {
-    router.push("/dashboard/eventview/tracks/track/schedule");
+  // const handlePageChange = (page: number) => {
+  //   setCurrentPage(page);
+  // };
+  const handleItemClick = (scheduleName: string, trackId: string | undefined) => {
+    console.log("TrackDetailsPage Track Id", trackId);
+    router.push({
+      pathname: "/dashboard/eventview/tracks/track/schedule",
+      query: { scheduleName, trackId }
+    });
   }
 
   const handleBackToTracksClick = () => {
     router.push("/dashboard/eventview/tracks");
   }
+
+
   return (
     <div className="flex gap-4">
       <div className="flex flex-col w-[1000px]">
-        <div className="flex px-2.5 rounded-full gap-[10px] h-[60px] justify-between items-center">
-          <img src="/images/1.png" width={100} alt="event" />
-          <div className="flex flex-col gap-2 w-3/4">
-            <h2 className="font-bold text-3xl">ZuConnect</h2>
-            <span className="font-semibold opacity-70">A Popup Village of Innovation in the Heart of Istanbul</span>
-          </div>
-          <Button className="rounded-[20px] text-base w-[150px] h-10 items-center">
-            <span className="mx-auto" >Apply to Event</span>
-          </Button>
-        </div>
+        <EventViewHeader imgPath={eventSpace?.image_url as string} name={eventSpace?.name as string} tagline={eventSpace?.tagline as string} />
         <div className="p-5 gap-[30px] max-w-[1000px]">
           <div className="flex flex-col gap-[10px] p-2.5 bg-componentPrimary rounded-xl">
             <div className="flex justify-between">  {/* Tracks and Edit Button */}
@@ -45,10 +49,10 @@ export default function OnlineTrackDetailsPageTemplate() {
               <Button variant="quiet" className="rounded-xl" leftIcon={BiEditAlt}>Edit</Button>
             </div>
             <div className="flex flex-col gap-[10px] p-5 "> {/* Track Info */}
-              <img src="/images/1.png" alt="track image" className=" h-[496px] rounded-[10px]" />
+              <img src={trackItem.image as string} alt="track image" className=" h-[496px] rounded-[10px]" />
               <div className="flex flex-col gap-[10px] p-2.5"> {/* Tracks Name */}
-                <h2 className="font-bold text-2xl">Zk Week</h2>
-                <p className="font-bold opacity-70">Public goods in Web3 refer to digital assets or resources that are openly accessible and available to all users on a blockchain network. They are typically funded by the community and are designed to benefit the entire ...</p>
+                <h2 className="font-bold text-2xl">{trackItem.name}</h2>
+                <p className="font-bold opacity-70">{trackItem.description}</p>
                 <span className="rounded-xl flex px-4 py-1 items-center gap-1 opacity-60 bg-[#FFFFFF10] font-bold justify-start w-[320px] text-lg">
                   <HiCalendar size={25} /> November 29 - November 11
                 </span>
@@ -64,11 +68,11 @@ export default function OnlineTrackDetailsPageTemplate() {
         <div className="flex flex-col gap-2.5 p-5 w-full">
           <div className="flex flex-col gap-[10px] overflow-hidden rounded-[10px]">
             {
-              <>
-                <UserFacingTrack onClick={handleItemClick} />
-                <UserFacingTrack onClick={handleItemClick} />
-                <UserFacingTrack onClick={handleItemClick} />
-              </>
+              eventSpace?.schedules.map((schedule, idx) => (
+                schedule.track_id === trackItem.id && (
+                  <UserFacingTrack key={idx} scheduleData={schedule} onClick={() => handleItemClick(schedule.name, trackItem.id)} />
+                )
+              ))
             }
           </div>
         </div>

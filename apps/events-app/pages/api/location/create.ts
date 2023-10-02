@@ -4,8 +4,9 @@ import withSession from "../middlewares/withSession";
 import { Database } from "@/database.types";
 import { logToFile } from "@/utils/logger";
 import { validateLocationCreation } from "@/validators";  // Ensure this path is correct
+import withAuthorization from "../middlewares/withAuthorization";
 
-const createLocationHandler = async (req: NextApiRequest, res: NextApiResponse) => {
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const supabase = createPagesServerClient<Database>({ req, res });
 
     console.log(req.body)
@@ -43,4 +44,5 @@ const createLocationHandler = async (req: NextApiRequest, res: NextApiResponse) 
     });
 }
 
-export default withSession(createLocationHandler);
+
+export default withSession(withAuthorization("collaborator", handler));
