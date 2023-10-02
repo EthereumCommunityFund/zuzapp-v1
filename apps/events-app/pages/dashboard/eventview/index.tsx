@@ -35,8 +35,14 @@ export default function EventViewPage() {
 
   return (
     <>
-      {eventSpace?.format === "in-person" && <InPersonEventViewPageTemplate eventSpace={eventSpace} />}
-      {eventSpace?.format === "online" && <OnlineEventViewPageTemplate eventSpace={eventSpace} />}
+      {
+        // isAuthenticated && (
+        <>
+          {eventSpace?.format === "in-person" && <InPersonEventViewPageTemplate eventSpace={eventSpace} />}
+          {eventSpace?.format === "online" && <OnlineEventViewPageTemplate eventSpace={eventSpace} />}
+        </>
+        // )
+      }
     </>
   )
 }
