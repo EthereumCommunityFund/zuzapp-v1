@@ -8,7 +8,6 @@ import '../styles/quill.css';
 import { DashboardProvider } from '@/components/ui-providers/DashboardLayout';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { EventSpaceProvider } from '@/context/EventSpaceContext';
-import { EventSpacesProvider } from '@/context/EventSpacesContext';
 
 
 /**
@@ -23,15 +22,13 @@ const App = ({ Component, pageProps }: { Component: any; pageProps: any }) => {
       <SessionContextProvider supabaseClient={supabaseClient} initialSession={pageProps.initialSession}>
         <GlobalProvider user={pageProps.user}>
           <UserPassportContextProvider>
-            <EventSpacesProvider>
-              <EventSpaceProvider>
-                <DashboardProvider>
-                  <QueryClientProvider client={queryClient}>
-                    <Component {...pageProps} />
-                  </QueryClientProvider>
-                </DashboardProvider>
-              </EventSpaceProvider>
-            </EventSpacesProvider>
+            <EventSpaceProvider>
+              <DashboardProvider>
+                <QueryClientProvider client={queryClient}>
+                  <Component {...pageProps} />
+                </QueryClientProvider>
+              </DashboardProvider>
+            </EventSpaceProvider>
           </UserPassportContextProvider>
         </GlobalProvider>
       </SessionContextProvider>

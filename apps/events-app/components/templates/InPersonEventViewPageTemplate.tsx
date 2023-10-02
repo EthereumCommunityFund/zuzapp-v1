@@ -12,12 +12,12 @@ import Carousel from "../ui/Carousel";
 import ResponsiveCarousel from "../ui/Carousel";
 import { LockClosed, LocationMarker, UserGroup } from "../ui/icons";
 import { EventSpaceDetailsType, EventSpaceUpdateRequestBody } from "@/types";
-import { useEventSpace } from "@/context/EventSpaceContext";
+import { useEventSpace, useEventSpaces } from "@/context/EventSpaceContext";
 import { useEffect, useState } from "react";
 import RenderHTMLString from "../ui/RenderHTMLString";
 import { useQuery } from "react-query";
 import { fetchUserEventSpaces } from "@/services/eventSpaceService";
-import { useEventSpaces } from "@/context/EventSpacesContext";
+
 
 
 interface IInPersonEventViewPageTemplateProps {
@@ -55,22 +55,7 @@ export default function InPersonEventViewPageTemplate({ eventSpace }: IInPersonE
 	const [socialLinks, setSocialLinks] = useState<IEventLink[] | undefined>();
 	const [extraLinks, setExtraLinks] = useState<IEventLink[] | undefined>();
 	const { setEventSpace } = useEventSpace();
-	const { setEventSpaceList } = useEventSpaces();
 
-	const {
-		data: eventSpaces,
-		isLoading,
-		isError,
-	} = useQuery<EventSpaceDetailsType[], Error>(
-		['eventSpaces'], // Query key
-		() => fetchUserEventSpaces(),
-		{
-			onSuccess: (data) => {
-				console.log('Event Spaces:', data);
-				setEventSpaceList(data);
-			},
-		}
-	);
 
 	useEffect(() => {
 		console.log("InPersonEventSpace", eventSpace);
@@ -81,9 +66,7 @@ export default function InPersonEventViewPageTemplate({ eventSpace }: IInPersonE
 			setExtraLinks(JSON.parse(extra_links));
 	}, [social_links, extra_links, eventSpace])
 
-	if (isLoading) {
-		return <p>Loading...</p>;
-	}
+
 
 	return (
 		<>

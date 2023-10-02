@@ -1,10 +1,10 @@
 import InPersonEventViewPageTemplate from "@/components/templates/InPersonEventViewPageTemplate";
-import EventViewPageTemplate from "@/components/templates/InPersonEventViewPageTemplate";
+import EventViewPageTemplate from "@/components/templates/EventViewPageTemplate";
 import OnlineEventViewPageTemplate from "@/components/templates/OnlineEventViewPageTemplate";
-import { useEventSpaces } from "@/context/EventSpacesContext";
+import { useEventSpace } from "@/context/EventSpaceContext";
 import { useGlobalContext } from "@/context/GlobalContext";
-import { fetchUserEventSpaces } from "@/services/eventSpaceService";
-import { EventSpaceDetailsType, EventTypes } from "@/types";
+import { fetchEventSpace } from "@/controllers";
+
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/router";
 import { useQuery } from "react-query";
@@ -13,22 +13,27 @@ export default function EventViewPage() {
   // Make request to get all event spaces
   const router = useRouter();
   const { eventId } = router.query;
-  const { eventSpaceList, setEventSpaceList } = useEventSpaces();
-  const eventSpace = eventSpaceList.find((eventSpace) => eventSpace.id === eventId);
-  const { isAuthenticated, user } = useGlobalContext();
+  const { setEventSpace } = useEventSpace();
 
+
+
+  const {
+    data: selectedEventSpace,
+  } = useQuery<any, Error>(
+    ['eventSpace'], // Query key
+    () => fetchEventSpace(eventId as string),
+    {
+      onSuccess: (data) => {
+        console.log('selectedEventSpace Event Spaces:', data);
+        setEventSpace(selectedEventSpace);
+      },
+    }
+  );
 
 
   return (
     <>
-      {
-        // isAuthenticated && (
-        <>
-          {eventSpace?.format === "in-person" && <InPersonEventViewPageTemplate eventSpace={eventSpace} />}
-          {eventSpace?.format === "online" && <OnlineEventViewPageTemplate eventSpace={eventSpace} />}
-        </>
-        // )
-      }
+      <EventViewPageTemplate />
     </>
   )
 }

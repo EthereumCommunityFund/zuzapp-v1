@@ -14,7 +14,7 @@ import { Loader } from '../ui/Loader';
 import { arrayFromLength } from '@/lib/helper';
 import { EventTemplateSkeleton } from '../commons/EventTemplateSkeleton';
 import { HomePageTemplateSkeleton } from '../commons/HomePageTemplateSkeleton';
-import { useEventSpaces } from '@/context/EventSpacesContext';
+import { useEventSpace, useEventSpaces } from '@/context/EventSpaceContext';
 
 export const sampleEvents = [
   {
@@ -36,7 +36,7 @@ export default function HomePageTemplate() {
   const { isAuthenticated, user } = useGlobalContext();
   const router = useRouter();
 
-  const { eventSpaceList, setEventSpaceList } = useEventSpaces();
+  const { eventSpaceList, setEventSpaceList } = useEventSpace();
 
   const handleButtonClick = async (eventId: string) => {
     router.push({
