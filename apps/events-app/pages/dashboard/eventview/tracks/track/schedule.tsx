@@ -1,9 +1,7 @@
 import EventViewHeader from "@/components/eventview/EventViewHeader";
 import RenderHTMLString from "@/components/ui/RenderHTMLString";
 import Speaker from "@/components/ui/Speaker";
-import UserFacingTrack from "@/components/ui/UserFacingTrack";
 import Button from "@/components/ui/buttons/Button";
-import { UserGroup } from "@/components/ui/icons";
 import { Label } from "@/components/ui/label";
 import EventDataDate from "@/components/ui/labels/event-data-date";
 import EventDataTime from "@/components/ui/labels/event-data-time";
@@ -31,15 +29,11 @@ export default function EventViewTrackDetailsPage() {
   const endTime = currentSchedule && new Date(currentSchedule.end_time).toLocaleTimeString('en-US', { hour: "2-digit", minute: "2-digit" });
   const startDate = currentSchedule && new Date(currentSchedule.start_time).toLocaleDateString('en-US', { month: 'long', day: '2-digit' });
   const endDate = currentSchedule && new Date(currentSchedule.end_time).toLocaleDateString('en-US', { month: 'long', day: '2-digit' });
-
-
-
   const { setEventSpace } = useEventSpace();
 
   useEffect(() => {
     console.log("InPersonEventSpace", eventSpace);
     setEventSpace(eventSpace);
-
   }, [eventSpace])
 
   return (
