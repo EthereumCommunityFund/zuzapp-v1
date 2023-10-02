@@ -6,8 +6,6 @@ import { validate_invite_create } from "@/validators/invite.validators";
 import { logToFile } from "@/utils/logger";
 import { Database } from "@/database.types";
 import withAuthorization from "../middlewares/withAuthorization";
-import mailClient from "@/utils/mailClient";
-import { resolve } from "path";
 import MailClient from "@/utils/mailClient";
 
 const processInvite = async (message: any) => {
@@ -46,17 +44,16 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         .from('eventspaceinvites')
         .select('*')
         .eq('event_space_id', event_space_id)
-        .eq('invitee_email', invitee_email)
+        .eq('invitee_email', invitee_email).in('status', ['pending', 'accepted'])
 
     if (existingInviteError) {
         logToFile("server error", existingInviteError.message, existingInviteError.code, req.body.user.email);
         return res.status(500).send("Internal server error");
     }
 
-
+    // console.log(existingInvite, "existing invite")
     if (existingInvite.length > 0) {
         const status = existingInvite[0].status;
-
         if (status === 'pending') {
             const inviteLink = `http://${req.headers.host}test/accept-invite?invite_id=${existingInvite[0].id}`;
             const message = {
@@ -76,7 +73,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     // ToDo check if invite has expired
 
 
-
     const result = await supabase.from('eventspaceinvites').insert({ event_space_id, invitee_email, status: "pending", inviter_id: req.body.user.id }).select("*").single()
     if (result.error) {
         logToFile("server error", result.error.message, result.error.code, req.body.user.email)
@@ -84,7 +80,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     const inviteLink = `http://${req.headers.host}/dashboard/events/accept-invite?invite_id=${result.data.id}`;
-
     const message = {
         from: "victor@ecf.network",
         to: "onyejivic@gmail.com",
