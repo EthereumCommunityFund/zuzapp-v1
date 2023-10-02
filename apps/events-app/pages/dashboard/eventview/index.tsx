@@ -2,7 +2,10 @@ import InPersonEventViewPageTemplate from "@/components/templates/InPersonEventV
 import EventViewPageTemplate from "@/components/templates/InPersonEventViewPageTemplate";
 import OnlineEventViewPageTemplate from "@/components/templates/OnlineEventViewPageTemplate";
 import { useEventSpaces } from "@/context/EventSpacesContext";
+<<<<<<< HEAD
 import { useGlobalContext } from "@/context/GlobalContext";
+=======
+>>>>>>> 507f92f (Add live data to eventview avout page)
 import { fetchUserEventSpaces } from "@/services/eventSpaceService";
 import { EventSpaceDetailsType, EventTypes } from "@/types";
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
@@ -15,6 +18,7 @@ export default function EventViewPage() {
   const { eventId } = router.query;
   const { eventSpaceList } = useEventSpaces();
   const eventSpace = eventSpaceList.find((eventSpace) => eventSpace.id === eventId);
+<<<<<<< HEAD
   const { isAuthenticated, user } = useGlobalContext();
 
   return (
@@ -27,6 +31,14 @@ export default function EventViewPage() {
           </>
         )
       }
+=======
+
+
+  return (
+    <>
+      {eventSpace?.format === "in-person" && <InPersonEventViewPageTemplate eventSpace={eventSpace} />}
+      {eventSpace?.format === "online" && <OnlineEventViewPageTemplate />}
+>>>>>>> 507f92f (Add live data to eventview avout page)
     </>
   )
 }
