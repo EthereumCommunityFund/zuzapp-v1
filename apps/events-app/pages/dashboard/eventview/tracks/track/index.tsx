@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 import TrackDetailsPageTemplate from "@/components/templates/TrackDetailsPageTemplate";
-=======
-import OnlineTrackDetailsPageTemplate from "@/components/templates/OnlineTrackDetailsPageTemplate";
->>>>>>> d44dd1a (Pass live data to trackItem)
 import TrackItemCard from "@/components/tracks/TrackItemCard";
 import MyDropdown from "@/components/ui/DropDown";
 import Pagination from "@/components/ui/Pagination";

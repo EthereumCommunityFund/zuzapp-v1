@@ -55,6 +55,15 @@ export default function OnlineEventViewPageTemplate({ eventSpace }: IOnlineEvent
       setExtraLinks(JSON.parse(extra_links));
   }, [social_links, extra_links, eventSpace])
 
+  useEffect(() => {
+    console.log("InPersonEventSpace", eventSpace);
+    setEventSpace(eventSpace);
+    if (social_links)
+      setSocialLinks(JSON.parse(social_links));
+    if (extra_links)
+      setExtraLinks(JSON.parse(extra_links));
+  }, [social_links, extra_links, eventSpace])
+
   return (
     <>
       <div className="flex gap-10">

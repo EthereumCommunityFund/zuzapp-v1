@@ -13,23 +13,12 @@ import { BiEditAlt, BiPlusCircle } from "react-icons/bi";
 import { HiArrowLeft, HiCalendar, HiCog, HiLocationMarker, HiMicrophone, HiTag, HiUserGroup } from "react-icons/hi";
 import EventViewHeader from "../eventview/EventViewHeader";
 
-<<<<<<<< HEAD:apps/events-app/components/templates/TrackDetailsPageTemplate.tsx
 interface ITrackDetailsPageTemplate {
   trackItem: TrackUpdateRequestBody;
 }
 
 export default function OnlineTrackDetailsPageTemplate(props: ITrackDetailsPageTemplate) {
   const router = useRouter();
-  // const [currentPage, setCurrentPage] = useState(1);
-========
-interface IOnlineTrackDetailsPageTemplate {
-  trackItem: TrackUpdateRequestBody;
-}
-
-export default function OnlineTrackDetailsPageTemplate(props: IOnlineTrackDetailsPageTemplate) {
-  const router = useRouter();
-  const [currentPage, setCurrentPage] = useState(1);
->>>>>>>> d44dd1a (Pass live data to trackItem):apps/events-app/components/templates/OnlineTrackDetailsPageTemplate.tsx
   const { trackItem } = props
   const { eventSpace } = useEventSpace();
 
@@ -49,31 +38,21 @@ export default function OnlineTrackDetailsPageTemplate(props: IOnlineTrackDetail
     router.push("/dashboard/eventview/tracks");
   }
 
-  useEffect(() => {
-<<<<<<<< HEAD:apps/events-app/components/templates/TrackDetailsPageTemplate.tsx
-    console.log("eventSpace Schedules", eventSpace?.schedules);
-========
-    console.log("eventSpace", eventSpace);
->>>>>>>> d44dd1a (Pass live data to trackItem):apps/events-app/components/templates/OnlineTrackDetailsPageTemplate.tsx
-  })
 
   return (
     <div className="flex gap-4">
       <div className="flex flex-col w-[1000px]">
-<<<<<<<< HEAD:apps/events-app/components/templates/TrackDetailsPageTemplate.tsx
         <EventViewHeader imgPath={eventSpace?.image_url as string} name={eventSpace?.name as string} tagline={eventSpace?.tagline as string} />
-========
         <div className="flex px-2.5 rounded-full gap-[10px] h-[60px] justify-between items-center">
           <img src="/images/1.png" width={100} alt="event" />
           <div className="flex flex-col gap-2 w-3/4">
-            <h2 className="font-bold text-3xl">ZuConnect</h2>
-            <span className="font-semibold opacity-70">A Popup Village of Innovation in the Heart of Istanbul</span>
+            <h2 className="font-bold text-3xl">{eventSpace?.name}</h2>
+            <span className="font-semibold opacity-70">{eventSpace?.tagline}</span>
           </div>
           <Button variant="primaryGreen" className="rounded-[20px] text-base w-[150px] h-10 items-center">
             <span className="mx-auto" >Apply to Event</span>
           </Button>
         </div>
->>>>>>>> d44dd1a (Pass live data to trackItem):apps/events-app/components/templates/OnlineTrackDetailsPageTemplate.tsx
         <div className="p-5 gap-[30px] max-w-[1000px]">
           <div className="flex flex-col gap-[10px] p-2.5 bg-componentPrimary rounded-xl">
             <div className="flex justify-between">  {/* Tracks and Edit Button */}
@@ -83,11 +62,7 @@ export default function OnlineTrackDetailsPageTemplate(props: IOnlineTrackDetail
             <div className="flex flex-col gap-[10px] p-5 "> {/* Track Info */}
               <img src={trackItem.image as string} alt="track image" className=" h-[496px] rounded-[10px]" />
               <div className="flex flex-col gap-[10px] p-2.5"> {/* Tracks Name */}
-<<<<<<<< HEAD:apps/events-app/components/templates/TrackDetailsPageTemplate.tsx
                 <h2 className="font-bold text-2xl">{trackItem.name}</h2>
-========
-                <h2 className="font-bold text-2xl">Zk Week</h2>
->>>>>>>> d44dd1a (Pass live data to trackItem):apps/events-app/components/templates/OnlineTrackDetailsPageTemplate.tsx
                 <p className="font-bold opacity-70">{trackItem.description}</p>
                 <span className="rounded-xl flex px-4 py-1 items-center gap-1 opacity-60 bg-[#FFFFFF10] font-bold justify-start w-[320px] text-lg">
                   <HiCalendar size={25} /> November 29 - November 11
