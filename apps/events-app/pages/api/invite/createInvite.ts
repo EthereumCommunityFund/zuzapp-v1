@@ -60,7 +60,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 from: process.env.EMAIL_FROM,
                 to: existingInvite[0].invitee_email,
                 subject: "You have been invited to collaborate on Zuzapp",
-                html: `<p>${inviteLink}</p>`,
+                html: `Follow this link to accept the invite <br/> <p>${inviteLink}</p>`,
             };
             await processInvite(message);
             return res.status(200).json({ message: "Invitation re-sent" });
@@ -85,7 +85,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         to: invitee_email,
         subject: "You have been invited to collaborate on Zuzapp",
         text: "",
-        html: `<p>${inviteLink}</p>`,
+        html: `Follow this link to accept the invite <br/> <p>${inviteLink}</p>`,
     };
 
     await processInvite(message);
