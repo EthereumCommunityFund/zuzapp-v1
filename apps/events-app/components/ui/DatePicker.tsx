@@ -15,7 +15,7 @@ function range(start: number, end: number, step: number): number[] {
 const CustomDatePicker: React.FC<DatePickerProps> = ({ selectedDate, handleDateChange, defaultDate }) => {
   const [startDate, setStartDate] = useState<Date | null>(selectedDate);
 
-  const years = range(1990, new Date().getFullYear() + 1, 1);
+  const years = range(2021, new Date().getFullYear() + 1, 1);
 
   const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
@@ -31,7 +31,7 @@ const CustomDatePicker: React.FC<DatePickerProps> = ({ selectedDate, handleDateC
           handleDateChange(date);
         }}
         value={defaultDate}
-        dateFormat="MM-dd-yyyy"
+        dateFormat="dd-MM-yyyy"
         renderCustomHeader={({ date, changeYear, changeMonth, decreaseMonth, increaseMonth }) => (
           <div
             style={{
@@ -41,14 +41,14 @@ const CustomDatePicker: React.FC<DatePickerProps> = ({ selectedDate, handleDateC
             }}
           >
             <button onClick={decreaseMonth}>&lt;</button>
-            <select title='year' value={date.getFullYear()} onChange={(e) => changeYear(Number(e.target.value))}>
+            <select title="year" value={date.getFullYear()} onChange={(e) => changeYear(Number(e.target.value))}>
               {years.map((year) => (
                 <option key={year} value={year}>
                   {year}
                 </option>
               ))}
             </select>
-            <select title='year' value={months[date.getMonth()]} onChange={(e) => changeMonth(months.indexOf(e.target.value))}>
+            <select title="year" value={months[date.getMonth()]} onChange={(e) => changeMonth(months.indexOf(e.target.value))}>
               {months.map((month) => (
                 <option key={month} value={month}>
                   {month}

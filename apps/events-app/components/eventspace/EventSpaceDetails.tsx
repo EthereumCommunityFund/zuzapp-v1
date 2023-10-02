@@ -155,7 +155,7 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace }) => 
     setSelectedEventFormat(e);
     // setEventFormat(selectedEventFormat);
   };
-
+  const today = new Date().toISOString().split('T')[0];
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const additionalPayload = {
       id: eventId as string,
