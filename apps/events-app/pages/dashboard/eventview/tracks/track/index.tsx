@@ -29,10 +29,6 @@ export default function EventViewTrackDetailsPage() {
     router.push("/dashboard/eventview/tracks");
   }
   return (
-<<<<<<< HEAD
     trackItem && <TrackDetailsPageTemplate trackItem={trackItem} />
-=======
-    trackItem && <OnlineTrackDetailsPageTemplate trackItem={trackItem} />
->>>>>>> d44dd1a (Pass live data to trackItem)
   )
 }
