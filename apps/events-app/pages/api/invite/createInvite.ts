@@ -82,7 +82,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const inviteLink = `http://${req.headers.host}/dashboard/events/accept-invite?invite_id=${result.data.id}`;
     const message = {
         from: "victor@ecf.network",
-        to: "onyejivic@gmail.com",
+        to: invitee_email,
         subject: "You have been invited to collaborate on Zuzapp",
         text: "",
         html: `<p>${inviteLink}</p>`,
