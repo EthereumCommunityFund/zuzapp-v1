@@ -55,16 +55,24 @@ export default function InPersonEventViewPageTemplate({ eventSpace }: IInPersonE
 	const formattedEndDate = endDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 	const [socialLinks, setSocialLinks] = useState<IEventLink[] | undefined>();
 	const [extraLinks, setExtraLinks] = useState<IEventLink[] | undefined>();
-	const { setEventSpace } = useEventSpace();
+	const [imgUrls, setImgUrls] = useState<string[]>();
 
 
 	useEffect(() => {
 		console.log("InPersonEventSpace", eventSpace);
-		setEventSpace(eventSpace);
+
 		if (social_links)
 			setSocialLinks(JSON.parse(social_links));
 		if (extra_links)
 			setExtraLinks(JSON.parse(extra_links));
+		if (eventSpace.eventspacelocation) {
+			const URLs: string[] = [];
+			eventSpace.eventspacelocation.forEach((location) => {
+				if (location.image_urls)
+					URLs.push(...location.image_urls);
+			})
+			setImgUrls(URLs);
+		}
 	}, [social_links, extra_links, eventSpace])
 
 
@@ -125,11 +133,8 @@ export default function InPersonEventViewPageTemplate({ eventSpace }: IInPersonE
 							<DialogTrigger asChild>
 								<Button variant="quiet" size="lg" className="rounded-2xl inline-block text-white/70 font-bold hover:text-white">View Location</Button>
 							</DialogTrigger>
-							<DialogContent>
-								<DialogHeader>
-									<DialogTitle>About This Event</DialogTitle>
-									<Carousel />
-								</DialogHeader>
+							<DialogContent className="w-[500px] h-[500px] flex justify-center">
+								{imgUrls && <Carousel imgUrls={imgUrls} />}
 							</DialogContent>
 						</Dialog>
 					</div>
