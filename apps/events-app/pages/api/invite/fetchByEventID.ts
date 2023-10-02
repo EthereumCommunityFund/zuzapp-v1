@@ -21,7 +21,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     let { data, error } = await supabase
         .from('eventspaceinvites')
         .select('*')
-        .eq('event_space_id', event_space_id as string).in('status', ['pending', 'accepted', 'declined'])
+        .eq('event_space_id', event_space_id as number).in('status', ['pending', 'accepted', 'declined'])
 
     if (error) {
         logToFile("server error", error.message, error.code, req.body.user.email);
