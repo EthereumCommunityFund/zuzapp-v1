@@ -39,6 +39,7 @@ export default function HomePageTemplate() {
   const { eventSpaceList, setEventSpaceList } = useEventSpaces();
 
   const handleButtonClick = async (eventId: string) => {
+
     router.push({
       pathname: `/dashboard/eventview`, // Update with your actual route
       query: { eventId },

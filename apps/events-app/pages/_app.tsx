@@ -9,6 +9,7 @@ import { DashboardProvider } from '@/components/ui-providers/DashboardLayout';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { EventSpaceProvider } from '@/context/EventSpaceContext';
 import { EventSpacesProvider } from '@/context/EventSpacesContext';
+import { Toaster } from '@/components/ui/toaster';
 
 
 /**
@@ -23,15 +24,16 @@ const App = ({ Component, pageProps }: { Component: any; pageProps: any }) => {
       <SessionContextProvider supabaseClient={supabaseClient} initialSession={pageProps.initialSession}>
         <GlobalProvider user={pageProps.user}>
           <UserPassportContextProvider>
-            <EventSpacesProvider>
-              <EventSpaceProvider>
-                <DashboardProvider>
-                  <QueryClientProvider client={queryClient}>
-                    <Component {...pageProps} />
-                  </QueryClientProvider>
-                </DashboardProvider>
-              </EventSpaceProvider>
-            </EventSpacesProvider>
+              <QueryClientProvider client={queryClient}>
+                <EventSpacesProvider>
+                  <EventSpaceProvider>
+                    <DashboardProvider>
+                        <Component {...pageProps} />
+                        <Toaster />
+                    </DashboardProvider>
+                  </EventSpaceProvider>
+                </EventSpacesProvider>
+              </QueryClientProvider>
           </UserPassportContextProvider>
         </GlobalProvider>
       </SessionContextProvider>

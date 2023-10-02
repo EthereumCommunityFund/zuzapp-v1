@@ -99,7 +99,10 @@ export default function EventSpaceDashboard(props: IProps) {
         query: { eventId: eventId },
       });
     } else if (type === SpaceDashboardCardType.OpenSettings) {
-      router.push('settings');
+      router.push({
+        pathname: `settings`,
+        query: { eventId: eventId },
+      });
     }
   };
 

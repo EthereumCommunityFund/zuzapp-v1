@@ -1,5 +1,6 @@
-import { EventSpaceDetailsType } from '@/types';
+import { EventSpaceDetailsType, EventSpaceUpdateRequestBody } from '@/types';
 import React, { createContext, useContext, useState, ReactNode } from 'react';
+
 interface EventSpacesContextProps {
   eventSpaceList: EventSpaceDetailsType[];
   setEventSpaceList: React.Dispatch<React.SetStateAction<EventSpaceDetailsType[]>>;
