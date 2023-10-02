@@ -1,6 +1,6 @@
 import { RxMinus, RxPlus } from 'react-icons/rx';
 import IconButton from '../ui/buttons/IconButton';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import InputFieldDark from '../ui/inputFieldDark';
@@ -49,16 +49,35 @@ export default function LinkField({ socialLinks, extraLinks, setSocialLinks, set
     setExtraLinks(updatedItems);
   };
 
+  useEffect(() => {
+    if (socialLinks.length > 0) {
+      setIsLink(true);
+    }
+  }, [socialLinks]);
+
+  useEffect(() => {
+    if (extraLinks.length > 0) {
+      setOtherLinks(true);
+    }
+  }, [extraLinks]);
+
   return (
     <div className="flex flex-col gap-5">
       <div className="">
-        <div className="flex gap-5">
+        <div className="flex space-x-3 items-center">
           <div className="font-semibold text-base leading-[19.px] flex ">Social Links</div>
-          <IconButton variant="dark" className="rounded-full" icon={RxPlus} onClick={() => setIsLink(!isLink)}></IconButton>
+          {
+            isLink ? (
+              <IconButton variant="dark" className="rounded-full" icon={RxMinus} onClick={() => setIsLink(!isLink)}></IconButton>
+            ) : (
+              <IconButton variant="dark" className="rounded-full" icon={RxPlus} onClick={() => setIsLink(!isLink)}></IconButton>
+            )
+          }
+          {/* <IconButton variant="dark" className="rounded-full" icon={RxPlus} onClick={() => setIsLink(!isLink)}></IconButton> */}
         </div>
         {isLink && (
           <div className="flex flex-col gap-5 justify-between">
-            <div className="flex w-full text-white gap-5">
+            <div className="flex w-full text-white space-x-3 items-center">
               <Autocomplete
                 {...defaultProps}
                 id="controlled-demo"
@@ -100,17 +119,18 @@ export default function LinkField({ socialLinks, extraLinks, setSocialLinks, set
                   })
                 }
               />
-              <button
-                type="button"
-                onClick={() => {
-                  if (tagItem.link === '' || tagItem.name === '') return;
-                  setSocialLinks([...socialLinks, tagItem]);
-                  setTagItem({ name: '', link: '' });
-                }}
-                className="flex gap-2.5 text-lg font-normal leading-[1.2] text-white items-center rounded-[8px] px-2 py-1 bg-white bg-opacity-10"
-              >
-                +
-              </button>
+              <div>
+                <IconButton 
+                  variant="dark" 
+                  className="rounded-full" 
+                  icon={RxPlus} 
+                  onClick={() => {
+                    if (tagItem.link === '' || tagItem.name === '') return;
+                    setSocialLinks([...socialLinks, tagItem]);
+                    setTagItem({ name: '', link: '' });
+                  }}
+                ></IconButton>  
+              </div>
             </div>
             <div className="flex gap-2.5">
               {socialLinks?.map((item, index) => {
@@ -132,13 +152,19 @@ export default function LinkField({ socialLinks, extraLinks, setSocialLinks, set
       </div>
 
       <div className="">
-        <div className="flex gap-5">
+        <div className="flex space-x-3 items-center">
           <div className="font-semibold text-base leading-[19.px] flex ">Extra Links</div>
-          <IconButton variant="dark" className="rounded-full" icon={RxPlus} onClick={() => setOtherLinks(!otherLinks)}></IconButton>
+          {
+            otherLinks ? (
+              <IconButton variant="dark" className="rounded-full" icon={RxMinus} onClick={() => setOtherLinks(!otherLinks)}></IconButton>
+            ) : (
+              <IconButton variant="dark" className="rounded-full" icon={RxPlus} onClick={() => setOtherLinks(!otherLinks)}></IconButton>
+            )
+          }
         </div>
         {otherLinks && (
           <div className="flex flex-col gap-5 justify-between ">
-            <div className="flex w-full text-white gap-5">
+            <div className="flex w-full text-white space-x-3 items-center">
               <Autocomplete
                 {...otherProps}
                 id="controlled-demo"
@@ -180,17 +206,18 @@ export default function LinkField({ socialLinks, extraLinks, setSocialLinks, set
                   })
                 }
               />
-              <button
-                type="button"
-                onClick={() => {
-                  if (otherItem.link === '' || otherItem.name === '') return;
-                  setExtraLinks([...extraLinks, otherItem]);
-                  setOtherItem({ name: '', link: '' });
-                }}
-                className="flex gap-2.5 text-lg font-normal leading-[1.2] text-white items-center rounded-[8px] px-2 py-1 bg-white bg-opacity-10"
-              >
-                +
-              </button>
+              <div>
+                <IconButton 
+                  variant="dark" 
+                  className="rounded-full" 
+                  icon={RxPlus} 
+                  onClick={() => {
+                    if (otherItem.link === '' || otherItem.name === '') return;
+                    setExtraLinks([...extraLinks, otherItem]);
+                    setOtherItem({ name: '', link: '' });
+                  }}
+                ></IconButton>  
+              </div>
             </div>
             <div className="flex gap-2.5">
               {extraLinks?.map((item, index) => {

@@ -18,7 +18,6 @@ export default function EventViewPage() {
   const { setEventSpace } = useEventSpace();
 
 
-
   const {
     data: selectedEventSpace,
   } = useQuery<EventSpaceDetailsType, Error>(

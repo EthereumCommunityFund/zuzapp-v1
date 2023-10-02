@@ -1,49 +1,40 @@
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
 
-import { zodResolver } from "@hookform/resolvers/zod"
-import * as z from "zod"
-
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import Button from "@/components/ui/buttons/Button"
-import { set, useForm } from "react-hook-form"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { BsPlusCircleFill } from "react-icons/bs"
-import { createEventSpace } from "@/controllers/eventspace.controller"
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import Button from '@/components/ui/buttons/Button';
+import { set, useForm } from 'react-hook-form';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { BsPlusCircleFill } from 'react-icons/bs';
+import { createEventSpace } from '@/controllers/eventspace.controller';
 
 const formSchema = z.object({
   name: z.string().min(2, {
-    message: "Event name is required.",
+    message: 'Event name is required.',
   }),
-  event_space_type: z.enum(["schedules", "tracks"], {
-    required_error: "You need to select a structure type.",
+  event_space_type: z.enum(['schedules', 'tracks'], {
+    required_error: 'You need to select a structure type.',
   }),
-})
+});
 
 export default function CreateEventsForm({ setEventCreated }: { setEventCreated: (eventCreated: boolean) => void }) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
-      event_space_type: undefined,
+      name: '',
+      event_space_type: 'tracks',
     },
-  })
+  });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      const result = await createEventSpace(values)
-      setEventCreated(true)
-      console.log(result)
+      const result = await createEventSpace(values);
+      setEventCreated(true);
+      console.log(result);
     } catch (error) {
-      setEventCreated(false)
-      console.log(error)
+      setEventCreated(false);
+      console.log(error);
     }
   }
 
@@ -69,15 +60,9 @@ export default function CreateEventsForm({ setEventCreated }: { setEventCreated:
           render={({ field }) => (
             <FormItem className="space-y-3">
               <FormLabel className="text-lg">Event Structure</FormLabel>
-              <FormDescription>
-                This will determine the basic structure of your event. Once selected, this cannot be changed.
-              </FormDescription>
+              <FormDescription>This will determine the basic structure of your event. Once selected, this cannot be changed.</FormDescription>
               <FormControl>
-                <RadioGroup
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                  className="flex flex-col md:flex-row justify-between pt-3 md:pt-5"
-                >
+                <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex flex-col md:flex-row justify-between pt-3 md:pt-5">
                   <FormItem className="flex items-center space-x-3 space-y-0 cursor-pointer">
                     <FormControl>
                       <RadioGroupItem value="schedules" />
@@ -89,7 +74,7 @@ export default function CreateEventsForm({ setEventCreated }: { setEventCreated:
                   </FormItem>
                   <FormItem className="flex items-center space-x-3 space-y-0 cursor-pointer">
                     <FormControl>
-                      <RadioGroupItem value="tracks" />
+                      <RadioGroupItem value="tracks" defaultChecked />
                     </FormControl>
                     <FormLabel className="font-semibold text-white/30 text-base">
                       With Tracks
@@ -109,5 +94,5 @@ export default function CreateEventsForm({ setEventCreated }: { setEventCreated:
         </div>
       </form>
     </Form>
-  )
+  );
 }

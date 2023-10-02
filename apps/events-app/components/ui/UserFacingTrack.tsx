@@ -1,12 +1,12 @@
-import { TbTicket } from "react-icons/tb";
-import Speaker from "./Speaker";
-import EventDataDate from "./labels/event-data-date";
-import { ScheduleUpdateRequestBody } from "@/types";
-import { useEffect, useState } from "react";
-import EventDataTime from "./labels/event-data-time";
+import { TbTicket } from 'react-icons/tb';
+import Speaker from './Speaker';
+import EventDataDate from './labels/event-data-date';
+import { ScheduleUpdateRequestBody } from '@/types';
+import { useEffect, useState } from 'react';
+import EventDataTime from './labels/event-data-time';
 
 interface IUserFacingTrack {
-  scheduleData: ScheduleUpdateRequestBody
+  scheduleData: ScheduleUpdateRequestBody;
   onClick: () => void;
 }
 
@@ -15,12 +15,12 @@ export default function UserFacingTrack(props: IUserFacingTrack) {
   const date = new Date(scheduleData.date);
   const startDate = new Date(scheduleData.start_time).toLocaleDateString('en-US', { month: 'short', day: '2-digit' });
   const endDate = new Date(scheduleData.end_time).toLocaleDateString('en-US', { month: 'short', day: '2-digit' });
-  const startTime = new Date(scheduleData.start_time).toLocaleTimeString('en-US', { hour: "2-digit", minute: "2-digit" });
-  const endTime = new Date(scheduleData.end_time).toLocaleTimeString('en-US', { hour: "2-digit", minute: "2-digit" });
+  const startTime = new Date(scheduleData.start_time).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+  const endTime = new Date(scheduleData.end_time).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
 
   useEffect(() => {
-    console.log("Date", date);
-  })
+    console.log('Date', date);
+  });
 
   return (
     <div onClick={onClick} className="flex flex-col gap-3">
@@ -49,7 +49,6 @@ export default function UserFacingTrack(props: IUserFacingTrack) {
               <Speaker title="Janine Leger" />
               <Speaker title="QJ" />
             </div>
-
           </div>
           <div>
             <div className="bg-trackDateColor p-1 rounded-xl">
@@ -59,5 +58,5 @@ export default function UserFacingTrack(props: IUserFacingTrack) {
         </div>
       </div>
     </div>
-  )
+  );
 }
