@@ -1,26 +1,40 @@
-import { useState, useEffect } from 'react';
-import Button from '@/components/ui/buttons/Button';
-import { deleteEventSpaceById } from '@/services/deleteEventSpaces';
-import { useEventSpace } from '@/context/EventSpaceContext';
-import { useRouter } from 'next/router';
-import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
-import { Database } from '@/database.types';
-import InputFieldDark from '@/components/ui/inputFieldDark';
-import { InputFieldType } from '@/types';
-import { createInvite, fetchEventSpaceInvites, revokeInvite } from '@/controllers/invite.controller';
-import { useQuery, useQueryClient } from 'react-query';
-import { Loader } from '@/components/ui/Loader';
-import fetchSpaceInvites from '@/services/fetchSpaceInvites';
-import { v4 } from 'uuid';
-import { HiXCircle } from 'react-icons/hi';
-import { DialogHeader, DialogFooter, Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import { useState, useEffect } from "react";
+import Button from "@/components/ui/buttons/Button";
+import { deleteEventSpaceById } from "@/services/deleteEventSpaces";
+import { useEventSpace } from "@/context/EventSpaceContext";
+import { useRouter } from "next/router";
+import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
+import { Database } from "@/database.types";
+import InputFieldDark from "@/components/ui/inputFieldDark";
+import { InputFieldType } from "@/types";
+import {
+  createInvite,
+  fetchEventSpaceInvites,
+  revokeInvite,
+} from "@/controllers/invite.controller";
+import { useQuery, useQueryClient } from "react-query";
+import { Loader } from "@/components/ui/Loader";
+import fetchSpaceInvites from "@/services/fetchSpaceInvites";
+import { v4 } from "uuid";
+import { HiXCircle } from "react-icons/hi";
+import {
+  DialogHeader,
+  DialogFooter,
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import { Link } from "lucide-react";
+import { BsMap } from "react-icons/bs";
 
 const EventSpaceSettings = () => {
   const router = useRouter();
   const { eventId } = router.query;
   const { eventSpace } = useEventSpace();
   const [isLoading, setIsLoading] = useState(false);
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState("");
   const [invitedEmails, setInvitedEmails] = useState([]);
   const queryClient = useQueryClient();
 
@@ -29,7 +43,7 @@ const EventSpaceSettings = () => {
     isLoading: isInvitesLoading,
     isError,
   } = useQuery(
-    ['inviteDetails'], // Query key
+    ["inviteDetails"], // Query key
     () => fetchSpaceInvites(eventId as string), // Query function
     {
       enabled: !!eventId,
@@ -38,8 +52,7 @@ const EventSpaceSettings = () => {
   );
 
   const handleSendInvite = async () => {
-    if (email === '') return;
-    if (eventId === undefined) return;
+    if (email === "") return;
     try {
       await createInvite(
         {
@@ -48,11 +61,11 @@ const EventSpaceSettings = () => {
         },
         eventId as string
       );
-      setEmail('');
-      queryClient.invalidateQueries({ queryKey: ['inviteDetails'] });
+      setEmail("");
+      queryClient.invalidateQueries({ queryKey: ["inviteDetails"] });
       // router.push("/dashboard/events/myspaces");
     } catch (error) {
-      console.error('Error sending invite', error);
+      console.error("Error sending invite", error);
     } finally {
       setIsLoading(false);
     }
@@ -63,10 +76,10 @@ const EventSpaceSettings = () => {
     try {
       const res = await revokeInvite(id, eventId as string);
       console.log(res);
-      queryClient.invalidateQueries({ queryKey: ['inviteDetails'] });
+      queryClient.invalidateQueries({ queryKey: ["inviteDetails"] });
       // router.push("/dashboard/events/myspaces");
     } catch (error) {
-      console.error('Error revoking invite', error);
+      console.error("Error revoking invite", error);
     }
   };
   const handleDeleteEventSpace = async () => {
@@ -75,9 +88,9 @@ const EventSpaceSettings = () => {
     setIsLoading(true);
     try {
       await deleteEventSpaceById(eventSpace.id as string);
-      router.push('/dashboard/events/myspaces');
+      router.push("/dashboard/events/myspaces");
     } catch (error) {
-      console.error('Error deleting the event space', error);
+      console.error("Error deleting the event space", error);
     } finally {
       setIsLoading(false);
     }
@@ -97,12 +110,25 @@ const EventSpaceSettings = () => {
         <h1 className=" text-2xl">Event Space Members</h1>
         <div className="flex flex-col gap-2.5 self-stretch">
           <h2 className="font-bold text-xl opacity-70">Invite Editors</h2>
-          <p className="text-sm font-medium">Invite other members via ZuPass to manage and edit this Event Space</p>
+          <p className="text-sm font-medium">
+            Invite other members via ZuPass to manage and edit this Event Space
+          </p>
         </div>
         <div className="flex flex-col gap-6">
-          <InputFieldDark type={InputFieldType.Primary} placeholder={'name@example.com'} value={email} onChange={(e) => setEmail((e.target as HTMLInputElement).value)} />
+          <InputFieldDark
+            type={InputFieldType.Primary}
+            placeholder={"name@example.com"}
+            value={email}
+            onChange={(e) => setEmail((e.target as HTMLInputElement).value)}
+          />
 
-          <Button className="rounded-lg flex justify-center" variant="blue" size="lg" type="button" onClick={handleSendInvite}>
+          <Button
+            className="rounded-lg flex justify-center"
+            variant="blue"
+            size="lg"
+            type="button"
+            onClick={handleSendInvite}
+          >
             Invite To Space
           </Button>
           <h2 className="font-bold text-xl opacity-70">Members</h2>
@@ -116,7 +142,9 @@ const EventSpaceSettings = () => {
                   <div className=""></div>
                   <div className="flex text-sm font-medium opacity-70 gap-10 items-center">
                     <p className="">{invite.invitee_email}</p>
-                    <p className="bg-[#67DBFF]/20 text-[#67DBFF] rounded-full text-xs py-1 px-2 block w-fit font-extrabold">{invite.status}</p>
+                    <p className="bg-[#67DBFF]/20 text-[#67DBFF] rounded-full text-xs py-1 px-2 block w-fit font-extrabold">
+                      {invite.status}
+                    </p>
                     <Dialog>
                       <DialogTrigger asChild>
                         <button
@@ -130,13 +158,19 @@ const EventSpaceSettings = () => {
                       <DialogContent className="sm:max-w-[425px] h-auto rounded-2xl">
                         <DialogHeader>
                           <DialogTitle>Remove Member?</DialogTitle>
-                          <DialogDescription className="text-sm font-bold">Are you sure you want to remove this person ({invite.invitee_email}) from this space?</DialogDescription>
+                          <DialogDescription className="text-sm font-bold">
+                            Are you sure you want to remove this person (
+                            {invite.invitee_email}) from this space?
+                          </DialogDescription>
                           <DialogFooter className="pt-5">
                             <div className="flex justify-between items-center">
                               <button className="py-2.5 px-3.5 flex items-center gap-1 rounded-[20px] bg-white/20">
                                 <span>Cancel</span>
                               </button>
-                              <button onClick={() => handleRemoveInvitee(invite.id)} className="py-2.5 px-3.5 flex items-center gap-1 text-[#FF5E5E] rounded-[20px] bg-[#EB5757]/20">
+                              <button
+                                onClick={() => handleRemoveInvitee(invite.id)}
+                                className="py-2.5 px-3.5 flex items-center gap-1 text-[#FF5E5E] rounded-[20px] bg-[#EB5757]/20"
+                              >
                                 <HiXCircle />
                                 <span>Remove</span>
                               </button>
@@ -162,8 +196,16 @@ const EventSpaceSettings = () => {
       </div>
       <div className="flex flex-col mx-auto py-5 px-4 gap-8 rounded-2xl bg-[#2E3131] w-[600px] mt-4">
         <h1>Delete this event space</h1>
-        <Button aria-disabled className="rounded-full flex justify-center" variant="red" size="lg" type="button" disabled={isLoading}>
-          {isLoading ? 'Deleting...' : 'Delete'}
+        <Button
+          onClick={handleDeleteEventSpace}
+          aria-disabled
+          className="rounded-full flex justify-center"
+          variant="red"
+          size="lg"
+          type="button"
+          disabled={isLoading}
+        >
+          {isLoading ? "Deleting..." : "Delete"}
         </Button>
       </div>
     </>
@@ -187,7 +229,10 @@ export const getServerSideProps = async (ctx: any) => {
     };
 
   // get profile from session
-  const { data: profile, error } = await supabase.from('profile').select('*').eq('uuid', session.user.id);
+  const { data: profile, error } = await supabase
+    .from("profile")
+    .select("*")
+    .eq("uuid", session.user.id);
 
   return {
     props: {
