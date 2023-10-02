@@ -17,20 +17,6 @@ export default function EventViewPage() {
   const eventSpace = eventSpaceList.find((eventSpace) => eventSpace.id === eventId);
   const { isAuthenticated, user } = useGlobalContext();
 
-  const {
-    data: eventSpaces,
-    isLoading,
-    isError,
-  } = useQuery<EventSpaceDetailsType[], Error>(
-    ['eventSpaces'], // Query key
-    () => fetchUserEventSpaces(),
-    {
-      onSuccess: (data) => {
-        console.log('Event Spaces:', data);
-        setEventSpaceList(data);
-      },
-    }
-  );
 
 
   return (
