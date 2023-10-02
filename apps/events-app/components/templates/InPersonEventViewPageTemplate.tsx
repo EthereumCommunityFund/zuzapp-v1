@@ -74,7 +74,7 @@ export default function InPersonEventViewPageTemplate({ eventSpace }: IInPersonE
 			<div className="flex gap-10">
 				<div className="w-2/3 flex flex-col rounded-2xl bg-componentPrimary min-w-[600px]"> {/* Information */}
 					<div className="rounded-xl p-5">
-						<img src={eventSpace.image_url} className="w-full pb-5" alt="" height={600} />
+						<img src={eventSpace.image_url} className="w-full pb-5 rounded-2xl" alt="" height={600} />
 					</div>
 					<div className="flex flex-col gap-2.5 pb-5 border-b-2 border-white/10 w-full p-5">
 						<div className="flex items-center justify-between w-full pb-5">
@@ -112,7 +112,7 @@ export default function InPersonEventViewPageTemplate({ eventSpace }: IInPersonE
 										<RenderHTMLString height="500" htmlString={description} />
 									</DialogDescription>
 								</DialogHeader>
-								<DialogFooter></DialogFooter>
+
 							</DialogContent>
 						</Dialog>
 					</div>
@@ -143,7 +143,7 @@ export default function InPersonEventViewPageTemplate({ eventSpace }: IInPersonE
 					<div className="flex flex-col gap-2 font-semibold text-sm">
 						<div className="flex gap-2 items-center">
 							<Label className="opacity-70">Format: </Label>
-							<Label className="opacity-100 font-bold text-base">In-Person</Label>
+							<Label className="opacity-100 font-bold text-base">{eventSpace.format.charAt(0).toUpperCase() + eventSpace.format.slice(1)}</Label>
 						</div>
 						<div className="flex gap-2 items-center">
 							<Label className="opacity-70">Type: </Label>
@@ -153,9 +153,9 @@ export default function InPersonEventViewPageTemplate({ eventSpace }: IInPersonE
 					<div className="flex flex-col gap-2">
 						<Label className="opacity-70">Links </Label>
 						{extraLinks && extraLinks.map((value: IEventLink, idx: number) => (
-							<div className="flex gap-2">
-								<Label key={idx} className="opacity-100 font-bold text-base">{value.name}:</Label>
-								<Label key={idx} className="opacity-100 font-bold text-base">{value.link}</Label>
+							<div className="flex gap-2" key={idx}>
+								<Label className="opacity-100 font-bold text-base">{value.name}:</Label>
+								<Label className="opacity-100 font-bold text-base">{value.link}</Label>
 							</div>
 						))}
 					</div>
@@ -163,9 +163,9 @@ export default function InPersonEventViewPageTemplate({ eventSpace }: IInPersonE
 						<Label className="opacity-70">Socials </Label>
 						{socialLinks && socialLinks.map((value: IEventLink, idx: number) => (
 
-							<div className="flex gap-2">
-								<Label key={idx} className="opacity-100 font-bold text-base">{value.name}:</Label>
-								<Label key={idx} className="opacity-100 font-bold text-base">{value.link}</Label>
+							<div className="flex gap-2" key={idx}>
+								<Label className="opacity-100 font-bold text-base">{value.name}:</Label>
+								<Label className="opacity-100 font-bold text-base">{value.link}</Label>
 							</div>
 						))}
 					</div>

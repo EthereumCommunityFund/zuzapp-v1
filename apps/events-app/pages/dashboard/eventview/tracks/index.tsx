@@ -4,6 +4,7 @@ import MyDropdown from "@/components/ui/DropDown";
 import { List } from "@/components/ui/DropDownMenu";
 import Pagination from "@/components/ui/Pagination";
 import Button from "@/components/ui/buttons/Button";
+import { Calendar, SelectCategories, SelectLocation } from "@/components/ui/icons";
 import { useEventSpace } from "@/context/EventSpaceContext";
 import { DropDownMenuItemType } from "@/types";
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
@@ -60,12 +61,11 @@ export default function EventViewTracksPage() {
 				</div>
 			</div>
 			<div className="flex flex-col gap-5 px-5 py-2.5 w-1/4 fixed right-0">
-				<h2 className="p-3.5 gap-[10px] font-bold">Tracks: Sort & Filter</h2>
+				<h2 className="p-3.5 gap-[10px] font-bold text-2xl">Tracks: Sort & Filter</h2>
 				<div className="flex flex-col p-2.5 gap-5 ">
-					{/* <MyDropdown placeholder={"Select Categories"} options={[]} className={"rounded-full opacity-70 bg-componentPrimary"} />
-					<MyDropdown placeholder={"Select Dates"} options={[]} className={"rounded-full opacity-70 bg-componentPrimary"} />
-					<MyDropdown placeholder={"Select Location"} options={[]} className={"rounded-full opacity-70 "} /> */}
-					<List data={categoryList} header={"Select Categories"} headerIcon={BiSolidCategory} />
+					<List data={categoryList} header={"Select Categories"} headerIcon={SelectCategories} />
+					<List data={categoryList} header={"Select Dates"} headerIcon={Calendar} />
+					<List data={categoryList} header={"Select Location"} headerIcon={SelectLocation} />
 				</div>
 			</div>
 		</div>

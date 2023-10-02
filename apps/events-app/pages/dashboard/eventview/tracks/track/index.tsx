@@ -10,8 +10,8 @@ import { useEventSpace } from "@/context/EventSpaceContext";
 import { TrackUpdateRequestBody } from "@/types";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import { BiEditAlt, BiPlusCircle } from "react-icons/bi";
-import { HiArrowLeft, HiCalendar, HiCog, HiLocationMarker, HiMicrophone, HiTag, HiUserGroup } from "react-icons/hi";
+
+
 
 export default function EventViewTrackDetailsPage() {
   const router = useRouter();
