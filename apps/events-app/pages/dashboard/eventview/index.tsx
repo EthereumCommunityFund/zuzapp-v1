@@ -2,12 +2,14 @@ import InPersonEventViewPageTemplate from "@/components/templates/InPersonEventV
 import EventViewPageTemplate from "@/components/templates/EventViewPageTemplate";
 import OnlineEventViewPageTemplate from "@/components/templates/OnlineEventViewPageTemplate";
 import { useEventSpace } from "@/context/EventSpaceContext";
-import { useGlobalContext } from "@/context/GlobalContext";
-import { fetchEventSpace } from "@/controllers";
+
+
 
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/router";
 import { useQuery } from "react-query";
+import { fetchEventSpaceById } from "@/services/fetchEventSpaceDetails";
+import { EventSpaceDetailsType } from "@/types";
 
 export default function EventViewPage() {
   // Make request to get all event spaces
@@ -19,13 +21,13 @@ export default function EventViewPage() {
 
   const {
     data: selectedEventSpace,
-  } = useQuery<any, Error>(
+  } = useQuery<EventSpaceDetailsType, Error>(
     ['eventSpace'], // Query key
-    () => fetchEventSpace(eventId as string),
+    () => fetchEventSpaceById(eventId as string),
     {
       onSuccess: (data) => {
         console.log('selectedEventSpace Event Spaces:', data);
-        setEventSpace(selectedEventSpace);
+        setEventSpace(data);
       },
     }
   );

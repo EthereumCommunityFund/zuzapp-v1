@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import { useEventSpace } from "@/context/EventSpaceContext";
 import { LocationMarker, LockClosed } from "../ui/icons";
 import RenderHTMLString from "../ui/RenderHTMLString";
+import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
 
 interface IOnlineEventViewPageTemplateProps {
   eventSpace: EventSpaceDetailsType;
@@ -142,3 +143,29 @@ export default function OnlineEventViewPageTemplate({ eventSpace }: IOnlineEvent
     </>
   )
 }
+
+export const getServerSideProps = async (ctx: any) => {
+  const supabase = createPagesServerClient(ctx);
+  let {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  if (!session)
+    return {
+      props: {
+        initialSession: null,
+        user: null,
+      },
+    };
+
+  // get profile from session
+  const { data: profile, error } = await supabase.from('profile').select('*').eq('uuid', session.user.id);
+
+  return {
+    props: {
+      initialSession: session,
+      user: session?.user,
+      profile: profile,
+    },
+  };
+};
