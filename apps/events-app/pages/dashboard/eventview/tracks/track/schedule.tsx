@@ -1,7 +1,4 @@
 import EventViewHeader from "@/components/eventview/EventViewHeader";
-import TrackItemCard from "@/components/tracks/TrackItemCard";
-import MyDropdown from "@/components/ui/DropDown";
-import Pagination from "@/components/ui/Pagination";
 import RenderHTMLString from "@/components/ui/RenderHTMLString";
 import Speaker from "@/components/ui/Speaker";
 import UserFacingTrack from "@/components/ui/UserFacingTrack";
