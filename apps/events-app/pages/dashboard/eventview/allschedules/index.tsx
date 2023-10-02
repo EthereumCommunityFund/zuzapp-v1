@@ -4,6 +4,7 @@ import Pagination from "@/components/ui/Pagination";
 import UserFacingTrack from "@/components/ui/UserFacingTrack";
 import Button from "@/components/ui/buttons/Button";
 import { useEventSpace } from "@/context/EventSpaceContext";
+import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { BiLeftArrow, BiPlusCircle } from "react-icons/bi";
@@ -57,3 +58,29 @@ export default function EventViewTracksAlleSchedulesPage() {
     </div>
   )
 }
+
+export const getServerSideProps = async (ctx: any) => {
+  const supabase = createPagesServerClient(ctx);
+  let {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  if (!session)
+    return {
+      props: {
+        initialSession: null,
+        user: null,
+      },
+    };
+
+  // get profile from session
+  const { data: profile, error } = await supabase.from('profile').select('*').eq('uuid', session.user.id);
+
+  return {
+    props: {
+      initialSession: session,
+      user: session?.user,
+      profile: profile,
+    },
+  };
+};

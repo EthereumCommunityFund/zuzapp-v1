@@ -11,6 +11,7 @@ import EventDataDate from "@/components/ui/labels/event-data-date";
 import EventDataTime from "@/components/ui/labels/event-data-time";
 import EventData from "@/components/ui/labels/event-data-time";
 import { useEventSpace } from "@/context/EventSpaceContext";
+import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { BiEditAlt, BiLeftArrow } from "react-icons/bi";
@@ -165,3 +166,29 @@ export default function EventViewScheduleDetailsPage() {
     </div>
   )
 }
+
+export const getServerSideProps = async (ctx: any) => {
+  const supabase = createPagesServerClient(ctx);
+  let {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  if (!session)
+    return {
+      props: {
+        initialSession: null,
+        user: null,
+      },
+    };
+
+  // get profile from session
+  const { data: profile, error } = await supabase.from('profile').select('*').eq('uuid', session.user.id);
+
+  return {
+    props: {
+      initialSession: session,
+      user: session?.user,
+      profile: profile,
+    },
+  };
+};
