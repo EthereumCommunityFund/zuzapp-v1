@@ -30,8 +30,8 @@ export default function TrackItem(props: IProps) {
 
   return (
     <div className="flex items-center justify-between w-full bg-itemHover rounded-2xl py-3.5 px-3 hover:bg-trackItemHover duration-200" onClick={onClick}>
-      <div className="flex items-start gap-2">
-        <div className="w-[100px] h-20">
+      <div className="flex items-center gap-2">
+        <div >
           <img src={trackImage} alt="track-image" className="rounded-lg h-10" />
         </div>
         <div className="flex flex-col w-[382px] justify-center items-start gap-[14px] self-stretch">
