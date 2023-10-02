@@ -31,6 +31,13 @@ export default function EventViewTrackDetailsPage() {
   const endDate = currentSchedule && new Date(currentSchedule.end_time).toLocaleDateString('en-US', { month: 'long', day: '2-digit' });
   const { setEventSpace } = useEventSpace();
 
+  const handleBackToTrackClick = () => {
+    router.push({
+      pathname: "/dashboard/eventview/tracks/track",
+      query: { trackId }
+    });
+  }
+
   useEffect(() => {
     console.log("InPersonEventSpace", eventSpace);
     setEventSpace(eventSpace);
@@ -43,7 +50,7 @@ export default function EventViewTrackDetailsPage() {
         <div className="p-5 gap-[30px] max-w-[1200px] h-full">
           <div className="flex flex-col gap-[10px] p-2.5 bg-componentPrimary rounded-2xl h-full">
             <div className="flex justify-between">  {/* Tracks and Edit Button */}
-              <Button variant="ghost" className="text-lg font-bold" leftIcon={HiArrowLeft}>Back to Track</Button>
+              <Button variant="ghost" className="text-lg font-bold" leftIcon={HiArrowLeft} onClick={handleBackToTrackClick}>Back to Track</Button>
               <Button variant="quiet" className="rounded-xl" leftIcon={BiEditAlt}>Edit</Button>
             </div>
             <div className="flex flex-col gap-2.5 p-2.5 "> {/* Schedule Info */}

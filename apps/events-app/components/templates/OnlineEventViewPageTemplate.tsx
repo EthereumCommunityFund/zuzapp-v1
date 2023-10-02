@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import { useEventSpace } from "@/context/EventSpaceContext";
 import { LocationMarker, LockClosed } from "../ui/icons";
 import RenderHTMLString from "../ui/RenderHTMLString";
+import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
 
 interface IOnlineEventViewPageTemplateProps {
   eventSpace: EventSpaceDetailsType;
@@ -60,7 +61,7 @@ export default function OnlineEventViewPageTemplate({ eventSpace }: IOnlineEvent
       <div className="flex gap-10">
         <div className="w-2/3 flex flex-col rounded-2xl bg-componentPrimary min-w-[600px]"> {/* Information */}
           <div className="rounded-xl p-5">
-            <img src={eventSpace.image_url} className="w-full pb-5" alt="" height={600} />
+            <img src={eventSpace.image_url} className="w-full pb-5 rounded-2xl" alt="" height={600} />
           </div>
           <div className="flex flex-col gap-2.5 pb-5 border-b-2 border-white/10 w-full p-5">
             <div className="flex items-center justify-between w-full pb-5">
@@ -84,7 +85,7 @@ export default function OnlineEventViewPageTemplate({ eventSpace }: IOnlineEvent
             </div>
           </div>
           <div className="flex flex-col gap-4 p-5 border-b-2 border-white/10"> {/* About */}
-            <h3 className='text-lg font-bold text-white/70'>ABOUT THIS EVENT</h3>
+            <h3 className='text-lg font-bold text-white/70'>About This Event</h3>
             <h2 className='text-3xl font-bold text-white/80'>What is ZuConnect?</h2>
             <p className="text-white/70 font-bold">Embark on a transformative journey at ZuConnect— a two-week popup village in Istanbul where the luminaries of crypto, AI, governance, decentralized science, and culture coalesce. Here, the brightest minds convene to co-work, foster collaborations, and have a joyous time.</p>
             <Dialog>
@@ -142,3 +143,29 @@ export default function OnlineEventViewPageTemplate({ eventSpace }: IOnlineEvent
     </>
   )
 }
+
+export const getServerSideProps = async (ctx: any) => {
+  const supabase = createPagesServerClient(ctx);
+  let {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  if (!session)
+    return {
+      props: {
+        initialSession: null,
+        user: null,
+      },
+    };
+
+  // get profile from session
+  const { data: profile, error } = await supabase.from('profile').select('*').eq('uuid', session.user.id);
+
+  return {
+    props: {
+      initialSession: session,
+      user: session?.user,
+      profile: profile,
+    },
+  };
+};

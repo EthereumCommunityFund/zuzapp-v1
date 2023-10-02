@@ -1,33 +1,32 @@
 import InPersonEventViewPageTemplate from "@/components/templates/InPersonEventViewPageTemplate";
-import EventViewPageTemplate from "@/components/templates/InPersonEventViewPageTemplate";
+import EventViewPageTemplate from "@/components/templates/EventViewPageTemplate";
 import OnlineEventViewPageTemplate from "@/components/templates/OnlineEventViewPageTemplate";
-import { useEventSpaces } from "@/context/EventSpacesContext";
-import { useGlobalContext } from "@/context/GlobalContext";
-import { fetchUserEventSpaces } from "@/services/eventSpaceService";
-import { EventSpaceDetailsType, EventTypes } from "@/types";
+import { useEventSpace } from "@/context/EventSpaceContext";
+
+
+
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/router";
 import { useQuery } from "react-query";
+import { fetchEventSpaceById } from "@/services/fetchEventSpaceDetails";
+import { EventSpaceDetailsType } from "@/types";
 
 export default function EventViewPage() {
   // Make request to get all event spaces
   const router = useRouter();
   const { eventId } = router.query;
-  const { eventSpaceList, setEventSpaceList } = useEventSpaces();
-  const eventSpace = eventSpaceList.find((eventSpace) => eventSpace.id === eventId);
-  const { isAuthenticated, user } = useGlobalContext();
+  const { setEventSpace } = useEventSpace();
+
 
   const {
-    data: eventSpaces,
-    isLoading,
-    isError,
-  } = useQuery<EventSpaceDetailsType[], Error>(
-    ['eventSpaces'], // Query key
-    () => fetchUserEventSpaces(),
+    data: selectedEventSpace,
+  } = useQuery<EventSpaceDetailsType, Error>(
+    ['eventSpace'], // Query key
+    () => fetchEventSpaceById(eventId as string),
     {
       onSuccess: (data) => {
-        console.log('Event Spaces:', data);
-        setEventSpaceList(data);
+        console.log('selectedEventSpace Event Spaces:', data);
+        setEventSpace(data);
       },
     }
   );
@@ -35,14 +34,7 @@ export default function EventViewPage() {
 
   return (
     <>
-      {
-        isAuthenticated && (
-          <>
-            {eventSpace?.format === "in-person" && <InPersonEventViewPageTemplate eventSpace={eventSpace} />}
-            {eventSpace?.format === "online" && <OnlineEventViewPageTemplate eventSpace={eventSpace} />}
-          </>
-        )
-      }
+      <EventViewPageTemplate />
     </>
   )
 }

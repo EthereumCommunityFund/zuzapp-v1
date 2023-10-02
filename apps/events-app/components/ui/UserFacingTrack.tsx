@@ -23,14 +23,14 @@ export default function UserFacingTrack(props: IUserFacingTrack) {
   });
 
   return (
-    <div onClick={onClick}>
-      <div className="text-center border-b-2 p-5 border-stone-800">
+    <div onClick={onClick} className="flex flex-col gap-3">
+      <div className="text-center border-b-2 p-3 border-borderPrimary">
         <span className="text-lg font-bold w-full">{new Date(scheduleData.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
       </div>
-      <div className="flex flex-col p-4 rounded-2xl bg-componentPrimary">
-        <div className="flex justify-between">
+      <div className="flex flex-col rounded-2xl">
+        <div className="flex justify-between border-2 border-[#444646] p-5 rounded-2xl bg-userFacingItem hover:bg-[#434646] duration-200">
           <div>
-            <div className="rounded-[10px] p-2.5  text-center bg-trackDateColor">
+            <div className="rounded-[10px] p-2.5 text-center border-2 bg-trackDateColor border-[#5F6262]">
               <h2 className="font-bold text-xl">{date.getDate()}</h2>
               <b className="font-bold text-xl">{date.toLocaleDateString('en-US', { month: 'short' })}</b>
             </div>

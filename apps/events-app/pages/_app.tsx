@@ -24,16 +24,14 @@ const App = ({ Component, pageProps }: { Component: any; pageProps: any }) => {
       <SessionContextProvider supabaseClient={supabaseClient} initialSession={pageProps.initialSession}>
         <GlobalProvider user={pageProps.user}>
           <UserPassportContextProvider>
-              <QueryClientProvider client={queryClient}>
-                <EventSpacesProvider>
-                  <EventSpaceProvider>
-                    <DashboardProvider>
-                        <Component {...pageProps} />
-                        <Toaster />
-                    </DashboardProvider>
-                  </EventSpaceProvider>
-                </EventSpacesProvider>
-              </QueryClientProvider>
+            <QueryClientProvider client={queryClient}>
+              <EventSpaceProvider>
+                <DashboardProvider>
+                  <Component {...pageProps} />
+                  <Toaster />
+                </DashboardProvider>
+              </EventSpaceProvider>
+            </QueryClientProvider>
           </UserPassportContextProvider>
         </GlobalProvider>
       </SessionContextProvider>

@@ -1,12 +1,29 @@
+import EventViewHeader from "@/components/eventview/EventViewHeader";
 import TrackItemCard from "@/components/tracks/TrackItemCard";
 import MyDropdown from "@/components/ui/DropDown";
+import { List } from "@/components/ui/DropDownMenu";
 import Pagination from "@/components/ui/Pagination";
 import UserFacingTrack from "@/components/ui/UserFacingTrack";
 import Button from "@/components/ui/buttons/Button";
+import { Calendar, SelectCategories, SelectLocation } from "@/components/ui/icons";
 import { useEventSpace } from "@/context/EventSpaceContext";
+import { DropDownMenuItemType } from "@/types";
+import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { BiLeftArrow, BiPlusCircle } from "react-icons/bi";
+
+const categoryList: DropDownMenuItemType[] = [
+  {
+    name: 'Network States',
+  },
+  {
+    name: 'Character Cities',
+  },
+  {
+    name: 'Coordinations',
+  },
+]
 
 export default function EventViewTracksAlleSchedulesPage() {
   const router = useRouter();
@@ -20,40 +37,59 @@ export default function EventViewTracksAlleSchedulesPage() {
   }
   return (
     <div className="flex gap-4">
-      <div className="flex flex-col w-[1000px]">
-        <div className="flex px-2.5 rounded-full gap-[10px] h-[60px] justify-between items-center">
-          <img src="/images/1.png" width={100} alt="event" />
-          <div className="flex flex-col gap-2 w-3/4">
-            <h2 className="font-bold text-3xl">ZuConnect</h2>
-            <span className="font-semibold opacity-70">A Popup Village of Innovation in the Heart of Istanbul</span>
-          </div>
-          <Button className="rounded-[20px] text-base w-[150px] h-10 items-center">
-            <span className="mx-auto" >Apply to Event</span>
-          </Button>
-        </div>
+      <div className="flex flex-col w-[1000px] gap-10">
+        <EventViewHeader imgPath={eventSpace?.image_url as string} name={eventSpace?.name as string} tagline={eventSpace?.tagline as string} />
         <div className="flex flex-col gap-2.5 p-[30px]">
-          <div>
-            <Button variant="blue" size="lg" className="rounded-xl" leftIcon={BiPlusCircle}>
-              Add a Schedule
-            </Button>
-          </div>
-          <div className=" p-2.5 gap-[10px] overflow-hidden rounded-[10px]">
-            {
-              eventSpace?.schedules.map((schedule) => (
-                <UserFacingTrack onClick={() => handleItemClick(schedule.name, schedule.track_id)} scheduleData={schedule} />
-              ))
-            }
+          <div className="p-8 bg-componentPrimary rounded-2xl">
+            <div>
+              <Button variant="blue" size="lg" className="rounded-xl" leftIcon={BiPlusCircle}>
+                Add a Schedule
+              </Button>
+            </div>
+            <div className=" p-2.5 gap-[10px] overflow-hidden rounded-[10px]">
+              {
+                eventSpace?.schedules.map((schedule) => (
+                  <UserFacingTrack onClick={() => handleItemClick(schedule.name, schedule.track_id)} scheduleData={schedule} />
+                ))
+              }
+            </div>
           </div>
         </div>
       </div>
-      <div className="flex flex-col gap-5 px-5 py-2.5">
-        <h2 className="p-3.5 gap-[10px] font-bold border">Schedules: Sort & Filter</h2>
-        <div className="p-2.5 gap-5 ">
-          <MyDropdown placeholder={""} options={[]} className={"rounded-full text-opacity-70 bg-componentPrimary"} />
-          <MyDropdown placeholder={""} options={[]} className={"rounded-full text-opacity-70 bg-componentPrimary"} />
-          <MyDropdown placeholder={""} options={[]} className={"rounded-full text-opacity-70 bg-componentPrimary	"} />
+      <div className="flex flex-col gap-5 px-5 py-2.5 w-1/4 fixed right-0">
+        <h2 className="p-3.5 gap-[10px] font-bold text-2xl border-b-2 border-borderPrimary">Schedules: Sort & Filter</h2>
+        <div className="flex flex-col p-2.5 gap-5 ">
+          <List data={categoryList} header={"Select Categories"} headerIcon={SelectCategories} />
+          <List data={categoryList} header={"Select Dates"} headerIcon={Calendar} />
+          <List data={categoryList} header={"Select Location"} headerIcon={SelectLocation} />
         </div>
       </div>
     </div>
   )
 }
+
+export const getServerSideProps = async (ctx: any) => {
+  const supabase = createPagesServerClient(ctx);
+  let {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  if (!session)
+    return {
+      props: {
+        initialSession: null,
+        user: null,
+      },
+    };
+
+  // get profile from session
+  const { data: profile, error } = await supabase.from('profile').select('*').eq('uuid', session.user.id);
+
+  return {
+    props: {
+      initialSession: session,
+      user: session?.user,
+      profile: profile,
+    },
+  };
+};

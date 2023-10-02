@@ -42,16 +42,6 @@ export default function OnlineTrackDetailsPageTemplate(props: ITrackDetailsPageT
     <div className="flex gap-4">
       <div className="flex flex-col w-[1000px]">
         <EventViewHeader imgPath={eventSpace?.image_url as string} name={eventSpace?.name as string} tagline={eventSpace?.tagline as string} />
-        <div className="flex px-2.5 rounded-full gap-[10px] h-[60px] justify-between items-center">
-          <img src="/images/1.png" width={100} alt="event" />
-          <div className="flex flex-col gap-2 w-3/4">
-            <h2 className="font-bold text-3xl">{eventSpace?.name}</h2>
-            <span className="font-semibold opacity-70">{eventSpace?.tagline}</span>
-          </div>
-          <Button variant="primaryGreen" className="rounded-[20px] text-base w-[150px] h-10 items-center">
-            <span className="mx-auto" >Apply to Event</span>
-          </Button>
-        </div>
         <div className="p-5 gap-[30px] max-w-[1000px]">
           <div className="flex flex-col gap-[10px] p-2.5 bg-componentPrimary rounded-xl">
             <div className="flex justify-between">  {/* Tracks and Edit Button */}

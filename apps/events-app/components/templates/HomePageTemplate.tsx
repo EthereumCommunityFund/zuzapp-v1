@@ -14,7 +14,7 @@ import { Loader } from '../ui/Loader';
 import { arrayFromLength } from '@/lib/helper';
 import { EventTemplateSkeleton } from '../commons/EventTemplateSkeleton';
 import { HomePageTemplateSkeleton } from '../commons/HomePageTemplateSkeleton';
-import { useEventSpaces } from '@/context/EventSpacesContext';
+import { useEventSpace, useEventSpaces } from '@/context/EventSpaceContext';
 
 export const sampleEvents = [
   {
@@ -36,12 +36,12 @@ export default function HomePageTemplate() {
   const { isAuthenticated, user } = useGlobalContext();
   const router = useRouter();
 
-  const { eventSpaceList, setEventSpaceList } = useEventSpaces();
+  const { eventSpaceList, setEventSpaceList } = useEventSpace();
 
   const handleButtonClick = async (eventId: string) => {
 
     router.push({
-      pathname: `/dashboard/eventview`, // Update with your actual route
+      pathname: `/dashboard/eventview/about`, // Update with your actual route
       query: { eventId },
     });
   };
@@ -130,7 +130,7 @@ export default function HomePageTemplate() {
               >
                 <div className="flex flex-col md:flex-row space-x-3 md:items-center">
                   <div>
-                    <Image src={event.image_url ? event.image_url : `/images/black-img.png`} alt="Event" width={150} height={120} />
+                    <img src={event.image_url ? event.image_url : `/images/black-img.png`} className='rounded-xl' alt="Event" width={150} height={120} />
                   </div>
                   <div className="space-y-2 mt-2 md:mt-0">
                     <h4 className="text-2xl font-bold">{event.name}</h4>

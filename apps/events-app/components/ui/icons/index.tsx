@@ -5,6 +5,8 @@ import LockClosed from './LockClosed';
 import LocationMarker from './LocationMarker';
 import UserGroup from './UserGroup';
 import User from './User';
+import SelectCategories from './SelectCategories';
+import SelectLocation from './SelectLocation';
 
 export {
   ArrowCircleRight,
@@ -13,5 +15,7 @@ export {
   LockClosed,
   LocationMarker,
   UserGroup,
-  User
+  User,
+  SelectCategories,
+  SelectLocation
 };
