@@ -40,7 +40,7 @@ export default function HomePageTemplate() {
 
   const handleButtonClick = async (eventId: string) => {
     router.push({
-      pathname: `/dashboard/eventview`, // Update with your actual route
+      pathname: `/dashboard/eventview/about`, // Update with your actual route
       query: { eventId },
     });
   };

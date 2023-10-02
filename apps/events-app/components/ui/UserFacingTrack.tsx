@@ -24,7 +24,7 @@ export default function UserFacingTrack(props: IUserFacingTrack) {
 
   return (
     <div onClick={onClick}>
-      <div className="text-center border-b-2 p-5 border-stone-800">
+      <div className="text-center border-b-2 p-5 border-borderPrimary">
         <span className="text-lg font-bold w-full">{new Date(scheduleData.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
       </div>
       <div className="flex flex-col p-4 rounded-2xl bg-componentPrimary">

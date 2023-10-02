@@ -86,7 +86,7 @@ export const navBarRoutes: Routes[] = [
 export const eventViewRoutes: Routes[] = [
   {
     name: 'About',
-    path: '/dashboard/eventview',
+    path: '/dashboard/eventview/about',
     icon: HiCalendar,
     title: 'Event View About',
   },
