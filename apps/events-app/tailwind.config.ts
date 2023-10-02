@@ -73,7 +73,8 @@ module.exports = {
         btnPrimaryGreen: "#D7FFC4",
         btnStrongerGreen: "#79916E",
         btnStrongerGreenHover: "#96B488",
-        borderPrimary: "#393939"
+        borderPrimary: "#393939",
+        userFacingItem: "#393C3C"
       },
       borderRadius: {
         lg: "var(--radius)",
