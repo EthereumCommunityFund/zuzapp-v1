@@ -85,7 +85,7 @@ export default function OnlineEventViewPageTemplate({ eventSpace }: IOnlineEvent
             </div>
           </div>
           <div className="flex flex-col gap-4 p-5 border-b-2 border-white/10"> {/* About */}
-            <h3 className='text-lg font-bold text-white/70'>ABOUT THIS EVENT</h3>
+            <h3 className='text-lg font-bold text-white/70'>About This Event</h3>
             <h2 className='text-3xl font-bold text-white/80'>What is ZuConnect?</h2>
             <p className="text-white/70 font-bold">Embark on a transformative journey at ZuConnect— a two-week popup village in Istanbul where the luminaries of crypto, AI, governance, decentralized science, and culture coalesce. Here, the brightest minds convene to co-work, foster collaborations, and have a joyous time.</p>
             <Dialog>
