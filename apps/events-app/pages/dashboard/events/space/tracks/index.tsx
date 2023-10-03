@@ -16,12 +16,12 @@ export default function Tracks() {
   // const { eventSpace } = useEventSpace();
   // console.log(eventSpace, 'eventSpace')
   const router = useRouter();
-  const { eventId } = router.query;
+  const { event_space_id } = router.query;
   const handleAddTrack = async () => {
     try {
       router.push({
         pathname: `tracks/addtrack`,
-        query: { eventId: eventId },
+        query: { event_space_id: event_space_id },
       });
     } catch (error) {
       console.error("Error fetching tracks", error);
@@ -33,11 +33,11 @@ export default function Tracks() {
     isLoading,
     isError,
   } = useQuery<TrackUpdateRequestBody[], Error>(
-    ["trackDetails", eventId],
-    () => fetchTracksByEventSpaceId(eventId as string),
+    ["trackDetails", event_space_id],
+    () => fetchTracksByEventSpaceId(event_space_id as string),
 
     {
-      enabled: !!eventId,
+      enabled: !!event_space_id,
       onSuccess: (data) => {
         console.log("tracks", data);
       },

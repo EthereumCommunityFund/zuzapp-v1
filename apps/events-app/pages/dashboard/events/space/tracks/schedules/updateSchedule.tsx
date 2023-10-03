@@ -71,7 +71,7 @@ type TagItemProp = {
 
 export default function UpdateSchedulePage() {
   const router = useRouter();
-  const { eventId, trackId, scheduleId, trackTitle } = router.query;
+  const { event_space_id, trackId, scheduleId, trackTitle } = router.query;
   const [selectedEventFormat, setSelectedEventFormat] = useState("");
 
   const [schedule, setSchedule] = useState<ScheduleUpdateRequestBody>({
@@ -134,20 +134,26 @@ export default function UpdateSchedulePage() {
     format: z.enum(["in-person", "online", "hybrid"], {
       required_error: "You need to select a format.",
     }),
-    date: z.date({
-      required_error: "You need to select a valid date for this schedule.",
-      invalid_type_error: "You need to select a valid date for this schedule.",
-    }).refine((date) => {
-      if (date) {
-        console.log(date, `date`)
-        const today = dayjs();
-        const selectedDate = dayjs(date);
-        return selectedDate.isAfter(today);
-        }
-        return false;
-        }, {
+    date: z
+      .date({
+        required_error: "You need to select a valid date for this schedule.",
+        invalid_type_error:
+          "You need to select a valid date for this schedule.",
+      })
+      .refine(
+        (date) => {
+          if (date) {
+            console.log(date, `date`);
+            const today = dayjs();
+            const selectedDate = dayjs(date);
+            return selectedDate.isAfter(today);
+          }
+          return false;
+        },
+        {
           message: "You need to select a valid date for this schedule.",
-        }),
+        }
+      ),
     description: z.string().min(10, {
       message: "Description is required and must be a minimum of 5",
     }),
@@ -160,10 +166,10 @@ export default function UpdateSchedulePage() {
     isLoading,
     isError,
   } = useQuery<EventSpaceDetailsType, Error>(
-    ["spaceDetails", eventId], // Query key
-    () => fetchEventSpaceById(eventId as string), // Query function
+    ["spaceDetails", event_space_id], // Query key
+    () => fetchEventSpaceById(event_space_id as string), // Query function
     {
-      enabled: !!eventId, // Only execute the query if eventId is available
+      enabled: !!event_space_id, // Only execute the query if event_space_id is available
     }
   );
 
@@ -186,24 +192,30 @@ export default function UpdateSchedulePage() {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    if(values.format !== "in-person" && (!values.video_call_link || values.video_call_link === "")) {
+    if (
+      values.format !== "in-person" &&
+      (!values.video_call_link || values.video_call_link === "")
+    ) {
       form.setError("video_call_link", {
-        message: "Video call link is required for online or hybrid events"
-      })
+        message: "Video call link is required for online or hybrid events",
+      });
       return;
     }
-    if(values.format !== "in-person" && (!values.live_stream_url || values.live_stream_url === "")) {
+    if (
+      values.format !== "in-person" &&
+      (!values.live_stream_url || values.live_stream_url === "")
+    ) {
       form.setError("live_stream_url", {
-        message: "Live stream link is required for in-person or hybrid events"
-      })
+        message: "Live stream link is required for in-person or hybrid events",
+      });
       return;
     }
-    if(values.format === "in-person" && (locationId === "")) {
+    if (values.format === "in-person" && locationId === "") {
       toast({
         title: "Error",
         description: "Location is required for in-person events",
         variant: "destructive",
-      })
+      });
       return;
     }
     const updatedOrganizers = (schedule.organizers as any).map((user: any) => {
@@ -256,7 +268,7 @@ export default function UpdateSchedulePage() {
       const result = await updateSchedule(
         scheduleId as string,
         payload,
-        eventId as string
+        event_space_id as string
       );
       // setSwitchDialogue(true);
       setScheduleUpdated(true);
@@ -296,7 +308,9 @@ export default function UpdateSchedulePage() {
   useEffect(() => {
     const fetchLocationDetails = async () => {
       try {
-        const result = await fetchLocationsByEventSpace(eventId as string);
+        const result = await fetchLocationsByEventSpace(
+          event_space_id as string
+        );
         console.log(result);
         setSavedLocations(result?.data?.data);
         setLocationId(result.data.data[0].id);
@@ -349,13 +363,13 @@ export default function UpdateSchedulePage() {
   useEffect(() => {
     console.log(form.formState.errors);
     //get the first item from the errors object
-    const firstError = Object.values(form.formState.errors)[0]
+    const firstError = Object.values(form.formState.errors)[0];
     if (firstError) {
       toast({
         title: "Error",
         description: firstError?.message,
         variant: "destructive",
-      })
+      });
     }
   }, [form.formState.errors]);
 
@@ -363,7 +377,11 @@ export default function UpdateSchedulePage() {
     try {
       router.push({
         pathname: `/dashboard/events/space/tracks/schedules`,
-        query: { eventId: eventId, trackTitle: trackTitle, trackId: trackId },
+        query: {
+          event_space_id: event_space_id,
+          trackTitle: trackTitle,
+          trackId: trackId,
+        },
       });
     } catch (error) {
       console.error("Error fetching space details", error);

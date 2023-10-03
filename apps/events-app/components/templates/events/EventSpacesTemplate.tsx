@@ -42,7 +42,7 @@ const EventSpacesTemplate: React.FC<EventSpacesTemplateProps> = ({
                       eventTitle={event.name}
                       index={index}
                       key={event.id}
-                      eventId={event.id}
+                      event_space_id={event.id}
                       eventStatus={event.status}
                     />
                   </div>
@@ -77,7 +77,7 @@ const EventSpacesTemplate: React.FC<EventSpacesTemplateProps> = ({
                         eventTitle={event.name}
                         index={index}
                         key={event.id}
-                        eventId={event.id}
+                        event_space_id={event.id}
                         eventStatus={event.status}
                       />
                     </div>
