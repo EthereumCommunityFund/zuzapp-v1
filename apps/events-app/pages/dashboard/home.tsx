@@ -1,8 +1,15 @@
 import HomePageTemplate from "@/components/templates/HomePageTemplate";
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
 import { Database } from "@/database.types";
+import { useEventSpaces } from "@/context/EventSpaceContext";
+import { useEffect } from "react";
+import { useQueryClient } from "react-query";
 
 export default function DashboardHomePage() {
+  const result = useEventSpaces();
+  console.log(result, "result");
+  const queryClient = useQueryClient();
+  queryClient.invalidateQueries("currentPublisedEventSpace");
   return (
     <>
       <HomePageTemplate />
@@ -12,6 +19,7 @@ export default function DashboardHomePage() {
 
 export const getServerSideProps = async (ctx: any) => {
   const supabase = createPagesServerClient<Database>(ctx);
+
   let {
     data: { session },
   } = await supabase.auth.getSession();

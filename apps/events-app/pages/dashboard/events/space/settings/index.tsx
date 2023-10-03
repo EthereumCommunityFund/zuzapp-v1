@@ -63,7 +63,6 @@ const EventSpaceSettings = () => {
       );
       setEmail("");
       queryClient.invalidateQueries({ queryKey: ["inviteDetails"] });
-      // router.push("/dashboard/events/myspaces");
     } catch (error) {
       console.error("Error sending invite", error);
     } finally {
@@ -77,7 +76,6 @@ const EventSpaceSettings = () => {
       const res = await revokeInvite(id, eventId as string);
       console.log(res);
       queryClient.invalidateQueries({ queryKey: ["inviteDetails"] });
-      // router.push("/dashboard/events/myspaces");
     } catch (error) {
       console.error("Error revoking invite", error);
     }

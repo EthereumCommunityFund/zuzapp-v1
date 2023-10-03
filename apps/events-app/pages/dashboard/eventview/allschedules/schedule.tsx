@@ -16,43 +16,106 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import { BiEditAlt, BiLeftArrow } from "react-icons/bi";
 import { BsFillTicketFill } from "react-icons/bs";
-import { HiArrowLeft, HiCalendar, HiCog, HiLocationMarker, HiMicrophone, HiTag, HiUserGroup } from "react-icons/hi";
+import {
+  HiArrowLeft,
+  HiCalendar,
+  HiCog,
+  HiLocationMarker,
+  HiMicrophone,
+  HiTag,
+  HiUserGroup,
+} from "react-icons/hi";
+import { EventSpaceDetailsType } from "@/types";
+import { fetchEventSpaceById } from "@/services/fetchEventSpaceDetails";
+import { QueryClient, dehydrate, useQuery } from "react-query";
 
 export default function EventViewScheduleDetailsPage() {
-  const { eventSpace } = useEventSpace();
   const router = useRouter();
+  const { event_space_id } = router.query;
+  const { data: eventSpace, isLoading } = useQuery<
+    EventSpaceDetailsType,
+    Error
+  >(
+    ["currentPublisedEventSpace"], // Query key
+    () => fetchEventSpaceById(event_space_id as string),
+
+    {
+      onSuccess: (data) => {
+        console.log("selectedEventSpace Event Spaces:", data);
+      },
+    }
+  );
 
   const { scheduleName, trackId } = router.query;
-  const currentSchedule = eventSpace?.schedules.find((scheduleItem) => (scheduleItem.name === scheduleName));
-  const trackItem = eventSpace?.tracks.find((trackItem) => (trackItem.id === trackId));
-  const startTime = currentSchedule && new Date(currentSchedule.start_time).toLocaleTimeString('en-US', { hour: "2-digit", minute: "2-digit" });
-  const endTime = currentSchedule && new Date(currentSchedule.end_time).toLocaleTimeString('en-US', { hour: "2-digit", minute: "2-digit" });
+  const currentSchedule = eventSpace?.schedules.find(
+    (scheduleItem) => scheduleItem.name === scheduleName
+  );
+  const trackItem = eventSpace?.tracks.find(
+    (trackItem) => trackItem.id === trackId
+  );
+  const startTime =
+    currentSchedule &&
+    new Date(currentSchedule.start_time).toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  const endTime =
+    currentSchedule &&
+    new Date(currentSchedule.end_time).toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
   console.log("All Schedules / Schedule eventSpace", eventSpace);
 
-
-  const handleBacktToSchedule = () => {
+  const handleBackToSchedule = () => {
     router.push({
-      pathname: "/dashboard/eventview/allschedules",
-    })
-  }
+      pathname: `/dashboard/eventview/allschedules`,
+      query: {
+        event_space_id,
+      },
+    });
+  };
 
   return (
     <div className="flex gap-4 font-bold">
       <div className="flex flex-col w-[1000px]">
-        <EventViewHeader imgPath={eventSpace?.image_url as string} name={eventSpace?.name as string} tagline={eventSpace?.tagline as string} />
+        <EventViewHeader
+          imgPath={eventSpace?.image_url as string}
+          name={eventSpace?.name as string}
+          tagline={eventSpace?.tagline as string}
+        />
         <div className="p-5 gap-[30px] max-w-[1000px]">
           <div className="flex flex-col gap-[10px] p-2.5 bg-componentPrimary rounded-2xl">
-            <div className="flex justify-between">  {/* Tracks and Edit Button */}
-              <Button variant="ghost" className="opacity-70 text-lg" leftIcon={HiArrowLeft} onClick={handleBacktToSchedule}>Back to Schedules</Button>
-              <Button variant="quiet" className="rounded-xl bg-componentPrimary text-lg" leftIcon={BiEditAlt}>Edit</Button>
+            <div className="flex justify-between">
+              {" "}
+              {/* Tracks and Edit Button */}
+              <Button
+                variant="ghost"
+                className="opacity-70 text-lg"
+                leftIcon={HiArrowLeft}
+                onClick={handleBackToSchedule}
+              >
+                Back to Schedules
+              </Button>
+              <Button
+                variant="quiet"
+                className="rounded-xl bg-componentPrimary text-lg"
+                leftIcon={BiEditAlt}
+              >
+                Edit
+              </Button>
             </div>
-            <div className="flex flex-col gap-2.5 p-2.5 "> {/* Schedule Info */}
+            <div className="flex flex-col gap-2.5 p-2.5 ">
+              {" "}
+              {/* Schedule Info */}
               <div className="flex flex-col gap-2.5 p-5">
                 <span className="text-sm">TRACK/THEME</span>
                 <div className="flex items-start">
-                  {startTime && endTime && <EventDataTime startTime={startTime} endTime={endTime} />}
+                  {startTime && endTime && (
+                    <EventDataTime startTime={startTime} endTime={endTime} />
+                  )}
                 </div>
-                <h2 className='text-3xl font-bold'>{currentSchedule?.name}</h2>
+                <h2 className="text-3xl font-bold">{currentSchedule?.name}</h2>
                 <div className="flex gap-[6px]">
                   <Speaker title={"QJ"} />
                   <Speaker title={"Janine Leger"} />
@@ -61,20 +124,33 @@ export default function EventViewScheduleDetailsPage() {
                   <h3>By: drivenfast</h3>
                 </div>
               </div>
-              <Button variant="primary" size="lg" className="rounded-2xl justify-center" leftIcon={BsFillTicketFill}>RSVP Schedule</Button>
+              <Button
+                variant="primary"
+                size="lg"
+                className="rounded-2xl justify-center"
+                leftIcon={BsFillTicketFill}
+              >
+                RSVP Schedule
+              </Button>
             </div>
-            <div className="flex flex-col gap-2.5 px-5 pt-5 pb-[60px]">{/* Schedule Description */}
+            <div className="flex flex-col gap-2.5 px-5 pt-5 pb-[60px]">
+              {/* Schedule Description */}
               <h2 className="font-bold">Location</h2>
             </div>
-            <div className="flex flex-col gap-2.5 px-5 pt-5 pb-[60px] font-bold">{/* Schedule Description */}
-              {currentSchedule?.description && <RenderHTMLString htmlString={currentSchedule?.description} />}
+            <div className="flex flex-col gap-2.5 px-5 pt-5 pb-[60px] font-bold">
+              {/* Schedule Description */}
+              {currentSchedule?.description && (
+                <RenderHTMLString htmlString={currentSchedule?.description} />
+              )}
             </div>
           </div>
         </div>
       </div>
       <div className="flex flex-col pt-5 pb-10 gap-5">
         <div className="flex flex-col gap-3">
-          <h2 className="font-bold p-3.5 border-b border-b-background text-xl">Details</h2>
+          <h2 className="font-bold p-3.5 border-b border-b-background text-xl">
+            Details
+          </h2>
           <div className="flex gap-2 items-center">
             <Label className="opacity-60">Format: </Label>
             <Label className="opacity-70 font-bold text-base">In-Person</Label>
@@ -90,18 +166,26 @@ export default function EventViewScheduleDetailsPage() {
         </div>
         <div className="pb-10 gap-2.5">
           <div className="flex flex-col gap-3">
-            <h2 className="font-bold p-3.5 border-b border-b-background text-xl">Details</h2>
+            <h2 className="font-bold p-3.5 border-b border-b-background text-xl">
+              Details
+            </h2>
             <div className="flex gap-2 items-center">
               <Label className="opacity-60">Format: </Label>
-              <Label className="opacity-70 font-bold text-base">{eventSpace?.format.toUpperCase()}</Label>
+              <Label className="opacity-70 font-bold text-base">
+                {eventSpace?.format.toUpperCase()}
+              </Label>
             </div>
             <div className="flex gap-2 items-center">
               <Label className="opacity-60">Type: </Label>
-              <Label className="opacity-70 font-bold text-base">{eventSpace?.event_type?.join(', ')}</Label>
+              <Label className="opacity-70 font-bold text-base">
+                {eventSpace?.event_type?.join(", ")}
+              </Label>
             </div>
             <div className="flex gap-2 items-center">
               <Label className="opacity-60">Expereicne Level: </Label>
-              <Label className="opacity-70 font-bold text-base">{eventSpace?.experience_level}</Label>
+              <Label className="opacity-70 font-bold text-base">
+                {eventSpace?.experience_level}
+              </Label>
             </div>
           </div>
           <div className="pb-10 gap-2.5">
@@ -135,10 +219,18 @@ export default function EventViewScheduleDetailsPage() {
                     <h2>Tags</h2>
                   </div>
                   <div className="flex gap-2.5">
-                    <Label className="rounded-xl opacity-70 bg-itemBgPrimary p-2 text-lg">Tag2</Label>
-                    <Label className="rounded-xl opacity-70 bg-itemBgPrimary p-2 text-lg">Tag2</Label>
-                    <Label className="rounded-xl opacity-70 bg-itemBgPrimary p-2 text-lg">Tag2</Label>
-                    <Label className="rounded-xl opacity-70 bg-itemBgPrimary p-2 text-lg">Tag2</Label>
+                    <Label className="rounded-xl opacity-70 bg-itemBgPrimary p-2 text-lg">
+                      Tag2
+                    </Label>
+                    <Label className="rounded-xl opacity-70 bg-itemBgPrimary p-2 text-lg">
+                      Tag2
+                    </Label>
+                    <Label className="rounded-xl opacity-70 bg-itemBgPrimary p-2 text-lg">
+                      Tag2
+                    </Label>
+                    <Label className="rounded-xl opacity-70 bg-itemBgPrimary p-2 text-lg">
+                      Tag2
+                    </Label>
                   </div>
                 </div>
               </div>
@@ -151,7 +243,9 @@ export default function EventViewScheduleDetailsPage() {
                   <img src="/images/1.png" width={100} height={50} alt="333" />
                   <div className="flex flex-col gap-[6px]">
                     <h2 className="font-bold">Soho House Istanbul</h2>
-                    <Label className="opacity-70">Beyoglu, Istanbul, Turkey</Label>
+                    <Label className="opacity-70">
+                      Beyoglu, Istanbul, Turkey
+                    </Label>
                   </div>
                 </div>
               </div>
@@ -164,11 +258,17 @@ export default function EventViewScheduleDetailsPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 export const getServerSideProps = async (ctx: any) => {
+  const queryClient = new QueryClient();
+  const { event_space_id } = ctx.query;
+  await queryClient.prefetchQuery("currentPublisedEventSpace", () =>
+    fetchEventSpaceById(event_space_id)
+  );
   const supabase = createPagesServerClient(ctx);
+
   let {
     data: { session },
   } = await supabase.auth.getSession();
@@ -182,13 +282,17 @@ export const getServerSideProps = async (ctx: any) => {
     };
 
   // get profile from session
-  const { data: profile, error } = await supabase.from('profile').select('*').eq('uuid', session.user.id);
+  const { data: profile, error } = await supabase
+    .from("profile")
+    .select("*")
+    .eq("uuid", session.user.id);
 
   return {
     props: {
       initialSession: session,
       user: session?.user,
       profile: profile,
+      dehydratedState: dehydrate(queryClient),
     },
   };
 };
