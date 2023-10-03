@@ -1,12 +1,12 @@
-import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
-import { BiChevronDown } from "react-icons/bi";
-import { BsMapFill, BsTicketFill } from "react-icons/bs";
-import { IconType } from "react-icons";
-import { HiMap } from "react-icons/hi";
-import { BsFillTicketFill } from "react-icons/bs";
-import Button from "@/components/ui/buttons/Button";
-import { useRouter } from "next/router";
-import { v4 } from "uuid";
+import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
+import { BiChevronDown } from 'react-icons/bi';
+import { BsMapFill, BsTicketFill } from 'react-icons/bs';
+import { IconType } from 'react-icons';
+import { HiMap } from 'react-icons/hi';
+import { BsFillTicketFill } from 'react-icons/bs';
+import Button from '@/components/ui/buttons/Button';
+import { useRouter } from 'next/router';
+import { v4 } from 'uuid';
 
 interface DropDownMenuItem {
   icon: IconType;
@@ -17,13 +17,13 @@ interface DropDownMenuItem {
 const DropDownMenu: DropDownMenuItem[] = [
   {
     icon: BsFillTicketFill,
-    label: "Add a Schedule",
-    path: "/dashboard/events/space/tracks/schedules/addschedule",
+    label: 'Add a Schedule',
+    path: '/dashboard/events/space/tracks/schedules/addschedule',
   },
   {
     icon: HiMap,
-    label: "Add a Track",
-    path: "/dashboard/events/space/tracks/addtrack",
+    label: 'Add a Track',
+    path: '/dashboard/events/space/tracks/addtrack',
   },
 ];
 
@@ -57,15 +57,10 @@ const AddToEventButton: React.FC<AddToEventButton> = (props) => {
                 key={id}
                 onClick={() => {
                   let path = item.path;
-                  if (event_space_id)
-                    path += `?event_space_id=${event_space_id}`;
-                  if (trackId)
-                    path += `${event_space_id ? "&" : "?"}trackId=${trackId}`;
-                  if (item.label === "Add a Schedule")
-                    path += `${
-                      event_space_id || trackId ? "&" : "?"
-                    }quickAccess=true`;
-                  router.push(path);
+                  if (event_space_id) path += `?event_space_id=${event_space_id}`;
+                  if (trackId) path += `${event_space_id ? '&' : '?'}trackId=${trackId}`;
+                  if (item.label === 'Add a Schedule') path += `${event_space_id || trackId ? '&' : '?'}quickAccess=true`;
+                  // router.push(path);
                 }}
                 className="w-full shadow-none rounded-[40px] px-3.5 bg-[#383B3B] border-none hover:bg-[#ffffff10] duration-200 text-textSecondary hover:text-textSecondary"
                 leftIcon={item.icon}
