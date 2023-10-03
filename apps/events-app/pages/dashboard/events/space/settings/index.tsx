@@ -31,7 +31,7 @@ import { BsMap } from "react-icons/bs";
 
 const EventSpaceSettings = () => {
   const router = useRouter();
-  const { eventId } = router.query;
+  const { event_space_id } = router.query;
   const { eventSpace } = useEventSpace();
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
@@ -44,10 +44,10 @@ const EventSpaceSettings = () => {
     isError,
   } = useQuery(
     ["inviteDetails"], // Query key
-    () => fetchSpaceInvites(eventId as string), // Query function
+    () => fetchSpaceInvites(event_space_id as string), // Query function
     {
-      enabled: !!eventId,
-      refetchOnWindowFocus: false, // Only execute the query if eventId is available
+      enabled: !!event_space_id,
+      refetchOnWindowFocus: false, // Only execute the query if event_space_id is available
     }
   );
 
@@ -57,13 +57,12 @@ const EventSpaceSettings = () => {
       await createInvite(
         {
           invitee_email: email,
-          event_space_id: eventId as string,
+          event_space_id: event_space_id as string,
         },
-        eventId as string
+        event_space_id as string
       );
       setEmail("");
       queryClient.invalidateQueries({ queryKey: ["inviteDetails"] });
-      // router.push("/dashboard/events/myspaces");
     } catch (error) {
       console.error("Error sending invite", error);
     } finally {
@@ -72,12 +71,11 @@ const EventSpaceSettings = () => {
   };
 
   const handleRemoveInvitee = async (id: string) => {
-    console.log(eventId);
+    console.log(event_space_id);
     try {
-      const res = await revokeInvite(id, eventId as string);
+      const res = await revokeInvite(id, event_space_id as string);
       console.log(res);
       queryClient.invalidateQueries({ queryKey: ["inviteDetails"] });
-      // router.push("/dashboard/events/myspaces");
     } catch (error) {
       console.error("Error revoking invite", error);
     }

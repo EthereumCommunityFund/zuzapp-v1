@@ -57,10 +57,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         if (status === 'pending') {
             const inviteLink = `http://${req.headers.host}test/accept-invite?invite_id=${existingInvite[0].id}`;
             const message = {
-                from: process.env.EMAIL_FROM,
+                from: "victor@ecf.network",
                 to: existingInvite[0].invitee_email,
                 subject: "You have been invited to collaborate on Zuzapp",
-                html: `<p>${inviteLink}</p>`,
+                html: `Follow this link to accept the invite <br/> <p>${inviteLink}</p>`,
             };
             await processInvite(message);
             return res.status(200).json({ message: "Invitation re-sent" });
@@ -82,10 +82,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const inviteLink = `http://${req.headers.host}/dashboard/events/accept-invite?invite_id=${result.data.id}`;
     const message = {
         from: "victor@ecf.network",
-        to: "onyejivic@gmail.com",
+        to: invitee_email,
         subject: "You have been invited to collaborate on Zuzapp",
         text: "",
-        html: `<p>${inviteLink}</p>`,
+        html: `Follow this link to accept the invite <br/> <p>${inviteLink}</p>`,
     };
 
     await processInvite(message);

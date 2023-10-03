@@ -1,10 +1,10 @@
-import EventSpacesTemplate from '@/components/templates/events/EventSpacesTemplate';
-import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
-import { useEffect, useState } from 'react';
-import { fetchUserEventSpaces } from '../../../services/eventSpaceService';
-import { EventSpaceDetailsType } from '@/types';
-import { useQuery } from 'react-query';
-import { fetchInvitedEvents } from '@/services/fetchInvitedEvents';
+import EventSpacesTemplate from "@/components/templates/events/EventSpacesTemplate";
+import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
+import { useEffect, useState } from "react";
+import { fetchUserEventSpaces } from "../../../services/eventSpaceService";
+import { EventSpaceDetailsType } from "@/types";
+import { useQuery } from "react-query";
+import { fetchInvitedEvents } from "@/services/fetchInvitedEvents";
 
 export default function MyEventSpacesPage() {
   const {
@@ -12,21 +12,22 @@ export default function MyEventSpacesPage() {
     isLoading,
     isError,
   } = useQuery<EventSpaceDetailsType[], Error>(
-    ['eventSpaces'], // Query key
-    () => fetchUserEventSpaces(),
+    ["eventSpaces"], // Query key
+    fetchUserEventSpaces,
+
     {
       onSuccess: (data) => {
-        console.log('Event Spaces:', data);
+        console.log("Event Spaces:", data);
       },
     }
   );
 
   const { data: invitedSpaces } = useQuery<EventSpaceDetailsType[], Error>(
-    ['invitedSpaces'], // Query key
-    () => fetchInvitedEvents(),
+    ["invitedSpaces"], // Query key
+    fetchInvitedEvents,
     {
       onSuccess: (data) => {
-        console.log('Event Spaces:', data);
+        console.log("Event Spaces:", data);
       },
     }
   );
@@ -34,7 +35,17 @@ export default function MyEventSpacesPage() {
   if (isError) {
     return <p>Error loading space details</p>;
   }
-  return <div className="flex gap-[10px] flex-1 items-center self-stretch font-inter">{<EventSpacesTemplate eventSpaces={eventSpaces} invitedSpaces={invitedSpaces} isLoading={isLoading} />}</div>;
+  return (
+    <div className="flex gap-[10px] flex-1 items-center self-stretch font-inter">
+      {
+        <EventSpacesTemplate
+          eventSpaces={eventSpaces}
+          invitedSpaces={invitedSpaces}
+          isLoading={isLoading}
+        />
+      }
+    </div>
+  );
 }
 
 export const getServerSideProps = async (ctx: any) => {
@@ -52,7 +63,10 @@ export const getServerSideProps = async (ctx: any) => {
     };
 
   // get profile from session
-  const { data: profile, error } = await supabase.from('profile').select('*').eq('uuid', session.user.id);
+  const { data: profile, error } = await supabase
+    .from("profile")
+    .select("*")
+    .eq("uuid", session.user.id);
 
   return {
     props: {

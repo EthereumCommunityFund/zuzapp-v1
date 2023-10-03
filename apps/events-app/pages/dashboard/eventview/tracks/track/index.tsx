@@ -9,9 +9,7 @@ import { Label } from "@/components/ui/label";
 import { useEventSpace } from "@/context/EventSpaceContext";
 import { TrackUpdateRequestBody } from "@/types";
 import { useRouter } from "next/router";
-import { useState } from "react";
-
-
+import { useEffect, useState } from "react";
 
 export default function EventViewTrackDetailsPage() {
   const router = useRouter();
@@ -20,15 +18,12 @@ export default function EventViewTrackDetailsPage() {
   const trackId = router.query.trackId;
   const trackItem = eventSpace?.tracks.find((track) => track.id === trackId);
 
-
   const handleItemClick = () => {
     router.push("/dashboard/eventview/tracks/track/schedule");
-  }
+  };
 
   const handleBackToTracksClick = () => {
     router.push("/dashboard/eventview/tracks");
-  }
-  return (
-    trackItem && <TrackDetailsPageTemplate trackItem={trackItem} />
-  )
+  };
+  return trackItem && <TrackDetailsPageTemplate trackItem={trackItem} />;
 }
