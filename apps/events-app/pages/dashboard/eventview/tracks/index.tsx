@@ -1,4 +1,4 @@
-import EventSpaceDetailsType from "/@/types";
+import { EventSpaceDetailsType } from "@/types";
 import EventViewHeader from "@/components/eventview/EventViewHeader";
 import TrackItemCard from "@/components/tracks/TrackItemCard";
 import MyDropdown from "@/components/ui/DropDown";
@@ -21,6 +21,7 @@ import { useState } from "react";
 import { Option } from "react-dropdown";
 import { BiLeftArrow, BiSolidCategory } from "react-icons/bi";
 import { QueryClient, dehydrate, useQuery } from "react-query";
+import useEventDetails from "@/hooks/useCurrentEventSpace";
 
 export default function EventViewTracksPage() {
   const router = useRouter();
@@ -29,19 +30,7 @@ export default function EventViewTracksPage() {
     router.push("/404");
   }
 
-  const { data: eventSpace, isLoading } = useQuery<
-    EventSpaceDetailsType,
-    Error
-  >(
-    ["currentPublisedEventSpace"], // Query key
-    () => fetchEventSpaceById(event_space_id as string),
-
-    {
-      onSuccess: (data) => {
-        console.log("selectedEventSpace Event Spaces:", data);
-      },
-    }
-  );
+  const { eventSpace, isLoading } = useEventDetails();
 
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -131,7 +120,7 @@ export default function EventViewTracksPage() {
 export const getServerSideProps = async (ctx: any) => {
   const queryClient = new QueryClient();
   const { event_space_id } = ctx.query;
-  await queryClient.prefetchQuery("currentPublisedEventSpace", () =>
+  await queryClient.prefetchQuery("currentEventSpace", () =>
     fetchEventSpaceById(event_space_id)
   );
   const supabase = createPagesServerClient(ctx);

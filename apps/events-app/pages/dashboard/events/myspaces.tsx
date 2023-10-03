@@ -14,6 +14,7 @@ export default function MyEventSpacesPage() {
   } = useQuery<EventSpaceDetailsType[], Error>(
     ["eventSpaces"], // Query key
     fetchUserEventSpaces,
+
     {
       onSuccess: (data) => {
         console.log("Event Spaces:", data);

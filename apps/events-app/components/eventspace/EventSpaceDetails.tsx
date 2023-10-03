@@ -167,7 +167,7 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({
     try {
       const result = await updateEventSpace(event_space_id as string, payload);
       setDetailsUpdated(true);
-      queryClient.invalidateQueries({ queryKey: ["spaceDetails"] });
+      queryClient.invalidateQueries({ queryKey: ["currentEventSpace"] });
       console.log(result, "result");
     } catch (error: any) {
       console.log(error, "error");

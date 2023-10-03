@@ -28,23 +28,12 @@ import {
 import { EventSpaceDetailsType } from "@/types";
 import { fetchEventSpaceById } from "@/services/fetchEventSpaceDetails";
 import { QueryClient, dehydrate, useQuery } from "react-query";
+import useEventDetails from "@/hooks/useCurrentEventSpace";
 
 export default function EventViewScheduleDetailsPage() {
   const router = useRouter();
   const { event_space_id } = router.query;
-  const { data: eventSpace, isLoading } = useQuery<
-    EventSpaceDetailsType,
-    Error
-  >(
-    ["currentPublisedEventSpace"], // Query key
-    () => fetchEventSpaceById(event_space_id as string),
-
-    {
-      onSuccess: (data) => {
-        console.log("selectedEventSpace Event Spaces:", data);
-      },
-    }
-  );
+  const { eventSpace, isLoading } = useEventDetails();
 
   const { scheduleName, trackId } = router.query;
   const currentSchedule = eventSpace?.schedules.find(
@@ -264,7 +253,7 @@ export default function EventViewScheduleDetailsPage() {
 export const getServerSideProps = async (ctx: any) => {
   const queryClient = new QueryClient();
   const { event_space_id } = ctx.query;
-  await queryClient.prefetchQuery("currentPublisedEventSpace", () =>
+  await queryClient.prefetchQuery("currentEventSpace", () =>
     fetchEventSpaceById(event_space_id)
   );
   const supabase = createPagesServerClient(ctx);

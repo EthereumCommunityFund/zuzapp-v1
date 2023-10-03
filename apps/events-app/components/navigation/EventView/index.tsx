@@ -6,10 +6,12 @@ import { useRouter } from "next/router";
 import { MdOutlineModeEdit } from "react-icons/md";
 import { HiArrowLeft, HiOutlineMenuAlt1 } from "react-icons/hi";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { ArrowCircleLeft } from "@/components/ui/icons";
 
 export default function EventViewNavigation() {
+  const [isClient, setIsClient] = useState(false);
+
   const router = useRouter();
   const { event_space_id } = router.query;
 
