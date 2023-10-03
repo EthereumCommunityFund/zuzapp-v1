@@ -120,7 +120,7 @@ export default function EventViewTracksPage() {
 export const getServerSideProps = async (ctx: any) => {
   const queryClient = new QueryClient();
   const { event_space_id } = ctx.query;
-  await queryClient.prefetchQuery("currentPublisedEventSpace", () =>
+  await queryClient.prefetchQuery("currentEventSpace", () =>
     fetchEventSpaceById(event_space_id)
   );
   const supabase = createPagesServerClient(ctx);
