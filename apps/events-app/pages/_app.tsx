@@ -21,12 +21,7 @@ const App = ({ Component, pageProps }: { Component: any; pageProps: any }) => {
   const queryClient = new QueryClient();
 
   useEffect(() => {
-    const queryKeys = [
-      "eventSpaces",
-      "invitedSpaces",
-      "publishedEventSpaces",
-      "",
-    ];
+    const queryKeys = ["eventSpaces", "invitedSpaces", "publishedEventSpaces"];
 
     queryKeys.forEach((key) => {
       const cache = localStorage.getItem(`react-query-cache-${key}`);

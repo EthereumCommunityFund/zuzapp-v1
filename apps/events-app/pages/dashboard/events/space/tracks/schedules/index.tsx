@@ -21,7 +21,7 @@ import fetchSchedulesByTrackId from "@/services/fetchScedulesByTrackId";
 import { ScheduleUpdateRequestBody } from "@/types";
 import { HiArrowRight } from "react-icons/hi2";
 import { Loader } from "@/components/ui/Loader";
-import useTrackDetails from "@/hooks/trackDetails";
+import useTrackDetails from "@/hooks/useTrackDetails";
 
 type IdProp = {
   id: string;
