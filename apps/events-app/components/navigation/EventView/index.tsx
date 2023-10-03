@@ -6,19 +6,12 @@ import { useRouter } from "next/router";
 import { MdOutlineModeEdit } from "react-icons/md";
 import { HiArrowLeft, HiOutlineMenuAlt1 } from "react-icons/hi";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { ArrowCircleLeft } from "@/components/ui/icons";
 
 export default function EventViewNavigation() {
-  const [isClient, setIsClient] = useState(false);
-
-  const router = useRouter();
-  const { event_space_id } = router.query;
-
-  if (!event_space_id) {
-    router.push("/404");
-  }
   const [dashboardOpen, setDashboardOpen] = React.useState(true);
+  const router = useRouter();
   const routes = eventViewRoutes;
 
   const handleClick = () => {
@@ -26,16 +19,16 @@ export default function EventViewNavigation() {
   };
 
   const handleEditEvent = () => {
-    router.push(`/dashboard/eventview/?event_space_id=${event_space_id}`);
+    router.push("/dashboard/eventview/");
   };
 
   const handleEditSchedules = () => {
-    router.push(`/dashboard/eventview/?event_space_id=${event_space_id}`);
+    router.push("/dashboard/eventview/");
   };
 
   const handleBackToEvents = () => {
     router.push("/dashboard/home");
-  };
+  }
 
   return (
     <>
@@ -72,43 +65,39 @@ export default function EventViewNavigation() {
                       }`}
                   >
                     {route.icon && <route.icon size={30} />}
-                    <Link href={route.path} className="max-lg:w-full lg:w-inherit">
+                    <Link href={route.path} className="md:w-full lg:w-inherit">
                       {route.name}
                     </Link>
                   </li>
                 ))}
               </ul>
             </div>
-            {router.pathname.includes("dashboard/eventview/tracks") && (
-              <div className="flex flex-col gap-3 rounded-md p-2 bg-black font-bold">
-                <h2>Organizer</h2>
-                <Button
-                  variant="ghost"
-                  className="p-2 w-full gap-3 text-base"
-                  onClick={handleEditEvent}
-                >
-                  <MdOutlineModeEdit />
-                  <span>Edit Event</span>
-                </Button>
-              </div>
-            )}
-            {router.pathname.includes("dashboard/eventview/allschedules") && (
-              <div className="flex flex-col gap-3 rounded-md p-2 bg-black font-bold">
-                <h2>Organizer</h2>
-                <Button
-                  variant="ghost"
-                  className="p-2 w-full gap-3 text-base"
-                  onClick={handleEditSchedules}
-                >
-                  <MdOutlineModeEdit />
-                  <span>Edit Schedules</span>
-                </Button>
-              </div>
-            )}
+            {
+              router.pathname.includes('dashboard/eventview/tracks') && (
+                <div className="flex flex-col gap-3 rounded-md p-2 bg-black font-bold">
+                  <h2>Organizer</h2>
+                  <Button variant="ghost" className="p-2 w-full gap-3 text-base" onClick={handleEditEvent}>
+                    <MdOutlineModeEdit />
+                    <span>Edit Event</span>
+                  </Button>
+                </div>
+              )
+            }
+            {
+              router.pathname.includes('dashboard/eventview/allschedules') && (
+                <div className="flex flex-col gap-3 rounded-md p-2 bg-black font-bold">
+                  <h2>Organizer</h2>
+                  <Button variant="ghost" className="p-2 w-full gap-3 text-base" onClick={handleEditSchedules}>
+                    <MdOutlineModeEdit />
+                    <span>Edit Schedules</span>
+                  </Button>
+                </div>
+              )
+            }
           </div>
-        </div>
-      </nav>
+        </div >
+      </nav >
       {/* </div> */}
     </>
-  );
+  )
 }
