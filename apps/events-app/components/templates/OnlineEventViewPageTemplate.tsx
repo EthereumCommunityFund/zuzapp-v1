@@ -58,8 +58,13 @@ export default function OnlineEventViewPageTemplate({ eventSpace }: IOnlineEvent
 
   return (
     <>
+<<<<<<< HEAD
       <div className="flex gap-10 md:flex-col sm:flex-col">
         <div className="lg:w-2/3 md:w-full flex flex-col rounded-2xl bg-componentPrimary lg:min-w-[600px]"> {/* Information */}
+=======
+      <div className="flex gap-10 md:flex-col">
+        <div className="lg:w-2/3 md:w-full flex flex-col rounded-2xl bg-componentPrimary min-w-[600px]"> {/* Information */}
+>>>>>>> c57b29b (Resolve merge conflicts)
           <div className="rounded-xl p-5">
             <img src={eventSpace.image_url} className="w-full pb-5 rounded-2xl" alt="" height={600} />
           </div>
