@@ -18,7 +18,7 @@ const DropDownMenu: DropDownMenuItem[] = [
   {
     icon: BsFillTicketFill,
     label: 'Add a Schedule',
-    path: '/dashboard/events/space/tracks/schedules/addschedule',
+    path: '/dashboard/events/space/tracks/schedules',
   },
   {
     icon: HiMap,
@@ -59,8 +59,8 @@ const AddToEventButton: React.FC<AddToEventButton> = (props) => {
                   let path = item.path;
                   if (eventId) path += `?eventId=${eventId}`;
                   if (trackId) path += `${eventId ? '&' : '?'}trackId=${trackId}`;
-                  if (item.label === 'Add a Schedule') path += `${eventId || trackId ? '&' : '?'}quickAccess=true`;
-                  router.push(path);
+                  // if (item.label === 'Add a Schedule') path += `${eventId || trackId ? '&' : '?'}`;
+                  // router.push(path);
                 }}
                 className="w-full shadow-none rounded-[40px] px-3.5 bg-[#383B3B] border-none hover:bg-[#ffffff10] duration-200 text-textSecondary hover:text-textSecondary"
                 leftIcon={item.icon}
