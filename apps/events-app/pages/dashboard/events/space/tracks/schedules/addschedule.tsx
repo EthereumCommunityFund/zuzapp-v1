@@ -73,9 +73,8 @@ export default function AddSchedulePage(props: any) {
   const [rsvpAmount, setRsvpAmount] = useState(1);
   const [organizers, setOrganizers] = useState<any>([]);
   const [tags, setTags] = useState<string[]>([]);
-  const [tagItem, setTagItem] = useState<TagItemProp>({ name: "" });
-  const [eventItem, setEventItem] = useState({ name: "", role: "speaker" });
-
+  const [tagItem, setTagItem] = useState<TagItemProp>({ name: '' });
+  const [eventItem, setEventItem] = useState({ name: '', role: 'speaker' });
   const [frequency, setFrequency] = useState<"once" | "everyday" | "weekly">(
     "once"
   );
@@ -718,7 +717,7 @@ export default function AddSchedulePage(props: any) {
                             <button
                               type="button"
                               onClick={() => {
-                                if (eventItem.name === "") return;
+                                if (eventItem.name === '') return;
                                 setOrganizers([...organizers, eventItem]);
                                 setEventItem({ name: "", role: "speaker" });
                               }}

@@ -124,11 +124,9 @@ export default function SchedulesDashboardPage() {
               <div className="w-24 h-fit bg-white rounded-lg p-1">{loading ? <Loader /> : <img src={trackDetails?.image as string} alt="track-image" />}</div>
               <div className="flex flex-col gap-5 self-stretch">
                 <h2 className="text-4xl font-semibold">{track_title}</h2>
-              </div >
-            </div >
-            <h3 className="text-2xl leading-[1.2] opacity-70 font-bold ">
-              Schedules
-            </h3>
+              </div>
+            </div>
+            <h3 className="text-2xl leading-[1.2] opacity-70 font-bold ">Schedules</h3>
             <div className="flex justify-between items-start self-stretch">
               <Button
                 variant="blue"
@@ -184,21 +182,21 @@ export default function SchedulesDashboardPage() {
                                 </span>
                               </div>
                             </div>
-                          </div >
-                          <Button variant="dark" className="bg-white/20 text-white/70 rounded-full" leftIcon={HiArrowRight} onClick={() => handleEnterSchedule(schedule.id)}>
-                            Update Schedule
-                          </Button>
-                        </div >
-                      </div >
-                    </div >
-                  ))
-                  }
-                </div >
-              )}
-            </div >
-          )}
-      </div >
-    </div >
+                          </div>
+                        </div>
+                        <Button variant="dark" className="bg-white/20 text-white/70 rounded-full" leftIcon={HiArrowRight} onClick={() => handleEnterSchedule(schedule.id)}>
+                          Update Schedule
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
   );
 }
 

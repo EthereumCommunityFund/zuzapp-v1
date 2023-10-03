@@ -54,10 +54,10 @@ export default function EventSpaceDetailsPage() {
 
 export const getServerSideProps = async (ctx: any) => {
   const queryClient = new QueryClient();
-  const { event_space_id } = ctx.query;
-  await queryClient.prefetchQuery("currentEventSpace", () =>
-    fetchEventSpaceById(event_space_id)
-  );
+  // const { event_space_id } = ctx.query;
+  // await queryClient.prefetchQuery("currentEventSpace", () =>
+  //   fetchEventSpaceById(event_space_id)
+  // );
   const supabase = createPagesServerClient(ctx);
   let {
     data: { session },
