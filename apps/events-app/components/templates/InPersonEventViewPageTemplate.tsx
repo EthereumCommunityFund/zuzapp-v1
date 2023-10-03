@@ -79,8 +79,8 @@ export default function InPersonEventViewPageTemplate({ eventSpace }: IInPersonE
 
 	return (
 		<>
-			<div className="flex gap-10 md:flex-col">
-				<div className="lg:w-2/3 md:w-full flex flex-col rounded-2xl bg-componentPrimary min-w-[600px]"> {/* Information */}
+			<div className="flex gap-10 md:flex-col sm:flex-col">
+				<div className="lg:w-2/3 md:w-full sm:w-full flex flex-col rounded-2xl bg-componentPrimary min-w-[600px]"> {/* Information */}
 					<div className="rounded-xl p-5">
 						<img src={eventSpace.image_url} className="w-full pb-5 rounded-2xl" alt="" height={600} />
 					</div>
@@ -126,7 +126,7 @@ export default function InPersonEventViewPageTemplate({ eventSpace }: IInPersonE
 					</div>
 					<div className="flex flex-col gap-3 p-5"> {/*Location */}
 						<h2 className="text-xl text-white/70 font-bold">LOCATION</h2>
-						<img src="/images/2.png" alt="" className="w-full" width={600} height={600} />
+						<img src={imgUrls && imgUrls[0]} alt="" className="w-full" width={600} height={600} />
 						<h2 className="font-extrabold text-lg">Soho House Istanbul</h2>
 						<h3 className="font-bold text-white/70">Beyoğlu, Istanbul, Turkey</h3>
 						<Dialog>

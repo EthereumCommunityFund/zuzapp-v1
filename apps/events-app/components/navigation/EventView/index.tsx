@@ -49,15 +49,15 @@ export default function EventViewNavigation() {
         onClick={handleClick}
       ></div>
       <nav
-        className={`z-50 dashboard-menu lg:w-[300px] md:w-full fixed flex flex-col lg:h-screen md:h-auto border-r border-r-gray-800 bg-pagePrimary lg:py-10 md:pt-10 pl-10 transition-transform duration-300 ${dashboardOpen && "open"
+        className={`z-50 dashboard-menu lg:w-[300px] md:w-full sm:w-full fixed flex flex-col lg:h-screen md:h-auto sm:h-auto border-r border-r-gray-800 bg-pagePrimary lg:py-10 md:pt-10 sm:pt-10 pl-10 transition-transform duration-300 ${dashboardOpen && "open"
           }`}
       >
         <div className="flex-1 flex flex-col gap-5 max-w-max">
           <div className="mt-10 flex-1">
-            <Button size="lg" variant="quiet-SM" className="lg:pb-10 md:pb-2 opacity-80" leftIcon={ArrowCircleLeft} onClick={handleBackToEvents}>Back to Events</Button>
+            <Button size="lg" variant="quiet-SM" className="lg:pb-10 md:pb-2 sm:pb-1 opacity-80" leftIcon={ArrowCircleLeft} onClick={handleBackToEvents}>Back to Events</Button>
             <div className="flex flex-col gap-3.5 lg:pb-10 md:pb-1">
-              <span className="font-semibold md:hidden lg:contents">Navigate Event</span>
-              <ul className="space-y-3 md:flex md:items-end lg:block">
+              <span className="font-semibold md:hidden lg:contents sm:hidden">Navigate Event</span>
+              <ul className="space-y-3 md:flex md:items-end lg:block sm:flex sm:items-end">
                 {routes.map((route, index) => (route.name &&
                   <li
                     key={index}
@@ -65,7 +65,7 @@ export default function EventViewNavigation() {
                       }`}
                   >
                     {route.icon && <route.icon size={30} />}
-                    <Link href={route.path} className="md:w-full lg:w-inherit">
+                    <Link href={route.path} className="max-lg:w-full lg:w-inherit">
                       {route.name}
                     </Link>
                   </li>
