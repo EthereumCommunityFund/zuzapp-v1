@@ -32,6 +32,7 @@ type Joined<T> = ScheduleUpdateRequestBody & T;
 export default function SchedulesDashboardPage() {
   const router = useRouter();
   const { event_space_id, trackId, track_title } = router.query;
+  const { trackDetails } = useTrackDetails();
 
   const {
     data: schedules,
