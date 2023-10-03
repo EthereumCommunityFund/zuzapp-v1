@@ -253,7 +253,7 @@ export default function EventViewScheduleDetailsPage() {
 export const getServerSideProps = async (ctx: any) => {
   const queryClient = new QueryClient();
   const { event_space_id } = ctx.query;
-  await queryClient.prefetchQuery("currentEventSpace", () =>
+  await queryClient.prefetchQuery("currentPublisedEventSpace", () =>
     fetchEventSpaceById(event_space_id)
   );
   const supabase = createPagesServerClient(ctx);

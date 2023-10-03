@@ -1,5 +1,14 @@
-import { BiLeftArrowAlt, BiEditAlt, BiPlus, BiRadioCircle, BiCalendarAlt, BiTimeFive, BiRadioCircleMarked, BiPlusCircle } from 'react-icons/bi';
-import { HiArrowLeft, HiCog, HiSelector } from 'react-icons/hi';
+import {
+  BiLeftArrowAlt,
+  BiEditAlt,
+  BiPlus,
+  BiRadioCircle,
+  BiCalendarAlt,
+  BiTimeFive,
+  BiRadioCircleMarked,
+  BiPlusCircle,
+} from "react-icons/bi";
+import { HiArrowLeft, HiCog, HiSelector } from "react-icons/hi";
 
 import Button from '@/components/ui/buttons/Button';
 import Link from 'next/link';
@@ -50,7 +59,7 @@ export default function SchedulesDashboardPage() {
         },
       });
     } catch (error) {
-      console.error('Error fetching space details', error);
+      console.error("Error fetching space details", error);
     }
   };
 
@@ -64,22 +73,22 @@ export default function SchedulesDashboardPage() {
         query: { event_space_id, trackId: trackId, track_title: track_title },
       });
     } catch (error) {
-      console.error('Error fetching space details', error);
+      console.error("Error fetching space details", error);
     }
   };
   function formatDate(dateString: string | number | Date) {
     const date = new Date(dateString);
-    return new Intl.DateTimeFormat('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
+    return new Intl.DateTimeFormat("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
     }).format(date);
   }
   function formatTime(dateString: string | number | Date) {
     const date = new Date(dateString);
-    return new Intl.DateTimeFormat('en-US', {
-      hour: 'numeric',
-      minute: 'numeric',
+    return new Intl.DateTimeFormat("en-US", {
+      hour: "numeric",
+      minute: "numeric",
       hour12: true,
     }).format(date);
   }
@@ -115,9 +124,11 @@ export default function SchedulesDashboardPage() {
               <div className="w-24 h-fit bg-white rounded-lg p-1">{loading ? <Loader /> : <img src={trackDetails?.image as string} alt="track-image" />}</div>
               <div className="flex flex-col gap-5 self-stretch">
                 <h2 className="text-4xl font-semibold">{track_title}</h2>
-              </div>
-            </div>
-            <h3 className="text-2xl leading-[1.2] opacity-70 font-bold ">Schedules</h3>
+              </div >
+            </div >
+            <h3 className="text-2xl leading-[1.2] opacity-70 font-bold ">
+              Schedules
+            </h3>
             <div className="flex justify-between items-start self-stretch">
               <Button
                 variant="blue"
@@ -129,55 +140,65 @@ export default function SchedulesDashboardPage() {
               </Button>
 
               <div className="flex items-start gap-3">
-                <Button className="rounded-[40px] py-2.5 px-3.5 bg-bgPrimary border-none hover:bg-[#363636] duration-200 text-textSecondary hover:text-textSecondary" size="lg" leftIcon={HiSelector}>
+                <Button
+                  className="rounded-[40px] py-2.5 px-3.5 bg-bgPrimary border-none hover:bg-[#363636] duration-200 text-textSecondary hover:text-textSecondary"
+                  size="lg"
+                  leftIcon={HiSelector}
+                >
                   Sort
                 </Button>
-                <Button className="rounded-[40px] py-2.5 px-3.5 bg-bgPrimary border-none hover:bg-[#363636] duration-200 text-textSecondary hover:text-textSecondary" size="lg" leftIcon={HiCog}>
+                <Button
+                  className="rounded-[40px] py-2.5 px-3.5 bg-bgPrimary border-none hover:bg-[#363636] duration-200 text-textSecondary hover:text-textSecondary"
+                  size="lg"
+                  leftIcon={HiCog}
+                >
                   Select
                 </Button>
               </div>
             </div>
-          </div>
-        </div>
-        {isLoading ? (
-          <Loader />
-        ) : (
-          <div className="w-full">
-            {schedules && (
-              <div className="flex flex-col gap-[10px] w-full">
-                {schedules.map((schedule) => (
-                  <div className="flex flex-col items-center justify-between gap-[10px]">
-                    <div className="w-full">
-                      <div className="flex py-3 px-3.5 items-center gap-[364px] rounded-2xl border border-white border-opacity-10 bg-[#2E3131] w-full">
-                        <div className="flex items-start gap-10">
-                          <BiRadioCircle className="w-10 h-10" />
-                          <div className="flex flex-col items-start gap-[10px]">
-                            <span className="text-[18px] font-semibold leading-[1.2]">{schedule.name}</span>
-                            <div className="flex items-start self-stretch gap-6">
-                              <span className="flex items-center p-1 gap-1 rounded-[10px] opacity-60 bg-[#FFFFFF10] white-space-nowrap overflow-hidden text-ellipsis">
-                                <BiCalendarAlt size={30} />
-                                <span className="ml-2">{formatDate(schedule?.date)}</span>
-                              </span>
-                              <span className="flex items-center p-1 gap-1 rounded-[10px] opacity-60 bg-[#FFFFFF10] white-space-nowrap overflow-hidden text-ellipsis">
-                                <BiTimeFive size={30} />
-                                <span className="ml-2">{formatTime(schedule?.start_time)} </span>
-                              </span>
+          </div >
+        </div >
+        {
+          isLoading ? (
+            <Loader />
+          ) : (
+            <div className="w-full">
+              {schedules && (
+                <div className="flex flex-col gap-[10px] w-full">
+                  {schedules.map((schedule) => (
+                    <div className="flex flex-col items-center justify-between gap-[10px]">
+                      <div className="w-full">
+                        <div className="flex py-3 px-3.5 items-center gap-[364px] rounded-2xl border border-white border-opacity-10 bg-[#2E3131] w-full">
+                          <div className="flex items-start gap-10">
+                            <BiRadioCircle className="w-10 h-10" />
+                            <div className="flex flex-col items-start gap-[10px]">
+                              <span className="text-[18px] font-semibold leading-[1.2]">{schedule.name}</span>
+                              <div className="flex items-start self-stretch gap-6">
+                                <span className="flex items-center p-1 gap-1 rounded-[10px] opacity-60 bg-[#FFFFFF10] white-space-nowrap overflow-hidden text-ellipsis">
+                                  <BiCalendarAlt size={30} />
+                                  <span className="ml-2">{formatDate(schedule?.date)}</span>
+                                </span>
+                                <span className="flex items-center p-1 gap-1 rounded-[10px] opacity-60 bg-[#FFFFFF10] white-space-nowrap overflow-hidden text-ellipsis">
+                                  <BiTimeFive size={30} />
+                                  <span className="ml-2">{formatTime(schedule?.start_time)} </span>
+                                </span>
+                              </div>
                             </div>
-                          </div>
-                        </div>
-                        <Button variant="dark" className="bg-white/20 text-white/70 rounded-full" leftIcon={HiArrowRight} onClick={() => handleEnterSchedule(schedule.id)}>
-                          Update Schedule
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
-      </div>
-    </div>
+                          </div >
+                          <Button variant="dark" className="bg-white/20 text-white/70 rounded-full" leftIcon={HiArrowRight} onClick={() => handleEnterSchedule(schedule.id)}>
+                            Update Schedule
+                          </Button>
+                        </div >
+                      </div >
+                    </div >
+                  ))
+                  }
+                </div >
+              )}
+            </div >
+          )}
+      </div >
+    </div >
   );
 }
 
@@ -196,7 +217,10 @@ export const getServerSideProps = async (ctx: any) => {
     };
 
   // get profile from session
-  const { data: profile, error } = await supabase.from('profile').select('*').eq('uuid', session.user.id);
+  const { data: profile, error } = await supabase
+    .from("profile")
+    .select("*")
+    .eq("uuid", session.user.id);
 
   return {
     props: {
