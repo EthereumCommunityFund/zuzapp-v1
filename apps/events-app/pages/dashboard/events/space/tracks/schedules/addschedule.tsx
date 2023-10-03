@@ -72,7 +72,7 @@ export default function AddSchedulePage(props: any) {
   const [organizers, setOrganizers] = useState<any>([]);
   const [tags, setTags] = useState<string[]>([]);
   const [tagItem, setTagItem] = useState<TagItemProp>({ name: '' });
-  const [eventItem, setEventItem] = useState({ name: '', role: '' });
+  const [eventItem, setEventItem] = useState({ name: '', role: 'speaker' });
 
   const [frequency, setFrequency] = useState<'once' | 'everyday' | 'weekly'>('once');
 
@@ -303,7 +303,7 @@ export default function AddSchedulePage(props: any) {
                 </div>
               ) : (
                 <Form {...form}>
-                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-10 w-full">
+                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-10 w-full mt-10">
                     <FormField
                       control={form.control}
                       name="format"
@@ -602,13 +602,7 @@ export default function AddSchedulePage(props: any) {
                             <button
                               type="button"
                               onClick={() => {
-                                // setScheduleAdded({
-                                //   ...scheduleAdded,
-                                //   organizers: [
-                                //     ...(scheduleAdded.organizers as Organizer[]),
-                                //     eventItem,
-                                //   ],
-                                // });
+                                if (eventItem.name === '') return;
                                 setOrganizers([...organizers, eventItem]);
                                 setEventItem({ name: '', role: 'speaker' });
                               }}

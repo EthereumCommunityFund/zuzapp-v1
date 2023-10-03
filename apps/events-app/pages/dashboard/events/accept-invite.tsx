@@ -1,11 +1,16 @@
-import { EventInviteCard } from "@/components/templates/events/EventInviteCard";
-import { useState } from "react";
-import router, { useRouter } from "next/router";
-import { useUserPassportContext } from "@/context/PassportContext";
-import { useGlobalContext } from "@/context/GlobalContext";
-import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
-import { Database } from "@/database.types";
-import { updateInvite } from "@/controllers/invite.controller";
+import { EventInviteCard } from '@/components/templates/events/EventInviteCard';
+import { useState } from 'react';
+import router, { useRouter } from 'next/router';
+import { useUserPassportContext } from '@/context/PassportContext';
+import { useGlobalContext } from '@/context/GlobalContext';
+import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
+import { Database } from '@/database.types';
+import { updateInvite } from '@/controllers/invite.controller';
+import { useQuery } from 'react-query';
+import fetchInviteById from '@/services/fetchInviteById';
+import useEventDetails from '@/hooks/eventSpaceDetails';
+import { EventSpaceDetailsType } from '@/types';
+import { fetchEventSpaceById } from '@/services/fetchEventSpaceDetails';
 
 export default function Invited() {
   const { signIn } = useUserPassportContext();
@@ -13,16 +18,43 @@ export default function Invited() {
   const [accepted, setAccepted] = useState(false);
   const router = useRouter();
   const { invite_id } = router.query;
+  const [eventId, setEventId] = useState('');
+
+  // const { eventSpace } = useEventDetails();
+
+  const {
+    data: inviteDetails,
+    isLoading,
+    isError,
+  } = useQuery<any, Error>(['inviteDetails', invite_id], () => fetchInviteById(invite_id as string), {
+    enabled: !!invite_id,
+    onSuccess: (data) => {
+      console.log('invite', data);
+      setEventId(data?.event_space_id as string);
+      if (data.status === 'accepted') {
+        setAccepted(true);
+      }
+    },
+  });
+
+  const { data: eventSpace } = useQuery<EventSpaceDetailsType, Error>(
+    ['spaceDetails', eventId], // Query key
+    () => fetchEventSpaceById(eventId as string), // Query function
+    {
+      enabled: !!eventId,
+      refetchOnWindowFocus: false, // Only execute the query if eventId is available
+    }
+  );
 
   const handleUpdateInvite = async () => {
     if (!invite_id) return;
     setAccepted(true);
     try {
       await updateInvite(invite_id as string, {
-        status: "accepted",
+        status: 'accepted',
       });
     } catch (error) {
-      console.error("Error sending invite", error);
+      console.error('Error sending invite', error);
     }
   };
 
@@ -31,48 +63,35 @@ export default function Invited() {
       pathname: `/dashboard/events/myspaces`,
     });
   };
-
   const renderEventInviteCard = () => {
-    if (user) {
-      if (accepted) {
-        return (
-          <EventInviteCard
-            spacename="ZuConnect"
-            buttonTitle="My Event Spaces"
-            onButtonClick={handleButtonClick}
-            buttonVariant="blue"
-            info="Head to your Event Spaces to view your invited spaces"
-          />
-        );
-      } else {
-        return (
-          <EventInviteCard
-            spacename="ZuConnect"
-            onButtonClick={handleUpdateInvite}
-            buttonTitle="Accept invite"
-            buttonVariant="blue"
-            info="Click the Button to Accept the invite"
-          />
-        );
-      }
-    } else {
+    if (!user) {
       return (
         <EventInviteCard
           onButtonClick={signIn}
-          spacename="ZuConnect"
+          spacename={eventSpace?.name as string}
           buttonTitle="Connect Passport"
           buttonVariant="quiet"
           info="You need to login to accept this invitation to edit"
         />
       );
+    } else if (accepted || (inviteDetails && inviteDetails.status === 'accepted')) {
+      return (
+        <EventInviteCard
+          spacename={eventSpace?.name as string}
+          buttonTitle={'My Event Spaces'}
+          onButtonClick={handleButtonClick}
+          buttonVariant="blue"
+          info="Invite Accepted, Head to your Event Spaces to view your invited spaces"
+        />
+      );
+    } else {
+      return (
+        <EventInviteCard spacename={eventSpace?.name as string} onButtonClick={handleUpdateInvite} buttonTitle="Accept invite" buttonVariant="blue" info="Click the Button to Accept the invite" />
+      );
     }
   };
 
-  return (
-    <div className="flex items-center justify-center">
-      {renderEventInviteCard()}
-    </div>
-  );
+  return <div className="flex items-center justify-center">{renderEventInviteCard()}</div>;
 }
 
 export const getServerSideProps = async (ctx: any) => {
@@ -90,10 +109,7 @@ export const getServerSideProps = async (ctx: any) => {
     };
 
   // get profile from session
-  const { data: profile, error } = await supabase
-    .from("profile")
-    .select("*")
-    .eq("uuid", session.user.id);
+  const { data: profile, error } = await supabase.from('profile').select('*').eq('uuid', session.user.id);
 
   return {
     props: {
