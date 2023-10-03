@@ -35,6 +35,9 @@ export default function SchedulesDashboardPage() {
 
     {
       enabled: !!eventId,
+      onSuccess: (data) => {
+        console.log('schedules', data);
+      },
     }
   );
 

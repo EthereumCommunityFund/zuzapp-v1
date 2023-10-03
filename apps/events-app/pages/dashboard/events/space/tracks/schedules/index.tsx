@@ -12,6 +12,7 @@ import fetchSchedulesByTrackId from '@/services/fetchScedulesByTrackId';
 import { ScheduleUpdateRequestBody } from '@/types';
 import { HiArrowRight } from 'react-icons/hi2';
 import { Loader } from '@/components/ui/Loader';
+import useTrackDetails from '@/hooks/trackDetails';
 
 type IdProp = {
   id: string;
@@ -22,6 +23,7 @@ type Joined<T> = ScheduleUpdateRequestBody & T;
 export default function SchedulesDashboardPage() {
   const router = useRouter();
   const { eventId, trackId, trackTitle } = router.query;
+  const { trackDetails } = useTrackDetails();
 
   const {
     data: schedules,
@@ -105,12 +107,14 @@ export default function SchedulesDashboardPage() {
           </div>
           <div className="flex flex-col gap-[30px] self-stretch">
             <div className="flex items-start gap-[10px] self-stretch">
-              <div className="w-28 h-28 bg-black rounded-lg"></div>
+              <div className="w-24 h-fit bg-white rounded-lg p-1">
+                <img src={trackDetails?.image as string} alt="track-image" />
+              </div>
               <div className="flex flex-col gap-5 self-stretch">
                 <h2 className="text-4xl font-semibold">{trackTitle}</h2>
-                <h3 className="text-2xl leading-[1.2] opacity-70 font-bold">Schedules</h3>
               </div>
             </div>
+            <h3 className="text-2xl leading-[1.2] opacity-70 font-bold ">Schedules</h3>
             <div className="flex justify-between items-start self-stretch">
               <Button
                 variant="blue"
@@ -139,31 +143,28 @@ export default function SchedulesDashboardPage() {
             {schedules && (
               <div className="flex flex-col gap-[10px] w-full">
                 {schedules.map((schedule) => (
-                  <div className="flex flex-col items-center justify-between gap-[10px]">
-                    <div className="w-full">
-                      <div className="flex py-3 px-3.5 items-center gap-[364px] rounded-2xl border border-white border-opacity-10 bg-[#2E3131] w-full">
-                        <div className="flex items-start gap-10">
-                          <BiRadioCircle className="w-10 h-10" />
-                          <div className="flex flex-col items-start gap-[10px]">
-                            <span className="text-[18px] font-semibold leading-[1.2]">{schedule.name}</span>
-                            <div className="flex items-start self-stretch gap-6">
-                              <span className="flex items-center p-1 gap-1 rounded-[10px] opacity-60 bg-[#FFFFFF10] white-space-nowrap overflow-hidden text-ellipsis">
-                                <BiCalendarAlt size={30} />
-                                <span className="ml-2">{formatDate(schedule?.date)}</span>
-                              </span>
-                              <span className="flex items-center p-1 gap-1 rounded-[10px] opacity-60 bg-[#FFFFFF10] white-space-nowrap overflow-hidden text-ellipsis">
-                                <BiTimeFive size={30} />
-                                <span className="ml-2">{formatTime(schedule?.start_time)} </span>
-                              </span>
-                            </div>
+                  <div className="flex flex-col items-center justify-between gap-[10px] w-full">
+                    <div className="flex py-3 px-3.5 items-center justify-between rounded-2xl border border-white border-opacity-10 bg-[#2E3131] w-full">
+                      <div className="flex items-start gap-10">
+                        <BiRadioCircle className="w-10 h-10" />
+                        <div className="flex flex-col items-start gap-[10px]">
+                          <span className="text-[18px] font-semibold leading-[1.2]">{schedule.name}</span>
+                          <div className="flex items-start self-stretch gap-6">
+                            <span className="flex items-center p-1 gap-1 rounded-[10px] opacity-60 bg-[#FFFFFF10] white-space-nowrap overflow-hidden text-ellipsis">
+                              <BiCalendarAlt size={30} />
+                              <span className="ml-2">{formatDate(schedule?.date)}</span>
+                            </span>
+                            <span className="flex items-center p-1 gap-1 rounded-[10px] opacity-60 bg-[#FFFFFF10] white-space-nowrap overflow-hidden text-ellipsis">
+                              <BiTimeFive size={30} />
+                              <span className="ml-2">{formatTime(schedule?.start_time)}</span>
+                            </span>
                           </div>
                         </div>
-                        <div className="w-full">
-                          <Button variant="dark" className="bg-white/20 text-white/70 rounded-full" leftIcon={HiArrowRight} onClick={() => handleEnterSchedule(schedule.id)}>
-                            Update Schedule
-                          </Button>
-                        </div>
                       </div>
+
+                      <Button variant="dark" className="bg-white/20 text-white/70 rounded-full" leftIcon={HiArrowRight} onClick={() => handleEnterSchedule(schedule.id)}>
+                        Update Schedule
+                      </Button>
                     </div>
                   </div>
                 ))}
