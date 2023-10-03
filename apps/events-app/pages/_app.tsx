@@ -21,7 +21,6 @@ const App = ({ Component, pageProps }: { Component: any; pageProps: any }) => {
   const queryClient = new QueryClient();
 
   useEffect(() => {
-    // Rehydrate cache from localStorage
     const queryKeys = [
       "eventSpaces",
       "invitedSpaces",
@@ -51,11 +50,9 @@ const App = ({ Component, pageProps }: { Component: any; pageProps: any }) => {
     };
     const unsubscribe = queryClient.getQueryCache().subscribe(saveCache);
 
-    // Ensure cache is saved before page unload
     window.addEventListener("beforeunload", saveCache);
 
     return () => {
-      // Cleanup
       if (unsubscribe) {
         unsubscribe;
       }

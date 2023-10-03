@@ -8,7 +8,7 @@ import Button from "@/components/ui/buttons/Button";
 import { SubHeaderTabIndex } from "@/types";
 import AddToEventButton from "./AddToEvent";
 import { HiArrowLeft } from "react-icons/hi";
-import useEventDetails from "@/hooks/eventSpaceDetails";
+import useEventDetails from "@/hooks/useCurrentEventSpace";
 
 export default function SubHeader() {
   const router = useRouter();

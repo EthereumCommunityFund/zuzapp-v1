@@ -7,29 +7,20 @@ import { QueryClient, dehydrate, useQuery } from "react-query";
 import { fetchEventSpaceById } from "@/services/fetchEventSpaceDetails";
 import { EventSpaceDetailsType } from "@/types";
 import { Loader } from "@/components/ui/Loader";
+import useEventDetails from "@/hooks/useCurrentEventSpace";
 
 export default function EventViewPage() {
   // Make request to get all event spaces
   const router = useRouter();
-  const { event_space_id } = router.query;
-
-  const { data: eventSpace, isLoading } = useQuery<
-    EventSpaceDetailsType,
-    Error
-  >(
-    ["currentPublisedEventSpace"], // Query key
-    () => fetchEventSpaceById(event_space_id as string),
-
-    {
-      onSuccess: (data) => {
-        console.log("selectedEventSpace Event Spaces:", data);
-      },
-    }
-  );
+  const { eventSpace, isLoading } = useEventDetails();
 
   return (
     <>
-      <EventViewPageTemplate eventSpace={eventSpace} />
+      {isLoading ? (
+        <Loader />
+      ) : (
+        eventSpace && <EventViewPageTemplate eventSpace={eventSpace} />
+      )}
     </>
   );
 }
@@ -37,7 +28,7 @@ export default function EventViewPage() {
 export const getServerSideProps = async (ctx: any) => {
   const queryClient = new QueryClient();
   const { event_space_id } = ctx.query;
-  await queryClient.prefetchQuery("currentPublisedEventSpace", () =>
+  await queryClient.prefetchQuery("currentEventSpace", () =>
     fetchEventSpaceById(event_space_id)
   );
 

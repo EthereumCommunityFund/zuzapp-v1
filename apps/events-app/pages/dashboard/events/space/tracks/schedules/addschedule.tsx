@@ -131,7 +131,7 @@ export default function AddSchedulePage(props: any) {
     isLoading,
     isError,
   } = useQuery<EventSpaceDetailsType, Error>(
-    ["spaceDetails", event_space_id], // Query key
+    ["currentEventSpace", event_space_id], // Query key
     () => fetchEventSpaceById(event_space_id as string), // Query function
     {
       enabled: !!event_space_id, // Only execute the query if event_space_id is available

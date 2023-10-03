@@ -7,9 +7,7 @@ import { useQueryClient } from "react-query";
 
 export default function DashboardHomePage() {
   const result = useEventSpaces();
-  console.log(result, "result");
-  const queryClient = useQueryClient();
-  queryClient.invalidateQueries("currentPublisedEventSpace");
+
   return (
     <>
       <HomePageTemplate />

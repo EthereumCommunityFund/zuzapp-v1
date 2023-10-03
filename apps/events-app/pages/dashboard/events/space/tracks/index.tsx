@@ -8,13 +8,14 @@ import { useRouter } from "next/router";
 import { BiSolidPlusCircle } from "react-icons/bi";
 import { HiCog, HiPlusCircle, HiSelector } from "react-icons/hi";
 import { useQuery } from "react-query";
-import { useEventSpace } from "@/context/EventSpaceContext";
 import TrackItemTemplate from "@/components/tracks/TrackItemTemplate";
 import fetchTracksByEventSpaceId from "../../../../../services/fetchTracksByEventSpace";
 import { Loader } from "@/components/ui/Loader";
+import { error } from "console";
 export default function Tracks() {
   // const { eventSpace } = useEventSpace();
   // console.log(eventSpace, 'eventSpace')
+
   const router = useRouter();
   const { event_space_id } = router.query;
   const handleAddTrack = async () => {
@@ -40,6 +41,10 @@ export default function Tracks() {
       enabled: !!event_space_id,
       onSuccess: (data) => {
         console.log("tracks", data);
+      },
+      onError: (error) => {
+        console.log("an error", error);
+        // router.push("/404");
       },
     }
   );
@@ -84,6 +89,7 @@ export default function Tracks() {
             <div className="w-full">
               {trackDetails && (
                 <TrackItemTemplate trackDetails={trackDetails} />
+                // <></>
               )}
             </div>
           )}
