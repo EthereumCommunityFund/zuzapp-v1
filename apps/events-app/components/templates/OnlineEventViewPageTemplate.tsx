@@ -95,7 +95,7 @@ export default function OnlineEventViewPageTemplate({ eventSpace }: IOnlineEvent
               <DialogContent className="lg:w-[700px] md:w-[700px] sm:w-full">
                 <DialogHeader>
                   <DialogTitle>About This Event</DialogTitle>
-                  <DialogDescription className="opacity-80">
+                  <DialogDescription className="text-white">
                     <RenderHTMLString height="500" htmlString={description} />
                   </DialogDescription>
                 </DialogHeader>

@@ -80,7 +80,7 @@ export default function InPersonEventViewPageTemplate({ eventSpace }: IInPersonE
 	return (
 		<>
 			<div className="flex gap-10 md:flex-col sm:flex-col">
-				<div className="lg:w-2/3 md:w-full sm:w-full flex flex-col rounded-2xl bg-componentPrimary min-w-[600px]"> {/* Information */}
+				<div className="lg:w-2/3 md:w-full flex flex-col rounded-2xl bg-componentPrimary lg:min-w-[600px]"> {/* Information */}
 					<div className="rounded-xl p-5">
 						<img src={eventSpace.image_url} className="w-full pb-5 rounded-2xl" alt="" height={600} />
 					</div>
@@ -94,7 +94,7 @@ export default function InPersonEventViewPageTemplate({ eventSpace }: IInPersonE
 								<h2 className="font-semibold text-[30px]">{name}</h2>
 								<span className="text-white/80 font-bold">{tagline}</span>
 							</div>
-							<Button variant="primaryGreen" size="lg" className="rounded-full" leftIcon={BsArrowRightCircleFill}>Apply to Event</Button>
+							<Button variant="primaryGreen" size="lg" className="rounded-full sm:w-full lg:w-inherit md:w-auto justify-center" leftIcon={BsArrowRightCircleFill}>Apply to Event</Button>
 						</div>
 						<div className="flex gap-3 text-lg">
 							<span className="rounded-full flex px-4 py-1 items-center gap-1 opacity-60 bg-[#FFFFFF10] font-bold">
@@ -133,7 +133,7 @@ export default function InPersonEventViewPageTemplate({ eventSpace }: IInPersonE
 							<DialogTrigger asChild>
 								<Button variant="quiet" size="lg" className="rounded-2xl inline-block text-white/70 font-bold hover:text-white">View Location</Button>
 							</DialogTrigger>
-							<DialogContent className="w-[500px] h-[500px] flex justify-center">
+							<DialogContent className="lg:w-[500px] lg:h-[500px] md:w-[500px] md:h-[500px] flex justify-center">
 								{imgUrls && <Carousel imgUrls={imgUrls} />}
 							</DialogContent>
 						</Dialog>
