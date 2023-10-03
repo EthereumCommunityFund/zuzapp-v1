@@ -43,18 +43,18 @@ export default function AddTrackForm({ onTrackSubmit }: { onTrackSubmit: (values
     const image = payload.image_urls[0];
     if (!image) {
       toast({
-        title: "Error",
-        description: "Select at least one image",
-        variant: 'destructive'
-      })
+        title: 'Error',
+        description: 'Select at least one image',
+        variant: 'destructive',
+      });
       return;
     }
     const data = { ...values, image };
-    onTrackSubmit(data); // Pass the form values to the parent component
+    onTrackSubmit(data);
   };
   const onSubmitWithEnter = (values: z.infer<typeof trackSchema>) => {
     return null;
-  }
+  };
 
   return (
     <Form {...form}>
@@ -82,11 +82,11 @@ export default function AddTrackForm({ onTrackSubmit }: { onTrackSubmit: (values
           )}
         />
         <div className="flex flex-col items-center gap-[10px] self-stretch">
-          <InputFieldLabel name="Track Image Url" />
+          <InputFieldLabel name="Track Image" />
           <DragAndDrop payload={payload} setPayload={setPayload} />
           <EventDeatilsDescription1 name="We recommend using at least a 2160x1080px" />
         </div>
-        {payload.image_urls.length == 0 && (<p className='text-sm text-btnRed'>Select at least one image</p>)}
+        {payload.image_urls.length == 0 && <p className="text-sm text-btnRed">Select at least one image</p>}
         {payload.image_urls.length > 0 && (
           <div className="flex gap-5">
             {payload.image_urls.map((source, index) => (
@@ -104,12 +104,7 @@ export default function AddTrackForm({ onTrackSubmit }: { onTrackSubmit: (values
             <Button className="rounded-full w-1/2 flex justify-center" variant="quiet" size="lg" type="button" leftIcon={CgClose}>
               <span>Discard Track</span>
             </Button>
-            <Button 
-              className="rounded-full w-1/2 flex justify-center" 
-              variant="blue" size="lg" 
-              // type="submit" 
-              onClick={() => form.handleSubmit(onSubmit)()}
-              leftIcon={FaCircleArrowUp}>
+            <Button className="rounded-full w-1/2 flex justify-center" variant="blue" size="lg" onClick={() => form.handleSubmit(onSubmit)()} leftIcon={FaCircleArrowUp}>
               <span>Add a Track</span>
             </Button>
           </div>
