@@ -10,8 +10,13 @@ import React from "react";
 import { ArrowCircleLeft } from "@/components/ui/icons";
 
 export default function EventViewNavigation() {
-  const [dashboardOpen, setDashboardOpen] = React.useState(true);
   const router = useRouter();
+  const { event_space_id } = router.query;
+
+  if (!event_space_id) {
+    router.push("/404");
+  }
+  const [dashboardOpen, setDashboardOpen] = React.useState(true);
   const routes = eventViewRoutes;
 
   const handleClick = () => {
@@ -19,16 +24,16 @@ export default function EventViewNavigation() {
   };
 
   const handleEditEvent = () => {
-    router.push("/dashboard/eventview/");
+    router.push(`/dashboard/eventview/?event_space_id=${event_space_id}`);
   };
 
   const handleEditSchedules = () => {
-    router.push("/dashboard/eventview/");
+    router.push(`/dashboard/eventview/?event_space_id=${event_space_id}`);
   };
 
   const handleBackToEvents = () => {
     router.push("/dashboard/home");
-  }
+  };
 
   return (
     <>
@@ -72,32 +77,36 @@ export default function EventViewNavigation() {
                 ))}
               </ul>
             </div>
-            {
-              router.pathname.includes('dashboard/eventview/tracks') && (
-                <div className="flex flex-col gap-3 rounded-md p-2 bg-black font-bold">
-                  <h2>Organizer</h2>
-                  <Button variant="ghost" className="p-2 w-full gap-3 text-base" onClick={handleEditEvent}>
-                    <MdOutlineModeEdit />
-                    <span>Edit Event</span>
-                  </Button>
-                </div>
-              )
-            }
-            {
-              router.pathname.includes('dashboard/eventview/allschedules') && (
-                <div className="flex flex-col gap-3 rounded-md p-2 bg-black font-bold">
-                  <h2>Organizer</h2>
-                  <Button variant="ghost" className="p-2 w-full gap-3 text-base" onClick={handleEditSchedules}>
-                    <MdOutlineModeEdit />
-                    <span>Edit Schedules</span>
-                  </Button>
-                </div>
-              )
-            }
+            {router.pathname.includes("dashboard/eventview/tracks") && (
+              <div className="flex flex-col gap-3 rounded-md p-2 bg-black font-bold">
+                <h2>Organizer</h2>
+                <Button
+                  variant="ghost"
+                  className="p-2 w-full gap-3 text-base"
+                  onClick={handleEditEvent}
+                >
+                  <MdOutlineModeEdit />
+                  <span>Edit Event</span>
+                </Button>
+              </div>
+            )}
+            {router.pathname.includes("dashboard/eventview/allschedules") && (
+              <div className="flex flex-col gap-3 rounded-md p-2 bg-black font-bold">
+                <h2>Organizer</h2>
+                <Button
+                  variant="ghost"
+                  className="p-2 w-full gap-3 text-base"
+                  onClick={handleEditSchedules}
+                >
+                  <MdOutlineModeEdit />
+                  <span>Edit Schedules</span>
+                </Button>
+              </div>
+            )}
           </div>
-        </div >
-      </nav >
+        </div>
+      </nav>
       {/* </div> */}
     </>
-  )
+  );
 }
