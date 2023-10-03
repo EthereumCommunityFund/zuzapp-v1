@@ -189,12 +189,12 @@ export default function SchedulesDashboardPage() {
                         </Button>
                       </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
+
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
       </div>
     </div>
   );
