@@ -17,7 +17,7 @@ const useTrackDetails = () => {
     }
   );
 
-  return { trackDetails: data };
+  return { trackDetails: data, isLoading };
 };
 
 export default useTrackDetails;
