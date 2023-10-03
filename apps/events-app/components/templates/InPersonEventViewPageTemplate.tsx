@@ -80,7 +80,7 @@ export default function InPersonEventViewPageTemplate({ eventSpace }: IInPersonE
 	return (
 		<>
 			<div className="flex gap-10 md:flex-col sm:flex-col">
-				<div className="lg:w-2/3 md:w-full flex flex-col rounded-2xl bg-componentPrimary lg:min-w-[600px]"> {/* Information */}
+				<div className="lg:w-2/3 md:w-full sm:w-full flex flex-col rounded-2xl bg-componentPrimary min-w-[600px]"> {/* Information */}
 					<div className="rounded-xl p-5">
 						<img src={eventSpace.image_url} className="w-full pb-5 rounded-2xl" alt="" height={600} />
 					</div>

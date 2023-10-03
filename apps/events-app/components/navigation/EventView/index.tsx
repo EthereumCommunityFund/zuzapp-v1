@@ -65,7 +65,7 @@ export default function EventViewNavigation() {
                       }`}
                   >
                     {route.icon && <route.icon size={30} />}
-                    <Link href={route.path} className="md:w-full lg:w-inherit">
+                    <Link href={route.path} className="max-lg:w-full lg:w-inherit">
                       {route.name}
                     </Link>
                   </li>
