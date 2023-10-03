@@ -44,7 +44,7 @@ export type EventSpaceDetailsType = {
   extra_links?: string;
   image_url: string;
   tracks: TrackUpdateRequestBody[];
-  schedules: ScheduleUpdateRequestBody[];
+  schedules: ScheduleDetailstype[];
 };
 export type LocationType = {
   id?: string;
@@ -92,6 +92,32 @@ export type ScheduleCreateRequestBody = {
   ];
 };
 
+export type ScheduleDetailstype = {
+  id: string;
+  name: string;
+  format: 'in-person' | 'online' | 'hybrid';
+  description: string;
+  date: string | Date | number;
+  start_time: string | Date | number;
+  end_time: string | Date | number;
+  all_day?: boolean;
+  schedule_frequency: 'once' | 'everyday' | 'weekly';
+  images?: string[];
+  video_call_link?: string;
+  live_stream_url?: string;
+  location_id: string;
+  event_type?: string;
+  experience_level?: string;
+  limit_rsvp?: boolean;
+  rsvp_amount?: number;
+  event_space_id: string;
+  track_id?: string;
+  tags?: string[];
+  organizers?: {
+    name: string;
+    role: string;
+  }[];
+};
 export type ScheduleUpdateRequestBody = {
   name: string;
   format: 'in-person' | 'online' | 'hybrid';

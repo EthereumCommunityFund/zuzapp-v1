@@ -1,44 +1,30 @@
-import EventLocation from '@/components/eventspace/EventLocation';
-import EventSpaceDetails from '@/components/eventspace/EventSpaceDetails';
-import EventSpaceDetailsNavBar from '@/components/eventspace/EventSpaceDetailsNavBar';
-import Button from '@/components/ui/buttons/Button';
+import EventLocation from "@/components/eventspace/EventLocation";
+import EventSpaceDetails from "@/components/eventspace/EventSpaceDetails";
+import EventSpaceDetailsNavBar from "@/components/eventspace/EventSpaceDetailsNavBar";
+import Button from "@/components/ui/buttons/Button";
 
-import { EventSpaceDetailsType } from '@/types';
-import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
+import { EventSpaceDetailsType } from "@/types";
+import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
 
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { useQuery } from 'react-query';
-import { useEffect, useState } from 'react';
-import { useEventSpace } from '@/context/EventSpaceContext';
-import { HiArrowLeft } from 'react-icons/hi';
+import { useRouter } from "next/router";
+import { QueryClient, dehydrate, useQuery } from "react-query";
+import { HiArrowLeft } from "react-icons/hi";
 
-import { fetchEventSpaceById } from '../../../../services/fetchEventSpaceDetails';
-import { Loader } from '@/components/ui/Loader';
-import { arrayFromLength } from '@/lib/helper';
-import { DetailsFormSkeleton } from '@/components/commons/DetailsFormSkeleton';
+import { fetchEventSpaceById } from "../../../../services/fetchEventSpaceDetails";
+import { Loader } from "@/components/ui/Loader";
+import { arrayFromLength } from "@/lib/helper";
+import { DetailsFormSkeleton } from "@/components/commons/DetailsFormSkeleton";
+import useCurrentEventSpace from "@/hooks/useCurrentEventSpace";
 
 export default function EventSpaceDetailsPage() {
   const router = useRouter();
-  const { eventId } = router.query;
   // const { eventSpace } = useEventSpace();
   const goBackToPreviousPage = () => {
     router.back();
   };
 
-  const {
-    data: eventSpace,
-    isLoading,
-    isError,
-  } = useQuery<EventSpaceDetailsType, Error>(
-    ['spaceDetails', eventId], // Query key
-    () => fetchEventSpaceById(eventId as string), // Query function
-    {
-      enabled: !!eventId,
-      refetchOnWindowFocus: false, // Only execute the query if eventId is available
-    }
-  );
-
+  const { eventSpace, isLoading, isError } = useCurrentEventSpace();
+  console.log(isLoading, "isloading");
   if (isLoading) {
     return <Loader />;
   }
@@ -67,6 +53,11 @@ export default function EventSpaceDetailsPage() {
 }
 
 export const getServerSideProps = async (ctx: any) => {
+  const queryClient = new QueryClient();
+  // const { event_space_id } = ctx.query;
+  // await queryClient.prefetchQuery("currentEventSpace", () =>
+  //   fetchEventSpaceById(event_space_id)
+  // );
   const supabase = createPagesServerClient(ctx);
   let {
     data: { session },
@@ -81,7 +72,10 @@ export const getServerSideProps = async (ctx: any) => {
     };
 
   // get profile from session
-  const { data: profile, error } = await supabase.from('profile').select('*').eq('uuid', session.user.id);
+  const { data: profile, error } = await supabase
+    .from("profile")
+    .select("*")
+    .eq("uuid", session.user.id);
 
   return {
     props: {

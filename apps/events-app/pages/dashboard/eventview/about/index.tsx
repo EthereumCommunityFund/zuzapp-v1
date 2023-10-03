@@ -1,46 +1,40 @@
 import InPersonEventViewPageTemplate from "@/components/templates/InPersonEventViewPageTemplate";
 import EventViewPageTemplate from "@/components/templates/EventViewPageTemplate";
-import OnlineEventViewPageTemplate from "@/components/templates/OnlineEventViewPageTemplate";
-import { useEventSpace } from "@/context/EventSpaceContext";
-
-
 
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/router";
-import { useQuery } from "react-query";
+import { QueryClient, dehydrate, useQuery } from "react-query";
 import { fetchEventSpaceById } from "@/services/fetchEventSpaceDetails";
 import { EventSpaceDetailsType } from "@/types";
+import { Loader } from "@/components/ui/Loader";
+import useEventDetails from "@/hooks/useCurrentEventSpace";
 
 export default function EventViewPage() {
   // Make request to get all event spaces
   const router = useRouter();
-  const { eventId } = router.query;
-  const { setEventSpace } = useEventSpace();
-
-
-  const {
-    data: selectedEventSpace,
-  } = useQuery<EventSpaceDetailsType, Error>(
-    ['eventSpace'], // Query key
-    () => fetchEventSpaceById(eventId as string),
-    {
-      onSuccess: (data) => {
-        console.log('selectedEventSpace Event Spaces:', data);
-        setEventSpace(data);
-      },
-    }
-  );
-
+  const { eventSpace, isLoading } = useEventDetails();
 
   return (
     <>
-      <EventViewPageTemplate />
+      {isLoading ? (
+        <Loader />
+      ) : (
+        eventSpace && <EventViewPageTemplate eventSpace={eventSpace} />
+      )}
     </>
-  )
+  );
 }
 
 export const getServerSideProps = async (ctx: any) => {
+  const queryClient = new QueryClient();
+  const { event_space_id } = ctx.query;
+  await queryClient.prefetchQuery("currentEventSpace", () =>
+    fetchEventSpaceById(event_space_id)
+  );
+
   const supabase = createPagesServerClient(ctx);
+
+  // console.log(dehydrate(queryClient).queries[0].state, "dehydrated");
   let {
     data: { session },
   } = await supabase.auth.getSession();
@@ -54,13 +48,17 @@ export const getServerSideProps = async (ctx: any) => {
     };
 
   // get profile from session
-  const { data: profile, error } = await supabase.from('profile').select('*').eq('uuid', session.user.id);
+  const { data: profile, error } = await supabase
+    .from("profile")
+    .select("*")
+    .eq("uuid", session.user.id);
 
   return {
     props: {
       initialSession: session,
       user: session?.user,
       profile: profile,
+      dehydratedState: dehydrate(queryClient),
     },
   };
 };

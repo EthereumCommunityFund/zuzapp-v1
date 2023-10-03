@@ -1,29 +1,37 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
-import { EventSpaceDetailsType, InputFieldType } from '@/types';
-import EventLinks from './EventLinks';
-import { CgClose } from 'react-icons/cg';
-import { FaCircleArrowUp } from 'react-icons/fa6';
-import InputFieldDark from '../ui/inputFieldDark';
-import TextEditor from '../ui/TextEditor';
-import { useForm } from 'react-hook-form';
+import { EventSpaceDetailsType, InputFieldType } from "@/types";
+import EventLinks from "./EventLinks";
+import { CgClose } from "react-icons/cg";
+import { FaCircleArrowUp } from "react-icons/fa6";
+import InputFieldDark from "../ui/inputFieldDark";
+import TextEditor from "../ui/TextEditor";
+import { useForm } from "react-hook-form";
 
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import EventLocation from './EventLocation';
-import { GoXCircleFill } from 'react-icons/go';
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import EventLocation from "./EventLocation";
+import { GoXCircleFill } from "react-icons/go";
 // import { experienceLevels } from "@/constant/experienceelevels";
-import CustomDatePicker from '../ui/DatePicker';
-import { useRouter } from 'next/router';
-import { updateEventSpace } from '@/controllers';
-import { useQueryClient } from 'react-query';
-import Button from '../ui/buttons/Button';
-import Link from 'next/link';
-import { HiArrowRight } from 'react-icons/hi';
-import { EventBanner } from './EventBanner';
+import CustomDatePicker from "../ui/DatePicker";
+import { useRouter } from "next/router";
+import { updateEventSpace } from "@/controllers";
+import { useQueryClient } from "react-query";
+import Button from "../ui/buttons/Button";
+import Link from "next/link";
+import { HiArrowRight } from "react-icons/hi";
+import { EventBanner } from "./EventBanner";
 import IconButton from "../ui/buttons/IconButton";
 import { RxPlus } from "react-icons/rx";
 import { toast } from "../ui/use-toast";
@@ -96,7 +104,7 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({
   );
   const [eventItem, setEventItem] = useState("");
   const [experienceItem, setExperienceItem] = useState("");
-  const { eventId } = router.query;
+  const { event_space_id } = router.query;
   const [detailsUpdated, setDetailsUpdated] = useState(false);
 
   interface SocialMediaFormState {
@@ -136,13 +144,13 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({
       format: format,
       start_date: start_date !== undefined ? new Date(start_date) : new Date(),
       end_date: end_date !== undefined ? new Date(end_date) : new Date(),
-      description: description
+      description: description,
     },
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const additionalPayload = {
-      id: eventId as string,
+      id: event_space_id as string,
       status: status,
       event_type: eventType,
       experience_level: experienceLevels,
@@ -157,23 +165,23 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({
     console.log(payload);
 
     try {
-      const result = await updateEventSpace(eventId as string, payload);
+      const result = await updateEventSpace(event_space_id as string, payload);
       setDetailsUpdated(true);
-      queryClient.invalidateQueries({ queryKey: ['spaceDetails'] });
-      console.log(result, 'result');
+      queryClient.invalidateQueries({ queryKey: ["currentEventSpace"] });
+      console.log(result, "result");
     } catch (error: any) {
-      console.log(error, 'error');
+      console.log(error, "error");
       toast({
         title: "Error",
         description: error.response.data.error,
         variant: "destructive",
-      })
+      });
     }
   }
 
   const onSubmitWithEnter = (values: z.infer<typeof formSchema>) => {
     return null;
-  }
+  };
 
   const addEventTypes = (eventTypeData: string) => {
     if (eventTypeData === "") {
@@ -181,12 +189,12 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({
         title: "Error",
         description: "Event Type is required",
         variant: "destructive",
-      })
+      });
       return;
-    };
+    }
     setEventType([...eventType, eventTypeData]);
     setEventItem("");
-  }
+  };
 
   const addExperienceLevels = (experienceLevelData: string) => {
     if (experienceLevelData === "") {
@@ -194,12 +202,12 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({
         title: "Error",
         description: "Experience Level is required",
         variant: "destructive",
-      })
+      });
       return;
-    };
+    }
     setExperienceLevels([...experienceLevels, experienceLevelData]);
     setExperienceItem("");
-  }
+  };
 
   useEffect(() => {
     console.log("Selected Event Format:", selectedEventFormat);
@@ -209,13 +217,13 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({
   useEffect(() => {
     console.log(form.formState.errors);
     //get the first item from the errors object
-    const firstError = Object.values(form.formState.errors)[0]
+    const firstError = Object.values(form.formState.errors)[0];
     if (firstError) {
       toast({
         title: "Error",
         description: firstError?.message,
         variant: "destructive",
-      })
+      });
     }
   }, [form.formState.errors]);
 
@@ -227,7 +235,9 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({
             <h3 className="font-bold text-xl">
               Your Details Have Been Updated
             </h3>
-            <Link href={`/dashboard/events/space/tracks?eventId=${eventId}`}>
+            <Link
+              href={`/dashboard/events/space/tracks?event_space_id=${event_space_id}`}
+            >
               <Button
                 variant="primary"
                 className="mt-8 bg-[#67DBFF]/20 text-[#67DBFF] rounded-full"
@@ -351,7 +361,9 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({
                           />
                         </div>
                       </FormControl>
-                      <FormMessage>{form.formState.errors.description?.message}</FormMessage>
+                      <FormMessage>
+                        {form.formState.errors.description?.message}
+                      </FormMessage>
                     </FormItem>
                   )}
                 />
@@ -372,7 +384,11 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({
                           will be required going forward
                         </FormDescription>
                         <FormControl>
-                          <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex flex-col md:flex-row justify-between">
+                          <RadioGroup
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                            className="flex flex-col md:flex-row justify-between"
+                          >
                             <FormItem className="flex items-center space-x-3 space-y-0 cursor-pointer p-3 hover:bg-btnPrimaryGreen/20 rounded-md focus:bg-btnPrimaryGreen/20">
                               <FormControl>
                                 <RadioGroupItem value="in-person" />
@@ -414,8 +430,15 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({
                   />
                 </div>
 
-                {selectedEventFormat !== 'in-person' && (
-                  <EventLinks social_links={socialLinks} setSocialLinks={setSocialLinks} extra_links={extraLinks} setExtraLinks={setExtraLinks} formData={formData} setFormData={setFormData} />
+                {selectedEventFormat !== "in-person" && (
+                  <EventLinks
+                    social_links={socialLinks}
+                    setSocialLinks={setSocialLinks}
+                    extra_links={extraLinks}
+                    setExtraLinks={setExtraLinks}
+                    formData={formData}
+                    setFormData={setFormData}
+                  />
                 )}
                 <div className="flex flex-col gap-[34px]">
                   <div className="flex flex-col gap-2.5">
@@ -429,29 +452,55 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({
                   </div>
 
                   <div className="flex flex-col gap-6">
-                    <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">Add Event Types</h2>
+                    <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">
+                      Add Event Types
+                    </h2>
                     <div className="flex space-x-3 items-center">
-                      <InputFieldDark type={InputFieldType.Primary} value={eventItem} onChange={(e) => setEventItem((e.target as HTMLInputElement).value)} placeholder={'Meetups, Workshops, etc'} />
+                      <InputFieldDark
+                        type={InputFieldType.Primary}
+                        value={eventItem}
+                        onChange={(e) =>
+                          setEventItem((e.target as HTMLInputElement).value)
+                        }
+                        placeholder={"Meetups, Workshops, etc"}
+                      />
                       <div>
-                        <IconButton variant="dark" className="rounded-full" icon={RxPlus} 
+                        <IconButton
+                          variant="dark"
+                          className="rounded-full"
+                          icon={RxPlus}
                           onClick={() => {
                             addEventTypes(eventItem);
-                          }}></IconButton>
+                          }}
+                        ></IconButton>
                       </div>
                     </div>
                     <div className="flex gap-2.5">
                       {eventType?.map((eventCategory, index) => (
-                        <div key={eventCategory} className="flex gap-2.5 items-center rounded-[8px] px-2 py-1.5 bg-white bg-opacity-10">
-                          <button type="button" className="flex gap-2.5 items-center">
-                            <GoXCircleFill onClick={() => handleRemoveEventType(index)} className="top-0.5 left-0.5 w-4 h-4" />
-                            <span className="text-lg font-semibold leading-[1.2] text-white self-stretch">{eventCategory}</span>
+                        <div
+                          key={eventCategory}
+                          className="flex gap-2.5 items-center rounded-[8px] px-2 py-1.5 bg-white bg-opacity-10"
+                        >
+                          <button
+                            type="button"
+                            className="flex gap-2.5 items-center"
+                          >
+                            <GoXCircleFill
+                              onClick={() => handleRemoveEventType(index)}
+                              className="top-0.5 left-0.5 w-4 h-4"
+                            />
+                            <span className="text-lg font-semibold leading-[1.2] text-white self-stretch">
+                              {eventCategory}
+                            </span>
                           </button>
                         </div>
                       ))}
                     </div>
                   </div>
                   <div className="flex flex-col gap-6">
-                    <span className="text-lg font-semibold leading-[1.2] text-white self-stretch">Experience Levels</span>
+                    <span className="text-lg font-semibold leading-[1.2] text-white self-stretch">
+                      Experience Levels
+                    </span>
                     <div className="flex space-x-3 items-center">
                       <InputFieldDark
                         type={InputFieldType.Primary}
@@ -464,18 +513,35 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({
                         placeholder={"Beginner, Intermediate, Advanced, etc"}
                       />
                       <div>
-                        <IconButton variant="dark" className="rounded-full" icon={RxPlus} 
+                        <IconButton
+                          variant="dark"
+                          className="rounded-full"
+                          icon={RxPlus}
                           onClick={() => {
                             addExperienceLevels(experienceItem);
-                          }}></IconButton>
+                          }}
+                        ></IconButton>
                       </div>
                     </div>
                     <div className="flex gap-2.5">
                       {experienceLevels?.map((experience, index) => (
-                        <div key={experience} className="flex gap-2.5 items-center rounded-[8px] px-2 py-1.5 bg-white bg-opacity-10">
-                          <button type="button" className="flex gap-2.5 items-center">
-                            <GoXCircleFill onClick={() => handleRemoveExperienceLevels(index)} className="top-0.5 left-0.5 w-4 h-4" />
-                            <span className="text-lg font-semibold leading-[1.2] text-white self-stretch">{experience}</span>
+                        <div
+                          key={experience}
+                          className="flex gap-2.5 items-center rounded-[8px] px-2 py-1.5 bg-white bg-opacity-10"
+                        >
+                          <button
+                            type="button"
+                            className="flex gap-2.5 items-center"
+                          >
+                            <GoXCircleFill
+                              onClick={() =>
+                                handleRemoveExperienceLevels(index)
+                              }
+                              className="top-0.5 left-0.5 w-4 h-4"
+                            />
+                            <span className="text-lg font-semibold leading-[1.2] text-white self-stretch">
+                              {experience}
+                            </span>
                           </button>
                         </div>
                       ))}
