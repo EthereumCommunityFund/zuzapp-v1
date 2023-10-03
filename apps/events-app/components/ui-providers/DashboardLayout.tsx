@@ -35,7 +35,7 @@ export const DashboardProvider = ({ children }: { children: React.ReactNode }) =
         }
         <DashboardHeader />
         <div className="mt-16 relative lg:left-[300px] lg:w-[calc(100%-300px)] md:w-full">
-          <div className="h-[90vh] mx-auto relative">
+          <div className="h-[90vh] mx-auto relative md:mt-36 lg:mt-0">
             {
               checkIfCurrentRouteIsInDashboardRoutes() ? (
                 <>
@@ -45,7 +45,7 @@ export const DashboardProvider = ({ children }: { children: React.ReactNode }) =
                   </div>
                 </>
               ) : (
-                <div className="flex-1 mx-auto px-10 sm:px-0 relative top-10 bg-pagePrimary">
+                <div className="flex-1 mx-auto px-10 sm:px-0 relative top-10 bg-pagePrimary md:flex md:flex-col">
                   {children}
                 </div>
               )
