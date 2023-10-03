@@ -16,7 +16,7 @@ import { fetchTrackById } from "@/services/fetchTrack";
 export default function Update() {
   const [trackCreated, setTrackCreated] = useState(false);
   const router = useRouter();
-  const { eventId, trackId } = router.query;
+  const { event_space_id, trackId } = router.query;
 
   const queryClient = useQueryClient();
   // const queryClient = new QueryClient({
@@ -36,7 +36,7 @@ export default function Update() {
     () => fetchTrackById(trackId as string), // Query function
     {
       enabled: !!trackId,
-      refetchOnWindowFocus: false, // Only execute the query if eventId is available
+      refetchOnWindowFocus: false, // Only execute the query if event_space_id is available
     }
   );
 
@@ -49,19 +49,19 @@ export default function Update() {
 
   const handleTrackSubmit = async (values: TrackUpdateRequestBody) => {
     try {
-      if (!eventId) return;
+      if (!event_space_id) return;
       const result = await updateTrack(
         trackId as string,
         {
           ...values,
-          event_space_id: eventId as string,
+          event_space_id: event_space_id as string,
           id: trackId as string,
         },
-        eventId as string
+        event_space_id as string
       );
       setTrackCreated(true);
       console.log(result);
-      queryClient.invalidateQueries({ queryKey: ['trackDetails'] });
+      queryClient.invalidateQueries({ queryKey: ["trackDetails"] });
     } catch (error) {
       setTrackCreated(false);
       console.error(error);
@@ -73,7 +73,9 @@ export default function Update() {
       {trackCreated ? (
         <div className="flex flex-col items-center">
           <h3 className="font-bold text-xl">Your Track Has Been Updated</h3>
-          <Link href={`/dashboard/events/space/tracks?eventId=${eventId}`}>
+          <Link
+            href={`/dashboard/events/space/tracks?event_space_id=${event_space_id}`}
+          >
             <Button
               variant="primary"
               className="mt-8 bg-[#67DBFF]/20 text-[#67DBFF] rounded-full"
@@ -87,7 +89,10 @@ export default function Update() {
         <>
           <Container className="mx-auto max-w-screen-xl w-[85%]">
             <h2 className="flex font-semibold text-3xl w-full ">Edit Track</h2>
-            <EditTrackForm onTrackSubmit={handleTrackSubmit as any} trackDetails={trackDetails as TrackUpdateRequestBody} />
+            <EditTrackForm
+              onTrackSubmit={handleTrackSubmit as any}
+              trackDetails={trackDetails as TrackUpdateRequestBody}
+            />
           </Container>
         </>
       )}

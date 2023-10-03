@@ -5,21 +5,24 @@ import { SpaceDashboardType } from "@/types";
 
 interface IProps {
   eventTitle: string;
-  eventId: string;
+  event_space_id: string;
   index: number;
   eventStatus: string;
 }
 
 export default function EventSpaceCard(props: IProps) {
   const router = useRouter();
-  const { eventTitle, eventId, index, eventStatus } = props;
+  const { eventTitle, event_space_id, index, eventStatus } = props;
 
   const handleEnterSpace = async () => {
     try {
       // Redirect to a new page with the fetched details
       router.push({
         pathname: `/dashboard/events/space/dashboard/`, // Update with your actual route
-        query: { eventId: eventId, isFirst: SpaceDashboardType.New }, // Pass space ID as a query parameter
+        query: {
+          event_space_id: event_space_id,
+          isFirst: SpaceDashboardType.New,
+        }, // Pass space ID as a query parameter
       });
     } catch (error) {
       console.error("Error fetching space details", error);

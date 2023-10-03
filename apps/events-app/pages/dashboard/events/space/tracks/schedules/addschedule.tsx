@@ -84,7 +84,7 @@ export default function AddSchedulePage(props: any) {
   );
   const router = useRouter();
   const { query } = useRouter();
-  const { eventId, trackId, trackTitle } = router.query;
+  const { event_space_id, trackId, trackTitle } = router.query;
   const [selectedEventFormat, setSelectedEventFormat] = useState("");
   const [switchDialogue, setSwitchDialogue] = useState(false);
   const [isAllDay, setIsAllDay] = useState(false);
@@ -117,10 +117,10 @@ export default function AddSchedulePage(props: any) {
   const [selectedTrackId, setSelectedTrackId] = useState("");
 
   const { data: trackDetails } = useQuery<TrackUpdateRequestBody[], Error>(
-    ["trackDetails", eventId],
-    () => fetchTracksByEventSpaceId(eventId as string),
+    ["trackDetails", event_space_id],
+    () => fetchTracksByEventSpaceId(event_space_id as string),
     {
-      enabled: !!eventId,
+      enabled: !!event_space_id,
       onSuccess: (data) => {
         console.log("tracks", data);
       },
@@ -131,10 +131,10 @@ export default function AddSchedulePage(props: any) {
     isLoading,
     isError,
   } = useQuery<EventSpaceDetailsType, Error>(
-    ["spaceDetails", eventId], // Query key
-    () => fetchEventSpaceById(eventId as string), // Query function
+    ["spaceDetails", event_space_id], // Query key
+    () => fetchEventSpaceById(event_space_id as string), // Query function
     {
-      enabled: !!eventId, // Only execute the query if eventId is available
+      enabled: !!event_space_id, // Only execute the query if event_space_id is available
     }
   );
 
@@ -219,7 +219,7 @@ export default function AddSchedulePage(props: any) {
       return;
     }
     const additionalPayload = {
-      event_space_id: eventId as string,
+      event_space_id: event_space_id as string,
       start_time: startTime as unknown as Date,
       end_time: endTime as unknown as Date,
       event_type:
@@ -261,7 +261,10 @@ export default function AddSchedulePage(props: any) {
     };
     console.log(payload, "payload");
     try {
-      const result = await createSchedule(payload as any, eventId as string);
+      const result = await createSchedule(
+        payload as any,
+        event_space_id as string
+      );
       setSwitchDialogue(true);
       setScheduleAdded(true);
       console.log(result, "result");
@@ -297,7 +300,11 @@ export default function AddSchedulePage(props: any) {
     try {
       router.push({
         pathname: `/dashboard/events/space/tracks/schedules`,
-        query: { eventId: eventId, trackTitle: trackTitle, trackId: trackId },
+        query: {
+          event_space_id: event_space_id,
+          trackTitle: trackTitle,
+          trackId: trackId,
+        },
       });
     } catch (error) {
       console.error("Error fetching space details", error);
@@ -985,7 +992,9 @@ export const getServerSideProps = async (ctx: any) => {
     .select("*")
     .eq("uuid", session.user.id);
 
-  const locationsResult = await fetchLocationsByEventSpace(ctx.query.eventId);
+  const locationsResult = await fetchLocationsByEventSpace(
+    ctx.query.event_space_id
+  );
   const tagsResult = await fetchAllTags();
   const organizersResult = await fetchAllSpeakers();
 
