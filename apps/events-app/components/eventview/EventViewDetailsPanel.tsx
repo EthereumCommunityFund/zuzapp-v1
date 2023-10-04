@@ -10,7 +10,7 @@ interface IEventViewDetailsPanel {
 export default function EventViewDetailsPanel(props: IEventViewDetailsPanel) {
   const { eventSpace } = props;
   return (
-    <div className="flex flex-col pt-5 pb-10 gap-5">
+    <div className="flex flex-col pt-5 pb-10 gap-5 min-w-[450px]">
       <div className="pb-10 gap-2.5">
         <div className="flex flex-col gap-3">
           <h2 className="font-bold p-3.5 border-b border-b-background text-xl">
