@@ -37,6 +37,13 @@ export default function EventViewNavigation() {
     router.push("/dashboard/home");
   };
 
+  const handleEventRouteClick = (path: string) => {
+    router.push({
+      pathname: path,
+      query: { event_space_id }
+    })
+  }
+
   return (
     <>
       {/* Mobile menu button */}
@@ -51,51 +58,32 @@ export default function EventViewNavigation() {
       </div>
       {/* Overlay that can close the dashboard menu */}
       <div
-        className={`md:hidden fixed inset-0 bg-black/10 z-10 ${
-          dashboardOpen ? "block" : "hidden"
-        }`}
+        className={`md:hidden fixed inset-0 bg-black/10 z-10 ${dashboardOpen ? "block" : "hidden"
+          }`}
         onClick={handleClick}
       ></div>
       <nav
-        className={`z-50 dashboard-menu min-w-[300px] fixed flex flex-col h-screen border-r border-r-gray-800 bg-pagePrimary py-10 pl-10 transition-transform duration-300 ${
-          dashboardOpen && "open"
-        }`}
+        className={`z-50 dashboard-menu lg:w-[300px] md:w-full sm:w-full fixed flex flex-col lg:h-screen md:h-auto sm:h-auto border-r border-r-gray-800 bg-pagePrimary lg:py-10 md:pt-10 sm:pt-10 pl-10 transition-transform duration-300 ${dashboardOpen && "open"
+          }`}
       >
         <div className="flex-1 flex flex-col gap-5 max-w-max">
           <div className="mt-10 flex-1">
-            <Button
-              size="lg"
-              variant="quiet-SM"
-              className="pb-10 opacity-80"
-              leftIcon={ArrowCircleLeft}
-              onClick={handleBackToEvents}
-            >
-              Back to Events
-            </Button>
-            <div className="flex flex-col gap-3.5 pb-10">
-              <span className="font-semibold">Navigate Event</span>
-              <ul className="space-y-3">
-                {routes.map(
-                  (route, index) =>
-                    route.name && (
-                      <li
-                        key={index}
-                        className={`flex items-center font-bold space-x-2 py-1 px-3 opacity-70 rounded-xl hover:bg-white/20  duration-200 ${
-                          router.pathname.includes(
-                            `${route.path}?event_space_id=${event_space_id}`
-                          ) && "bg-white/20"
-                        }`}
-                      >
-                        {route.icon && <route.icon size={30} />}
-                        <Link
-                          href={`${route.path}?event_space_id=${event_space_id}`}
-                          className="w-full "
-                        >
-                          {route.name}
-                        </Link>
-                      </li>
-                    )
-                )}
+            <Button size="lg" variant="quiet-SM" className="lg:pb-10 md:pb-2 sm:pb-1 opacity-80" leftIcon={ArrowCircleLeft} onClick={handleBackToEvents}>Back to Events</Button>
+            <div className="flex flex-col gap-3.5 lg:pb-10 md:pb-1">
+              <span className="font-semibold md:hidden lg:contents sm:hidden">Navigate Event</span>
+              <ul className="space-y-3 md:flex md:items-end lg:block sm:flex sm:items-end">
+                {routes.map((route, index) => (route.name &&
+                  <li
+                    key={index}
+                    className={`flex items-center font-bold space-x-2 py-1 px-3 opacity-70 rounded-xl hover:bg-white/20 md:hover:border-b duration-200 ${router.pathname.includes(route.path)
+                      }`}
+                  >
+                    {route.icon && <route.icon size={30} />}
+                    <Link href={`${route.path}?event_space_id=${event_space_id}`} >
+                      {route.name}
+                    </Link>
+                  </li>
+                ))}
               </ul>
             </div>
             {router.pathname.includes("dashboard/eventview/tracks") && (

@@ -1,5 +1,14 @@
-import { BiLeftArrowAlt, BiEditAlt, BiPlus, BiRadioCircle, BiCalendarAlt, BiTimeFive, BiRadioCircleMarked, BiPlusCircle } from 'react-icons/bi';
-import { HiArrowLeft, HiCog, HiSelector } from 'react-icons/hi';
+import {
+  BiLeftArrowAlt,
+  BiEditAlt,
+  BiPlus,
+  BiRadioCircle,
+  BiCalendarAlt,
+  BiTimeFive,
+  BiRadioCircleMarked,
+  BiPlusCircle,
+} from "react-icons/bi";
+import { HiArrowLeft, HiCog, HiSelector } from "react-icons/hi";
 
 import Button from '@/components/ui/buttons/Button';
 import Link from 'next/link';
@@ -50,7 +59,7 @@ export default function SchedulesDashboardPage() {
         },
       });
     } catch (error) {
-      console.error('Error fetching space details', error);
+      console.error("Error fetching space details", error);
     }
   };
 
@@ -64,22 +73,22 @@ export default function SchedulesDashboardPage() {
         query: { event_space_id, trackId: trackId, track_title: track_title },
       });
     } catch (error) {
-      console.error('Error fetching space details', error);
+      console.error("Error fetching space details", error);
     }
   };
   function formatDate(dateString: string | number | Date) {
     const date = new Date(dateString);
-    return new Intl.DateTimeFormat('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
+    return new Intl.DateTimeFormat("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
     }).format(date);
   }
   function formatTime(dateString: string | number | Date) {
     const date = new Date(dateString);
-    return new Intl.DateTimeFormat('en-US', {
-      hour: 'numeric',
-      minute: 'numeric',
+    return new Intl.DateTimeFormat("en-US", {
+      hour: "numeric",
+      minute: "numeric",
       hour12: true,
     }).format(date);
   }
@@ -129,10 +138,18 @@ export default function SchedulesDashboardPage() {
               </Button>
 
               <div className="flex items-start gap-3">
-                <Button className="rounded-[40px] py-2.5 px-3.5 bg-bgPrimary border-none hover:bg-[#363636] duration-200 text-textSecondary hover:text-textSecondary" size="lg" leftIcon={HiSelector}>
+                <Button
+                  className="rounded-[40px] py-2.5 px-3.5 bg-bgPrimary border-none hover:bg-[#363636] duration-200 text-textSecondary hover:text-textSecondary"
+                  size="lg"
+                  leftIcon={HiSelector}
+                >
                   Sort
                 </Button>
-                <Button className="rounded-[40px] py-2.5 px-3.5 bg-bgPrimary border-none hover:bg-[#363636] duration-200 text-textSecondary hover:text-textSecondary" size="lg" leftIcon={HiCog}>
+                <Button
+                  className="rounded-[40px] py-2.5 px-3.5 bg-bgPrimary border-none hover:bg-[#363636] duration-200 text-textSecondary hover:text-textSecondary"
+                  size="lg"
+                  leftIcon={HiCog}
+                >
                   Select
                 </Button>
               </div>
@@ -170,13 +187,11 @@ export default function SchedulesDashboardPage() {
                     </div>
                   </div>
                 ))}
-              </div>
-            )}
-          </div>
-        )}
+              </div>)
+            }
+          </div>)}
       </div>
-    </div>
-  );
+    </div>)
 }
 
 export const getServerSideProps = async (ctx: any) => {
@@ -194,7 +209,10 @@ export const getServerSideProps = async (ctx: any) => {
     };
 
   // get profile from session
-  const { data: profile, error } = await supabase.from('profile').select('*').eq('uuid', session.user.id);
+  const { data: profile, error } = await supabase
+    .from("profile")
+    .select("*")
+    .eq("uuid", session.user.id);
 
   return {
     props: {

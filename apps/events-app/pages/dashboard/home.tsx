@@ -7,7 +7,6 @@ import { useQueryClient } from "react-query";
 
 export default function DashboardHomePage() {
   const result = useEventSpaces();
-
   return (
     <>
       <HomePageTemplate />
