@@ -25,7 +25,7 @@ export const DashboardProvider = ({ children }: { children: React.ReactNode }) =
   if (!router.pathname.startsWith("/dashboard")) return <div className="bg-[#222222] text-white relative min-h-screen">{children}</div>
   return (
     <>
-      <div className="flex relative bg-[#222222] text-white">
+      <div className="flex relative bg-[#222222] text-white md:h-14 md:flex-col">
         {
           !checkIfCurrentRouteIsInEventViewRoutes() ? (
             <DashboardNavigation />
@@ -34,7 +34,7 @@ export const DashboardProvider = ({ children }: { children: React.ReactNode }) =
           )
         }
         <DashboardHeader />
-        <div className="mt-16 relative left-[300px] w-[calc(100%-300px)]">
+        <div className="mt-16 relative lg:left-[300px] lg:w-[calc(100%-300px)] md:w-full">
           <div className="h-[90vh] mx-auto relative">
             {
               checkIfCurrentRouteIsInDashboardRoutes() ? (
