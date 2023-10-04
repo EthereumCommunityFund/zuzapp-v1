@@ -14,13 +14,14 @@ import { HiArrowLeft, HiCalendar, HiCog, HiLocationMarker, HiMicrophone, HiTag, 
 import EventViewHeader from "../eventview/EventViewHeader";
 
 interface ITrackDetailsPageTemplate {
-  trackItem: TrackUpdateRequestBody;
+  trackId: string;
 }
 
 export default function OnlineTrackDetailsPageTemplate(props: ITrackDetailsPageTemplate) {
   const router = useRouter();
-  const { trackItem } = props
+  const { trackId } = props
   const { eventSpace } = useEventSpace();
+  const trackItem = eventSpace?.tracks.find((item) => item.id === trackId);
 
   // const handlePageChange = (page: number) => {
   //   setCurrentPage(page);
@@ -49,10 +50,10 @@ export default function OnlineTrackDetailsPageTemplate(props: ITrackDetailsPageT
               <Button variant="quiet" className="rounded-xl" leftIcon={BiEditAlt}>Edit</Button>
             </div>
             <div className="flex flex-col gap-[10px] p-5 "> {/* Track Info */}
-              <img src={trackItem.image as string} alt="track image" className=" h-[496px] rounded-[10px]" />
+              <img src={trackItem?.image as string} alt="track image" className=" h-[496px] rounded-[10px]" />
               <div className="flex flex-col gap-[10px] p-2.5"> {/* Tracks Name */}
-                <h2 className="font-bold text-2xl">{trackItem.name}</h2>
-                <p className="font-bold opacity-70">{trackItem.description}</p>
+                <h2 className="font-bold text-2xl">{trackItem?.name}</h2>
+                <p className="font-bold opacity-70">{trackItem?.description}</p>
                 <span className="rounded-xl flex px-4 py-1 items-center gap-1 opacity-60 bg-[#FFFFFF10] font-bold justify-start w-[320px] text-lg">
                   <HiCalendar size={25} /> November 29 - November 11
                 </span>
@@ -69,8 +70,8 @@ export default function OnlineTrackDetailsPageTemplate(props: ITrackDetailsPageT
           <div className="flex flex-col gap-[10px] overflow-hidden rounded-[10px]">
             {
               eventSpace?.schedules.map((schedule, idx) => (
-                schedule.track_id === trackItem.id && (
-                  <UserFacingTrack key={idx} scheduleData={schedule} onClick={() => handleItemClick(schedule.name, trackItem.id)} />
+                schedule.track_id === trackItem?.id && (
+                  <UserFacingTrack key={idx} scheduleData={schedule} onClick={() => handleItemClick(schedule.name, trackItem?.id)} />
                 )
               ))
             }

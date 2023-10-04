@@ -52,7 +52,7 @@ export default function EventViewTracksPage() {
 
   const handleItemClick = (track_title: string, trackId?: string) => {
     router.push({
-      pathname: `/dashboard/events/space/tracks/schedules`,
+      pathname: `/dashboard/eventview/tracks/track`,
       query: { trackId, event_space_id, track_title },
     });
   };

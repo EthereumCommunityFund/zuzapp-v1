@@ -18,12 +18,5 @@ export default function EventViewTrackDetailsPage() {
   const trackId = router.query.trackId;
   const trackItem = eventSpace?.tracks.find((track) => track.id === trackId);
 
-  const handleItemClick = () => {
-    router.push("/dashboard/eventview/tracks/track/schedule");
-  };
-
-  const handleBackToTracksClick = () => {
-    router.push("/dashboard/eventview/tracks");
-  };
-  return trackItem && <TrackDetailsPageTemplate trackItem={trackItem} />;
+  return trackId && <TrackDetailsPageTemplate trackId={trackId as string} />;
 }
