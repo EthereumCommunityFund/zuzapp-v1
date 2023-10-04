@@ -12,15 +12,16 @@ import { useEffect, useState } from "react";
 
 import { BiEditAlt, BiLeftArrow } from "react-icons/bi";
 import { BsFillTicketFill } from "react-icons/bs";
-import { HiArrowLeft, HiCalendar, HiCog, HiLocationMarker, HiMicrophone, HiTag, HiUserGroup } from "react-icons/hi";
-
+import { HiArrowLeft, HiCog, HiLocationMarker, HiMicrophone, HiTag, HiUserGroup } from "react-icons/hi";
+import useEventDetails from "@/hooks/useCurrentEventSpace";
+import { Loader } from "@/components/ui/Loader";
 interface IEventLink {
   name: string;
   link: string;
 }
 
 export default function EventViewTrackDetailsPage() {
-  const { eventSpace } = useEventSpace();
+  const { eventSpace, isLoading } = useEventDetails();
   const router = useRouter();
   const { scheduleName, trackId } = router.query;
   const currentSchedule = eventSpace?.schedules.find((scheduleItem) => (scheduleItem.name === scheduleName));
@@ -29,19 +30,18 @@ export default function EventViewTrackDetailsPage() {
   const endTime = currentSchedule && new Date(currentSchedule.end_time).toLocaleTimeString('en-US', { hour: "2-digit", minute: "2-digit" });
   const startDate = currentSchedule && new Date(currentSchedule.start_time).toLocaleDateString('en-US', { month: 'long', day: '2-digit' });
   const endDate = currentSchedule && new Date(currentSchedule.end_time).toLocaleDateString('en-US', { month: 'long', day: '2-digit' });
-  const { setEventSpace } = useEventSpace();
 
-  const handleBackToTrackClick = () => {
+
+  const handleBackToTrackClick = (event_space_id: string) => {
     router.push({
       pathname: "/dashboard/eventview/tracks/track",
-      query: { trackId }
+      query: { trackId, event_space_id }
     });
   }
 
-  useEffect(() => {
-    console.log("InPersonEventSpace", eventSpace);
-    setEventSpace(eventSpace);
-  }, [eventSpace])
+  if (isLoading) {
+    return <Loader />
+  }
 
   return (
     <div className="flex gap-4">
@@ -50,7 +50,7 @@ export default function EventViewTrackDetailsPage() {
         <div className="p-5 gap-[30px] max-w-[1200px] h-full">
           <div className="flex flex-col gap-[10px] p-2.5 bg-componentPrimary rounded-2xl h-full">
             <div className="flex justify-between">  {/* Tracks and Edit Button */}
-              <Button variant="ghost" className="text-lg font-bold" leftIcon={HiArrowLeft} onClick={handleBackToTrackClick}>Back to Track</Button>
+              {eventSpace && <Button variant="ghost" className="text-lg font-bold" leftIcon={HiArrowLeft} onClick={() => handleBackToTrackClick(eventSpace?.id)}>Back to Track</Button>}
               <Button variant="quiet" className="rounded-xl" leftIcon={BiEditAlt}>Edit</Button>
             </div>
             <div className="flex flex-col gap-2.5 p-2.5 "> {/* Schedule Info */}
@@ -100,7 +100,7 @@ export default function EventViewTrackDetailsPage() {
             </div>
             <div className="flex gap-2 items-center">
               <Label className="opacity-60">Expereicne Level: </Label>
-              <Label className="opacity-70 font-bold text-base">{eventSpace?.experience_level}</Label>
+              <Label className="opacity-70 font-bold text-base">{eventSpace?.experience_level?.join(', ')}</Label>
             </div>
           </div>
           <div className="pb-10 gap-2.5">
