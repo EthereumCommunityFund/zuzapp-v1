@@ -37,6 +37,13 @@ export default function EventViewNavigation() {
     router.push("/dashboard/home");
   };
 
+  const handleEventRouteClick = (path: string) => {
+    router.push({
+      pathname: path,
+      query: { event_space_id }
+    })
+  }
+
   return (
     <>
       {/* Mobile menu button */}
@@ -51,9 +58,8 @@ export default function EventViewNavigation() {
       </div>
       {/* Overlay that can close the dashboard menu */}
       <div
-        className={`md:hidden fixed inset-0 bg-black/10 z-10 ${
-          dashboardOpen ? "block" : "hidden"
-        }`}
+        className={`md:hidden fixed inset-0 bg-black/10 z-10 ${dashboardOpen ? "block" : "hidden"
+          }`}
         onClick={handleClick}
       ></div>
       <nav
@@ -69,11 +75,11 @@ export default function EventViewNavigation() {
                 {routes.map((route, index) => (route.name &&
                   <li
                     key={index}
-                    className={`flex items-center font-bold space-x-2 py-1 px-3 opacity-70 rounded-xl hover:bg-white/20 md:hover:border-b duration-200 ${router.pathname.includes(route.path) && "bg-white/20"
+                    className={`flex items-center font-bold space-x-2 py-1 px-3 opacity-70 rounded-xl hover:bg-white/20 md:hover:border-b duration-200 ${router.pathname.includes(route.path)
                       }`}
                   >
                     {route.icon && <route.icon size={30} />}
-                    <Link href={route.path} className="max-lg:w-full lg:w-inherit">
+                    <Link href={`${route.path}?event_space_id=${event_space_id}`} >
                       {route.name}
                     </Link>
                   </li>

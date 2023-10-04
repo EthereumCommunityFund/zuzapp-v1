@@ -3,13 +3,14 @@ import { IconType } from 'react-icons';
 import { HiCollection, HiHome, HiLightningBolt, HiViewBoards, HiMap, HiCalendar } from 'react-icons/hi';
 import { BiCalendar, BiSolidLayout } from 'react-icons/bi';
 import { BsFillTicketFill } from 'react-icons/bs';
+import { LucideIcon } from 'lucide-react';
 
 interface Routes {
   name?: string;
   tabIndex?: SubHeaderTabIndex;
   path: string;
   title: string;
-  icon?: IconType | null;
+  icon?: IconType | LucideIcon;
 }
 export const eventRoutes: Routes[] = [
   {
