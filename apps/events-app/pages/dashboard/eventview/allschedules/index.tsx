@@ -53,13 +53,13 @@ export default function EventViewTracksAlleSchedulesPage() {
 
   return (
     <div className="flex gap-4">
-      <div className="flex flex-col w-2/3 pb-10 gap-5">
+      <div className="flex flex-col w-2/3 pb-10 gap-5 justify-center max-w-[1000px]">
         <EventViewHeader
           imgPath={eventSpace?.image_url as string}
           name={eventSpace?.name as string}
           tagline={eventSpace?.tagline as string}
         />
-        <div className="flex flex-col gap-2.5 p-[30px] max-w-[1000px]">
+        <div className="flex flex-col gap-2.5 p-[30px]">
           <div className="p-8 bg-componentPrimary rounded-2xl">
             <div>
               <Button
