@@ -14,7 +14,7 @@ import { useForm } from 'react-hook-form';
 import { useEffect, useState } from 'react';
 import FormTitle from '@/components/ui/labels/form-title';
 import InputFieldDark from '@/components/ui/inputFieldDark';
-import { EventSpaceDetailsType, InputFieldType, LocationUpdateRequestBody, TrackUpdateRequestBody } from '@/types';
+import { DropDownMenuItemType, EventSpaceDetailsType, InputFieldType, LocationUpdateRequestBody, TrackUpdateRequestBody } from '@/types';
 import TextEditor from '@/components/ui/TextEditor';
 import { Label } from '@/components/ui/label';
 import SwitchButton from '@/components/ui/buttons/SwitchButton';
@@ -39,6 +39,7 @@ import Autocomplete from "@mui/material/Autocomplete";
 import Link from "next/link";
 import { Loader } from "@/components/ui/Loader";
 import { toast } from "@/components/ui/use-toast";
+import { List } from "@/components/ui/DropDownMenu";
 
 type Organizer = {
   name: string;
@@ -96,6 +97,7 @@ export default function AddSchedulePage(props: any) {
   const [scheduleAdded, setScheduleAdded] = useState(false);
   const isQuickAccess = query.quickAccess === 'true';
   const [selectedTrackId, setSelectedTrackId] = useState('');
+  const trackList: DropDownMenuItemType[] = [];
 
   const { data: trackDetails } = useQuery<TrackUpdateRequestBody[], Error>(['trackDetails', event_space_id], () => fetchTracksByEventSpaceId(event_space_id as string), {
     enabled: !!event_space_id,
@@ -285,6 +287,14 @@ export default function AddSchedulePage(props: any) {
     }
   };
 
+  if (isQuickAccess) {
+    eventSpace?.tracks.forEach((track) => {
+      trackList.push({
+        name: track.name
+      })
+    })
+  }
+
   useEffect(() => {
     console.log(form.formState.errors);
     //get the first item from the errors object
@@ -297,6 +307,8 @@ export default function AddSchedulePage(props: any) {
       });
     }
   }, [form.formState.errors]);
+
+
 
   if (isLoading) {
     return <Loader />;
@@ -316,8 +328,11 @@ export default function AddSchedulePage(props: any) {
             Back
           </Button>
           <div className="flex flex-col gap-[10px]">
-            <span className="text-2xl items-start font-bold">{track_title}</span>
-            <span className="text-sm opacity-70">You are adding a schedule for this track</span>
+            {isQuickAccess ? (
+              <List data={trackList} header={trackList[0].name} />
+            ) : (
+              <span className="text-2xl items-start font-bold">{track_title}</span>
+            )}
           </div>
         </div>
         <div className="flex py-5 px-4 flex-col items-center gap-8 self-stretch rounded-2xl border border-[#FFFFFF10] bg-[#2E3131]">
