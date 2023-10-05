@@ -39,7 +39,7 @@ import Autocomplete from "@mui/material/Autocomplete";
 import Link from "next/link";
 import { Loader } from "@/components/ui/Loader";
 import { toast } from "@/components/ui/use-toast";
-import { List } from "@/components/ui/DropDownMenu";
+import { DropDownMenu } from "@/components/ui/DropDownMenu";
 
 type Organizer = {
   name: string;
@@ -96,8 +96,9 @@ export default function AddSchedulePage(props: any) {
   const [isLimit, setIsLimit] = useState(false);
   const [scheduleAdded, setScheduleAdded] = useState(false);
   const isQuickAccess = query.quickAccess === 'true';
-  const [selectedTrackId, setSelectedTrackId] = useState('');
+  const [selectedTrackId, setSelectedTrackId] = useState<string>('');
   const trackList: DropDownMenuItemType[] = [];
+  const [selectedTrackName, setSelectedTrackName] = useState<string>('');
 
   const { data: trackDetails } = useQuery<TrackUpdateRequestBody[], Error>(['trackDetails', event_space_id], () => fetchTracksByEventSpaceId(event_space_id as string), {
     enabled: !!event_space_id,
@@ -279,7 +280,7 @@ export default function AddSchedulePage(props: any) {
         query: {
           event_space_id: event_space_id,
           track_title: track_title,
-          trackId: trackId,
+          trackId: isQuickAccess ? selectedTrackId : trackId,
         },
       });
     } catch (error) {
@@ -293,6 +294,12 @@ export default function AddSchedulePage(props: any) {
         name: track.name
       })
     })
+  }
+
+  const handleTracksSelect = (value: any) => {
+    const curTrackId = eventSpace?.tracks.find((track) => track.name === value.name)?.id;
+    curTrackId && setSelectedTrackId(curTrackId);
+    setSelectedTrackName(value.name);
   }
 
   useEffect(() => {
@@ -329,7 +336,7 @@ export default function AddSchedulePage(props: any) {
           </Button>
           <div className="flex flex-col gap-[10px]">
             {isQuickAccess ? (
-              <List data={trackList} header={trackList[0].name} />
+              <span className="text-lg items-start font-semibold opacity-70">You are adding a schedule in quick access</span>
             ) : (
               <span className="text-2xl items-start font-bold">{track_title}</span>
             )}
@@ -437,7 +444,7 @@ export default function AddSchedulePage(props: any) {
                         <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
                           Select Track
                         </Label>
-                        <select
+                        {/* <select
                           title="trackDetails"
                           className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
                           value={selectedTrackId}
@@ -448,7 +455,8 @@ export default function AddSchedulePage(props: any) {
                               {track.name}
                             </option>
                           ))}
-                        </select>
+                        </select> */}
+                        <DropDownMenu data={trackList} header={trackList[0].name} multiple={false} value={selectedTrackName} onChange={handleTracksSelect} />
                       </div>
                     )}
                     <div className="w-full">

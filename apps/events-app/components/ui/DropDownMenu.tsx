@@ -4,7 +4,7 @@ import { Listbox } from '@headlessui/react'
 import { TbChevronDown } from 'react-icons/tb'
 import { DropDownMenuItemType } from '@/types'
 import { IconType } from 'react-icons'
-
+import { cn } from '@/lib/utils';
 
 
 
@@ -12,21 +12,22 @@ type DropDownMenu = {
   data: DropDownMenuItemType[];
   header: string;
   headerIcon?: any;
+  multiple: boolean;
+  value: string | string[];
+  onChange: (newValue: string) => void;
+  className?: string;
 }
 
-export const List = (props: DropDownMenu) => {
-  const { data, header, headerIcon: HeaderIcon } = props;
+export const DropDownMenu = (props: DropDownMenu) => {
+  const { data, header, headerIcon: HeaderIcon, multiple, value, onChange, className } = props;
 
-  const [selectedPeople, setSelectedPeople] = useState()
+  // const [selectedPeople, setSelectedPeople] = useState()
 
-  console.log(selectedPeople);
+  // console.log(selectedPeople);
 
   return (
     <>
-      <Listbox as={"div"} className={"w-72 relative"} value={selectedPeople} onChange={setSelectedPeople} multiple>
-        {/* <Listbox.Button>
-          {selectedPeople.map((person) => person.name).join(', ')}
-        </Listbox.Button> */}
+      <Listbox as={"div"} className={cn("w-full relative", className)} value={value} onChange={onChange} multiple={multiple}>
         <Listbox.Button className="relative w-full inline-flex justify-between item-center cursor-pointer rounded-2xl bg-slate-600 py-2 px-2 shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
           <div className='flex gap-2 items-center font-semibold pl-2'>
             {HeaderIcon && <HeaderIcon />}
@@ -57,11 +58,7 @@ export const List = (props: DropDownMenu) => {
                         }`}
                     >
                       {item.name}
-                      {selected ? (
-                        <span className="absolute inset-y-0 right-1 flex items-center pl-3 text-white-600">
-                          {/* <XCircleIcon className="h-5 w-5" aria-hidden="true" /> */}222
-                        </span>
-                      ) : null}
+
                     </span>
 
                   </>
