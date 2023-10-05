@@ -15,11 +15,11 @@ const Carousel: React.FC<GalleryProps> = ({ imgUrls }) => {
   const items: any = [];
   imgUrls.forEach((imgUrl, idx) => {
     items.push(
-      <img key={idx} alt='333' src={imgUrl} onDragStart={handleDragStart} className='w-[500px] h-[430px]' role="presentation" />
+      <img key={idx} alt='image' src={imgUrl} onDragStart={handleDragStart} className='w-[500px] h-[430px]' role="presentation" />
     )
   })
   return (
-    <div className='w-[500px] h-[450px]'>
+    <div className='w-full'>
       <AliceCarousel touchTracking disableDotsControls mouseTracking items={items} />
     </div>
   );
