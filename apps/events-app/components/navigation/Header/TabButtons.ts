@@ -24,6 +24,6 @@ export const tabButtonLists: TabButtons[] = [
   {
     name: 'Schedules',
     icon: BsFillTicketFill,
-    path: '/dashboard/events/space/dashboard',
+    path: '/dashboard/events/space/schedules',
   },
 ];
