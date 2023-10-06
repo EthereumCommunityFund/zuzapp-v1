@@ -16,7 +16,7 @@ type DropDownMenu = {
   className?: string;
   headerClassName: string;
   optionsClassName: string;
-}
+};
 
 export const DropDownMenu = (props: DropDownMenu) => {
   const { data, header, headerIcon: HeaderIcon, multiple, value, onChange, className, headerClassName, optionsClassName } = props;

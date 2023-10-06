@@ -94,6 +94,11 @@ export default function AddSchedulePage(props: any) {
   const [selectedTrackId, setSelectedTrackId] = useState<string>('');
   const trackList: DropDownMenuItemType[] = [];
   const [selectedTrackName, setSelectedTrackName] = useState<string>('');
+  const [selectedTimeZone, setSelectedTimeZone] = useState<string>('');
+  const [selectedEventCategory, setSelectedEventCategory] = useState<string>('');
+
+  const eventCategoriesList: DropDownMenuItemType[] = [];
+  const eventExperienceLevelList: DropDownMenuItemType[] = [];
 
   const { data: trackDetails } = useQuery<TrackUpdateRequestBody[], Error>(['trackDetails', event_space_id], () => fetchTracksByEventSpaceId(event_space_id as string), {
     enabled: !!event_space_id,
@@ -110,6 +115,14 @@ export default function AddSchedulePage(props: any) {
     () => fetchEventSpaceById(event_space_id as string), // Query function
     {
       enabled: !!event_space_id, // Only execute the query if event_space_id is available
+      onSuccess: (data) => {
+        data.event_type?.forEach((category) => {
+          eventCategoriesList.push({ name: category });
+        })
+        data.experience_level?.forEach((category) => {
+          eventExperienceLevelList.push({ name: category });
+        })
+      }
     }
   );
 
@@ -275,6 +288,29 @@ export default function AddSchedulePage(props: any) {
     const curTrackId = eventSpace?.tracks.find((track) => track.name === value.name)?.id;
     curTrackId && setSelectedTrackId(curTrackId);
     setSelectedTrackName(value.name);
+  }
+
+  const handleSelectFrequency = (value: any) => {
+    setFrequency(value.name);
+  }
+
+  const handleSelectLocationID = (value: any) => {
+    setLocationId(value.name);
+  }
+
+  const handleSelectTimeZone = (value: any) => {
+    setSelectedTimeZone(value.name);
+  }
+
+  const handleSelectSpeakerRole = (value: any) => {
+    setEventItem({
+      ...eventItem,
+      role: value.name,
+    });
+  }
+
+  const handleEventCategoriesSelect = (value: any) => {
+    setSelectedEventCategory(value.name);
   }
 
   useEffect(() => {
@@ -505,8 +541,10 @@ export default function AddSchedulePage(props: any) {
                           )}
                         </div>
                         <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                          <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select a Timezone</Label>
-                          <select
+                          <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
+                            Select a Timezone
+                          </Label>
+                          {/* <select
                             // onChange={(e) => setFrequency(e.target.value as any)}
                             className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
                             title="Timezone"
