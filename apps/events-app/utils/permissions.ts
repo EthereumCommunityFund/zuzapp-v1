@@ -1,91 +1,181 @@
+import { SupabaseClient } from "@supabase/supabase-js";
+import { NextApiRequest } from "next";
+
 export const permissionConfig = {
     // Schedules
     '/api/schedule/create': {
-        permission: 'creator',
-        verify: verifyUserPermissionForEventSpace, // Assuming you'll verify against an associated event_space_id
+        allowedUsers: ["creator", "collaborator"],
+        verify: verifyEventSpaceAccess, // Assuming you'll verify against an associated event_space_id
     },
     '/api/schedule/:id/update': {
-        permission: 'creator',
+        allowedUsers: ['creator'],
         verify: verifyScheduleOwnership,
     },
     '/api/schedule/:id/delete': {
-        permission: 'creator',
+        allowedUsers: ['creator'],
         verify: verifyScheduleOwnership,
     },
 
     // Tracks
     '/api/track/create': {
-        permission: 'creator',
-        verify: verifyUserPermissionForEventSpace, // Assuming you'll verify against an associated event_space_id
+        allowedUsers: ['creator'],
+        verify: verifyEventSpaceAccess, // Assuming you'll verify against an associated event_space_id
     },
     '/api/track/:id/update': {
-        permission: 'creator',
+        allowedUsers: ['creator'],
         verify: verifyTrackOwnership,
     },
     '/api/track/:id/delete': {
-        permission: 'creator',
+        allowedUsers: ['creator'],
         verify: verifyTrackOwnership,
     },
 
     // Invites
-    '/api/invite/create': {
-        permission: 'creator',
-        verify: verifyUserPermissionForEventSpace, // Assuming you'll verify against an associated event_space_id
+    '/api/invite/createInvite': {
+        allowedUsers: ['creator'],
+        verify: verifyEventSpaceAccess, // Assuming you'll verify against an associated event_space_id
     },
     '/api/invite/:id/update': {
-        permission: 'creator',
-        verify: verifyInviteOwnership,
+        allowedUsers: ['creator'],
+        verify: verifyInviteAccess,
     },
-    '/api/invite/:id/delete': {
-        permission: 'creator',
-        verify: verifyInviteOwnership,
+    '/api/invite/:id/revoke': {
+        allowedUsers: ['creator'],
+        verify: verifyInviteAccess,
     },
 
     // Locations
     '/api/location/create': {
-        permission: 'creator',
-        verify: verifyUserPermissionForEventSpace, // Assuming you'll verify against an associated event_space_id
+        allowedUsers: ['creator'],
+        verify: verifyEventSpaceAccess, // Assuming you'll verify against an associated event_space_id
     },
     '/api/location/:id/update': {
-        permission: 'creator',
-        verify: verifyLocationOwnership,
+        allowedUsers: ['creator'],
+        verify: verifyLocationAccess,
     },
     '/api/location/:id/delete': {
-        permission: 'creator',
-        verify: verifyLocationOwnership,
-    }
+        allowedUsers: ['creator'],
+        verify: verifyLocationAccess,
+    },
+
+
+
+
 };
 
 
 // Verify user's permission for the associated event_space_id when creating a new resource
-async function verifyUserPermissionForEventSpace(supabase, userId: string, eventId: string) {
-    const { data } = await supabase
-        .from('eventspace')
-        .select('creator_id')
-        .eq('id', eventId);
-    return data && data[0] && data[0].creator_id === userId;
+async function verifyEventSpaceAccess(supabase: SupabaseClient, req: NextApiRequest, allowedUsers: ["collaborator", "creator"]) {
+    if (allowedUsers.includes('creator')) {
+        const { data: eventData } = await supabase
+            .from('eventspace')
+            .select('creator_id')
+            .eq('id', req.query.event_space_id);
+
+        if (eventData && eventData[0] && eventData[0].creator_id === req.body.user.id) {
+            return true;
+        }
+    }
+
+    if (allowedUsers.includes('collaborator')) {
+        const { data: inviteData } = await supabase
+            .from('eventspaceinvites')
+            .select('*')
+            .eq('event_space_id', req.query.event_space_id)
+            .eq('invitee_id', req.body.user.id)
+            .eq('status', 'accepted');
+
+        if (inviteData && inviteData.length > 0) {
+            return true;
+        }
+    }
+
+    return false;
 }
+
 
 // Verification for schedules:
-async function verifyScheduleOwnership(supabase, userId, scheduleId) {
-    const { data } = await supabase
-        .from('Schedule')
-        .select('creator_id')
-        .eq('id', scheduleId);
-    return data && data[0] && data[0].creator_id === userId;
+async function verifyScheduleOwnership(supabase: SupabaseClient, req: NextApiRequest) {
+    // First, retrieve the Schedule by its ID to get the related event_space_id
+    const { data: scheduleData } = await supabase.from('schedule').select('event_space_id').eq('id', req.query.id);
+
+    if (!scheduleData || !scheduleData[0]) return false;
+
+    // Then, check if the user is the creator of the related EventSpace
+    const { data: eventData } = await supabase.from('eventspace').select('creator_id').eq('id', scheduleData[0].event_space_id);
+    return eventData && eventData[0] && eventData[0].creator_id === req.body.user.id;
 }
 
-// Verification for tracks:
-async function verifyTrackOwnership(supabase, userId, trackId) {
-    // Implement similar logic like above for Track resource
+async function verifyTrackOwnership(supabase: SupabaseClient, req: NextApiRequest) {
+    const { data: trackData } = await supabase.from('track').select('event_space_id').eq('id', req.query.id);
+
+    if (!trackData || !trackData[0]) return false;
+    const { data: eventData } = await supabase.from('eventspace').select('creator_id').eq('id', trackData[0].event_space_id);
+    return eventData && eventData[0] && eventData[0].creator_id === req.body.user.id;
 }
+
 
 // Verification for invites:
-async function verifyInviteOwnership(supabase, userId, inviteId) {
-    // Implement similar logic for Invite resource
+async function verifyInviteAccess(supabase: SupabaseClient, req: NextApiRequest, allowedUsers: ["collaborator", "creator"]) {
+    if (allowedUsers.includes('creator')) {
+        const { data: inviteData } = await supabase
+            .from('eventspaceinvites')
+            .select('inviter_id')
+            .eq('id', req.query.id);
+
+        if (inviteData && inviteData[0] && inviteData[0].inviter_id === req.body.user.id) {
+            return true;
+        }
+    }
+
+    if (allowedUsers.includes('collaborator')) {
+        const { data: inviteData } = await supabase
+            .from('eventspaceinvites')
+            .select('*')
+            .eq('id', req.query.id)
+            .eq('invitee_id', req.body.user.id)
+            .eq('status', 'accepted');
+
+        if (inviteData && inviteData.length > 0) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
-// Verification for locations:
-async function verifyLocationOwnership(supabase, userId, locationId) {
-    // Implement similar logic for Location resource
+
+async function verifyLocationAccess(supabase: SupabaseClient, req: NextApiRequest, allowedUsers: ["collaborator", "creator"]) {
+    if (allowedUsers.includes('creator')) {
+        const { data: locationData } = await supabase
+            .from('eventspacelocation')
+            .select('event_space_id')
+            .eq('id', req.query.id);
+
+        if (!locationData || !locationData[0]) return false;
+
+        const { data: eventData } = await supabase
+            .from('eventspace')
+            .select('creator_id')
+            .eq('id', locationData[0].event_space_id);
+
+        if (eventData && eventData[0] && eventData[0].creator_id === req.body.user.id) {
+            return true;
+        }
+    }
+
+    if (allowedUsers.includes('collaborator')) {
+        const { data: inviteData } = await supabase
+            .from('eventspaceinvites')
+            .select('*')
+            .eq('event_space_id', req.query.event_space_id)
+            .eq('invitee_id', req.body.user.id)
+            .eq('status', 'accepted');
+
+        if (inviteData && inviteData.length > 0) {
+            return true;
+        }
+    }
+
+    return false;
 }
