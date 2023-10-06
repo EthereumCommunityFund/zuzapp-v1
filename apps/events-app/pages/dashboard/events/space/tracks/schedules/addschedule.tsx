@@ -237,10 +237,6 @@ export default function AddSchedulePage(props: any) {
     setSelectedTrackId(e.target.value)
   }
 
-  const handleFrequencySelect = (e: any) => {
-    setFrequency(e.target.value);
-  }
-
   const handleRemoveTag = (index: number) => {
     const updatedItems = [...tags.slice(0, index), ...tags.slice(index + 1)];
     setTags(updatedItems);
@@ -487,7 +483,7 @@ export default function AddSchedulePage(props: any) {
                           <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
                             Select a Timezone
                           </Label>
-                          {/* <select
+                          <select
                             // onChange={(e) => setFrequency(e.target.value as any)}
                             className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
                             title="Timezone"
@@ -496,9 +492,10 @@ export default function AddSchedulePage(props: any) {
                           </select>
                         </div>
                         <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                          <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select Schedule Frequency</Label>
+                          <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
+                            Select Schedule Frequency
+                          </Label>
                           <select
-                            value={frequency}
                             onChange={(e) => setFrequency(e.target.value as any)}
                             className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
                             title="frequency"
