@@ -2,6 +2,16 @@ import { SupabaseClient } from "@supabase/supabase-js";
 import { NextApiRequest } from "next";
 
 export const permissionConfig = {
+    // Event space
+    '/api/eventspace/:id/update': {
+        allowedUsers: ['creator', 'collaborator'],
+        verify: verifyEventSpace,
+    },
+    '/api/eventspace/:id/delete': {
+        allowedUsers: ['creator'],
+        verify: verifyEventSpace,
+    },
+
     // Schedules
     '/api/schedule/create': {
         allowedUsers: ["creator", "collaborator"],
@@ -9,11 +19,11 @@ export const permissionConfig = {
     },
     '/api/schedule/:id/update': {
         allowedUsers: ['creator'],
-        verify: verifyScheduleOwnership,
+        verify: verifyScheduleAccess,
     },
     '/api/schedule/:id/delete': {
         allowedUsers: ['creator'],
-        verify: verifyScheduleOwnership,
+        verify: verifyScheduleAccess,
     },
 
     // Tracks
@@ -23,11 +33,11 @@ export const permissionConfig = {
     },
     '/api/track/:id/update': {
         allowedUsers: ['creator'],
-        verify: verifyTrackOwnership,
+        verify: verifyTrackAccess,
     },
     '/api/track/:id/delete': {
         allowedUsers: ['creator'],
-        verify: verifyTrackOwnership,
+        verify: verifyTrackAccess,
     },
 
     // Invites
@@ -59,13 +69,30 @@ export const permissionConfig = {
     },
 
 
-
-
 };
 
 
+async function verifyEventSpace(supabase: SupabaseClient, req: NextApiRequest, allowedUsers: ["creator"]) {
+    const eventSpaceId = req.query.id;
+    const event_space_id = req.query.event_space_id;
+
+    const { data: eventData } = await supabase
+        .from('eventspace')
+        .select('id')
+        .eq('id', eventSpaceId);
+
+    console.log(eventData, "event data")
+    if (!eventData || !eventData[0] || eventData[0].id !== event_space_id) {
+        return false;  // Provided event_space_id doesn't match the eventspace's actual event_space_id
+    }
+
+    return verifyEventSpaceAccess(supabase, req, allowedUsers)
+
+}
+
+
 // Verify user's permission for the associated event_space_id when creating a new resource
-async function verifyEventSpaceAccess(supabase: SupabaseClient, req: NextApiRequest, allowedUsers: ["collaborator", "creator"]) {
+async function verifyEventSpaceAccess(supabase: SupabaseClient, req: NextApiRequest, allowedUsers: ["collaborator" | "creator"]) {
     if (allowedUsers.includes('creator')) {
         const { data: eventData } = await supabase
             .from('eventspace')
@@ -95,87 +122,67 @@ async function verifyEventSpaceAccess(supabase: SupabaseClient, req: NextApiRequ
 
 
 // Verification for schedules:
-async function verifyScheduleOwnership(supabase: SupabaseClient, req: NextApiRequest) {
-    // First, retrieve the Schedule by its ID to get the related event_space_id
-    const { data: scheduleData } = await supabase.from('schedule').select('event_space_id').eq('id', req.query.id);
+async function verifyScheduleAccess(supabase: SupabaseClient, req: NextApiRequest, allowedUsers: ["collaborator" | "creator"]) {
+    const scheduleId = req.query.id;
+    const eventSpaceId = req.query.event_space_id;
+    const { data: scheduleData } = await supabase
+        .from('schedule')
+        .select('event_space_id')
+        .eq('id', scheduleId);
 
-    if (!scheduleData || !scheduleData[0]) return false;
-
-    // Then, check if the user is the creator of the related EventSpace
-    const { data: eventData } = await supabase.from('eventspace').select('creator_id').eq('id', scheduleData[0].event_space_id);
-    return eventData && eventData[0] && eventData[0].creator_id === req.body.user.id;
+    if (!scheduleData || !scheduleData[0] || scheduleData[0].event_space_id !== eventSpaceId) {
+        return false;  // Provided event_space_id doesn't match the schedule's actual event_space_id
+    }
+    return verifyEventSpaceAccess(supabase, req, allowedUsers);
 }
 
-async function verifyTrackOwnership(supabase: SupabaseClient, req: NextApiRequest) {
-    const { data: trackData } = await supabase.from('track').select('event_space_id').eq('id', req.query.id);
+async function verifyTrackAccess(supabase: SupabaseClient, req: NextApiRequest, allowedUsers: ["collaborator" | "creator"]) {
+    const trackId = req.query.id;
+    const eventSpaceId = req.query.event_space_id;
+    const { data: trackData } = await supabase
+        .from('track')
+        .select('event_space_id')
+        .eq('id', trackId);
 
-    if (!trackData || !trackData[0]) return false;
-    const { data: eventData } = await supabase.from('eventspace').select('creator_id').eq('id', trackData[0].event_space_id);
-    return eventData && eventData[0] && eventData[0].creator_id === req.body.user.id;
+    if (!trackData || !trackData[0] || trackData[0].event_space_id !== eventSpaceId) {
+        return false;  // Provided event_space_id doesn't match the track's actual event_space_id
+    }
+    return verifyEventSpaceAccess(supabase, req, allowedUsers);
 }
+
 
 
 // Verification for invites:
-async function verifyInviteAccess(supabase: SupabaseClient, req: NextApiRequest, allowedUsers: ["collaborator", "creator"]) {
-    if (allowedUsers.includes('creator')) {
-        const { data: inviteData } = await supabase
-            .from('eventspaceinvites')
-            .select('inviter_id')
-            .eq('id', req.query.id);
+async function verifyInviteAccess(supabase: SupabaseClient, req: NextApiRequest, allowedUsers: ["collaborator" | "creator"]) {
+    const inviteId = req.query.id;
+    const eventSpaceId = req.query.event_space_id;
 
-        if (inviteData && inviteData[0] && inviteData[0].inviter_id === req.body.user.id) {
-            return true;
-        }
+    const { data: inviteData } = await supabase
+        .from('eventspaceinvites')
+        .select('event_space_id')
+        .eq('id', inviteId);
+
+    if (!inviteData || !inviteData[0] || inviteData[0].event_space_id !== eventSpaceId) {
+        return false;  // Provided event_space_id doesn't match the invite's actual event_space_id
     }
 
-    if (allowedUsers.includes('collaborator')) {
-        const { data: inviteData } = await supabase
-            .from('eventspaceinvites')
-            .select('*')
-            .eq('id', req.query.id)
-            .eq('invitee_id', req.body.user.id)
-            .eq('status', 'accepted');
-
-        if (inviteData && inviteData.length > 0) {
-            return true;
-        }
-    }
-
-    return false;
+    return verifyEventSpaceAccess(supabase, req, allowedUsers);
 }
 
 
-async function verifyLocationAccess(supabase: SupabaseClient, req: NextApiRequest, allowedUsers: ["collaborator", "creator"]) {
-    if (allowedUsers.includes('creator')) {
-        const { data: locationData } = await supabase
-            .from('eventspacelocation')
-            .select('event_space_id')
-            .eq('id', req.query.id);
+async function verifyLocationAccess(supabase: SupabaseClient, req: NextApiRequest, allowedUsers: ["collaborator" | "creator"]) {
+    const locationId = req.query.id;
+    const eventSpaceId = req.query.event_space_id;
 
-        if (!locationData || !locationData[0]) return false;
+    const { data: locationData } = await supabase
+        .from('eventspacelocation')
+        .select('event_space_id')
+        .eq('id', locationId);
 
-        const { data: eventData } = await supabase
-            .from('eventspace')
-            .select('creator_id')
-            .eq('id', locationData[0].event_space_id);
-
-        if (eventData && eventData[0] && eventData[0].creator_id === req.body.user.id) {
-            return true;
-        }
+    if (!locationData || !locationData[0] || locationData[0].event_space_id !== eventSpaceId) {
+        return false;  // Provided event_space_id doesn't match the location's actual event_space_id
     }
 
-    if (allowedUsers.includes('collaborator')) {
-        const { data: inviteData } = await supabase
-            .from('eventspaceinvites')
-            .select('*')
-            .eq('event_space_id', req.query.event_space_id)
-            .eq('invitee_id', req.body.user.id)
-            .eq('status', 'accepted');
-
-        if (inviteData && inviteData.length > 0) {
-            return true;
-        }
-    }
-
-    return false;
+    return verifyEventSpaceAccess(supabase, req, allowedUsers);
 }
+
