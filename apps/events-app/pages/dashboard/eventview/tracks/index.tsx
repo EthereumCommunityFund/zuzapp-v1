@@ -100,21 +100,30 @@ export default function EventViewTracksPage() {
                 headerIcon={SelectCategories}
                 multiple={true}
                 value={""}
-                onChange={() => { }} />
+                onChange={() => { }}
+                headerClassName={""}
+                optionsClassName={""}
+              />
               <DropDownMenu
                 data={categoryList}
                 header={"Select Dates"}
                 headerIcon={Calendar}
                 multiple={true}
                 value={""}
-                onChange={() => { }} />
+                onChange={() => { }}
+                headerClassName={""}
+                optionsClassName={""}
+              />
               <DropDownMenu
                 data={categoryList}
                 header={"Select Location"}
                 headerIcon={SelectLocation}
                 multiple={true}
                 value={""}
-                onChange={() => { }} />
+                onChange={() => { }}
+                headerClassName={""}
+                optionsClassName={""}
+              />
             </div>
           </div>
         </div>

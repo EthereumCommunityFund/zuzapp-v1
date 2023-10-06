@@ -6,7 +6,7 @@ import { DropDownMenuItemType } from '@/types';
 import { IconType } from 'react-icons';
 import { cn } from '@/lib/utils';
 
-export type DropDownMenu = {
+type DropDownMenu = {
   data: DropDownMenuItemType[];
   header: string;
   headerIcon?: any;
@@ -14,18 +14,20 @@ export type DropDownMenu = {
   value: string | string[];
   onChange: (newValue: string) => void;
   className?: string;
+  headerClassName: string;
+  optionsClassName: string;
 };
 
 export const DropDownMenu = (props: DropDownMenu) => {
-  const { data, header, headerIcon: HeaderIcon, multiple, value, onChange, className } = props;
-
+  const { data, header, headerIcon: HeaderIcon, multiple, value, onChange, className, headerClassName, optionsClassName } = props;
+  
   return (
     <>
-      <Listbox as={'div'} className={cn('w-full relative', className)} value={value} onChange={onChange} multiple={multiple}>
-        <Listbox.Button className="relative w-full inline-flex justify-between item-center cursor-pointer rounded-2xl bg-slate-600 py-2 px-2 shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
-          <div className="flex gap-2 items-center font-semibold pl-2">
+      <Listbox as={"div"} className={cn("w-full relative", className)} value={value} onChange={onChange} multiple={multiple}>
+        <Listbox.Button className={cn("relative w-full inline-flex justify-between item-center cursor-pointer bg-inputField py-2 px-2 shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm", headerClassName)}>
+          <div className='flex gap-2 items-center font-semibold pl-2'>
             {HeaderIcon && <HeaderIcon />}
-            {header}
+            {header.charAt(0).toUpperCase() + header.slice(1)}
           </div>
           <TbChevronDown className="h-5 w-5 text-gray-40 font-extrabold" aria-hidden="true" />
         </Listbox.Button>
@@ -38,12 +40,17 @@ export const DropDownMenu = (props: DropDownMenu) => {
           leaveFrom="transform opacity-100 scale-100"
           leaveTo="transform opacity-0 scale-95"
         >
-          <Listbox.Options className={'absolute right-0 z-10 mt-2 w-full pb-2 bg-componentPrimary origin-top-right rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'}>
+          <Listbox.Options className={cn("absolute right-0 z-10 mt-2 w-full pb-2 bg-componentPrimary origin-top-right rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none", optionsClassName)}>
             {data.map((item, idx) => (
               <Listbox.Option key={idx} value={item} className={'block pt-2 px-2 text-sm'}>
                 {({ selected }) => (
                   <>
-                    <span className={`relative block truncate rounded-2xl py-2 px-2 w-full hover:bg-slate-700 ${selected ? 'font-medium bg-slate-700' : 'font-normal'}`}>{item.name}</span>
+                    <span
+                      className={`relative block truncate rounded-2xl py-2 px-2 w-full hover:bg-itemHover ${selected ? 'font-medium bg-slate-700' : 'font-normal'
+                        }`}
+                    >
+                      {item.name.charAt(0).toUpperCase() + item.name.slice(1)}
+                    </span>
                   </>
                 )}
               </Listbox.Option>
