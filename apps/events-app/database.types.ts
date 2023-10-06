@@ -223,6 +223,7 @@ export interface Database {
       schedule: {
         Row: {
           all_day: boolean | null
+          current_rsvp_no: number
           date: string
           description: string | null
           end_time: string
@@ -236,7 +237,7 @@ export interface Database {
           live_stream_url: string | null
           location_id: string | null
           name: string
-          rsvp_amount: number | null
+          rsvp_amount: number
           schedule_frequency: string | null
           start_time: string
           track_id: string | null
@@ -244,6 +245,7 @@ export interface Database {
         }
         Insert: {
           all_day?: boolean | null
+          current_rsvp_no?: number
           date: string
           description?: string | null
           end_time: string
@@ -257,7 +259,7 @@ export interface Database {
           live_stream_url?: string | null
           location_id?: string | null
           name: string
-          rsvp_amount?: number | null
+          rsvp_amount?: number
           schedule_frequency?: string | null
           start_time: string
           track_id?: string | null
@@ -265,6 +267,7 @@ export interface Database {
         }
         Update: {
           all_day?: boolean | null
+          current_rsvp_no?: number
           date?: string
           description?: string | null
           end_time?: string
@@ -278,7 +281,7 @@ export interface Database {
           live_stream_url?: string | null
           location_id?: string | null
           name?: string
-          rsvp_amount?: number | null
+          rsvp_amount?: number
           schedule_frequency?: string | null
           start_time?: string
           track_id?: string | null
@@ -455,6 +458,28 @@ export interface Database {
             foreignKeyName: "track_event_space_id_fkey"
             columns: ["event_space_id"]
             referencedRelation: "eventspace"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      userrsvp: {
+        Row: {
+          schedule_id: string
+          user_id: string
+        }
+        Insert: {
+          schedule_id: string
+          user_id: string
+        }
+        Update: {
+          schedule_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "userrsvp_schedule_id_fkey"
+            columns: ["schedule_id"]
+            referencedRelation: "schedule"
             referencedColumns: ["id"]
           }
         ]
