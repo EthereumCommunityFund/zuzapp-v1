@@ -265,6 +265,10 @@ export default function AddSchedulePage(props: any) {
     setOrganizers(updatedItems);
   };
 
+  const handleTrackSelect = (e: any) => {
+    setSelectedTrackId(e.target.value)
+  }
+
   const handleRemoveTag = (index: number) => {
     const updatedItems = [...tags.slice(0, index), ...tags.slice(index + 1)];
     setTags(updatedItems);
@@ -422,6 +426,20 @@ export default function AddSchedulePage(props: any) {
                         <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
                           Select Track
                         </Label>
+                        <select
+                          onChange={handleTrackSelect}
+                          title="Track List"
+                          value={selectedTrackId}
+                          defaultValue={selectedTrackId}
+                          className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
+                        >
+                          <option value="">Select Track</option>
+                          {eventSpace?.tracks.map((track: any) => (
+                            <option key={track.id} value={track.id}>
+                              {track.name}
+                            </option>
+                          ))}
+                        </select>
                       </div>
                     )}
                     <div className="w-full">
@@ -549,18 +567,27 @@ export default function AddSchedulePage(props: any) {
                           <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
                             Select a Timezone
                           </Label>
-                          {/* <select
+                          <select
                             // onChange={(e) => setFrequency(e.target.value as any)}
                             className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
-                            title="frequency"
+                            title="Timezone"
                           >
                             <option className="bg-componentPrimary origin-top-right rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" value="once">UTC</option>
-                          </select> */}
+                          </select>
                         </div>
                         <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
                           <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
                             Select Schedule Frequency
                           </Label>
+                          <select
+                            onChange={(e) => setFrequency(e.target.value as any)}
+                            className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
+                            title="frequency"
+                          >
+                            <option className="bg-componentPrimary origin-top-right rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" value="once">Once</option>
+                            <option className="bg-componentPrimary origin-top-right rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" value="everyday">Everyday</option>
+                            <option className="bg-componentPrimary origin-top-right rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" value="weekly">Weekly</option>
+                          </select>
                         </div>
                         <line></line>
                       </div>
