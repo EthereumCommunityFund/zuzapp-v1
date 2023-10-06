@@ -79,14 +79,14 @@ export default function InPersonEventViewPageTemplate({ eventSpace }: IInPersonE
 
 	return (
 		<>
-			<div className="flex gap-10">
-				<div className="w-2/3 flex flex-col rounded-2xl bg-componentPrimary min-w-[600px]"> {/* Information */}
+			<div className="flex gap-10 md:flex-col sm:flex-col">
+				<div className="lg:w-2/3 md:w-full sm:w-full flex flex-col rounded-2xl bg-componentPrimary min-w-[600px]"> {/* Information */}
 					<div className="rounded-xl p-5">
 						<img src={eventSpace.image_url} className="w-full pb-5 rounded-2xl" alt="" height={600} />
 					</div>
 					<div className="flex flex-col gap-2.5 pb-5 border-b-2 border-white/10 w-full p-5">
-						<div className="flex items-center justify-between w-full pb-5">
-							<div className="flex flex-col gap-3">
+						<div className="items-center justify-between w-full pb-5 sm:flex-col sm:gap-3 sm:flex md:flex md:flex-row">
+							<div className="flex flex-col gap-3 sm:w-full md:w-auto">
 								<div className="flex items-center gap-3 text-[#D7FFC4]/80">
 									<LockClosed />
 									<span className="font-bold">Zuzalu Residents & Invited Guests</span>
@@ -94,7 +94,7 @@ export default function InPersonEventViewPageTemplate({ eventSpace }: IInPersonE
 								<h2 className="font-semibold text-[30px]">{name}</h2>
 								<span className="text-white/80 font-bold">{tagline}</span>
 							</div>
-							<Button variant="primaryGreen" size="lg" className="rounded-full" leftIcon={BsArrowRightCircleFill}>Apply to Event</Button>
+							<Button variant="primaryGreen" size="lg" className="rounded-full sm:w-full md:w-auto lg:w-auto justify-center" leftIcon={BsArrowRightCircleFill}>Apply to Event</Button>
 						</div>
 						<div className="flex gap-3 text-lg">
 							<span className="rounded-full flex px-4 py-1 items-center gap-1 opacity-60 bg-[#FFFFFF10] font-bold">
@@ -126,20 +126,20 @@ export default function InPersonEventViewPageTemplate({ eventSpace }: IInPersonE
 					</div>
 					<div className="flex flex-col gap-3 p-5"> {/*Location */}
 						<h2 className="text-xl text-white/70 font-bold">LOCATION</h2>
-						<img src="/images/2.png" alt="" className="w-full" width={600} height={600} />
+						<img src={imgUrls && imgUrls[0]} alt="" className="w-full" width={600} height={600} />
 						<h2 className="font-extrabold text-lg">Soho House Istanbul</h2>
 						<h3 className="font-bold text-white/70">Beyoğlu, Istanbul, Turkey</h3>
 						<Dialog>
 							<DialogTrigger asChild>
 								<Button variant="quiet" size="lg" className="rounded-2xl inline-block text-white/70 font-bold hover:text-white">View Location</Button>
 							</DialogTrigger>
-							<DialogContent className="w-[500px] h-[500px] flex justify-center">
+							<DialogContent className="lg:w-[500px] lg:h-[500px] md:w-[500px] md:h-[500px] flex justify-center">
 								{imgUrls && <Carousel imgUrls={imgUrls} />}
 							</DialogContent>
 						</Dialog>
 					</div>
 				</div>
-				<div className="w-1/4 flex flex-col px-10 py-5 gap-5 fixed right-0">
+				<div className="lg:w-1/4 md:w-full flex flex-col px-10 py-5 gap-5 lg:fixed lg:right-0">
 					<h2 className="border-b pb-3 text-2xl font-bold border-white/10">Details</h2>
 					<div className="flex gap-4 items-center text-lg font-bold">
 						<UserGroup />

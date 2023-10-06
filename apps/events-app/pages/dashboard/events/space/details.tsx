@@ -82,6 +82,7 @@ export const getServerSideProps = async (ctx: any) => {
       initialSession: session,
       user: session?.user,
       profile: profile,
+      dehydratedState: dehydrate(queryClient),
     },
   };
 };

@@ -12,6 +12,10 @@ import { useEffect, useState } from "react";
 import { BiEditAlt, BiPlusCircle } from "react-icons/bi";
 import { HiArrowLeft, HiCalendar, HiCog, HiLocationMarker, HiMicrophone, HiTag, HiUserGroup } from "react-icons/hi";
 import EventViewHeader from "../eventview/EventViewHeader";
+import useEventDetails from "@/hooks/useCurrentEventSpace";
+import { Loader } from "../ui/Loader";
+import RenderHTMLString from "../ui/RenderHTMLString";
+import EventViewDetailsPanel from "../eventview/EventViewDetailsPanel";
 
 interface ITrackDetailsPageTemplate {
   trackItem: TrackUpdateRequestBody;
@@ -19,24 +23,31 @@ interface ITrackDetailsPageTemplate {
 
 export default function OnlineTrackDetailsPageTemplate(props: ITrackDetailsPageTemplate) {
   const router = useRouter();
-  const { trackItem } = props
-  const { eventSpace } = useEventSpace();
+  const { trackItem } = props;
+  const { eventSpace, isLoading } = useEventDetails();
+
 
   // const handlePageChange = (page: number) => {
   //   setCurrentPage(page);
   // };
-  const handleItemClick = (scheduleName: string, trackId: string | undefined) => {
+  const handleItemClick = (scheduleName: string, trackId: string | undefined, event_space_id: string) => {
     console.log("TrackDetailsPage Track Id", trackId);
     router.push({
       pathname: "/dashboard/eventview/tracks/track/schedule",
-      query: { scheduleName, trackId }
+      query: { scheduleName, trackId, event_space_id }
     });
   }
 
-  const handleBackToTracksClick = () => {
-    router.push("/dashboard/eventview/tracks");
+  const handleBackToTracksClick = (event_space_id: string) => {
+    router.push({
+      pathname: "/dashboard/eventview/tracks",
+      query: { event_space_id }
+    });
   }
 
+  if (isLoading) {
+    return <Loader />
+  }
 
   return (
     <div className="flex gap-4">
@@ -45,14 +56,14 @@ export default function OnlineTrackDetailsPageTemplate(props: ITrackDetailsPageT
         <div className="p-5 gap-[30px] max-w-[1000px]">
           <div className="flex flex-col gap-[10px] p-2.5 bg-componentPrimary rounded-xl">
             <div className="flex justify-between">  {/* Tracks and Edit Button */}
-              <Button variant="ghost" className="text-lg font-bold" leftIcon={HiArrowLeft} onClick={handleBackToTracksClick}>Tracks</Button>
+              {eventSpace && <Button variant="ghost" className="text-lg font-bold" leftIcon={HiArrowLeft} onClick={() => handleBackToTracksClick(eventSpace?.id)}>Tracks</Button>}
               <Button variant="quiet" className="rounded-xl" leftIcon={BiEditAlt}>Edit</Button>
             </div>
             <div className="flex flex-col gap-[10px] p-5 "> {/* Track Info */}
-              <img src={trackItem.image as string} alt="track image" className=" h-[496px] rounded-[10px]" />
+              <img src={trackItem?.image as string} alt="track image" className=" h-[496px] rounded-[10px]" />
               <div className="flex flex-col gap-[10px] p-2.5"> {/* Tracks Name */}
                 <h2 className="font-bold text-2xl">{trackItem.name}</h2>
-                <p className="font-bold opacity-70">{trackItem.description}</p>
+                <RenderHTMLString htmlString={trackItem.description as string} />
                 <span className="rounded-xl flex px-4 py-1 items-center gap-1 opacity-60 bg-[#FFFFFF10] font-bold justify-start w-[320px] text-lg">
                   <HiCalendar size={25} /> November 29 - November 11
                 </span>
@@ -67,90 +78,17 @@ export default function OnlineTrackDetailsPageTemplate(props: ITrackDetailsPageT
         </div>
         <div className="flex flex-col gap-2.5 p-5 w-full">
           <div className="flex flex-col gap-[10px] overflow-hidden rounded-[10px]">
-            {
+            {eventSpace &&
               eventSpace?.schedules.map((schedule, idx) => (
-                schedule.track_id === trackItem.id && (
-                  <UserFacingTrack key={idx} scheduleData={schedule} onClick={() => handleItemClick(schedule.name, trackItem.id)} />
+                schedule.track_id === trackItem?.id && (
+                  <UserFacingTrack key={idx} scheduleData={schedule} onClick={() => handleItemClick(schedule.name, trackItem?.id, eventSpace.id)} />
                 )
               ))
             }
           </div>
         </div>
       </div>
-      <div className="flex flex-col pt-5 pb-10 gap-5">
-        <div className="flex flex-col gap-3">
-          <h2 className="font-bold p-3.5 border-b border-b-background text-xl">Details</h2>
-          <div className="flex gap-2 items-center">
-            <Label className="opacity-60">Format: </Label>
-            <Label className="opacity-70 font-bold text-base">In-Person</Label>
-          </div>
-          <div className="flex gap-2 items-center">
-            <Label className="opacity-60">Type: </Label>
-            <Label className="opacity-70 font-bold text-base">Meetup</Label>
-          </div>
-          <div className="flex gap-2 items-center">
-            <Label className="opacity-60">Expereicne Level: </Label>
-            <Label className="opacity-70 font-bold text-base">Greenies</Label>
-          </div>
-        </div>
-        <div className="pb-10 gap-2.5">
-          <div className="flex flex-col gap-5  rounded-[10px]">
-            <div className="flex flex-col border-b border-b-background pb-5 gap-5">
-              <div className="flex gap-2.5 items-center">
-                <HiCog className="text-2xl" />
-                <h2>Organizers</h2>
-              </div>
-              <div className="flex gap-[6px]">
-                <Speaker title="QJ" />
-                <Speaker title="Janine Leger" />
-              </div>
-            </div>
-            <div className="flex flex-col gap-5">
-              <div className="flex flex-col border-b border-b-background pb-5 gap-5">
-                <div className="flex gap-2.5 items-center">
-                  <HiMicrophone className="text-2xl" />
-                  <h2>Speakers</h2>
-                </div>
-                <div className="flex gap-[6px]">
-                  <Speaker title="Avery Longname" />
-                  <Speaker title="Janine Leger" />
-                </div>
-              </div>
-            </div>
-            <div className="flex flex-col gap-5">
-              <div className="flex flex-col border-b border-b-background pb-5 gap-5">
-                <div className="flex gap-2.5 items-center">
-                  <HiTag className="text-2xl" />
-                  <h2>Tags</h2>
-                </div>
-                <div className="flex gap-2.5">
-                  <Label className="rounded-xl opacity-70 bg-itemBgPrimary p-2 text-lg">Tag2</Label>
-                  <Label className="rounded-xl opacity-70 bg-itemBgPrimary p-2 text-lg">Tag2</Label>
-                  <Label className="rounded-xl opacity-70 bg-itemBgPrimary p-2 text-lg">Tag2</Label>
-                  <Label className="rounded-xl opacity-70 bg-itemBgPrimary p-2 text-lg">Tag2</Label>
-                </div>
-              </div>
-            </div>
-            <div className="flex flex-col pb-2.5 gap-5">
-              <div className="flex gap-2.5 items-center">
-                <HiLocationMarker className="text-2xl" />
-                <h2>Location</h2>
-              </div>
-              <div className="flex gap-2.5">
-                <img src="/images/1.png" width={100} height={50} alt="333" />
-                <div className="flex flex-col gap-[6px]">
-                  <h2 className="font-bold">Soho House Istanbul</h2>
-                  <Label className="opacity-70">Beyoglu, Istanbul, Turkey</Label>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="flex p-2.5 text-xl items-center gap-3">
-            <HiUserGroup className="text-2xl" />
-            <span>14 going</span>
-          </div>
-        </div>
-      </div>
+      {eventSpace && <EventViewDetailsPanel eventSpace={eventSpace} />}
     </div>
   )
 }

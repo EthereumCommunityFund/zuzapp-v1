@@ -19,6 +19,7 @@ import { BiLeftArrow, BiPlusCircle } from "react-icons/bi";
 import { QueryClient, dehydrate, useQuery } from "react-query";
 import { EventSpaceDetailsType } from "@/types";
 import useEventDetails from "@/hooks/useCurrentEventSpace";
+import { Loader } from "@/components/ui/Loader";
 
 const categoryList: DropDownMenuItemType[] = [
   {
@@ -45,9 +46,14 @@ export default function EventViewTracksAlleSchedulesPage() {
       query: { scheduleName, trackId, event_space_id },
     });
   };
+
+  if (isLoading) {
+    return <Loader />
+  }
+
   return (
     <div className="flex gap-4">
-      <div className="flex flex-col w-[1000px] gap-10">
+      <div className="flex flex-col w-2/3 pb-10 gap-5 justify-center max-w-[1000px]">
         <EventViewHeader
           imgPath={eventSpace?.image_url as string}
           name={eventSpace?.name as string}
