@@ -237,6 +237,10 @@ export default function AddSchedulePage(props: any) {
     setSelectedTrackId(e.target.value)
   }
 
+  const handleFrequencySelect = (e: any) => {
+    setFrequency(e.target.value);
+  }
+
   const handleRemoveTag = (index: number) => {
     const updatedItems = [...tags.slice(0, index), ...tags.slice(index + 1)];
     setTags(updatedItems);
@@ -496,7 +500,7 @@ export default function AddSchedulePage(props: any) {
                             Select Schedule Frequency
                           </Label>
                           <select
-                            onChange={(e) => setFrequency(e.target.value as any)}
+                            onChange={handleFrequencySelect}
                             className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
                             title="frequency"
                           >
@@ -584,7 +588,9 @@ export default function AddSchedulePage(props: any) {
                               />
                             </div>
                             <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                              <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select Role</h2>
+                              <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">
+                                Select Role
+                              </h2>
                               <select
                                 onChange={(e) => setEventItem({
                                   ...eventItem,
@@ -629,7 +635,9 @@ export default function AddSchedulePage(props: any) {
                     <div className="w-full flex flex-col gap-6">
                       <h2 className="text-lg opacity-70 self-stretch font-bold pb-5">Schedule Labels</h2>
                       <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                        <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select Event Category</Label>
+                        <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
+                          Select Event Category
+                        </Label>
                         <select
                           onChange={(e) => setExperienceLevel(e.target.value)}
                           value={experienceLevel}
