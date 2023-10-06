@@ -91,9 +91,8 @@ export default function AddSchedulePage(props: any) {
   const [isLimit, setIsLimit] = useState(false);
   const [scheduleAdded, setScheduleAdded] = useState(false);
   const isQuickAccess = query.quickAccess === 'true';
-  const [selectedTrackId, setSelectedTrackId] = useState<string>('');
+  const [selectedTrackId, setSelectedTrackId] = useState('');
   const trackList: DropDownMenuItemType[] = [];
-  const [selectedTrackName, setSelectedTrackName] = useState<string>('');
 
   const { data: trackDetails } = useQuery<TrackUpdateRequestBody[], Error>(['trackDetails', event_space_id], () => fetchTracksByEventSpaceId(event_space_id as string), {
     enabled: !!event_space_id,
@@ -266,16 +265,10 @@ export default function AddSchedulePage(props: any) {
   if (isQuickAccess) {
     eventSpace?.tracks.forEach((track) => {
       trackList.push({
-        name: track.name,
-      });
-    });
+        name: track.name
+      })
+    })
   }
-
-  const handleTracksSelect = (value: any) => {
-    const curTrackId = eventSpace?.tracks.find((track) => track.name === value.name)?.id;
-    curTrackId && setSelectedTrackId(curTrackId);
-    setSelectedTrackName(value.name);
-  };
 
   useEffect(() => {
     console.log(form.formState.errors);
@@ -289,6 +282,8 @@ export default function AddSchedulePage(props: any) {
       });
     }
   }, [form.formState.errors]);
+
+
 
   if (isLoading) {
     return <Loader />;
