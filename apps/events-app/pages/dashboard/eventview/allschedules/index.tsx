@@ -74,6 +74,8 @@ export default function EventViewTracksAlleSchedulesPage() {
             multiple={true}
             value={""}
             onChange={() => { }}
+            headerClassName={''}
+            optionsClassName={''}
           />
           <DropDownMenu
             data={categoryList}
@@ -82,6 +84,8 @@ export default function EventViewTracksAlleSchedulesPage() {
             multiple={true}
             value={""}
             onChange={() => { }}
+            headerClassName={''}
+            optionsClassName={''}
           />
           <DropDownMenu
             data={categoryList}
@@ -90,7 +94,8 @@ export default function EventViewTracksAlleSchedulesPage() {
             multiple={true}
             value={""}
             onChange={() => { }}
-          />
+            headerClassName={''}
+            optionsClassName={''} />
         </div>
       </div>
     </div>
