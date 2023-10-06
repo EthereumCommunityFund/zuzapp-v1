@@ -12,13 +12,8 @@ import Link from "next/link";
 import { HiArrowRight } from "react-icons/hi";
 import { useQueryClient, useQuery } from "react-query";
 import { fetchTrackById } from "@/services/fetchTrack";
-import { cn } from '@/lib/utils';
 
-interface IUpdate {
-  className?: string;
-}
-
-export default function Update({ className }: IUpdate) {
+export default function Update() {
   const [trackCreated, setTrackCreated] = useState(false);
   const router = useRouter();
   const { event_space_id, trackId } = router.query;
@@ -74,7 +69,7 @@ export default function Update({ className }: IUpdate) {
   };
 
   return (
-    <div className={cn("flex flex-col py-5 px-10 items-center gap-[10px] self-stretch w-full", className)}>
+    <div className="flex flex-col py-5 px-10 items-center gap-[10px] self-stretch w-full">
       {trackCreated ? (
         <div className="flex flex-col items-center">
           <h3 className="font-bold text-xl">Your Track Has Been Updated</h3>

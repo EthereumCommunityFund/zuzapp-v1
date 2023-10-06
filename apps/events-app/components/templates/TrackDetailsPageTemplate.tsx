@@ -16,10 +16,6 @@ import useEventDetails from "@/hooks/useCurrentEventSpace";
 import { Loader } from "../ui/Loader";
 import RenderHTMLString from "../ui/RenderHTMLString";
 import EventViewDetailsPanel from "../eventview/EventViewDetailsPanel";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
-import Update from "@/pages/dashboard/events/space/tracks/update";
-import EventViewTrackUpdate from "../eventview/EventViewTrackUpdate";
-import AddSchedulePage from "@/pages/dashboard/events/space/tracks/schedules/addschedule";
 
 interface ITrackDetailsPageTemplate {
   trackItem: TrackUpdateRequestBody;
@@ -61,17 +57,7 @@ export default function OnlineTrackDetailsPageTemplate(props: ITrackDetailsPageT
           <div className="flex flex-col gap-[10px] p-2.5 bg-componentPrimary rounded-xl">
             <div className="flex justify-between">  {/* Tracks and Edit Button */}
               {eventSpace && <Button variant="ghost" className="text-lg font-bold" leftIcon={HiArrowLeft} onClick={() => handleBackToTracksClick(eventSpace?.id)}>Tracks</Button>}
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button variant="quiet" className="rounded-xl text-lg font-bold" leftIcon={BiEditAlt}>Edit</Button>
-                </DialogTrigger>
-                <DialogContent className="w-3/5 overflow-x-auto sm:w-3/4">
-                  <DialogHeader>
-                    <Label className="text-2xl font-bold">Edit Track</Label>
-                  </DialogHeader>
-                  <EventViewTrackUpdate className="px-0 text-white text-2xl" />
-                </DialogContent>
-              </Dialog>
+              <Button variant="quiet" className="rounded-xl" leftIcon={BiEditAlt}>Edit</Button>
             </div>
             <div className="flex flex-col gap-[10px] p-5 "> {/* Track Info */}
               <img src={trackItem?.image as string} alt="track image" className=" h-[496px] rounded-[10px]" />
@@ -86,17 +72,9 @@ export default function OnlineTrackDetailsPageTemplate(props: ITrackDetailsPageT
           </div>
         </div>
         <div className="p-4 w-full">
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button variant="blue" size="lg" className="rounded-xl flex justify-center w-full" leftIcon={BiPlusCircle}>Add a Schedule</Button>
-            </DialogTrigger>
-            <DialogContent className="w-3/5 overflow-x-auto sm:w-3/4">
-              <DialogHeader>
-                <Label className="text-2xl font-bold">Add a Schedule</Label>
-              </DialogHeader>
-
-            </DialogContent>
-          </Dialog>
+          <Button variant="blue" size="lg" className="rounded-xl flex justify-center w-full" leftIcon={BiPlusCircle}>
+            Add a Schedule
+          </Button>
         </div>
         <div className="flex flex-col gap-2.5 p-5 w-full">
           <div className="flex flex-col gap-[10px] overflow-hidden rounded-[10px]">
