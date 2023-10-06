@@ -60,6 +60,8 @@ const schedule_update_schema = Joi.object({
   organizers: Joi.array().items(organizer_schema).default([]),
 });
 
+
+
 export const validateScheduleCreation = (body: any): [Joi.ValidationResult<any>, ScheduleCreateRequestBody] => {
   let data = { ...body };
   delete data.user;
