@@ -653,8 +653,10 @@ export default function AddSchedulePage(props: any) {
                           onChange={(e) => setExperienceLevel(e.target.value)}
                           value={experienceLevel}
                           title="category"
-                          className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
-                          {eventSpace?.event_type?.length === 0 || (eventSpace?.event_type === null && <option value="">No saved categories</option>)}
+                          className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10">
+                          {eventSpace?.event_type?.length === 0 ||
+                            (eventSpace?.event_type === null && <option value="">No saved categories</option>)
+                          }
                           {eventSpace?.event_type?.map((category) => (
                             <option key={category} value={category}>
                               {category}
