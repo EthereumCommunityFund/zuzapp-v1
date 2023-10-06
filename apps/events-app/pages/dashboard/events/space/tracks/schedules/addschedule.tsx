@@ -5,7 +5,6 @@ import Button from "@/components/ui/buttons/Button";
 import { HiArrowLeft, HiArrowRight } from "react-icons/hi";
 import DetailsBar from "@/components/detailsbar";
 
-
 import { CgClose } from 'react-icons/cg';
 import { FaCircleArrowUp } from 'react-icons/fa6';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
@@ -14,7 +13,7 @@ import { useForm } from 'react-hook-form';
 import { useEffect, useState } from 'react';
 import FormTitle from '@/components/ui/labels/form-title';
 import InputFieldDark from '@/components/ui/inputFieldDark';
-import { EventSpaceDetailsType, InputFieldType, LocationUpdateRequestBody, TrackUpdateRequestBody } from '@/types';
+import { DropDownMenuItemType, EventSpaceDetailsType, InputFieldType, LocationUpdateRequestBody, TrackUpdateRequestBody } from '@/types';
 import TextEditor from '@/components/ui/TextEditor';
 import { Label } from '@/components/ui/label';
 import SwitchButton from '@/components/ui/buttons/SwitchButton';
@@ -91,7 +90,9 @@ export default function AddSchedulePage(props: any) {
   const [isLimit, setIsLimit] = useState(false);
   const [scheduleAdded, setScheduleAdded] = useState(false);
   const isQuickAccess = query.quickAccess === 'true';
-  const [selectedTrackId, setSelectedTrackId] = useState('');
+  const [selectedTrackId, setSelectedTrackId] = useState<string>('');
+  const trackList: DropDownMenuItemType[] = [];
+  const [selectedTrackName, setSelectedTrackName] = useState<string>('');
 
   const { data: trackDetails } = useQuery<TrackUpdateRequestBody[], Error>(['trackDetails', event_space_id], () => fetchTracksByEventSpaceId(event_space_id as string), {
     enabled: !!event_space_id,
@@ -261,6 +262,20 @@ export default function AddSchedulePage(props: any) {
     }
   };
 
+  if (isQuickAccess) {
+    eventSpace?.tracks.forEach((track) => {
+      trackList.push({
+        name: track.name,
+      });
+    });
+  }
+
+  const handleTracksSelect = (value: any) => {
+    const curTrackId = eventSpace?.tracks.find((track) => track.name === value.name)?.id;
+    curTrackId && setSelectedTrackId(curTrackId);
+    setSelectedTrackName(value.name);
+  };
+
   useEffect(() => {
     console.log(form.formState.errors);
     //get the first item from the errors object
@@ -292,8 +307,11 @@ export default function AddSchedulePage(props: any) {
             Back
           </Button>
           <div className="flex flex-col gap-[10px]">
-            <span className="text-2xl items-start font-bold">{track_title}</span>
-            <span className="text-sm opacity-70">You are adding a schedule for this track</span>
+            {isQuickAccess ? (
+              <span className="text-lg items-start font-semibold opacity-70">You are adding a schedule in quick access</span>
+            ) : (
+              <span className="text-2xl items-start font-bold">{track_title}</span>
+            )}
           </div>
         </div>
         <div className="flex py-5 px-4 flex-col items-center gap-8 self-stretch rounded-2xl border border-[#FFFFFF10] bg-[#2E3131]">
@@ -484,9 +502,7 @@ export default function AddSchedulePage(props: any) {
                           )}
                         </div>
                         <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                          <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                            Select a Timezone
-                          </Label>
+                          <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select a Timezone</Label>
                           <select
                             // onChange={(e) => setFrequency(e.target.value as any)}
                             className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
@@ -496,11 +512,10 @@ export default function AddSchedulePage(props: any) {
                           </select>
                         </div>
                         <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                          <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                            Select Schedule Frequency
-                          </Label>
+                          <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select Schedule Frequency</Label>
                           <select
                             onChange={handleFrequencySelect}
+                            value={frequency}
                             className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
                             title="frequency"
                           >
@@ -588,9 +603,7 @@ export default function AddSchedulePage(props: any) {
                               />
                             </div>
                             <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                              <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                                Select Role
-                              </h2>
+                              <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select Role</h2>
                               <select
                                 onChange={(e) => setEventItem({
                                   ...eventItem,
@@ -635,21 +648,13 @@ export default function AddSchedulePage(props: any) {
                     <div className="w-full flex flex-col gap-6">
                       <h2 className="text-lg opacity-70 self-stretch font-bold pb-5">Schedule Labels</h2>
                       <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                        <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                          Select Event Category
-                        </Label>
+                        <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select Event Category</Label>
                         <select
                           onChange={(e) => setExperienceLevel(e.target.value)}
                           value={experienceLevel}
                           title="category"
                           className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
-                        >
-                          {eventSpace?.event_type?.length === 0 ||
-                            (eventSpace?.event_type === null && (
-                              <option value="">
-                                No saved event categories
-                              </option>
-                            ))}
+                          {eventSpace?.event_type?.length === 0 || (eventSpace?.event_type === null && <option value="">No saved categories</option>)}
                           {eventSpace?.event_type?.map((category) => (
                             <option key={category} value={category}>
                               {category}

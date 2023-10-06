@@ -20,11 +20,7 @@ type DropDownMenu = {
 
 export const DropDownMenu = (props: DropDownMenu) => {
   const { data, header, headerIcon: HeaderIcon, multiple, value, onChange, className, headerClassName, optionsClassName } = props;
-  console.log("data", data);
-  // const [selectedPeople, setSelectedPeople] = useState()
-
-  // console.log(selectedPeople);
-
+  
   return (
     <>
       <Listbox as={"div"} className={cn("w-full relative", className)} value={value} onChange={onChange} multiple={multiple}>
@@ -54,7 +50,6 @@ export const DropDownMenu = (props: DropDownMenu) => {
                         }`}
                     >
                       {item.name.charAt(0).toUpperCase() + item.name.slice(1)}
-
                     </span>
                   </>
                 )}
