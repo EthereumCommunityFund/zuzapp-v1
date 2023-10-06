@@ -5,7 +5,8 @@ import { validateUUID } from "@/validators";
 import handler from "../eventspace";
 import { string } from "joi";
 import { logToFile } from "@/utils/logger";
-
+import { permissionConfig } from "@/utils/permissions";
+import pathToRegexp from 'path-to-regexp';
 type Permissions = "creator" | "collaborator"
 
 
@@ -16,6 +17,20 @@ const withAuthorization = (permission: Permissions, handler: NextApiHandler) => 
         if (errors.length > 0) {
             return res.status(400).json({ errors });
         }
+
+
+
+        const routeConfigKey = Object.keys(permissionConfig).find((pattern) => {
+            const regex = pathToRegexp(pattern);
+            return regex.test(req.url);
+        });
+
+        const routeConfig = routeConfigKey ? permissionConfig[routeConfigKey] : null;
+
+        if (!routeConfig) {
+            return res.status(403).send("Access forbidden");
+        }
+
 
         if (permission === "creator") {
             // creatorAuthorization(req, res);
