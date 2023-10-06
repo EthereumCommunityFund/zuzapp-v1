@@ -28,6 +28,7 @@ import IconButton from '../ui/buttons/IconButton';
 import { RxPlus } from 'react-icons/rx';
 import { toast } from '../ui/use-toast';
 import { add } from 'libsodium-wrappers';
+import dayjs, { Dayjs } from 'dayjs';
 
 interface EventSpaceDetailsProps {
   eventSpace: EventSpaceDetailsType;
@@ -40,11 +41,27 @@ const formSchema = z.object({
   format: z.enum(['in-person', 'online', 'hybrid'], {
     required_error: 'You need to select an event type.',
   }),
-  start_date: z.date().refine((date) => date instanceof Date, {
-    message: 'Start date is required.',
-  }),
-  end_date: z.date().refine((date) => date instanceof Date, {
-    message: 'End date is required.',
+  start_date: z
+    .date({
+      required_error: 'You need to select a valid date for this event.',
+      invalid_type_error: 'You need to select a valid date for this event.',
+    })
+    .refine(
+      (date) => {
+        if (date) {
+          const today = dayjs();
+          const selectedDate = dayjs(date);
+          return selectedDate.isAfter(today);
+        }
+        return false;
+      },
+      {
+        message: 'You cannot create an event in the past.',
+      }
+    ),
+  end_date: z.date({
+    required_error: 'You need to select a valid date for this event.',
+    invalid_type_error: 'You need to select a valid date for this event.',
   }),
   description: z.string().min(10, {
     message: 'Description is required and is a minimum of 10 characters',
@@ -99,13 +116,21 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace }) => 
     defaultValues: {
       name: name,
       format: format,
-      start_date: start_date !== undefined ? new Date(start_date) : new Date(),
-      end_date: end_date !== undefined ? new Date(end_date) : new Date(),
+      start_date: start_date !== undefined && start_date !== null ? new Date(start_date) : new Date(),
+      end_date: end_date !== undefined && end_date !== null ? new Date(end_date) : new Date(),
       description: description,
     },
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    const endDate = dayjs(values.end_date);
+    const startDate = dayjs(values.start_date);
+    if (endDate.isBefore(startDate)) {
+      form.setError('end_date', {
+        message: 'End date cannot be earlier than start date',
+      });
+      return;
+    }
     const additionalPayload = {
       id: event_space_id as string,
       status: status,
