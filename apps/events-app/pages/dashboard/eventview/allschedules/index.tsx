@@ -1,35 +1,31 @@
-import EventViewHeader from "@/components/eventview/EventViewHeader";
-import TrackItemCard from "@/components/tracks/TrackItemCard";
-import MyDropdown from "@/components/ui/DropDown";
-import { List } from "@/components/ui/DropDownMenu";
-import Pagination from "@/components/ui/Pagination";
-import UserFacingTrack from "@/components/ui/UserFacingTrack";
-import Button from "@/components/ui/buttons/Button";
-import {
-  Calendar,
-  SelectCategories,
-  SelectLocation,
-} from "@/components/ui/icons";
-import { fetchEventSpaceById } from "@/services/fetchEventSpaceDetails";
-import { DropDownMenuItemType } from "@/types";
-import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
-import { useRouter } from "next/router";
-import { useState } from "react";
-import { BiLeftArrow, BiPlusCircle } from "react-icons/bi";
-import { QueryClient, dehydrate, useQuery } from "react-query";
-import { EventSpaceDetailsType } from "@/types";
-import useEventDetails from "@/hooks/useCurrentEventSpace";
-import { Loader } from "@/components/ui/Loader";
+import EventViewHeader from '@/components/eventview/EventViewHeader';
+import TrackItemCard from '@/components/tracks/TrackItemCard';
+import MyDropdown from '@/components/ui/DropDown';
+import { DropDownMenu } from '@/components/ui/DropDownMenu';
+import Pagination from '@/components/ui/Pagination';
+import UserFacingTrack from '@/components/ui/UserFacingTrack';
+import Button from '@/components/ui/buttons/Button';
+import { Calendar, SelectCategories, SelectLocation } from '@/components/ui/icons';
+import { fetchEventSpaceById } from '@/services/fetchEventSpaceDetails';
+import { DropDownMenuItemType } from '@/types';
+import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
+import { BiLeftArrow, BiPlusCircle } from 'react-icons/bi';
+import { QueryClient, dehydrate, useQuery } from 'react-query';
+import { EventSpaceDetailsType } from '@/types';
+import useEventDetails from '@/hooks/useCurrentEventSpace';
+import { Loader } from '@/components/ui/Loader';
 
 const categoryList: DropDownMenuItemType[] = [
   {
-    name: "Network States",
+    name: 'Network States',
   },
   {
-    name: "Character Cities",
+    name: 'Character Cities',
   },
   {
-    name: "Coordinations",
+    name: 'Coordinations',
   },
 ];
 
@@ -38,7 +34,7 @@ export default function EventViewTracksAlleSchedulesPage() {
   const { event_space_id } = router.query;
   const { eventSpace, isLoading } = useEventDetails();
 
-  console.log(isLoading, "is loading");
+  console.log(isLoading, 'is loading');
 
   const handleItemClick = (scheduleName: string, trackId?: string) => {
     router.push({
@@ -48,62 +44,52 @@ export default function EventViewTracksAlleSchedulesPage() {
   };
 
   if (isLoading) {
-    return <Loader />
+    return <Loader />;
   }
 
   return (
     <div className="flex gap-4">
       <div className="flex flex-col w-2/3 pb-10 gap-5 justify-center max-w-[1000px]">
-        <EventViewHeader
-          imgPath={eventSpace?.image_url as string}
-          name={eventSpace?.name as string}
-          tagline={eventSpace?.tagline as string}
-        />
+        <EventViewHeader imgPath={eventSpace?.image_url as string} name={eventSpace?.name as string} tagline={eventSpace?.tagline as string} />
         <div className="flex flex-col gap-2.5 p-[30px]">
           <div className="p-8 bg-componentPrimary rounded-2xl">
             <div>
-              <Button
-                variant="blue"
-                size="lg"
-                className="rounded-xl"
-                leftIcon={BiPlusCircle}
-              >
+              <Button variant="blue" size="lg" className="rounded-xl" leftIcon={BiPlusCircle}>
                 Add a Schedule
               </Button>
             </div>
             <div className=" p-2.5 gap-[10px] overflow-hidden rounded-[10px]">
-              {eventSpace?.schedules.map((schedule, id) => (
-                <UserFacingTrack
-                  key={schedule.id}
-                  onClick={() =>
-                    handleItemClick(schedule.name, schedule.track_id)
-                  }
-                  scheduleData={schedule}
-                />
-              ))}
+              {eventSpace?.schedules.map((schedule, id) => <UserFacingTrack key={schedule.id} onClick={() => handleItemClick(schedule.name, schedule.track_id)} scheduleData={schedule} />)}
             </div>
           </div>
         </div>
       </div>
       <div className="flex flex-col gap-5 px-5 py-2.5 w-1/4 fixed right-0">
-        <h2 className="p-3.5 gap-[10px] font-bold text-2xl border-b-2 border-borderPrimary">
-          Schedules: Sort & Filter
-        </h2>
+        <h2 className="p-3.5 gap-[10px] font-bold text-2xl border-b-2 border-borderPrimary">Schedules: Sort & Filter</h2>
         <div className="flex flex-col p-2.5 gap-5 ">
-          <List
+          <DropDownMenu
             data={categoryList}
-            header={"Select Categories"}
+            header={'Select Categories'}
             headerIcon={SelectCategories}
+            multiple={true}
+            value={""}
+            onChange={() => { }}
           />
-          <List
+          <DropDownMenu
             data={categoryList}
-            header={"Select Dates"}
+            header={'Select Dates'}
             headerIcon={Calendar}
+            multiple={true}
+            value={""}
+            onChange={() => { }}
           />
-          <List
+          <DropDownMenu
             data={categoryList}
-            header={"Select Location"}
+            header={'Select Location'}
             headerIcon={SelectLocation}
+            multiple={true}
+            value={""}
+            onChange={() => { }}
           />
         </div>
       </div>
@@ -114,9 +100,7 @@ export default function EventViewTracksAlleSchedulesPage() {
 export const getServerSideProps = async (ctx: any) => {
   const queryClient = new QueryClient();
   const { event_space_id } = ctx.query;
-  await queryClient.prefetchQuery("currentEventSpace", () =>
-    fetchEventSpaceById(event_space_id)
-  );
+  await queryClient.prefetchQuery('currentEventSpace', () => fetchEventSpaceById(event_space_id));
   const supabase = createPagesServerClient(ctx);
   let {
     data: { session },
@@ -131,10 +115,7 @@ export const getServerSideProps = async (ctx: any) => {
     };
 
   // get profile from session
-  const { data: profile, error } = await supabase
-    .from("profile")
-    .select("*")
-    .eq("uuid", session.user.id);
+  const { data: profile, error } = await supabase.from('profile').select('*').eq('uuid', session.user.id);
 
   return {
     props: {
