@@ -462,6 +462,28 @@ export interface Database {
           }
         ]
       }
+      userrsvp: {
+        Row: {
+          schedule_id: string
+          user_id: string
+        }
+        Insert: {
+          schedule_id: string
+          user_id: string
+        }
+        Update: {
+          schedule_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "userrsvp_schedule_id_fkey"
+            columns: ["schedule_id"]
+            referencedRelation: "schedule"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
     }
     Views: {
       [_ in never]: never

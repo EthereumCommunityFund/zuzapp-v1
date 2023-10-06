@@ -16,6 +16,22 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
 
+    // Check if the user has already RSVP'ed
+    const { data: existingRSVPArray, error: existingRSVPError } = await supabase
+        .from('userrsvp')
+        .select('*')
+        .eq('user_id', req.body.user.id)
+        .eq('schedule_id', schedule_id as string);
+
+    if (existingRSVPError) {
+        logToFile("server error", existingRSVPError.message, existingRSVPError.code, req.body.user.email);
+        return res.status(500).send("Internal server error");
+    }
+
+    if (existingRSVPArray.length > 0) {
+        return res.status(400).json({ message: "You have already RSVP'ed to this schedule." });
+    }
+
     // Check if the schedule exists
     const { data: existingScheduleArray, error: existingScheduleError } = await supabase
         .from('schedule')
@@ -33,20 +49,29 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
 
 
-
     let existingSchedule = existingScheduleArray[0];
     if (existingSchedule.limit_rsvp && existingSchedule.current_rsvp_no >= existingSchedule.rsvp_amount) {
         return res.status(400).json({ message: "RSVP limit has been reached for this schedule" });
     }
 
     // Increment the RSVP number for the schedule
-    const { error: rsvpError } = await supabase
+    const { data, error: rsvpError } = await supabase
         .from('schedule')
         .update({ current_rsvp_no: existingSchedule.current_rsvp_no + 1 })
-        .eq('id', schedule_id as string);
+        .eq('id', schedule_id as string).select("*");
 
     if (rsvpError) {
         logToFile("server error", rsvpError.message, rsvpError.code, req.body.user.email);
+        return res.status(500).send("Internal server error");
+    }
+
+    // Save the user's RSVP in the UserRSVP table
+    const { error: insertRSVPError } = await supabase
+        .from('userrsvp')
+        .insert({ user_id: req.body.user.id, schedule_id: schedule_id as string }).select("*");
+
+    if (insertRSVPError) {
+        logToFile("server error", insertRSVPError.message, insertRSVPError.code, req.body.user.email);
         return res.status(500).send("Internal server error");
     }
 
