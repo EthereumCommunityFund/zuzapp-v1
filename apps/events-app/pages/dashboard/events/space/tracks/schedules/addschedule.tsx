@@ -269,6 +269,10 @@ export default function AddSchedulePage(props: any) {
     setSelectedTrackId(e.target.value)
   }
 
+  const handleFrequencySelect = (e: any) => {
+    setFrequency(e.target.value);
+  }
+
   const handleRemoveTag = (index: number) => {
     const updatedItems = [...tags.slice(0, index), ...tags.slice(index + 1)];
     setTags(updatedItems);
@@ -580,7 +584,7 @@ export default function AddSchedulePage(props: any) {
                             Select Schedule Frequency
                           </Label>
                           <select
-                            onChange={(e) => setFrequency(e.target.value as any)}
+                            onChange={handleFrequencySelect}
                             className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
                             title="frequency"
                           >
@@ -693,6 +697,19 @@ export default function AddSchedulePage(props: any) {
                               <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">
                                 Select Role
                               </h2>
+                              <select
+                                onChange={(e) => setEventItem({
+                                  ...eventItem,
+                                  role: e.target.value
+                                })}
+                                title="location"
+                                value={eventItem.role}
+                                className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
+                              >
+                                <option value='organizer'>Organizer</option>
+                                <option value='speaker'>Speaker</option>
+                                <option value='facilitator'>Facilitator</option>
+                              </select>
                             </div>
 
                             <button
@@ -744,6 +761,24 @@ export default function AddSchedulePage(props: any) {
                         <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
                           Select Event Category
                         </Label>
+                        <select
+                          onChange={(e) => setExperienceLevel(e.target.value)}
+                          value={experienceLevel}
+                          title="category"
+                          className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
+                        >
+                          {eventSpace?.event_type?.length === 0 ||
+                            (eventSpace?.event_type === null && (
+                              <option value="">
+                                No saved event categories
+                              </option>
+                            ))}
+                          {eventSpace?.event_type?.map((category) => (
+                            <option key={category} value={category}>
+                              {category}
+                            </option>
+                          ))}
+                        </select>
                       </div>
                       <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
                         <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
@@ -775,11 +810,12 @@ export default function AddSchedulePage(props: any) {
                           <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
                             Add Tags
                           </Label>
-                          <div className="flex w-full text-white gap-5">
+                          <div className="flex w-full text-white outline-none rounded-lg pr-3 pl-2.5 bg-inputField gap-2.5 border border-white/10 border-opacity-10 items-center">
                             <Autocomplete
                               {...defaultProps}
                               id="controlled-demo"
-                              sx={{ color: "white", width: "100%" }}
+                              sx={{ color: "black", width: "100%" }}
+                              color="black"
                               value={tagItem}
                               onChange={(event: any, newValue) => {
                                 if (newValue) {
@@ -788,6 +824,14 @@ export default function AddSchedulePage(props: any) {
                               }}
                               onInputChange={(event, newInputValue) => {
                                 setTagItem({ name: newInputValue });
+                              }}
+                              slotProps={{
+                                paper: {
+                                  sx: {
+                                    color: "white",
+                                    backgroundColor: "#242727",
+                                  }
+                                }
                               }}
                               renderInput={(params) => (
                                 <TextField
@@ -799,6 +843,7 @@ export default function AddSchedulePage(props: any) {
                                     label: {
                                       color: "white",
                                     },
+
                                   }}
                                   {...params}
                                   label="tags"
@@ -813,7 +858,7 @@ export default function AddSchedulePage(props: any) {
                                 setTags([...tags, tagItem.name]);
                                 setTagItem({ name: "" });
                               }}
-                              className="flex gap-2.5 text-lg font-normal leading-[1.2] text-white items-center rounded-[8px] px-2 py-1 bg-white bg-opacity-10"
+                              className="flex gap-2.5 text-lg font-normal leading-[1.2] text-white items-center rounded-[8px] px-2 py-1 bg-componentPrimary bg-opacity-10"
                             >
                               +
                             </button>
