@@ -1,7 +1,7 @@
 import EventViewHeader from '@/components/eventview/EventViewHeader';
 import TrackItemCard from '@/components/tracks/TrackItemCard';
 import MyDropdown from '@/components/ui/DropDown';
-import { List } from '@/components/ui/DropDownMenu';
+import { DropDownMenu } from '@/components/ui/DropDownMenu';
 import Pagination from '@/components/ui/Pagination';
 import UserFacingTrack from '@/components/ui/UserFacingTrack';
 import Button from '@/components/ui/buttons/Button';
@@ -67,9 +67,30 @@ export default function EventViewTracksAlleSchedulesPage() {
       <div className="flex flex-col gap-5 px-5 py-2.5 w-1/4 fixed right-0">
         <h2 className="p-3.5 gap-[10px] font-bold text-2xl border-b-2 border-borderPrimary">Schedules: Sort & Filter</h2>
         <div className="flex flex-col p-2.5 gap-5 ">
-          <List data={categoryList} header={'Select Categories'} headerIcon={SelectCategories} />
-          <List data={categoryList} header={'Select Dates'} headerIcon={Calendar} />
-          <List data={categoryList} header={'Select Location'} headerIcon={SelectLocation} />
+          <DropDownMenu
+            data={categoryList}
+            header={'Select Categories'}
+            headerIcon={SelectCategories}
+            multiple={true}
+            value={""}
+            onChange={() => { }}
+          />
+          <DropDownMenu
+            data={categoryList}
+            header={'Select Dates'}
+            headerIcon={Calendar}
+            multiple={true}
+            value={""}
+            onChange={() => { }}
+          />
+          <DropDownMenu
+            data={categoryList}
+            header={'Select Location'}
+            headerIcon={SelectLocation}
+            multiple={true}
+            value={""}
+            onChange={() => { }}
+          />
         </div>
       </div>
     </div>

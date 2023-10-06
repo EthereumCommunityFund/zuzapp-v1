@@ -2,7 +2,7 @@ import { EventSpaceDetailsType } from "@/types";
 import EventViewHeader from "@/components/eventview/EventViewHeader";
 import TrackItemCard from "@/components/tracks/TrackItemCard";
 import MyDropdown from "@/components/ui/DropDown";
-import { List } from "@/components/ui/DropDownMenu";
+import { DropDownMenu } from "@/components/ui/DropDownMenu";
 import { Loader } from "@/components/ui/Loader";
 import Pagination from "@/components/ui/Pagination";
 import Button from "@/components/ui/buttons/Button";
@@ -94,21 +94,27 @@ export default function EventViewTracksPage() {
               Tracks: Sort & Filter
             </h2>
             <div className="flex flex-col p-2.5 gap-5 ">
-              <List
+              <DropDownMenu
                 data={categoryList}
                 header={"Select Categories"}
                 headerIcon={SelectCategories}
-              />
-              <List
+                multiple={true}
+                value={""}
+                onChange={() => { }} />
+              <DropDownMenu
                 data={categoryList}
                 header={"Select Dates"}
                 headerIcon={Calendar}
-              />
-              <List
+                multiple={true}
+                value={""}
+                onChange={() => { }} />
+              <DropDownMenu
                 data={categoryList}
                 header={"Select Location"}
                 headerIcon={SelectLocation}
-              />
+                multiple={true}
+                value={""}
+                onChange={() => { }} />
             </div>
           </div>
         </div>
