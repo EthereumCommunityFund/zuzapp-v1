@@ -4,7 +4,7 @@ import * as z from "zod";
 import Button from "@/components/ui/buttons/Button";
 import { HiArrowLeft, HiArrowRight } from "react-icons/hi";
 import DetailsBar from "@/components/detailsbar";
-import EditionButtons from "@/components/ui/buttons/EditionButtons";
+
 
 import { CgClose } from 'react-icons/cg';
 import { FaCircleArrowUp } from 'react-icons/fa6';
@@ -36,10 +36,11 @@ import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
-import Link from "next/link";
+
 import { Loader } from "@/components/ui/Loader";
 import { toast } from "@/components/ui/use-toast";
 import { DropDownMenu } from "@/components/ui/DropDownMenu";
+import { ScheduleFrequencyList, SpeakerRoleList, TimeZonesList } from "@/constant/dropdownmenuitems";
 
 type Organizer = {
   name: string;
@@ -76,9 +77,7 @@ export default function AddSchedulePage(props: any) {
   const [tags, setTags] = useState<string[]>([]);
   const [tagItem, setTagItem] = useState<TagItemProp>({ name: '' });
   const [eventItem, setEventItem] = useState({ name: '', role: 'speaker' });
-  const [frequency, setFrequency] = useState<"once" | "everyday" | "weekly">(
-    "once"
-  );
+  const [frequency, setFrequency] = useState<string>('');
 
   console.log(eventItem, organizers);
   // const [savedLocations, setSavedLocations] = useState<
@@ -99,6 +98,11 @@ export default function AddSchedulePage(props: any) {
   const [selectedTrackId, setSelectedTrackId] = useState<string>('');
   const trackList: DropDownMenuItemType[] = [];
   const [selectedTrackName, setSelectedTrackName] = useState<string>('');
+  const [selectedTimeZone, setSelectedTimeZone] = useState<string>('');
+  const [selectedEventCategory, setSelectedEventCategory] = useState<string>('');
+
+  const eventCategoriesList: DropDownMenuItemType[] = [];
+  const eventExperienceLevelList: DropDownMenuItemType[] = [];
 
   const { data: trackDetails } = useQuery<TrackUpdateRequestBody[], Error>(['trackDetails', event_space_id], () => fetchTracksByEventSpaceId(event_space_id as string), {
     enabled: !!event_space_id,
@@ -115,8 +119,18 @@ export default function AddSchedulePage(props: any) {
     () => fetchEventSpaceById(event_space_id as string), // Query function
     {
       enabled: !!event_space_id, // Only execute the query if event_space_id is available
+      onSuccess: (data) => {
+        data.event_type?.forEach((category) => {
+          eventCategoriesList.push({ name: category });
+        })
+        data.experience_level?.forEach((category) => {
+          eventExperienceLevelList.push({ name: category });
+        })
+      }
     }
   );
+
+  console.log("EventSpace", eventSpace);
 
   const [eventType, setEventType] = useState("");
 
@@ -302,6 +316,29 @@ export default function AddSchedulePage(props: any) {
     setSelectedTrackName(value.name);
   }
 
+  const handleSelectFrequency = (value: any) => {
+    setFrequency(value.name);
+  }
+
+  const handleSelectLocationID = (value: any) => {
+    setLocationId(value.name);
+  }
+
+  const handleSelectTimeZone = (value: any) => {
+    setSelectedTimeZone(value.name);
+  }
+
+  const handleSelectSpeakerRole = (value: any) => {
+    setEventItem({
+      ...eventItem,
+      role: value.name,
+    });
+  }
+
+  const handleEventCategoriesSelect = (value: any) => {
+    setSelectedEventCategory(value.name);
+  }
+
   useEffect(() => {
     console.log(form.formState.errors);
     //get the first item from the errors object
@@ -444,19 +481,7 @@ export default function AddSchedulePage(props: any) {
                         <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
                           Select Track
                         </Label>
-                        {/* <select
-                          title="trackDetails"
-                          className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
-                          value={selectedTrackId}
-                          onChange={(e) => setSelectedTrackId(e.target.value)}
-                        >
-                          {trackDetails?.map((track: any) => (
-                            <option key={track.id} value={track.id}>
-                              {track.name}
-                            </option>
-                          ))}
-                        </select> */}
-                        <DropDownMenu data={trackList} header={trackList[0].name} multiple={false} value={selectedTrackName} onChange={handleTracksSelect} />
+                        <DropDownMenu className="rounded-xl" headerClassName="rounded-xl" optionsClassName="bg-inputField" data={trackList} header={trackList[0].name} multiple={false} value={selectedTrackName} onChange={handleTracksSelect} />
                       </div>
                     )}
                     <div className="w-full">
@@ -496,11 +521,6 @@ export default function AddSchedulePage(props: any) {
                           </span>
                         </div>
                         <div className="flex flex-col items-center gap-[30px] self-stretch w-full">
-                          {/* <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                            <span className="text-lg opacity-70 self-stretch">Start Date</span>
-                            <InputFieldDark type={InputFieldType.Date} placeholder={'00-00-0000'} />
-                            <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">Click & Select or type in a date</h3>
-                          </div> */}
                           <FormField
                             control={form.control}
                             name="date"
@@ -589,31 +609,20 @@ export default function AddSchedulePage(props: any) {
                           <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
                             Select a Timezone
                           </Label>
-                          <select
+                          {/* <select
                             // onChange={(e) => setFrequency(e.target.value as any)}
                             className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
                             title="frequency"
                           >
-                            <option value="once">UTC</option>
-                          </select>
+                            <option className="bg-componentPrimary origin-top-right rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" value="once">UTC</option>
+                          </select> */}
+                          <DropDownMenu data={TimeZonesList} header={selectedTimeZone} multiple={false} value={selectedTimeZone} onChange={handleSelectTimeZone} headerClassName={""} optionsClassName={""} />
                         </div>
                         <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
                           <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
                             Select Schedule Frequency
                           </Label>
-                          <select
-                            value={frequency}
-                            onChange={(e) =>
-                              setFrequency(e.target.value as any)
-                            }
-                            className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
-                            title="frequency"
-                          >
-                            <option value="once">Once</option>
-                            <option value="everyday">Everyday</option>
-                            <option value="weekly">Weekly</option>
-                          </select>
-                          {/* <InputFieldDark type={InputFieldType.Option} placeholder={'Only Once'} /> */}
+                          <DropDownMenu data={ScheduleFrequencyList} header={frequency} multiple={false} value={frequency} onChange={handleSelectFrequency} headerClassName={""} optionsClassName={""} />
                         </div>
                         <line></line>
                       </div>
@@ -627,7 +636,7 @@ export default function AddSchedulePage(props: any) {
                           <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
                             Select Location
                           </Label>
-                          {/* <InputFieldDark type={InputFieldType.Option} placeholder={'The Dome'} /> */}
+
                           <select
                             onChange={(e) => setLocationId(e.target.value)}
                             title="location"
@@ -719,22 +728,8 @@ export default function AddSchedulePage(props: any) {
                               <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">
                                 Select Role
                               </h2>
-                              <select
-                                title="Organizer"
-                                value={eventItem.role}
-                                onChange={(e) => {
-                                  console.log(e.target.value, "role value");
-                                  setEventItem({
-                                    ...eventItem,
-                                    role: e.target.value,
-                                  });
-                                }}
-                                className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
-                              >
-                                <option value="speaker">Speaker</option>
-                                <option value="organizer">Organizer</option>
-                                <option value="facilitator">Facilitator</option>
-                              </select>
+
+                              <DropDownMenu className="rounded-xl" headerClassName="rounded-xl" optionsClassName="bg-inputField" data={SpeakerRoleList} header={eventItem.role} multiple={false} value={eventItem.role} onChange={handleSelectSpeakerRole} />
                             </div>
 
                             <button
@@ -786,22 +781,7 @@ export default function AddSchedulePage(props: any) {
                         <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
                           Select Event Category
                         </Label>
-                        <select
-                          onChange={(e) => setEventType(e.target.value)}
-                          defaultValue={eventType}
-                          title="category"
-                          className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
-                        >
-                          {eventSpace?.event_type?.length === 0 ||
-                            (eventSpace?.event_type === null && (
-                              <option value="">No saved categories</option>
-                            ))}
-                          {eventSpace?.event_type?.map((category) => (
-                            <option key={category} value={category}>
-                              {category}
-                            </option>
-                          ))}
-                        </select>
+                        {eventSpace?.event_type && <DropDownMenu data={eventCategoriesList} header={selectedEventCategory} multiple={false} value={selectedEventCategory} onChange={handleEventCategoriesSelect} headerClassName={""} optionsClassName={""} />}
                       </div>
                       <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
                         <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
