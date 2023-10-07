@@ -36,10 +36,10 @@ export default function EventViewTracksAlleSchedulesPage() {
 
   console.log(isLoading, 'is loading');
 
-  const handleItemClick = (scheduleName: string, trackId?: string) => {
+  const handleItemClick = (scheduleName: string, scheduleId: string, trackId?: string) => {
     router.push({
       pathname: `/dashboard/eventview/allschedules/schedule`,
-      query: { scheduleName, trackId, event_space_id },
+      query: { scheduleName, trackId, event_space_id, scheduleId },
     });
   };
 
@@ -59,7 +59,9 @@ export default function EventViewTracksAlleSchedulesPage() {
               </Button>
             </div>
             <div className=" p-2.5 gap-[10px] overflow-hidden rounded-[10px]">
-              {eventSpace?.schedules.map((schedule, id) => <UserFacingTrack key={schedule.id} onClick={() => handleItemClick(schedule.name, schedule.track_id)} scheduleData={schedule} />)}
+              {eventSpace?.schedules.map((schedule, id) => (
+                <UserFacingTrack key={schedule.id} onClick={() => handleItemClick(schedule.name, schedule.id, schedule.track_id)} scheduleData={schedule} />
+              ))}
             </div>
           </div>
         </div>
@@ -67,30 +69,9 @@ export default function EventViewTracksAlleSchedulesPage() {
       <div className="flex flex-col gap-5 px-5 py-2.5 w-1/4 fixed right-0">
         <h2 className="p-3.5 gap-[10px] font-bold text-2xl border-b-2 border-borderPrimary">Schedules: Sort & Filter</h2>
         <div className="flex flex-col p-2.5 gap-5 ">
-          <DropDownMenu
-            data={categoryList}
-            header={'Select Categories'}
-            headerIcon={SelectCategories}
-            multiple={true}
-            value={""}
-            onChange={() => { }}
-          />
-          <DropDownMenu
-            data={categoryList}
-            header={'Select Dates'}
-            headerIcon={Calendar}
-            multiple={true}
-            value={""}
-            onChange={() => { }}
-          />
-          <DropDownMenu
-            data={categoryList}
-            header={'Select Location'}
-            headerIcon={SelectLocation}
-            multiple={true}
-            value={""}
-            onChange={() => { }}
-          />
+          <DropDownMenu data={categoryList} header={'Select Categories'} headerIcon={SelectCategories} multiple={true} value={''} onChange={() => {}} />
+          <DropDownMenu data={categoryList} header={'Select Dates'} headerIcon={Calendar} multiple={true} value={''} onChange={() => {}} />
+          <DropDownMenu data={categoryList} header={'Select Location'} headerIcon={SelectLocation} multiple={true} value={''} onChange={() => {}} />
         </div>
       </div>
     </div>
