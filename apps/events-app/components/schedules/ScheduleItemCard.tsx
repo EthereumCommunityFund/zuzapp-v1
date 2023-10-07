@@ -5,6 +5,8 @@ import { HiArrowRight } from 'react-icons/hi';
 import { useQuery } from 'react-query';
 import fetchSchedulesByTrackId from '@/services/fetchScedulesByTrackId';
 import { useRouter } from 'next/router';
+import { Loader } from '../ui/Loader';
+import useEventDetails from "@/hooks/useCurrentEventSpace";
 
 type IdProp = {
   id: string;
@@ -15,6 +17,7 @@ type Joined<T> = ScheduleUpdateRequestBody & T;
 export default function ScheduleItemCard() {
   const router = useRouter();
   const { event_space_id, trackId, track_title } = router.query;
+  const { eventSpace } = useEventDetails();
 
   const {
     data: schedules,
@@ -29,15 +32,16 @@ export default function ScheduleItemCard() {
     }
   );
 
-  const handleEnterSchedule = async (id: string) => {
+  const handleEnterSchedule = async (id: string, scheduleTrackId: string) => {
+    const scheduleTrackTitle = eventSpace?.tracks.find((trackItem) => trackItem.id === scheduleTrackId)?.name;
     try {
       router.push({
         pathname: `/dashboard/events/space/tracks/schedules/updateSchedule`,
         query: {
           event_space_id,
-          trackId,
+          trackId: scheduleTrackId,
           scheduleId: id,
-          track_title: track_title,
+          track_title: scheduleTrackTitle,
         },
       });
     } catch (error) {
@@ -63,6 +67,10 @@ export default function ScheduleItemCard() {
     }).format(date);
   }
 
+  if (isLoading) {
+    return <Loader />
+  }
+
   return (
     <div className="w-full">
       {schedules && (
@@ -86,7 +94,7 @@ export default function ScheduleItemCard() {
                     </div>
                   </div>
                 </div>
-                <Button variant="dark" className="bg-white/20 text-white/70 rounded-full" leftIcon={HiArrowRight} onClick={() => handleEnterSchedule(schedule.id)}>
+                <Button variant="dark" className="bg-white/20 text-white/70 rounded-full" leftIcon={HiArrowRight} onClick={() => handleEnterSchedule(schedule.id, schedule.track_id as string)}>
                   Update Schedule
                 </Button>
               </div>
