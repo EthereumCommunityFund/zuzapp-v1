@@ -14,7 +14,7 @@ import { useForm } from 'react-hook-form';
 import { useEffect, useState } from 'react';
 import FormTitle from '@/components/ui/labels/form-title';
 import InputFieldDark from '@/components/ui/inputFieldDark';
-import { DropDownMenuItemType, EventSpaceDetailsType, InputFieldType, LocationUpdateRequestBody, TrackUpdateRequestBody } from '@/types';
+import { EventSpaceDetailsType, InputFieldType, LocationUpdateRequestBody, TrackUpdateRequestBody } from '@/types';
 import TextEditor from '@/components/ui/TextEditor';
 import { Label } from '@/components/ui/label';
 import SwitchButton from '@/components/ui/buttons/SwitchButton';
@@ -91,14 +91,7 @@ export default function AddSchedulePage(props: any) {
   const [isLimit, setIsLimit] = useState(false);
   const [scheduleAdded, setScheduleAdded] = useState(false);
   const isQuickAccess = query.quickAccess === 'true';
-  const [selectedTrackId, setSelectedTrackId] = useState<string>('');
-  const trackList: DropDownMenuItemType[] = [];
-  const [selectedTrackName, setSelectedTrackName] = useState<string>('');
-  const [selectedTimeZone, setSelectedTimeZone] = useState<string>('');
-  const [selectedEventCategory, setSelectedEventCategory] = useState<string>('');
-
-  const eventCategoriesList: DropDownMenuItemType[] = [];
-  const eventExperienceLevelList: DropDownMenuItemType[] = [];
+  const [selectedTrackId, setSelectedTrackId] = useState('');
 
   const { data: trackDetails } = useQuery<TrackUpdateRequestBody[], Error>(['trackDetails', event_space_id], () => fetchTracksByEventSpaceId(event_space_id as string), {
     enabled: !!event_space_id,
@@ -115,14 +108,6 @@ export default function AddSchedulePage(props: any) {
     () => fetchEventSpaceById(event_space_id as string), // Query function
     {
       enabled: !!event_space_id, // Only execute the query if event_space_id is available
-      onSuccess: (data) => {
-        data.event_type?.forEach((category) => {
-          eventCategoriesList.push({ name: category });
-        })
-        data.experience_level?.forEach((category) => {
-          eventExperienceLevelList.push({ name: category });
-        })
-      }
     }
   );
 
@@ -276,43 +261,6 @@ export default function AddSchedulePage(props: any) {
     }
   };
 
-  if (isQuickAccess) {
-    eventSpace?.tracks.forEach((track) => {
-      trackList.push({
-        name: track.name
-      })
-    })
-  }
-
-  const handleTracksSelect = (value: any) => {
-    const curTrackId = eventSpace?.tracks.find((track) => track.name === value.name)?.id;
-    curTrackId && setSelectedTrackId(curTrackId);
-    setSelectedTrackName(value.name);
-  }
-
-  const handleSelectFrequency = (value: any) => {
-    setFrequency(value.name);
-  }
-
-  const handleSelectLocationID = (value: any) => {
-    setLocationId(value.name);
-  }
-
-  const handleSelectTimeZone = (value: any) => {
-    setSelectedTimeZone(value.name);
-  }
-
-  const handleSelectSpeakerRole = (value: any) => {
-    setEventItem({
-      ...eventItem,
-      role: value.name,
-    });
-  }
-
-  const handleEventCategoriesSelect = (value: any) => {
-    setSelectedEventCategory(value.name);
-  }
-
   useEffect(() => {
     console.log(form.formState.errors);
     //get the first item from the errors object
@@ -325,8 +273,6 @@ export default function AddSchedulePage(props: any) {
       });
     }
   }, [form.formState.errors]);
-
-
 
   if (isLoading) {
     return <Loader />;
@@ -346,11 +292,8 @@ export default function AddSchedulePage(props: any) {
             Back
           </Button>
           <div className="flex flex-col gap-[10px]">
-            {isQuickAccess ? (
-              <span className="text-lg items-start font-semibold opacity-70">You are adding a schedule in quick access</span>
-            ) : (
-              <span className="text-2xl items-start font-bold">{track_title}</span>
-            )}
+            <span className="text-2xl items-start font-bold">{track_title}</span>
+            <span className="text-sm opacity-70">You are adding a schedule for this track</span>
           </div>
         </div>
         <div className="flex py-5 px-4 flex-col items-center gap-8 self-stretch rounded-2xl border border-[#FFFFFF10] bg-[#2E3131]">
