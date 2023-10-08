@@ -18,19 +18,17 @@ import { BiEditAlt, BiLeftArrow } from "react-icons/bi";
 import { BsFillTicketFill } from "react-icons/bs";
 import {
   HiArrowLeft,
-  HiCalendar,
-  HiCog,
-  HiLocationMarker,
-  HiMicrophone,
-  HiTag,
-  HiUserGroup,
+
 } from "react-icons/hi";
-import { EventSpaceDetailsType } from "@/types";
+
 import { fetchEventSpaceById } from "@/services/fetchEventSpaceDetails";
 import { QueryClient, dehydrate, useQuery } from "react-query";
 import useEventDetails from "@/hooks/useCurrentEventSpace";
 import { Loader } from "@/components/ui/Loader";
 import EventViewDetailsPanel from "@/components/eventview/EventViewDetailsPanel";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import UpdateSchedulePage from "../../events/space/tracks/schedules/updateSchedule";
+import ScheduleEditForm from "@/components/commons/ScheduleEditForm";
 
 export default function EventViewScheduleDetailsPage() {
   const router = useRouter();
@@ -92,13 +90,31 @@ export default function EventViewScheduleDetailsPage() {
               >
                 Back to Schedules
               </Button>
-              <Button
-                variant="quiet"
-                className="rounded-xl bg-componentPrimary text-lg"
-                leftIcon={BiEditAlt}
-              >
-                Edit
-              </Button>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button
+                    variant="quiet"
+                    className="rounded-xl bg-componentPrimary text-lg"
+                    leftIcon={BiEditAlt}
+                  >
+                    Edit
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="w-full">
+                  {currentSchedule && <ScheduleEditForm
+                    name={currentSchedule.name}
+                    format={currentSchedule.format}
+                    description={currentSchedule.description}
+                    date={currentSchedule.date}
+                    start_time={currentSchedule.start_time}
+                    end_time={currentSchedule.end_time}
+                    schedule_frequency={currentSchedule.schedule_frequency}
+                    location_id={currentSchedule.location_id}
+                    event_space_id={event_space_id as string}
+                  />}
+                </DialogContent>
+              </Dialog>
+
             </div>
             <div className="flex flex-col gap-2.5 p-2.5 ">
               {" "}

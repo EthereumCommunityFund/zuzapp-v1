@@ -3,7 +3,7 @@ import { BiCalendarAlt, BiRadioCircle, BiTimeFive } from 'react-icons/bi';
 import Button from '../ui/buttons/Button';
 import { HiArrowRight } from 'react-icons/hi';
 import { useQuery } from 'react-query';
-import fetchSchedulesByTrackId from '@/services/fetchScedulesByTrackId';
+import fetchSchedulesByTrackId from '@/services/fetchSchedulesByTrackId';
 import { useRouter } from 'next/router';
 import { Loader } from '../ui/Loader';
 import useEventDetails from "@/hooks/useCurrentEventSpace";

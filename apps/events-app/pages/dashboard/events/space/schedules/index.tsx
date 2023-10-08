@@ -8,7 +8,7 @@ import { BsFillPlusCircleFill } from 'react-icons/bs';
 import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
 import { Database } from '@/database.types';
 import { useQuery } from 'react-query';
-import fetchSchedulesByTrackId from '@/services/fetchScedulesByTrackId';
+import fetchSchedulesByTrackId from '@/services/fetchSchedulesByTrackId';
 import { ScheduleUpdateRequestBody } from '@/types';
 import { HiArrowRight } from 'react-icons/hi2';
 import { Loader } from '@/components/ui/Loader';
