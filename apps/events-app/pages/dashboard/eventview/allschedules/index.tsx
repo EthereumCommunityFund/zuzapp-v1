@@ -36,10 +36,10 @@ export default function EventViewTracksAlleSchedulesPage() {
 
   console.log(isLoading, 'is loading');
 
-  const handleItemClick = (scheduleName: string, trackId?: string) => {
+  const handleItemClick = (scheduleName: string, scheduleId: string, trackId?: string) => {
     router.push({
       pathname: `/dashboard/eventview/allschedules/schedule`,
-      query: { scheduleName, trackId, event_space_id },
+      query: { scheduleName, trackId, event_space_id, scheduleId },
     });
   };
 
@@ -70,7 +70,9 @@ export default function EventViewTracksAlleSchedulesPage() {
               </Button>
             </div>
             <div className=" p-2.5 gap-[10px] overflow-hidden rounded-[10px]">
-              {eventSpace?.schedules.map((schedule, id) => <UserFacingTrack key={schedule.id} onClick={() => handleItemClick(schedule.name, schedule.track_id)} scheduleData={schedule} />)}
+              {eventSpace?.schedules.map((schedule, id) => (
+                <UserFacingTrack key={schedule.id} onClick={() => handleItemClick(schedule.name, schedule.id, schedule.track_id)} scheduleData={schedule} />
+              ))}
             </div>
           </div>
         </div>
