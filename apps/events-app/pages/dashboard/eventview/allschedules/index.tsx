@@ -31,7 +31,7 @@ const categoryList: DropDownMenuItemType[] = [
 
 export default function EventViewTracksAlleSchedulesPage() {
   const router = useRouter();
-  const { event_space_id } = router.query;
+  const { event_space_id, trackId, track_title } = router.query;
   const { eventSpace, isLoading } = useEventDetails();
 
   console.log(isLoading, 'is loading');
@@ -41,6 +41,17 @@ export default function EventViewTracksAlleSchedulesPage() {
       pathname: `/dashboard/eventview/allschedules/schedule`,
       query: { scheduleName, trackId, event_space_id },
     });
+  };
+
+  const handleAddSchedule = async () => {
+    try {
+      router.push({
+        pathname: `/dashboard/eventview/allschedules/addschedule`,
+        query: { event_space_id, trackId: trackId, track_title: track_title, quickAccess: true },
+      });
+    } catch (error) {
+      console.error('Error fetching space details', error);
+    }
   };
 
   if (isLoading) {
@@ -54,7 +65,7 @@ export default function EventViewTracksAlleSchedulesPage() {
         <div className="flex flex-col gap-2.5 p-[30px]">
           <div className="p-8 bg-componentPrimary rounded-2xl">
             <div>
-              <Button variant="blue" size="lg" className="rounded-xl" leftIcon={BiPlusCircle}>
+              <Button variant="blue" size="lg" className="rounded-xl" leftIcon={BiPlusCircle} onClick={handleAddSchedule}>
                 Add a Schedule
               </Button>
             </div>
@@ -67,36 +78,9 @@ export default function EventViewTracksAlleSchedulesPage() {
       <div className="flex flex-col gap-5 px-5 py-2.5 w-1/4 fixed right-0">
         <h2 className="p-3.5 gap-[10px] font-bold text-2xl border-b-2 border-borderPrimary">Schedules: Sort & Filter</h2>
         <div className="flex flex-col p-2.5 gap-5 ">
-          <DropDownMenu
-            data={categoryList}
-            header={'Select Categories'}
-            headerIcon={SelectCategories}
-            multiple={true}
-            value={""}
-            onChange={() => { }}
-            headerClassName={''}
-            optionsClassName={''}
-          />
-          <DropDownMenu
-            data={categoryList}
-            header={'Select Dates'}
-            headerIcon={Calendar}
-            multiple={true}
-            value={""}
-            onChange={() => { }}
-            headerClassName={''}
-            optionsClassName={''}
-          />
-          <DropDownMenu
-            data={categoryList}
-            header={'Select Location'}
-            headerIcon={SelectLocation}
-            multiple={true}
-            value={""}
-            onChange={() => { }}
-            headerClassName={''}
-            optionsClassName={''} 
-          />
+          <DropDownMenu data={categoryList} header={'Select Categories'} headerIcon={SelectCategories} multiple={true} value={''} onChange={() => {}} headerClassName={''} optionsClassName={''} />
+          <DropDownMenu data={categoryList} header={'Select Dates'} headerIcon={Calendar} multiple={true} value={''} onChange={() => {}} headerClassName={''} optionsClassName={''} />
+          <DropDownMenu data={categoryList} header={'Select Location'} headerIcon={SelectLocation} multiple={true} value={''} onChange={() => {}} headerClassName={''} optionsClassName={''} />
         </div>
       </div>
     </div>
