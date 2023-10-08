@@ -36,7 +36,6 @@ import { v4 as uuidv4 } from 'uuid';
 
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
-import { fetchScheduleByID, updateSchedule } from '../../../../../../controllers/schedule.controller';
 import Link from 'next/link';
 import { toast } from '@/components/ui/use-toast';
 import ScheduleEditForm from '@/components/commons/ScheduleEditForm';
@@ -52,11 +51,9 @@ type TagItemProp = {
   name: string;
 };
 
-
 export default function UpdateSchedulePage() {
   const router = useRouter();
   const { event_space_id, trackId, scheduleId, track_title } = router.query;
-
 
   const {
     data: schedule,
@@ -73,17 +70,16 @@ export default function UpdateSchedulePage() {
     }
   );
 
-
   // const formated = formatDate('2023-09-27T23:00:00+00:00');
   // console.log(formated, 'formated');
 
   if (isLoading) {
-    return <Loader />
+    return <Loader />;
   }
 
   return (
     <div className="flex items-start gap-[60px] self-stretch px-10 py-5">
-      <DetailsBar />
+      {/* <DetailsBar /> */}
       <div className="flex flex-col items-start gap-[17px] flex-1">
         <div className="flex items-center gap-[17px] self-stretch">
           <Button
@@ -99,7 +95,7 @@ export default function UpdateSchedulePage() {
             <span className="text-sm opacity-70">You are editing a schedule for this track</span>
           </div>
         </div>
-        {schedule &&
+        {schedule && (
           <ScheduleEditForm
             name={schedule.name}
             format={schedule.format}
@@ -110,7 +106,8 @@ export default function UpdateSchedulePage() {
             schedule_frequency={schedule.schedule_frequency}
             location_id={schedule.location_id}
             event_space_id={event_space_id as string}
-          />}
+          />
+        )}
         {/* <div className="flex py-5 px-4 flex-col items-center gap-8 self-stretch rounded-2xl border border-[#FFFFFF10] bg-[#2E3131]">
           <div className="flex flex-col items-center gap-[34px] self-stretch w-full">
             <FormTitle name="Update Schedule" />
