@@ -69,6 +69,23 @@ export default function EventViewScheduleDetailsPage() {
     }
   };
 
+  const handleEnterSchedule = async (id: string, scheduleTrackId: string) => {
+    const scheduleTrackTitle = eventSpace?.tracks.find((trackItem) => trackItem.id === scheduleTrackId)?.name;
+    try {
+      router.push({
+        pathname: `/dashboard/eventview/allschedules/updateschedule`,
+        query: {
+          event_space_id,
+          trackId: scheduleTrackId,
+          scheduleId: id,
+          track_title: scheduleTrackTitle,
+        },
+      });
+    } catch (error) {
+      console.error('Error fetching space details', error);
+    }
+  };
+
   if (isLoading) {
     return <Loader />;
   }
@@ -85,7 +102,12 @@ export default function EventViewScheduleDetailsPage() {
               <Button variant="ghost" className="opacity-70 text-lg" leftIcon={HiArrowLeft} onClick={handleBackToSchedule}>
                 Back to Schedules
               </Button>
-              <Button variant="quiet" className="rounded-xl bg-componentPrimary text-lg" leftIcon={BiEditAlt}>
+              <Button
+                variant="quiet"
+                className="rounded-xl bg-componentPrimary text-lg"
+                leftIcon={BiEditAlt}
+                onClick={() => handleEnterSchedule(currentSchedule?.id as string, currentSchedule?.track_id as string)}
+              >
                 Edit
               </Button>
             </div>

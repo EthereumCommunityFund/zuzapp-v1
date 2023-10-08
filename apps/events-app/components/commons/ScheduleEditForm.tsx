@@ -21,12 +21,7 @@ import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
 import { Database } from '@/database.types';
 import CustomDatePicker from '@/components/ui/DatePicker';
 import { useRouter } from 'next/router';
-import {
-  fetchLocationsByEventSpace,
-  fetchAllTags,
-  fetchScheduleByID,
-  updateSchedule
-} from '@/controllers';
+import { fetchLocationsByEventSpace, fetchAllTags, fetchScheduleByID, updateSchedule } from '@/controllers';
 import { useQuery } from 'react-query';
 import { fetchEventSpaceById } from '@/services/fetchEventSpaceDetails';
 import dayjs, { Dayjs } from 'dayjs';
@@ -266,8 +261,8 @@ export default function ScheduleEditForm({
   };
 
   const handleTrackSelect = (e: any) => {
-    setSelectedTrackId(e.target.value)
-  }
+    setSelectedTrackId(e.target.value);
+  };
 
   const defaultProps = {
     options: optionTags,
@@ -445,25 +440,7 @@ export default function ScheduleEditForm({
                     )}
                   />
                 </div>
-                <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                  <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                    Select Track
-                  </Label>
-                  <select
-                    onChange={handleTrackSelect}
-                    title="Track List"
-                    value={selectedTrackId}
-                    defaultValue={selectedTrackId}
-                    className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
-                  >
-                    <option value="">Select Track</option>
-                    {eventSpace?.tracks.map((track: any) => (
-                      <option key={track.id} value={track.id}>
-                        {track.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+
                 <div className="w-full">
                   <h2 className="text-xl opacity-70 self-stretch">Schedule Date & Times</h2>
                   <div className="flex flex-col items-start gap-5 self-stretch w-full pt-5">

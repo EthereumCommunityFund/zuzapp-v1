@@ -16,6 +16,10 @@ import useEventDetails from '@/hooks/useCurrentEventSpace';
 import { Loader } from '../ui/Loader';
 import RenderHTMLString from '../ui/RenderHTMLString';
 import EventViewDetailsPanel from '../eventview/EventViewDetailsPanel';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
+import Update from '@/pages/dashboard/events/space/tracks/update';
+import EventViewTrackUpdate from '../eventview/EventViewTrackUpdate';
+import AddSchedulePage from '@/pages/dashboard/events/space/tracks/schedules/addschedule';
 import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
 import { Database } from '@/database.types';
 
@@ -28,6 +32,7 @@ export default function OnlineTrackDetailsPageTemplate(props: ITrackDetailsPageT
   const { trackItem } = props;
   const { eventSpace, isLoading } = useEventDetails();
   const { event_space_id, trackId, track_title } = router.query;
+
   // const handlePageChange = (page: number) => {
   //   setCurrentPage(page);
   // };
@@ -75,9 +80,19 @@ export default function OnlineTrackDetailsPageTemplate(props: ITrackDetailsPageT
                   Tracks
                 </Button>
               )}
-              <Button variant="quiet" className="rounded-xl" leftIcon={BiEditAlt}>
-                Edit
-              </Button>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="quiet" className="rounded-xl text-lg font-bold" leftIcon={BiEditAlt}>
+                    Edit
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="w-3/5 overflow-x-auto sm:w-3/4">
+                  <DialogHeader>
+                    <Label className="text-2xl font-bold">Edit Track</Label>
+                  </DialogHeader>
+                  <EventViewTrackUpdate className="px-0 text-white text-2xl" />
+                </DialogContent>
+              </Dialog>
             </div>
             <div className="flex flex-col gap-[10px] p-5 ">
               {' '}
