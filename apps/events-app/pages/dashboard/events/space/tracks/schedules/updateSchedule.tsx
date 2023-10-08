@@ -41,6 +41,7 @@ import Link from 'next/link';
 import { toast } from '@/components/ui/use-toast';
 import ScheduleEditForm from '@/components/commons/ScheduleEditForm';
 import fetchSchedulesByTrackId from '@/services/fetchSchedulesByTrackId';
+import { Loader } from '@/components/ui/Loader';
 
 type Organizer = {
   name: string;
@@ -76,6 +77,10 @@ export default function UpdateSchedulePage() {
   // const formated = formatDate('2023-09-27T23:00:00+00:00');
   // console.log(formated, 'formated');
 
+  if (isLoading) {
+    return <Loader />
+  }
+
   return (
     <div className="flex items-start gap-[60px] self-stretch px-10 py-5">
       <DetailsBar />
@@ -104,7 +109,7 @@ export default function UpdateSchedulePage() {
             end_time={schedule.end_time}
             schedule_frequency={schedule.schedule_frequency}
             location_id={schedule.location_id}
-            event_space_id={schedule.event_space_id}
+            event_space_id={event_space_id as string}
           />}
         {/* <div className="flex py-5 px-4 flex-col items-center gap-8 self-stretch rounded-2xl border border-[#FFFFFF10] bg-[#2E3131]">
           <div className="flex flex-col items-center gap-[34px] self-stretch w-full">

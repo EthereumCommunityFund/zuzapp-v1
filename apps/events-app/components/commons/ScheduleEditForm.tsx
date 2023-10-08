@@ -38,6 +38,7 @@ import { v4 as uuidv4 } from 'uuid';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import { toast } from '@/components/ui/use-toast';
+import { Loader } from '../ui/Loader';
 
 type Organizer = {
   name: string;
