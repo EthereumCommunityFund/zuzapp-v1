@@ -17,6 +17,7 @@ export default function UserFacingTrack(props: IUserFacingTrack) {
   const endDate = new Date(scheduleData.end_time).toLocaleDateString('en-US', { month: 'short', day: '2-digit' });
   const startTime = new Date(scheduleData.start_time).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
   const endTime = new Date(scheduleData.end_time).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+  console.log("scheduleData", scheduleData);
 
   useEffect(() => {
     console.log('Date', date);
@@ -46,8 +47,10 @@ export default function UserFacingTrack(props: IUserFacingTrack) {
               <EventDataTime startTime={startTime} endTime={endTime} />
             </div>
             <div className="flex gap-[3px]">
-              <Speaker title="Janine Leger" />
-              <Speaker title="QJ" />
+              {scheduleData.organizers?.map((organizer) => (
+                <Speaker title={organizer.name} />
+              )
+              )}
             </div>
           </div>
           <div>

@@ -48,13 +48,13 @@ export default function EventViewTracksAlleSchedulesPage() {
   }
 
   return (
-    <div className="flex gap-4">
-      <div className="flex flex-col w-2/3 pb-10 gap-5 justify-center max-w-[1000px]">
+    <div className="flex gap-4 lg:flex-row sm:flex-col-reverse lg:bg-pagePrimary md:bg-componentPrimary">
+      <div className="flex flex-col lg:w-3/4 sm:w-full pb-30 gap-5">
         <EventViewHeader imgPath={eventSpace?.image_url as string} name={eventSpace?.name as string} tagline={eventSpace?.tagline as string} />
-        <div className="flex flex-col gap-2.5 p-[30px]">
-          <div className="p-8 bg-componentPrimary rounded-2xl">
+        <div className="flex flex-col gap-2.5 lg:px-9 md:px-5">
+          <div className="bg-componentPrimary rounded-2xl lg:px-5 lg:pt-8">
             <div>
-              <Button variant="blue" size="lg" className="rounded-xl" leftIcon={BiPlusCircle}>
+              <Button variant="blue" size="lg" className="rounded-full sm:w-full lg:w-fit justify-center" leftIcon={BiPlusCircle}>
                 Add a Schedule
               </Button>
             </div>
@@ -64,17 +64,19 @@ export default function EventViewTracksAlleSchedulesPage() {
           </div>
         </div>
       </div>
-      <div className="flex flex-col gap-5 px-5 py-2.5 w-1/4 fixed right-0">
-        <h2 className="p-3.5 gap-[10px] font-bold text-2xl border-b-2 border-borderPrimary">Schedules: Sort & Filter</h2>
-        <div className="flex flex-col p-2.5 gap-5 ">
+      <div className="lg:w-1/4 sm:w-full flex lg:flex-col lg:pl-10 gap-5 lg:fixed lg:right-0 min-w-fit">
+        <h2 className="p-3.5 gap-[10px] font-bold text-xl sm:hidden lg:flex">
+          Schedules: Sort & Filter
+        </h2>
+        <div className="flex lg:flex-col sm:flex-row w-full p-2.5 gap-5">
           <DropDownMenu
             data={categoryList}
             header={'Select Categories'}
             headerIcon={SelectCategories}
             multiple={true}
             value={""}
-            onChange={() => { }}
-            headerClassName={''}
+
+            headerClassName={'rounded-full bg-borderPrimary'}
             optionsClassName={''}
           />
           <DropDownMenu
@@ -83,8 +85,8 @@ export default function EventViewTracksAlleSchedulesPage() {
             headerIcon={Calendar}
             multiple={true}
             value={""}
-            onChange={() => { }}
-            headerClassName={''}
+
+            headerClassName={'rounded-full bg-borderPrimary'}
             optionsClassName={''}
           />
           <DropDownMenu
@@ -93,9 +95,9 @@ export default function EventViewTracksAlleSchedulesPage() {
             headerIcon={SelectLocation}
             multiple={true}
             value={""}
-            onChange={() => { }}
-            headerClassName={''}
-            optionsClassName={''} 
+
+            headerClassName={'rounded-full bg-borderPrimary'}
+            optionsClassName={''}
           />
         </div>
       </div>
