@@ -78,6 +78,22 @@
   }
 }
 
+.animate-rsvp {
+  animation: rsvpAnimation 2s ease-in-out;
+}
+
+@keyframes rsvpAnimation {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
 @media (max-width: 640px) {
   .dashboard-menu {
     @apply fixed bottom-0 left-0 right-0 z-10 flex justify-around;
