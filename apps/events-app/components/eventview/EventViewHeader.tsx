@@ -9,15 +9,13 @@ interface IEventViewHeader {
 export default function EventViewHeader(props: IEventViewHeader) {
   const { imgPath, name, tagline } = props;
   return (
-    <div className="flex px-2.5 rounded-full gap-[10px] h-[60px] justify-between items-center">
-      <img src={imgPath} className="rounded-xl" width={100} alt="event" />
+    <div className={"flex px-10 rounded-full gap-[10px] h-[60px] justify-between items-center lg:bg-inherit md:bg-inherit/80 lg:relative sm:fixed sm:bottom-0 w-full"}>
+      <img src={imgPath} className="rounded-xl" width={90} height={90} alt="event" />
       <div className="flex flex-col gap-2 w-3/4">
-        <h2 className="font-bold text-3xl">{name}</h2>
-        <span className="font-semibold opacity-70">{tagline}</span>
+        <h2 className="font-bold text-2xl">{name}</h2>
+        <span className="opacity-70 text-[15px] lg:flex md:hidden">{tagline}</span>
       </div>
-      <Button variant="primaryGreen" className="rounded-[20px] text-base w-[150px] h-10 items-center">
-        <span className="mx-auto" >Apply to Event</span>
-      </Button>
+      <Button variant="primaryGreen" className="rounded-full w-[200px] justify-center text-[18px]">Apply to Event</Button>
     </div>
   );
 }

@@ -63,15 +63,15 @@ export default function EventViewTracksPage() {
       {isLoading ? (
         <Loader />
       ) : (
-        <div className="flex gap-4">
-          <div className="flex flex-col w-2/3 pb-10 gap-5">
+        <div className="flex gap-4 lg:flex-row sm:flex-col-reverse lg:bg-pagePrimary md:bg-componentPrimary">
+          <div className="flex flex-col lg:w-3/4 sm:w-full pb-10 gap-5">
             <EventViewHeader
               imgPath={eventSpace?.image_url as string}
               name={eventSpace?.name as string}
               tagline={eventSpace?.tagline as string}
             />
-            <div className="p-5">
-              <div className="p-2.5 bg-componentPrimary rounded-2xl">
+            <div className="lg:py-5 lg:px-14">
+              <div className="p-2.5 md:bg-componentPrimary rounded-2xl">
                 <div className="flex flex-col p-2.5 gap-[10px] overflow-hidden">
                   {eventSpace?.tracks.map((item, idx) => (
                     <TrackItemCard
@@ -89,19 +89,19 @@ export default function EventViewTracksPage() {
               </div>
             </div>
           </div>
-          <div className="flex flex-col gap-5 px-5 py-2.5 w-1/4 fixed right-0">
-            <h2 className="p-3.5 gap-[10px] font-bold text-2xl">
+          <div className="lg:w-1/4 sm:w-full flex lg:flex-col lg:pl-10 gap-5 lg:fixed lg:right-0 min-w-fit">
+            <h2 className="p-3.5 gap-[10px] font-bold text-xl sm:hidden lg:flex">
               Tracks: Sort & Filter
             </h2>
-            <div className="flex flex-col p-2.5 gap-5 ">
+            <div className="flex lg:flex-col sm:flex-row w-full p-2.5 gap-5 ">
               <DropDownMenu
                 data={categoryList}
                 header={"Select Categories"}
                 headerIcon={SelectCategories}
                 multiple={true}
                 value={""}
-                onChange={() => { }}
-                headerClassName={""}
+
+                headerClassName={'rounded-full bg-borderPrimary'}
                 optionsClassName={""}
               />
               <DropDownMenu
@@ -110,8 +110,8 @@ export default function EventViewTracksPage() {
                 headerIcon={Calendar}
                 multiple={true}
                 value={""}
-                onChange={() => { }}
-                headerClassName={""}
+
+                headerClassName={'rounded-full bg-borderPrimary'}
                 optionsClassName={""}
               />
               <DropDownMenu
@@ -120,8 +120,8 @@ export default function EventViewTracksPage() {
                 headerIcon={SelectLocation}
                 multiple={true}
                 value={""}
-                onChange={() => { }}
-                headerClassName={""}
+
+                headerClassName={'rounded-full bg-borderPrimary'}
                 optionsClassName={""}
               />
             </div>

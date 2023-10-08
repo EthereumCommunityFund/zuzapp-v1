@@ -63,7 +63,7 @@ export default function EventViewNavigation() {
         onClick={handleClick}
       ></div>
       <nav
-        className={`z-50 dashboard-menu lg:w-[300px] md:w-full sm:w-full fixed flex flex-col lg:h-screen md:h-auto sm:h-auto border-r border-r-gray-800 bg-pagePrimary lg:py-10 md:pt-10 sm:pt-10 pl-10 transition-transform duration-300 ${dashboardOpen && "open"
+        className={`z-50 dashboard-menu lg:w-[250px] md:w-full sm:w-full fixed flex flex-col lg:h-screen md:h-auto sm:h-auto border-r border-r-gray-800 bg-pagePrimary lg:py-10 md:pt-10 sm:pt-10 pl-10 transition-transform duration-300 ${dashboardOpen && "open"
           }`}
       >
         <div className="flex-1 flex flex-col gap-5 max-w-max">
@@ -87,7 +87,7 @@ export default function EventViewNavigation() {
               </ul>
             </div>
             {router.pathname.includes("dashboard/eventview/tracks") && (
-              <div className="flex flex-col gap-3 rounded-md p-2 bg-black font-bold">
+              <div className="flex-col gap-3 rounded-md p-2 bg-black font-bold sm:hidden lg:flex">
                 <h2>Organizer</h2>
                 <Button
                   variant="ghost"
@@ -100,7 +100,7 @@ export default function EventViewNavigation() {
               </div>
             )}
             {router.pathname.includes("dashboard/eventview/allschedules") && (
-              <div className="flex flex-col gap-3 rounded-md p-2 bg-black font-bold">
+              <div className="flex-col gap-3 rounded-md p-2 bg-black font-bold sm:hidden lg:flex">
                 <h2>Organizer</h2>
                 <Button
                   variant="ghost"
