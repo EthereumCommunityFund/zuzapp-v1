@@ -1,13 +1,13 @@
-import Button from "@/components/ui/buttons/Button";
-import { eventViewRoutes } from "@/constant/routes";
-import { useGlobalContext } from "@/context/GlobalContext";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import { MdOutlineModeEdit } from "react-icons/md";
-import { HiArrowLeft, HiOutlineMenuAlt1 } from "react-icons/hi";
+import Button from '@/components/ui/buttons/Button';
+import { eventViewRoutes } from '@/constant/routes';
+import { useGlobalContext } from '@/context/GlobalContext';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { MdOutlineModeEdit } from 'react-icons/md';
+import { HiArrowLeft, HiOutlineMenuAlt1 } from 'react-icons/hi';
 
-import React, { useEffect, useState } from "react";
-import { ArrowCircleLeft } from "@/components/ui/icons";
+import React, { useEffect, useState } from 'react';
+import { ArrowCircleLeft } from '@/components/ui/icons';
 
 export default function EventViewNavigation() {
   const [isClient, setIsClient] = useState(false);
@@ -16,7 +16,7 @@ export default function EventViewNavigation() {
   const { event_space_id } = router.query;
 
   if (!event_space_id) {
-    router.push("/404");
+    router.push('/404');
   }
   const [dashboardOpen, setDashboardOpen] = React.useState(true);
   const routes = eventViewRoutes;
@@ -26,42 +26,34 @@ export default function EventViewNavigation() {
   };
 
   const handleEditEvent = () => {
-    router.push(`/dashboard/eventview/?event_space_id=${event_space_id}`);
+    router.push(`/dashboard/events/space/details?event_space_id=${event_space_id}`);
   };
 
   const handleEditSchedules = () => {
-    router.push(`/dashboard/eventview/?event_space_id=${event_space_id}`);
+    router.push(`/dashboard/events/space/details?event_space_id=${event_space_id}`);
   };
 
   const handleBackToEvents = () => {
-    router.push("/dashboard/home");
+    router.push('/dashboard/home');
   };
 
   const handleEventRouteClick = (path: string) => {
     router.push({
       pathname: path,
-      query: { event_space_id }
-    })
-  }
+      query: { event_space_id },
+    });
+  };
 
   return (
     <>
       {/* Mobile menu button */}
       <div className="z-50 top-4 left-3 fixed">
-        <button
-          onClick={handleClick}
-          className="block md:hidden "
-          aria-label="Open Dashboard Menu"
-        >
+        <button onClick={handleClick} className="block md:hidden " aria-label="Open Dashboard Menu">
           <HiOutlineMenuAlt1 size={28} />
         </button>
       </div>
       {/* Overlay that can close the dashboard menu */}
-      <div
-        className={`md:hidden fixed inset-0 bg-black/10 z-10 ${dashboardOpen ? "block" : "hidden"
-          }`}
-        onClick={handleClick}
-      ></div>
+      <div className={`md:hidden fixed inset-0 bg-black/10 z-10 ${dashboardOpen ? 'block' : 'hidden'}`} onClick={handleClick}></div>
       <nav
         className={`z-50 lg:w-[250px] md:w-full sm:w-full fixed flex flex-col lg:h-screen md:h-auto sm:h-auto border-r border-r-gray-800 bg-pagePrimary lg:py-10 md:pt-10 sm:pt-10 lg:pl-10 md:text-base sm:text-[12px] transition-transform duration-300 ${dashboardOpen && "open"
           }`}
@@ -91,11 +83,7 @@ export default function EventViewNavigation() {
             {router.pathname.includes("dashboard/eventview/tracks") && (
               <div className="flex-col gap-3 rounded-md p-2 bg-black font-bold sm:hidden lg:flex">
                 <h2>Organizer</h2>
-                <Button
-                  variant="ghost"
-                  className="p-2 w-full gap-3 text-base"
-                  onClick={handleEditEvent}
-                >
+                <Button variant="ghost" className="p-2 w-full gap-3 text-base" onClick={handleEditEvent}>
                   <MdOutlineModeEdit />
                   <span>Edit Event</span>
                 </Button>
@@ -104,11 +92,7 @@ export default function EventViewNavigation() {
             {router.pathname.includes("dashboard/eventview/allschedules") && (
               <div className="flex-col gap-3 rounded-md p-2 bg-black font-bold sm:hidden lg:flex">
                 <h2>Organizer</h2>
-                <Button
-                  variant="ghost"
-                  className="p-2 w-full gap-3 text-base"
-                  onClick={handleEditSchedules}
-                >
+                <Button variant="ghost" className="p-2 w-full gap-3 text-base" onClick={handleEditSchedules}>
                   <MdOutlineModeEdit />
                   <span>Edit Schedules</span>
                 </Button>

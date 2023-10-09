@@ -31,16 +31,27 @@ const categoryList: DropDownMenuItemType[] = [
 
 export default function EventViewTracksAlleSchedulesPage() {
   const router = useRouter();
-  const { event_space_id } = router.query;
+  const { event_space_id, trackId, track_title } = router.query;
   const { eventSpace, isLoading } = useEventDetails();
 
   console.log(isLoading, 'is loading');
 
-  const handleItemClick = (scheduleName: string, trackId?: string) => {
+  const handleItemClick = (scheduleName: string, scheduleId: string, trackId?: string) => {
     router.push({
       pathname: `/dashboard/eventview/allschedules/schedule`,
-      query: { scheduleName, trackId, event_space_id },
+      query: { scheduleName, trackId, event_space_id, scheduleId },
     });
+  };
+
+  const handleAddSchedule = async () => {
+    try {
+      router.push({
+        pathname: `/dashboard/eventview/allschedules/addschedule`,
+        query: { event_space_id, trackId: trackId, track_title: track_title, quickAccess: true },
+      });
+    } catch (error) {
+      console.error('Error fetching space details', error);
+    }
   };
 
   if (isLoading) {
@@ -54,16 +65,23 @@ export default function EventViewTracksAlleSchedulesPage() {
         <div className="flex flex-col gap-2.5 lg:px-9 md:px-5">
           <div className="bg-componentPrimary rounded-2xl lg:px-5 lg:pt-8">
             <div>
+<<<<<<< HEAD
               <Button variant="blue" size="lg" className="rounded-full sm:w-full lg:w-fit justify-center" leftIcon={BiPlusCircle}>
+=======
+              <Button variant="blue" size="lg" className="rounded-xl" leftIcon={BiPlusCircle} onClick={handleAddSchedule}>
+>>>>>>> 231a9f0 (merged changes from responsive dashboard)
                 Add a Schedule
               </Button>
             </div>
             <div className=" p-2.5 gap-[10px] overflow-hidden rounded-[10px]">
-              {eventSpace?.schedules.map((schedule, id) => <UserFacingTrack key={schedule.id} onClick={() => handleItemClick(schedule.name, schedule.track_id)} scheduleData={schedule} />)}
+              {eventSpace?.schedules.map((schedule, id) => (
+                <UserFacingTrack key={schedule.id} onClick={() => handleItemClick(schedule.name, schedule.id, schedule.track_id)} scheduleData={schedule} />
+              ))}
             </div>
           </div>
         </div>
       </div>
+<<<<<<< HEAD
       <div className="lg:w-1/4 sm:w-full flex lg:flex-col lg:pl-10 gap-5 lg:fixed lg:right-0 min-w-fit">
         <h2 className="p-3.5 gap-[10px] font-bold text-xl sm:hidden lg:flex">
           Schedules: Sort & Filter
@@ -99,6 +117,14 @@ export default function EventViewTracksAlleSchedulesPage() {
             headerClassName={'rounded-full bg-borderPrimary'}
             optionsClassName={''}
           />
+=======
+      <div className="flex flex-col gap-5 px-5 py-2.5 w-1/4 fixed right-0">
+        <h2 className="p-3.5 gap-[10px] font-bold text-2xl border-b-2 border-borderPrimary">Schedules: Sort & Filter</h2>
+        <div className="flex flex-col p-2.5 gap-5 ">
+          <DropDownMenu data={categoryList} header={'Select Categories'} headerIcon={SelectCategories} multiple={true} value={''} onChange={() => {}} headerClassName={''} optionsClassName={''} />
+          <DropDownMenu data={categoryList} header={'Select Dates'} headerIcon={Calendar} multiple={true} value={''} onChange={() => {}} headerClassName={''} optionsClassName={''} />
+          <DropDownMenu data={categoryList} header={'Select Location'} headerIcon={SelectLocation} multiple={true} value={''} onChange={() => {}} headerClassName={''} optionsClassName={''} />
+>>>>>>> 231a9f0 (merged changes from responsive dashboard)
         </div>
       </div>
     </div>
