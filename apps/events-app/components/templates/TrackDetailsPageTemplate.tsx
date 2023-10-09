@@ -16,6 +16,9 @@ import useEventDetails from "@/hooks/useCurrentEventSpace";
 import { Loader } from "../ui/Loader";
 import RenderHTMLString from "../ui/RenderHTMLString";
 import EventViewDetailsPanel from "../eventview/EventViewDetailsPanel";
+import { QueryClient, dehydrate } from "react-query";
+import { fetchEventSpaceById } from "@/services/fetchEventSpaceDetails";
+import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
 
 interface ITrackDetailsPageTemplate {
   trackItem: TrackUpdateRequestBody;
@@ -50,17 +53,17 @@ export default function OnlineTrackDetailsPageTemplate(props: ITrackDetailsPageT
   }
 
   return (
-    <div className="flex gap-4">
-      <div className="flex flex-col w-[1000px]">
+    <div className="flex gap-4 lg:flex-row sm:flex-col">
+      <div className="flex flex-col lg:w-[1000px] sm:w-full">
         <EventViewHeader imgPath={eventSpace?.image_url as string} name={eventSpace?.name as string} tagline={eventSpace?.tagline as string} />
-        <div className="p-5 gap-[30px] max-w-[1000px]">
+        <div className="p-5 gap-[30px] lg:max-w-[1000px] md:w-full">
           <div className="flex flex-col gap-[10px] p-2.5 bg-componentPrimary rounded-xl">
             <div className="flex justify-between">  {/* Tracks and Edit Button */}
               {eventSpace && <Button variant="ghost" className="text-lg font-bold" leftIcon={HiArrowLeft} onClick={() => handleBackToTracksClick(eventSpace?.id)}>Tracks</Button>}
               <Button variant="quiet" className="rounded-xl" leftIcon={BiEditAlt}>Edit</Button>
             </div>
             <div className="flex flex-col gap-[10px] p-5 "> {/* Track Info */}
-              <img src={trackItem?.image as string} alt="track image" className=" h-[496px] rounded-[10px]" />
+              <img src={trackItem?.image as string} alt="track image" className="lg:h-[496px] md:h-full rounded-[10px]" />
               <div className="flex flex-col gap-[10px] p-2.5"> {/* Tracks Name */}
                 <h2 className="font-bold text-2xl">{trackItem.name}</h2>
                 <RenderHTMLString htmlString={trackItem.description as string} />
@@ -92,3 +95,33 @@ export default function OnlineTrackDetailsPageTemplate(props: ITrackDetailsPageT
     </div>
   )
 }
+
+export const getServerSideProps = async (ctx: any) => {
+  const queryClient = new QueryClient();
+  const { event_space_id } = ctx.query;
+  await queryClient.prefetchQuery('currentEventSpace', () => fetchEventSpaceById(event_space_id));
+  const supabase = createPagesServerClient(ctx);
+  let {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  if (!session)
+    return {
+      props: {
+        initialSession: null,
+        user: null,
+      },
+    };
+
+  // get profile from session
+  const { data: profile, error } = await supabase.from('profile').select('*').eq('uuid', session.user.id);
+
+  return {
+    props: {
+      initialSession: session,
+      user: session?.user,
+      profile: profile,
+      dehydratedState: dehydrate(queryClient),
+    },
+  };
+};

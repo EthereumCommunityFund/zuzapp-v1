@@ -15,6 +15,10 @@ import { BsFillTicketFill } from "react-icons/bs";
 import { HiArrowLeft, HiCog, HiLocationMarker, HiMicrophone, HiTag, HiUserGroup } from "react-icons/hi";
 import useEventDetails from "@/hooks/useCurrentEventSpace";
 import { Loader } from "@/components/ui/Loader";
+import EventViewDetailsPanel from "@/components/eventview/EventViewDetailsPanel";
+import { QueryClient, dehydrate } from "react-query";
+import { fetchEventSpaceById } from "@/services/fetchEventSpaceDetails";
+import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
 interface IEventLink {
   name: string;
   link: string;
@@ -44,7 +48,7 @@ export default function EventViewTrackDetailsPage() {
   }
 
   return (
-    <div className="flex gap-4">
+    <div className="flex gap-4 lg:flex-row sm:flex-col">
       <div className="flex flex-col w-[1200px]">
         <EventViewHeader imgPath={eventSpace?.image_url as string} name={eventSpace?.name as string} tagline={eventSpace?.tagline as string} />
         <div className="p-5 gap-[30px] max-w-[1200px] h-full">
@@ -79,7 +83,7 @@ export default function EventViewTrackDetailsPage() {
       <div className="flex flex-col px-10 gap-1 right-0">
         <div className="flex flex-col gap-5 py-5">
           <div className="flex flex-col p-2.5 gap-2.5">
-            {trackItem?.image && <img src={trackItem?.image as string} className="h-[200px] rounded-2xl" alt="zuzalu" />}
+            {trackItem?.image && <img src={trackItem?.image as string} className="lg:h-[200px] rounded-2xl" alt="zuzalu" />}
             {startDate && endDate && <EventDataDate startDate={startDate} endDate={endDate} />}
           </div>
           <div className="flex flex-col p-2.5 gap-2.5 w-[300px]">
@@ -87,81 +91,38 @@ export default function EventViewTrackDetailsPage() {
             {trackItem?.description && <RenderHTMLString height="" htmlString={trackItem?.description} />}
           </div>
         </div>
-        <div className="flex flex-col gap-2.5">
-          <div className="flex flex-col gap-3">
-            <h2 className="font-bold p-3.5 border-b border-b-background text-xl">Details</h2>
-            <div className="flex gap-2 items-center">
-              <Label className="opacity-60">Format: </Label>
-              <Label className="opacity-70 font-bold text-base">{eventSpace?.format.toUpperCase()}</Label>
-            </div>
-            <div className="flex gap-2 items-center">
-              <Label className="opacity-60">Type: </Label>
-              <Label className="opacity-70 font-bold text-base">{eventSpace?.event_type?.join(', ')}</Label>
-            </div>
-            <div className="flex gap-2 items-center">
-              <Label className="opacity-60">Expereicne Level: </Label>
-              <Label className="opacity-70 font-bold text-base">{eventSpace?.experience_level?.join(', ')}</Label>
-            </div>
-          </div>
-          <div className="pb-10 gap-2.5">
-            <div className="flex flex-col gap-5  rounded-[10px]">
-              <div className="flex flex-col border-b border-b-background pb-5 gap-5">
-                <div className="flex gap-2.5 items-center">
-                  <HiCog className="text-2xl" />
-                  <h2>Organizers</h2>
-                </div>
-                <div className="flex gap-[6px]">
-                  <Speaker title="QJ" />
-                  <Speaker title="Janine Leger" />
-                </div>
-              </div>
-              <div className="flex flex-col gap-5">
-                <div className="flex flex-col border-b border-b-background pb-5 gap-5">
-                  <div className="flex gap-2.5 items-center">
-                    <HiMicrophone className="text-2xl" />
-                    <h2>Speakers</h2>
-                  </div>
-                  <div className="flex gap-[6px]">
-                    <Speaker title="Avery Longname" />
-                    <Speaker title="Janine Leger" />
-                  </div>
-                </div>
-              </div>
-              <div className="flex flex-col gap-5">
-                <div className="flex flex-col border-b border-b-background pb-5 gap-5">
-                  <div className="flex gap-2.5 items-center">
-                    <HiTag className="text-2xl" />
-                    <h2>Tags</h2>
-                  </div>
-                  <div className="flex gap-2.5">
-                    <Label className="rounded-xl opacity-70 bg-itemBgPrimary p-2 text-lg">Tag2</Label>
-                    <Label className="rounded-xl opacity-70 bg-itemBgPrimary p-2 text-lg">Tag2</Label>
-                    <Label className="rounded-xl opacity-70 bg-itemBgPrimary p-2 text-lg">Tag2</Label>
-                    <Label className="rounded-xl opacity-70 bg-itemBgPrimary p-2 text-lg">Tag2</Label>
-                  </div>
-                </div>
-              </div>
-              <div className="flex flex-col pb-2.5 gap-5">
-                <div className="flex gap-2.5 items-center">
-                  <HiLocationMarker className="text-2xl" />
-                  <h2>Location</h2>
-                </div>
-                <div className="flex gap-2.5">
-                  <img src="/images/1.png" width={100} height={50} alt="333" />
-                  <div className="flex flex-col gap-[6px]">
-                    <h2 className="font-bold">Soho House Istanbul</h2>
-                    <Label className="opacity-70">Beyoglu, Istanbul, Turkey</Label>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="flex p-2.5 text-xl items-center gap-3">
-              <HiUserGroup className="text-2xl" />
-              <span>14 going</span>
-            </div>
-          </div>
-        </div>
+        {eventSpace && <EventViewDetailsPanel eventSpace={eventSpace} />}
       </div>
     </div>
   )
 }
+
+export const getServerSideProps = async (ctx: any) => {
+  const queryClient = new QueryClient();
+  const { event_space_id } = ctx.query;
+  await queryClient.prefetchQuery('currentEventSpace', () => fetchEventSpaceById(event_space_id));
+  const supabase = createPagesServerClient(ctx);
+  let {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  if (!session)
+    return {
+      props: {
+        initialSession: null,
+        user: null,
+      },
+    };
+
+  // get profile from session
+  const { data: profile, error } = await supabase.from('profile').select('*').eq('uuid', session.user.id);
+
+  return {
+    props: {
+      initialSession: session,
+      user: session?.user,
+      profile: profile,
+      dehydratedState: dehydrate(queryClient),
+    },
+  };
+};

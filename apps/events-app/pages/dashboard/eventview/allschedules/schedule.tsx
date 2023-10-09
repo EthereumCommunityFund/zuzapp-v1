@@ -72,14 +72,14 @@ export default function EventViewScheduleDetailsPage() {
   }
 
   return (
-    <div className="flex gap-4 font-bold">
-      <div className="flex flex-col w-[1000px]">
+    <div className="flex gap-4 lg:flex-row sm:flex-col">
+      <div className="flex flex-col lg:w-[1000px]">
         <EventViewHeader
           imgPath={eventSpace?.image_url as string}
           name={eventSpace?.name as string}
           tagline={eventSpace?.tagline as string}
         />
-        <div className="p-5 gap-[30px] max-w-[1000px]">
+        <div className="p-5 gap-[30px] lg:max-w-[1000px] sm:sm:w-full">
           <div className="flex flex-col gap-[10px] p-2.5 bg-componentPrimary rounded-2xl">
             <div className="flex justify-between">
               {" "}
@@ -112,8 +112,9 @@ export default function EventViewScheduleDetailsPage() {
                 </div>
                 <h2 className="text-3xl font-bold">{currentSchedule?.name}</h2>
                 <div className="flex gap-[6px]">
-                  <Speaker title={"QJ"} />
-                  <Speaker title={"Janine Leger"} />
+                  {currentSchedule?.organizers?.map((organizer) => (
+                    <Speaker title={organizer.name} />
+                  ))}
                 </div>
                 <div className="flex justify-end">
                   <h3>By: drivenfast</h3>
