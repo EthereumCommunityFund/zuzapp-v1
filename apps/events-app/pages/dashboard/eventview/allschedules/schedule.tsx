@@ -1,62 +1,52 @@
-import EventViewHeader from "@/components/eventview/EventViewHeader";
-import TrackItemCard from "@/components/tracks/TrackItemCard";
-import MyDropdown from "@/components/ui/DropDown";
-import Pagination from "@/components/ui/Pagination";
-import RenderHTMLString from "@/components/ui/RenderHTMLString";
-import Speaker from "@/components/ui/Speaker";
-import UserFacingTrack from "@/components/ui/UserFacingTrack";
-import Button from "@/components/ui/buttons/Button";
-import { Label } from "@/components/ui/label";
-import EventDataDate from "@/components/ui/labels/event-data-date";
-import EventDataTime from "@/components/ui/labels/event-data-time";
-import EventData from "@/components/ui/labels/event-data-time";
-import { useEventSpace } from "@/context/EventSpaceContext";
-import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
-import { useRouter } from "next/router";
-import { useState } from "react";
-import { BiEditAlt, BiLeftArrow } from "react-icons/bi";
-import { BsFillTicketFill } from "react-icons/bs";
-import {
-  HiArrowLeft,
-  HiCalendar,
-  HiCog,
-  HiLocationMarker,
-  HiMicrophone,
-  HiTag,
-  HiUserGroup,
-} from "react-icons/hi";
-import { EventSpaceDetailsType } from "@/types";
-import { fetchEventSpaceById } from "@/services/fetchEventSpaceDetails";
-import { QueryClient, dehydrate, useQuery } from "react-query";
-import useEventDetails from "@/hooks/useCurrentEventSpace";
-import { Loader } from "@/components/ui/Loader";
-import EventViewDetailsPanel from "@/components/eventview/EventViewDetailsPanel";
+import EventViewHeader from '@/components/eventview/EventViewHeader';
+import TrackItemCard from '@/components/tracks/TrackItemCard';
+import MyDropdown from '@/components/ui/DropDown';
+import Pagination from '@/components/ui/Pagination';
+import RenderHTMLString from '@/components/ui/RenderHTMLString';
+import Speaker from '@/components/ui/Speaker';
+import UserFacingTrack from '@/components/ui/UserFacingTrack';
+import Button from '@/components/ui/buttons/Button';
+import { Label } from '@/components/ui/label';
+import EventDataDate from '@/components/ui/labels/event-data-date';
+import EventDataTime from '@/components/ui/labels/event-data-time';
+import EventData from '@/components/ui/labels/event-data-time';
+import { useEventSpace } from '@/context/EventSpaceContext';
+import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
+import { BiEditAlt, BiLeftArrow } from 'react-icons/bi';
+import { BsFillTicketFill } from 'react-icons/bs';
+import { HiArrowLeft, HiCalendar, HiCog, HiLocationMarker, HiMicrophone, HiTag, HiUserGroup } from 'react-icons/hi';
+import { EventSpaceDetailsType } from '@/types';
+import { fetchEventSpaceById } from '@/services/fetchEventSpaceDetails';
+import { QueryClient, dehydrate, useQuery } from 'react-query';
+import useEventDetails from '@/hooks/useCurrentEventSpace';
+import { Loader } from '@/components/ui/Loader';
+import EventViewDetailsPanel from '@/components/eventview/EventViewDetailsPanel';
+import { rsvpSchedule } from '@/controllers';
 
 export default function EventViewScheduleDetailsPage() {
   const router = useRouter();
   const { event_space_id } = router.query;
   const { eventSpace, isLoading } = useEventDetails();
-
-  const { scheduleName, trackId } = router.query;
-  const currentSchedule = eventSpace?.schedules.find(
-    (scheduleItem) => scheduleItem.name === scheduleName
-  );
-  const trackItem = eventSpace?.tracks.find(
-    (trackItem) => trackItem.id === trackId
-  );
+  const [rsvpUpdated, setRsvpUpdated] = useState(false);
+  const { scheduleName, scheduleId, trackId } = router.query;
+  const [hasRsvpd, setHasRsvpd] = useState(false);
+  const currentSchedule = eventSpace?.schedules.find((scheduleItem) => scheduleItem.name === scheduleName);
+  const trackItem = eventSpace?.tracks.find((trackItem) => trackItem.id === trackId);
   const startTime =
     currentSchedule &&
-    new Date(currentSchedule.start_time).toLocaleTimeString("en-US", {
-      hour: "2-digit",
-      minute: "2-digit",
+    new Date(currentSchedule.start_time).toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
     });
   const endTime =
     currentSchedule &&
-    new Date(currentSchedule.end_time).toLocaleTimeString("en-US", {
-      hour: "2-digit",
-      minute: "2-digit",
+    new Date(currentSchedule.end_time).toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
     });
-  console.log("All Schedules / Schedule eventSpace", eventSpace);
+  console.log('All Schedules / Schedule eventSpace', eventSpace);
 
   const handleBackToSchedule = () => {
     router.push({
@@ -67,53 +57,70 @@ export default function EventViewScheduleDetailsPage() {
     });
   };
 
+  const handleRsvpToSchedule = async () => {
+    try {
+      console.log(scheduleId, 'scheduleId');
+      const result = await rsvpSchedule(scheduleId as string, event_space_id as string);
+      setRsvpUpdated(true);
+      setHasRsvpd(true);
+      console.log(result, 'rsvp updated');
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleEnterSchedule = async (id: string, scheduleTrackId: string) => {
+    const scheduleTrackTitle = eventSpace?.tracks.find((trackItem) => trackItem.id === scheduleTrackId)?.name;
+    try {
+      router.push({
+        pathname: `/dashboard/eventview/allschedules/updateschedule`,
+        query: {
+          event_space_id,
+          trackId: scheduleTrackId,
+          scheduleId: id,
+          track_title: scheduleTrackTitle,
+        },
+      });
+    } catch (error) {
+      console.error('Error fetching space details', error);
+    }
+  };
+
   if (isLoading) {
-    return <Loader />
+    return <Loader />;
   }
 
   return (
     <div className="flex gap-4 font-bold">
       <div className="flex flex-col w-[1000px]">
-        <EventViewHeader
-          imgPath={eventSpace?.image_url as string}
-          name={eventSpace?.name as string}
-          tagline={eventSpace?.tagline as string}
-        />
+        <EventViewHeader imgPath={eventSpace?.image_url as string} name={eventSpace?.name as string} tagline={eventSpace?.tagline as string} />
         <div className="p-5 gap-[30px] max-w-[1000px]">
           <div className="flex flex-col gap-[10px] p-2.5 bg-componentPrimary rounded-2xl">
             <div className="flex justify-between">
-              {" "}
+              {' '}
               {/* Tracks and Edit Button */}
-              <Button
-                variant="ghost"
-                className="opacity-70 text-lg"
-                leftIcon={HiArrowLeft}
-                onClick={handleBackToSchedule}
-              >
+              <Button variant="ghost" className="opacity-70 text-lg" leftIcon={HiArrowLeft} onClick={handleBackToSchedule}>
                 Back to Schedules
               </Button>
               <Button
                 variant="quiet"
                 className="rounded-xl bg-componentPrimary text-lg"
                 leftIcon={BiEditAlt}
+                onClick={() => handleEnterSchedule(currentSchedule?.id as string, currentSchedule?.track_id as string)}
               >
                 Edit
               </Button>
             </div>
             <div className="flex flex-col gap-2.5 p-2.5 ">
-              {" "}
+              {' '}
               {/* Schedule Info */}
               <div className="flex flex-col gap-2.5 p-5">
                 <span className="text-sm">TRACK/THEME</span>
-                <div className="flex items-start">
-                  {startTime && endTime && (
-                    <EventDataTime startTime={startTime} endTime={endTime} />
-                  )}
-                </div>
+                <div className="flex items-start">{startTime && endTime && <EventDataTime startTime={startTime} endTime={endTime} />}</div>
                 <h2 className="text-3xl font-bold">{currentSchedule?.name}</h2>
                 <div className="flex gap-[6px]">
-                  <Speaker title={"QJ"} />
-                  <Speaker title={"Janine Leger"} />
+                  <Speaker title={'QJ'} />
+                  <Speaker title={'Janine Leger'} />
                 </div>
                 <div className="flex justify-end">
                   <h3>By: drivenfast</h3>
@@ -122,10 +129,12 @@ export default function EventViewScheduleDetailsPage() {
               <Button
                 variant="primary"
                 size="lg"
-                className="rounded-2xl justify-center"
+                className={`rounded-2xl justify-center ${hasRsvpd ? 'animate-rsvp' : ''}`}
                 leftIcon={BsFillTicketFill}
+                onClick={handleRsvpToSchedule}
+                disabled={hasRsvpd}
               >
-                RSVP Schedule
+                {hasRsvpd ? "RSVP'd" : 'RSVP Schedule'}
               </Button>
             </div>
             <div className="flex flex-col gap-2.5 px-5 pt-5 pb-[60px]">
@@ -134,9 +143,7 @@ export default function EventViewScheduleDetailsPage() {
             </div>
             <div className="flex flex-col gap-2.5 px-5 pt-5 pb-[60px] font-bold">
               {/* Schedule Description */}
-              {currentSchedule?.description && (
-                <RenderHTMLString htmlString={currentSchedule?.description} />
-              )}
+              {currentSchedule?.description && <RenderHTMLString htmlString={currentSchedule?.description} />}
             </div>
           </div>
         </div>
@@ -149,9 +156,7 @@ export default function EventViewScheduleDetailsPage() {
 export const getServerSideProps = async (ctx: any) => {
   const queryClient = new QueryClient();
   const { event_space_id } = ctx.query;
-  await queryClient.prefetchQuery("currentEventSpace", () =>
-    fetchEventSpaceById(event_space_id)
-  );
+  await queryClient.prefetchQuery('currentEventSpace', () => fetchEventSpaceById(event_space_id));
   const supabase = createPagesServerClient(ctx);
 
   let {
@@ -167,10 +172,7 @@ export const getServerSideProps = async (ctx: any) => {
     };
 
   // get profile from session
-  const { data: profile, error } = await supabase
-    .from("profile")
-    .select("*")
-    .eq("uuid", session.user.id);
+  const { data: profile, error } = await supabase.from('profile').select('*').eq('uuid', session.user.id);
 
   return {
     props: {
