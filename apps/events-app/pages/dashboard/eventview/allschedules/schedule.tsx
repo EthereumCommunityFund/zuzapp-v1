@@ -13,7 +13,7 @@ import EventData from '@/components/ui/labels/event-data-time';
 import { useEventSpace } from '@/context/EventSpaceContext';
 import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BiEditAlt, BiLeftArrow } from 'react-icons/bi';
 import { BsFillTicketFill } from 'react-icons/bs';
 import { HiArrowLeft, HiCalendar, HiCog, HiLocationMarker, HiMicrophone, HiTag, HiUserGroup } from 'react-icons/hi';
@@ -23,7 +23,7 @@ import { QueryClient, dehydrate, useQuery } from 'react-query';
 import useEventDetails from '@/hooks/useCurrentEventSpace';
 import { Loader } from '@/components/ui/Loader';
 import EventViewDetailsPanel from '@/components/eventview/EventViewDetailsPanel';
-import { rsvpSchedule } from '@/controllers';
+import { cancelUserRsvp, checkUserRsvp, rsvpSchedule } from '@/controllers';
 
 export default function EventViewScheduleDetailsPage() {
   const router = useRouter();
@@ -57,13 +57,28 @@ export default function EventViewScheduleDetailsPage() {
     });
   };
 
-  const handleRsvpToSchedule = async () => {
+  const handleRsvpAction = async () => {
     try {
-      console.log(scheduleId, 'scheduleId');
-      const result = await rsvpSchedule(scheduleId as string, event_space_id as string);
-      setRsvpUpdated(true);
-      setHasRsvpd(true);
-      console.log(result, 'rsvp updated');
+      if (hasRsvpd) {
+        const result = await cancelUserRsvp(scheduleId as string, event_space_id as string);
+        console.log(result, 'cancelrsvp');
+        setHasRsvpd(false);
+      } else {
+        console.log(scheduleId, 'scheduleId');
+        const result = await rsvpSchedule(scheduleId as string, event_space_id as string);
+        console.log(result, 'rsvp updated');
+        setHasRsvpd(true);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const checkIfUserHasRsvpd = async () => {
+    try {
+      const result = await checkUserRsvp(scheduleId as string, event_space_id as string);
+      const hasRsvp = result?.data?.hasRSVPed;
+      setHasRsvpd(hasRsvp);
     } catch (error) {
       console.log(error);
     }
@@ -126,15 +141,8 @@ export default function EventViewScheduleDetailsPage() {
                   <h3>By: drivenfast</h3>
                 </div>
               </div>
-              <Button
-                variant="primary"
-                size="lg"
-                className={`rounded-2xl justify-center ${hasRsvpd ? 'animate-rsvp' : ''}`}
-                leftIcon={BsFillTicketFill}
-                onClick={handleRsvpToSchedule}
-                disabled={hasRsvpd}
-              >
-                {hasRsvpd ? "RSVP'd" : 'RSVP Schedule'}
+              <Button variant="primary" size="lg" className={`rounded-2xl justify-center ${rsvpUpdated ? 'animate-rsvp' : ''}`} leftIcon={BsFillTicketFill} onClick={handleRsvpAction}>
+                {hasRsvpd ? 'Cancel RSVP' : 'RSVP Schedule'}
               </Button>
             </div>
             <div className="flex flex-col gap-2.5 px-5 pt-5 pb-[60px]">
