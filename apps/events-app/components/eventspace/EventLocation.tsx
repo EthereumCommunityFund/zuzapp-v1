@@ -82,8 +82,9 @@ export default function EventLocation() {
             <>
               <div
                 key={savedLocation.id}
-                className="flex rounded-[10px] border border-opacity-10 border-white p-3.5 gap-[30px] bg-[#2B2E2E] bg-opacity-10 w-full"
+                className="flex flex-col md:flex-row rounded-[10px] border border-opacity-10 border-white p-3.5 gap-[30px] bg-[#2B2E2E] bg-opacity-10 w-full"
               >
+                <div className="flex gap-7">
                 <img
                   src={(savedLocation.image_urls as unknown as string)[0]}
                   alt="Avatar"
@@ -96,6 +97,8 @@ export default function EventLocation() {
                     {savedLocation.name}
                   </span>
                 </div>
+                </div>
+               
                 <div className="flex gap-[10px]">
                   <Button
                     className="rounded-full flex justify-center h-10 "

@@ -31,27 +31,16 @@ const categoryList: DropDownMenuItemType[] = [
 
 export default function EventViewTracksAlleSchedulesPage() {
   const router = useRouter();
-  const { event_space_id, trackId, track_title } = router.query;
+  const { event_space_id } = router.query;
   const { eventSpace, isLoading } = useEventDetails();
 
   console.log(isLoading, 'is loading');
 
-  const handleItemClick = (scheduleName: string, scheduleId: string, trackId?: string) => {
+  const handleItemClick = (scheduleName: string, trackId?: string) => {
     router.push({
       pathname: `/dashboard/eventview/allschedules/schedule`,
-      query: { scheduleName, trackId, event_space_id, scheduleId },
+      query: { scheduleName, trackId, event_space_id },
     });
-  };
-
-  const handleAddSchedule = async () => {
-    try {
-      router.push({
-        pathname: `/dashboard/eventview/allschedules/addschedule`,
-        query: { event_space_id, trackId: trackId, track_title: track_title, quickAccess: true },
-      });
-    } catch (error) {
-      console.error('Error fetching space details', error);
-    }
   };
 
   if (isLoading) {
@@ -70,9 +59,7 @@ export default function EventViewTracksAlleSchedulesPage() {
               </Button>
             </div>
             <div className=" p-2.5 gap-[10px] overflow-hidden rounded-[10px]">
-              {eventSpace?.schedules.map((schedule, id) => (
-                <UserFacingTrack key={schedule.id} onClick={() => handleItemClick(schedule.name, schedule.id, schedule.track_id)} scheduleData={schedule} />
-              ))}
+              {eventSpace?.schedules.map((schedule, id) => <UserFacingTrack key={schedule.id} onClick={() => handleItemClick(schedule.name, schedule.track_id)} scheduleData={schedule} />)}
             </div>
           </div>
         </div>

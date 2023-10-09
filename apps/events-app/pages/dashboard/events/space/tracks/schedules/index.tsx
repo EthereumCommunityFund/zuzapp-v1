@@ -8,7 +8,7 @@ import { BsFillPlusCircleFill } from 'react-icons/bs';
 import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
 import { Database } from '@/database.types';
 import { useQuery } from 'react-query';
-import fetchSchedulesByTrackId from '@/services/fetchSchedulesByTrackId';
+import fetchSchedulesByTrackId from '@/services/fetchScedulesByTrackId';
 import { ScheduleUpdateRequestBody } from '@/types';
 import { HiArrowRight } from 'react-icons/hi2';
 import { Loader } from '@/components/ui/Loader';
@@ -86,11 +86,11 @@ export default function SchedulesDashboardPage() {
   }
   return (
     <div className="pt-10">
-      <div className="flex flex-col items-start gap-10 self-stretch pb-[60px] px-20">
+      <div className="flex flex-col items-start gap-10 self-stretch pb-[60px] px-5 lg:px-20">
         <div className="w-full flex flex-col justify-start items-start relative p-0 gap-[30px] rounded-0">
           <div className="flex w-full justify-between items-center flex-1 flex-grow-0">
             <Button
-              className="rounded-[40px] py-2.5 px-3.5 bg-bgPrimary border-none hover:bg-[#363636] duration-200 text-textSecondary hover:text-textSecondary"
+              className="rounded-[40px] py-2.5 text-base px-3.5 bg-bgPrimary border-none hover:bg-[#363636] duration-200 text-textSecondary hover:text-textSecondary"
               size="lg"
               leftIcon={HiArrowLeft}
               onClick={goBackToPreviousPage}
@@ -104,7 +104,7 @@ export default function SchedulesDashboardPage() {
                   query: { event_space_id, trackId: trackId },
                 })
               }
-              className="rounded-[40px] py-2.5 px-3.5 bg-bgPrimary border-none hover:bg-[#363636] duration-200 text-textSecondary hover:text-textSecondary"
+              className="rounded-[40px] py-2.5 text-base px-3.5 bg-bgPrimary border-none hover:bg-[#363636] duration-200 text-textSecondary hover:text-textSecondary"
               size="lg"
               leftIcon={BiEditAlt}
             >
@@ -115,32 +115,34 @@ export default function SchedulesDashboardPage() {
             <div className="flex items-start gap-[10px] self-stretch">
               <div className="w-24 h-fit bg-white rounded-lg p-1">{loading ? <Loader /> : <img src={trackDetails?.image as string} alt="track-image" />}</div>
               <div className="flex flex-col gap-5 self-stretch">
-                <h2 className="text-4xl font-semibold">{track_title}</h2>
+                <h2 className="md:text-4xl text-2xl font-semibold">{track_title}</h2>
               </div>
             </div>
             <h3 className="text-2xl leading-[1.2] opacity-70 font-bold ">Schedules</h3>
-            <div className="flex justify-between items-start self-stretch">
+            <div className="flex flex-col md:flex-row justify-between items-start self-stretch">
               <Button
                 variant="blue"
-                className="flex py-[10px] px-[14px] items-center gap-[10px] rounded-[20px] bg-[#67DAFF20] text-[#67DAFF] text-xl"
+                className="flex py-[10px] px-[14px] justify-center w-full md:w-auto items-center gap-[10px] rounded-[20px] bg-[#67DAFF20] text-[#67DAFF] text-xl"
                 leftIcon={BsFillPlusCircleFill}
                 onClick={handleAddSchedule}
               >
                 Add a Schedule
               </Button>
 
-              <div className="flex items-start gap-3">
-                <Button className="rounded-[40px] py-2.5 px-3.5 bg-bgPrimary border-none hover:bg-[#363636] duration-200 text-textSecondary hover:text-textSecondary" size="lg" leftIcon={HiSelector}>
+              <div className="flex mt-2 md:mt-0 items-start gap-3">
+                <Button className="rounded-[40px] py-2.5 px-3.5 bg-bgPrimary border-none hover:bg-[#363636] duration-200 text-sm text-textSecondary hover:text-textSecondary" size="lg" leftIcon={HiSelector}>
                   Sort
                 </Button>
-                <Button className="rounded-[40px] py-2.5 px-3.5 bg-bgPrimary border-none hover:bg-[#363636] duration-200 text-textSecondary hover:text-textSecondary" size="lg" leftIcon={HiCog}>
+                <Button className="rounded-[40px] py-2.5 px-3.5 bg-bgPrimary border-none hover:bg-[#363636] duration-200 text-sm text-textSecondary hover:text-textSecondary" size="lg" leftIcon={HiCog}>
                   Select
                 </Button>
               </div>
             </div>
           </div>
         </div>
+
         {isLoading ? <Loader /> : <ScheduleItemCard />}
+
       </div>
     </div>
   );

@@ -45,13 +45,3 @@ export const deleteSchedule = async (id: string, event_space_id: string) => {
 export const rsvpSchedule = async (id: string, event_space_id: string) => {
     return await axiosInstance.put(`/api/schedule/${id}/rsvp/?event_space_id=${event_space_id}`);
 }
-
-// RSVP a schedule
-export const checkUserRsvp = async (id: string, event_space_id: string) => {
-    return await axiosInstance.put(`/api/schedule/${id}/checkUserRsvp/?event_space_id=${event_space_id}`);
-}
-
-// RSVP a schedule
-export const cancelUserRsvp = async (id: string, event_space_id: string) => {
-    return await axiosInstance.put(`/api/schedule/${id}/cancelUserRsvp/?event_space_id=${event_space_id}`);
-}

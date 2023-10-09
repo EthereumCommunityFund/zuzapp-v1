@@ -1,4 +1,4 @@
-import Button from '../ui/buttons/Button';
+import Button from "../ui/buttons/Button";
 
 interface IEventViewHeader {
   imgPath: string;

@@ -54,7 +54,7 @@ export const DashboardProvider = ({
               checkIfCurrentRouteIsInDashboardRoutes() ? (
                 <>
                   <SubHeader />
-                  <div className="flex-1 mx-auto px-10 sm:px-0 relative top-20">
+                  <div className="flex-1 mx-auto pt-10 lg:px-10 relative top-20">
                     {children}
                   </div>
                 </>
@@ -63,6 +63,7 @@ export const DashboardProvider = ({
                   {children}
                 </div>
               )}
+
           </div>
         </div>
       </div>

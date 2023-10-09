@@ -294,12 +294,12 @@ export default function AddSchedulePage(props: any) {
   }
 
   return (
-    <div className="flex items-start gap-[60px] self-stretch px-10 py-5">
+    <div className="flex items-start gap-[60px] self-stretch md:px-10 px-2.5 py-5">
       <DetailsBar />
       <div className="flex flex-col items-start gap-[17px] flex-1">
         <div className="flex items-center gap-[17px] self-stretch">
           <Button
-            className="rounded-[40px] py-2.5 px-3.5 bg-bgPrimary border-none hover:bg-[#363636] duration-200 text-textSecondary hover:text-textSecondary"
+            className="rounded-[40px] text-base md:text-xl py-2.5 px-3.5 bg-bgPrimary border-none hover:bg-[#363636] duration-200 text-textSecondary hover:text-textSecondary"
             size="lg"
             leftIcon={HiArrowLeft}
             onClick={() => router.back()}
@@ -312,11 +312,12 @@ export default function AddSchedulePage(props: any) {
             ) : (
               <span className="text-2xl items-start font-bold">{track_title}</span>
             )}
+
           </div>
         </div>
         <div className="flex py-5 px-4 flex-col items-center gap-8 self-stretch rounded-2xl border border-[#FFFFFF10] bg-[#2E3131]">
           <div className="flex flex-col items-center gap-[34px] self-stretch w-full">
-            <div className="flex flex-col py-5 px-10 items-center gap-[10px] self-stretch w-full">
+            <div className="flex flex-col py-5 items-center gap-[10px] self-stretch w-full">
               <FormTitle name="Add a Schedule" />
               {scheduleAdded ? (
                 <div className="flex flex-col items-center">
@@ -632,7 +633,7 @@ export default function AddSchedulePage(props: any) {
                             </button>
                           </div>
 
-                          <div className="flex gap-2.5">
+                          <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5">
                             {organizers?.map((organizer: any, index: number) => (
                               <div key={index} className="flex gap-2.5 items-center rounded-[8px] px-2 py-1.5 bg-white bg-opacity-10">
                                 <button type="button" className="flex gap-2.5 items-center">
@@ -740,10 +741,10 @@ export default function AddSchedulePage(props: any) {
                               +
                             </button>
                           </div>
-                          <div className="flex gap-2.5">
+                          <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5">
                             {tags?.map((tag, index) => (
-                              <div key={index} className="flex gap-2.5 items-center rounded-[8px] px-2 py-1.5 bg-white bg-opacity-10">
-                                <button className="flex gap-2.5 items-center">
+                              <div key={index} className="flex w-full items-center rounded-[8px] px-2 py-1.5 bg-white bg-opacity-10">
+                                <button type='button' className="flex gap-2.5 items-center">
                                   <GoXCircle onClick={() => handleRemoveTag(index)} className="top-0.5 left-0.5 w-4 h-4" />
                                   <span className="text-lg font-semibold leading-[1.2] text-white self-stretch">{tag}</span>
                                 </button>
@@ -775,11 +776,11 @@ export default function AddSchedulePage(props: any) {
                       </div>
                     </div>
                     <div className="flex justify-center pt-8">
-                      <div className="flex gap-[30px] w-full">
-                        <Button className="rounded-full w-1/2 flex justify-center" variant="quiet" size="lg" type="button" leftIcon={CgClose}>
+                      <div className="flex flex-col md:flex-row gap-[30px] w-full">
+                        <Button className="rounded-full w-full md:w-1/2 flex justify-center" variant="quiet" size="lg" type="button" leftIcon={CgClose}>
                           <span>Discard Schedule</span>
                         </Button>
-                        <Button className="rounded-full w-1/2 flex justify-center" variant="blue" size="lg" type="submit" leftIcon={FaCircleArrowUp}>
+                        <Button className="rounded-full w-full md:w-1/2 flex justify-center" variant="blue" size="lg" type="submit" leftIcon={FaCircleArrowUp}>
                           <span>Add Schedule</span>
                         </Button>
                       </div>

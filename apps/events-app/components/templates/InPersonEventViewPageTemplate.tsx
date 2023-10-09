@@ -1,27 +1,31 @@
-import { BsArrowRightCircleFill } from 'react-icons/bs';
-import { FiLock } from 'react-icons/fi';
-import Button from '../ui/buttons/Button';
-import { HiCalendar } from 'react-icons/hi';
-import { GoLocation } from 'react-icons/go';
-import { HiUserGroup } from 'react-icons/hi';
-import { Label } from '../ui/label';
+import { BsArrowRightCircleFill } from "react-icons/bs";
+import { FiLock } from "react-icons/fi";
+import Button from "../ui/buttons/Button";
+import { HiCalendar } from "react-icons/hi";
+import { GoLocation } from "react-icons/go";
+import { HiUserGroup } from "react-icons/hi";
+import { Label } from "../ui/label";
 
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
 
-import Carousel from '../ui/Carousel';
-import ResponsiveCarousel from '../ui/Carousel';
-import { LockClosed, LocationMarker, UserGroup } from '../ui/icons';
-import { EventSpaceDetailsType, EventSpaceUpdateRequestBody } from '@/types';
-import { useEventSpace, useEventSpaces } from '@/context/EventSpaceContext';
-import { useEffect, useState } from 'react';
-import RenderHTMLString from '../ui/RenderHTMLString';
-import { useQuery } from 'react-query';
-import { fetchUserEventSpaces } from '@/services/eventSpaceService';
-import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
+import Carousel from "../ui/Carousel";
+import ResponsiveCarousel from "../ui/Carousel";
+import { LockClosed, LocationMarker, UserGroup } from "../ui/icons";
+import { EventSpaceDetailsType, EventSpaceUpdateRequestBody } from "@/types";
+import { useEventSpace, useEventSpaces } from "@/context/EventSpaceContext";
+import { useEffect, useState } from "react";
+import RenderHTMLString from "../ui/RenderHTMLString";
+import { useQuery } from "react-query";
+import { fetchUserEventSpaces } from "@/services/eventSpaceService";
+import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
+
+
 
 interface IInPersonEventViewPageTemplateProps {
   eventSpace: EventSpaceDetailsType;
 }
+
+
 
 interface IEventLink {
   name: string;
@@ -53,19 +57,10 @@ export default function InPersonEventViewPageTemplate({ eventSpace }: IInPersonE
   const [extraLinks, setExtraLinks] = useState<IEventLink[] | undefined>();
   const [imgUrls, setImgUrls] = useState<string[]>();
 
-  useEffect(() => {
-    console.log('InPersonEventSpace', eventSpace);
 
-    if (social_links) setSocialLinks(JSON.parse(social_links));
-    if (extra_links) setExtraLinks(JSON.parse(extra_links));
-    if (eventSpace.eventspacelocation) {
-      const URLs: string[] = [];
-      eventSpace.eventspacelocation.forEach((location) => {
-        if (location.image_urls) URLs.push(...location.image_urls);
-      });
-      setImgUrls(URLs);
-    }
-  }, [social_links, extra_links, eventSpace]);
+  useEffect(() => {
+    console.log("InPersonEventSpace", eventSpace);
+  })
 
   return (
     <>

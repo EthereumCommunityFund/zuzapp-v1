@@ -35,24 +35,27 @@ export default function EventViewScheduleDetailsPage() {
   const router = useRouter();
   const { event_space_id } = router.query;
   const { eventSpace, isLoading } = useEventDetails();
-  const [rsvpUpdated, setRsvpUpdated] = useState(false);
-  const { scheduleName, scheduleId, trackId } = router.query;
-  const [hasRsvpd, setHasRsvpd] = useState(false);
-  const currentSchedule = eventSpace?.schedules.find((scheduleItem) => scheduleItem.name === scheduleName);
-  const trackItem = eventSpace?.tracks.find((trackItem) => trackItem.id === trackId);
+
+  const { scheduleName, trackId } = router.query;
+  const currentSchedule = eventSpace?.schedules.find(
+    (scheduleItem) => scheduleItem.name === scheduleName
+  );
+  const trackItem = eventSpace?.tracks.find(
+    (trackItem) => trackItem.id === trackId
+  );
   const startTime =
     currentSchedule &&
-    new Date(currentSchedule.start_time).toLocaleTimeString('en-US', {
-      hour: '2-digit',
-      minute: '2-digit',
+    new Date(currentSchedule.start_time).toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
     });
   const endTime =
     currentSchedule &&
-    new Date(currentSchedule.end_time).toLocaleTimeString('en-US', {
-      hour: '2-digit',
-      minute: '2-digit',
+    new Date(currentSchedule.end_time).toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
     });
-  console.log('All Schedules / Schedule eventSpace', eventSpace);
+  console.log("All Schedules / Schedule eventSpace", eventSpace);
 
   const handleBackToSchedule = () => {
     router.push({
@@ -63,37 +66,8 @@ export default function EventViewScheduleDetailsPage() {
     });
   };
 
-  const handleRsvpToSchedule = async () => {
-    try {
-      console.log(scheduleId, 'scheduleId');
-      const result = await rsvpSchedule(scheduleId as string, event_space_id as string);
-      setRsvpUpdated(true);
-      setHasRsvpd(true);
-      console.log(result, 'rsvp updated');
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const handleEnterSchedule = async (id: string, scheduleTrackId: string) => {
-    const scheduleTrackTitle = eventSpace?.tracks.find((trackItem) => trackItem.id === scheduleTrackId)?.name;
-    try {
-      router.push({
-        pathname: `/dashboard/eventview/allschedules/updateschedule`,
-        query: {
-          event_space_id,
-          trackId: scheduleTrackId,
-          scheduleId: id,
-          track_title: scheduleTrackTitle,
-        },
-      });
-    } catch (error) {
-      console.error('Error fetching space details', error);
-    }
-  };
-
   if (isLoading) {
-    return <Loader />;
+    return <Loader />
   }
 
   return (
@@ -107,7 +81,7 @@ export default function EventViewScheduleDetailsPage() {
         <div className="md:p-5 sm:p-0 gap-[30px] max-w-[1200px] h-full">
           <div className="flex flex-col gap-[10px] p-2.5 bg-componentPrimary rounded-2xl">
             <div className="flex justify-between">
-              {' '}
+              {" "}
               {/* Tracks and Edit Button */}
               <Button variant="ghost" className="md:text-lg sm:text-base font-bold" leftIcon={HiArrowLeft} onClick={handleBackToSchedule}>
                 Back to Schedules
@@ -139,11 +113,15 @@ export default function EventViewScheduleDetailsPage() {
 
             </div>
             <div className="flex flex-col gap-2.5 p-2.5 ">
-              {' '}
+              {" "}
               {/* Schedule Info */}
               <div className="flex flex-col gap-2.5 p-5">
                 <span className="text-sm">TRACK/THEME</span>
-                <div className="flex items-start">{startTime && endTime && <EventDataTime startTime={startTime} endTime={endTime} />}</div>
+                <div className="flex items-start">
+                  {startTime && endTime && (
+                    <EventDataTime startTime={startTime} endTime={endTime} />
+                  )}
+                </div>
                 <h2 className="text-3xl font-bold">{currentSchedule?.name}</h2>
                 <div className="flex gap-[6px]">
                   {currentSchedule?.organizers?.map((organizer) => (
@@ -157,12 +135,10 @@ export default function EventViewScheduleDetailsPage() {
               <Button
                 variant="primary"
                 size="lg"
-                className={`rounded-2xl justify-center ${hasRsvpd ? 'animate-rsvp' : ''}`}
+                className="rounded-2xl justify-center"
                 leftIcon={BsFillTicketFill}
-                onClick={handleRsvpToSchedule}
-                disabled={hasRsvpd}
               >
-                {hasRsvpd ? "RSVP'd" : 'RSVP Schedule'}
+                RSVP Schedule
               </Button>
             </div>
             <div className="flex flex-col gap-2.5 px-5 pt-5 pb-[60px]">
@@ -171,7 +147,9 @@ export default function EventViewScheduleDetailsPage() {
             </div>
             <div className="flex flex-col gap-2.5 px-5 pt-5 pb-[60px] font-bold">
               {/* Schedule Description */}
-              {currentSchedule?.description && <RenderHTMLString htmlString={currentSchedule?.description} />}
+              {currentSchedule?.description && (
+                <RenderHTMLString htmlString={currentSchedule?.description} />
+              )}
             </div>
           </div>
         </div>
@@ -184,7 +162,9 @@ export default function EventViewScheduleDetailsPage() {
 export const getServerSideProps = async (ctx: any) => {
   const queryClient = new QueryClient();
   const { event_space_id } = ctx.query;
-  await queryClient.prefetchQuery('currentEventSpace', () => fetchEventSpaceById(event_space_id));
+  await queryClient.prefetchQuery("currentEventSpace", () =>
+    fetchEventSpaceById(event_space_id)
+  );
   const supabase = createPagesServerClient(ctx);
 
   let {
@@ -200,7 +180,10 @@ export const getServerSideProps = async (ctx: any) => {
     };
 
   // get profile from session
-  const { data: profile, error } = await supabase.from('profile').select('*').eq('uuid', session.user.id);
+  const { data: profile, error } = await supabase
+    .from("profile")
+    .select("*")
+    .eq("uuid", session.user.id);
 
   return {
     props: {

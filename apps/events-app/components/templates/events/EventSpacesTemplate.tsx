@@ -23,7 +23,7 @@ const EventSpacesTemplate: React.FC<EventSpacesTemplateProps> = ({
   const { setEventSpace } = useEventSpace();
   return (
     <>
-      <div className="w-2/3 mx-auto font-inter">
+      <div className="xl:w-2/3 w-[92%] mx-auto font-inter">
         <h1 className="text-[31px] leading-[1.2] mb-20">My Event Spaces</h1>
         <h2 className="text-[25px] leading-[1.2]">Created Spaces</h2>
         <div className="mt-6">

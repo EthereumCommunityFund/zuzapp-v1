@@ -5,7 +5,7 @@ import { v4 } from "uuid";
 export default function DetailsBar() {
 
   return (
-    <div className="rounded-s-xl opacity-70 w-[230px]">
+    <div className="rounded-s-xl hidden md:block opacity-70 w-[230px]">
       <div className="p-3.5 flex gap-2.5 ">
         <BsFillTicketFill className="w-5 h-5" /> Schedule
       </div>

@@ -69,7 +69,7 @@ export default function Update() {
   };
 
   return (
-    <div className="flex flex-col py-5 px-10 items-center gap-[10px] self-stretch w-full">
+    <div className="flex flex-col lg:py-5 lg:px-10 items-center gap-[10px] self-stretch w-full">
       {trackCreated ? (
         <div className="flex flex-col items-center">
           <h3 className="font-bold text-xl">Your Track Has Been Updated</h3>
@@ -87,7 +87,7 @@ export default function Update() {
         </div>
       ) : (
         <>
-          <Container className="mx-auto max-w-screen-xl w-[85%]">
+          <Container className="mx-auto max-w-screen-xl lg:w-[85%]">
             <h2 className="flex font-semibold text-3xl w-full ">Edit Track</h2>
             <EditTrackForm
               onTrackSubmit={handleTrackSubmit as any}
