@@ -37,6 +37,7 @@ export default function EventViewScheduleDetailsPage() {
   const { eventSpace, isLoading } = useEventDetails();
   const [rsvpUpdated, setRsvpUpdated] = useState(false);
   const { scheduleName, scheduleId, trackId } = router.query;
+  const [hasRsvpd, setHasRsvpd] = useState(false);
   const currentSchedule = eventSpace?.schedules.find((scheduleItem) => scheduleItem.name === scheduleName);
   const trackItem = eventSpace?.tracks.find((trackItem) => trackItem.id === trackId);
   const startTime =
@@ -67,6 +68,7 @@ export default function EventViewScheduleDetailsPage() {
       console.log(scheduleId, 'scheduleId');
       const result = await rsvpSchedule(scheduleId as string, event_space_id as string);
       setRsvpUpdated(true);
+      setHasRsvpd(true);
       console.log(result, 'rsvp updated');
     } catch (error) {
       console.log(error);

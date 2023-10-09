@@ -86,17 +86,11 @@
   0% {
     transform: scale(1);
   }
-<<<<<<< HEAD
 
   50% {
     transform: scale(1.05);
   }
 
-=======
-  50% {
-    transform: scale(1.05);
-  }
->>>>>>> 231a9f0 (merged changes from responsive dashboard)
   100% {
     transform: scale(1);
   }
@@ -114,12 +108,4 @@
   }
 }
 
-<<<<<<< HEAD
 @import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
-=======
-@import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
-
-#MuiAutocomplete-listbox {
-  background-color: black;
-}
->>>>>>> 231a9f0 (merged changes from responsive dashboard)
