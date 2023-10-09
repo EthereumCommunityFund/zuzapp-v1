@@ -75,6 +75,23 @@ export default function EventViewScheduleDetailsPage() {
     }
   };
 
+  const handleEnterSchedule = async (id: string, scheduleTrackId: string) => {
+    const scheduleTrackTitle = eventSpace?.tracks.find((trackItem) => trackItem.id === scheduleTrackId)?.name;
+    try {
+      router.push({
+        pathname: `/dashboard/eventview/allschedules/updateschedule`,
+        query: {
+          event_space_id,
+          trackId: scheduleTrackId,
+          scheduleId: id,
+          track_title: scheduleTrackTitle,
+        },
+      });
+    } catch (error) {
+      console.error('Error fetching space details', error);
+    }
+  };
+
   if (isLoading) {
     return <Loader />;
   }

@@ -29,9 +29,7 @@ interface IEventLink {
 export default function EventViewTrackDetailsPage() {
   const { eventSpace, isLoading } = useEventDetails();
   const router = useRouter();
-  const { scheduleName, trackId, event_space_id, track_title, scheduleId } = router.query;
-  const [rsvpUpdated, setRsvpUpdated] = useState(false);
-  const [hasRsvpd, setHasRsvpd] = useState(false);
+  const { scheduleName, trackId, event_space_id, track_title } = router.query;
   const currentSchedule = eventSpace?.schedules.find((scheduleItem) => scheduleItem.name === scheduleName);
   const trackItem = eventSpace?.tracks.find((trackItem) => trackItem.id === trackId);
   const startTime = currentSchedule && new Date(currentSchedule.start_time).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
@@ -44,6 +42,23 @@ export default function EventViewTrackDetailsPage() {
       pathname: '/dashboard/eventview/tracks/track',
       query: { trackId, event_space_id },
     });
+  };
+
+  const handleEnterSchedule = async (id: string, scheduleTrackId: string) => {
+    const scheduleTrackTitle = eventSpace?.tracks.find((trackItem) => trackItem.id === scheduleTrackId)?.name;
+    try {
+      router.push({
+        pathname: `/dashboard/eventview/allschedules/updateschedule`,
+        query: {
+          event_space_id,
+          trackId: scheduleTrackId,
+          scheduleId: id,
+          track_title: scheduleTrackTitle,
+        },
+      });
+    } catch (error) {
+      console.error('Error fetching space details', error);
+    }
   };
 
   const handleEnterSchedule = async (id: string, scheduleTrackId: string) => {
@@ -124,8 +139,8 @@ export default function EventViewTrackDetailsPage() {
                   <h3 className="float-right">By: drivenfast</h3>
                 </div>
               </div>
-              <Button variant="primary" size="lg" className={`rounded-2xl justify-center ${rsvpUpdated ? 'animate-rsvp' : ''}`} leftIcon={BsFillTicketFill} onClick={handleRsvpAction}>
-                {hasRsvpd ? 'Cancel RSVP' : 'RSVP Schedule'}
+              <Button size="lg" variant="quiet" className="rounded-full text-center flex justify-center" leftIcon={BsFillTicketFill}>
+                RSVP Schedule
               </Button>
             </div>
             <div className="flex flex-col gap-2.5 px-5 pt-5 pb-[60px]">

@@ -25,7 +25,6 @@ import { Database } from '@/database.types';
 import { QueryClient, dehydrate } from 'react-query';
 import { fetchEventSpaceById } from '@/services/fetchEventSpaceDetails';
 
-
 interface ITrackDetailsPageTemplate {
   trackItem: TrackUpdateRequestBody;
 }
@@ -35,6 +34,7 @@ export default function OnlineTrackDetailsPageTemplate(props: ITrackDetailsPageT
   const { trackItem } = props;
   const { eventSpace, isLoading } = useEventDetails();
   const { event_space_id, trackId, track_title } = router.query;
+
   // const handlePageChange = (page: number) => {
   //   setCurrentPage(page);
   // };
@@ -82,9 +82,19 @@ export default function OnlineTrackDetailsPageTemplate(props: ITrackDetailsPageT
                   Tracks
                 </Button>
               )}
-              <Button variant="quiet" className="rounded-xl" leftIcon={BiEditAlt}>
-                Edit
-              </Button>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="quiet" className="rounded-xl text-lg font-bold" leftIcon={BiEditAlt}>
+                    Edit
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="w-3/5 overflow-x-auto sm:w-3/4">
+                  <DialogHeader>
+                    <Label className="text-2xl font-bold">Edit Track</Label>
+                  </DialogHeader>
+                  <EventViewTrackUpdate className="px-0 text-white text-2xl" />
+                </DialogContent>
+              </Dialog>
             </div>
             <div className="flex flex-col gap-[10px] p-5 "> {/* Track Info */}
               <img src={trackItem?.image as string} alt="track image" className="lg:h-[496px] md:h-full rounded-[10px]" />
