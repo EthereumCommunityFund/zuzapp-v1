@@ -138,7 +138,7 @@ export default function EventViewScheduleDetailsPage() {
                   <h3>By: drivenfast</h3>
                 </div>
               </div >
-              <Button variant="primary" size="lg" className={`rounded-2xl justify-center ${rsvpUpdated ? 'animate-rsvp' : ''}`} leftIcon={BsFillTicketFill} onClick={handleRsvpAction}>
+              <Button variant="primary" size="lg" className={`rounded-2xl justify-center ${rsvpUpdated ? 'animate-rsvp' : ''}`} leftIcon={BsFillTicketFill} onClick={handleRsvpToSchedule}>
                 {hasRsvpd ? 'Cancel RSVP' : 'RSVP Schedule'}
               </Button>
             </div >
