@@ -90,7 +90,7 @@ export default function OnlineEventViewPageTemplate({ eventSpace }: IOnlineEvent
             {' '}
             {/* About */}
             <h3 className="text-lg font-bold text-white/70">About This Event</h3>
-            <h2 className="text-3xl font-bold text-white/80">What is ZuConnect?</h2>
+            <h2 className="text-2xl font-bold text-white/80">What is ZuConnect?</h2>
             <p className="text-white/70 font-bold">
               Embark on a transformative journey at ZuConnect— a two-week popup village in Istanbul where the luminaries of crypto, AI, governance, decentralized science, and culture coalesce. Here,
               the brightest minds convene to co-work, foster collaborations, and have a joyous time.
