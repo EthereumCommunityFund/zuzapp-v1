@@ -1,37 +1,3 @@
-<<<<<<< HEAD
-import EventViewHeader from "@/components/eventview/EventViewHeader";
-import TrackItemCard from "@/components/tracks/TrackItemCard";
-import MyDropdown from "@/components/ui/DropDown";
-import Pagination from "@/components/ui/Pagination";
-import RenderHTMLString from "@/components/ui/RenderHTMLString";
-import Speaker from "@/components/ui/Speaker";
-import UserFacingTrack from "@/components/ui/UserFacingTrack";
-import Button from "@/components/ui/buttons/Button";
-import { Label } from "@/components/ui/label";
-import EventDataDate from "@/components/ui/labels/event-data-date";
-import EventDataTime from "@/components/ui/labels/event-data-time";
-import EventData from "@/components/ui/labels/event-data-time";
-import { useEventSpace } from "@/context/EventSpaceContext";
-import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
-import { useRouter } from "next/router";
-import { useState } from "react";
-import { BiEditAlt, BiLeftArrow } from "react-icons/bi";
-import { BsFillTicketFill } from "react-icons/bs";
-import {
-  HiArrowLeft,
-
-} from "react-icons/hi";
-
-import { fetchEventSpaceById } from "@/services/fetchEventSpaceDetails";
-import { QueryClient, dehydrate, useQuery } from "react-query";
-import useEventDetails from "@/hooks/useCurrentEventSpace";
-import { Loader } from "@/components/ui/Loader";
-import EventViewDetailsPanel from "@/components/eventview/EventViewDetailsPanel";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import UpdateSchedulePage from "../../events/space/tracks/schedules/updateSchedule";
-import ScheduleEditForm from "@/components/commons/ScheduleEditForm";
-import { rsvpSchedule } from "@/controllers";
-=======
 import EventViewHeader from '@/components/eventview/EventViewHeader';
 import TrackItemCard from '@/components/tracks/TrackItemCard';
 import MyDropdown from '@/components/ui/DropDown';
@@ -47,7 +13,7 @@ import EventData from '@/components/ui/labels/event-data-time';
 import { useEventSpace } from '@/context/EventSpaceContext';
 import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BiEditAlt, BiLeftArrow } from 'react-icons/bi';
 import { BsFillTicketFill } from 'react-icons/bs';
 import { HiArrowLeft, HiCalendar, HiCog, HiLocationMarker, HiMicrophone, HiTag, HiUserGroup } from 'react-icons/hi';
@@ -57,8 +23,7 @@ import { QueryClient, dehydrate, useQuery } from 'react-query';
 import useEventDetails from '@/hooks/useCurrentEventSpace';
 import { Loader } from '@/components/ui/Loader';
 import EventViewDetailsPanel from '@/components/eventview/EventViewDetailsPanel';
-import { rsvpSchedule } from '@/controllers';
->>>>>>> 231a9f0 (merged changes from responsive dashboard)
+import { cancelUserRsvp, checkUserRsvp, rsvpSchedule } from '@/controllers';
 
 export default function EventViewScheduleDetailsPage() {
   const router = useRouter();
@@ -92,13 +57,28 @@ export default function EventViewScheduleDetailsPage() {
     });
   };
 
-  const handleRsvpToSchedule = async () => {
+  const handleRsvpAction = async () => {
     try {
-      console.log(scheduleId, 'scheduleId');
-      const result = await rsvpSchedule(scheduleId as string, event_space_id as string);
-      setRsvpUpdated(true);
-      setHasRsvpd(true);
-      console.log(result, 'rsvp updated');
+      if (hasRsvpd) {
+        const result = await cancelUserRsvp(scheduleId as string, event_space_id as string);
+        console.log(result, 'cancelrsvp');
+        setHasRsvpd(false);
+      } else {
+        console.log(scheduleId, 'scheduleId');
+        const result = await rsvpSchedule(scheduleId as string, event_space_id as string);
+        console.log(result, 'rsvp updated');
+        setHasRsvpd(true);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const checkIfUserHasRsvpd = async () => {
+    try {
+      const result = await checkUserRsvp(scheduleId as string, event_space_id as string);
+      const hasRsvp = result?.data?.hasRSVPed;
+      setHasRsvpd(hasRsvp);
     } catch (error) {
       console.log(error);
     }
@@ -126,7 +106,6 @@ export default function EventViewScheduleDetailsPage() {
   }
 
   return (
-<<<<<<< HEAD
     <div className="flex gap-4 lg:flex-row sm:flex-col">
       <div className="flex flex-col lg:w-[1000px] sm:w-full">
         <EventViewHeader
@@ -135,58 +114,20 @@ export default function EventViewScheduleDetailsPage() {
           tagline={eventSpace?.tagline as string}
         />
         <div className="md:p-5 sm:p-0 gap-[30px] max-w-[1200px] h-full">
-=======
-    <div className="flex gap-4 font-bold">
-      <div className="flex flex-col w-[1000px]">
-        <EventViewHeader imgPath={eventSpace?.image_url as string} name={eventSpace?.name as string} tagline={eventSpace?.tagline as string} />
-        <div className="p-5 gap-[30px] max-w-[1000px]">
->>>>>>> 231a9f0 (merged changes from responsive dashboard)
           <div className="flex flex-col gap-[10px] p-2.5 bg-componentPrimary rounded-2xl">
             <div className="flex justify-between">
               {' '}
               {/* Tracks and Edit Button */}
-<<<<<<< HEAD
               <Button variant="ghost" className="md:text-lg sm:text-base font-bold" leftIcon={HiArrowLeft} onClick={handleBackToSchedule}>
-                Back to Schedules
-              </Button>
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button
-                    variant="quiet"
-                    className="rounded-xl bg-componentPrimary text-lg"
-                    leftIcon={BiEditAlt}
-                  >
-                    Edit
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="w-full">
-                  {currentSchedule && <ScheduleEditForm
-                    name={currentSchedule.name}
-                    format={currentSchedule.format}
-                    description={currentSchedule.description}
-                    date={currentSchedule.date}
-                    start_time={currentSchedule.start_time}
-                    end_time={currentSchedule.end_time}
-                    schedule_frequency={currentSchedule.schedule_frequency}
-                    location_id={currentSchedule.location_id}
-                    event_space_id={event_space_id as string}
-                  />}
-                </DialogContent>
-              </Dialog>
-
-=======
-              <Button variant="ghost" className="opacity-70 text-lg" leftIcon={HiArrowLeft} onClick={handleBackToSchedule}>
                 Back to Schedules
               </Button>
               <Button
                 variant="quiet"
                 className="rounded-xl bg-componentPrimary text-lg"
                 leftIcon={BiEditAlt}
-                onClick={() => handleEnterSchedule(currentSchedule?.id as string, currentSchedule?.track_id as string)}
               >
                 Edit
               </Button>
->>>>>>> 231a9f0 (merged changes from responsive dashboard)
             </div>
             <div className="flex flex-col gap-2.5 p-2.5 ">
               {' '}
@@ -196,30 +137,20 @@ export default function EventViewScheduleDetailsPage() {
                 <div className="flex items-start">{startTime && endTime && <EventDataTime startTime={startTime} endTime={endTime} />}</div>
                 <h2 className="text-3xl font-bold">{currentSchedule?.name}</h2>
                 <div className="flex gap-[6px]">
-<<<<<<< HEAD
-                  {currentSchedule?.organizers?.map((organizer) => (
-                    <Speaker title={organizer.name} />
-                  ))}
-=======
-                  <Speaker title={'QJ'} />
-                  <Speaker title={'Janine Leger'} />
->>>>>>> 231a9f0 (merged changes from responsive dashboard)
-                </div>
+                  {
+                    currentSchedule?.organizers?.map((organizer) => (
+                      <Speaker title={organizer.name} />
+                    ))
+                  }
+                </div >
                 <div className="flex justify-end">
                   <h3>By: drivenfast</h3>
                 </div>
-              </div>
-              <Button
-                variant="primary"
-                size="lg"
-                className={`rounded-2xl justify-center ${hasRsvpd ? 'animate-rsvp' : ''}`}
-                leftIcon={BsFillTicketFill}
-                onClick={handleRsvpToSchedule}
-                disabled={hasRsvpd}
-              >
-                {hasRsvpd ? "RSVP'd" : 'RSVP Schedule'}
+              </div >
+              <Button variant="primary" size="lg" className={`rounded-2xl justify-center ${rsvpUpdated ? 'animate-rsvp' : ''}`} leftIcon={BsFillTicketFill} onClick={handleRsvpAction}>
+                {hasRsvpd ? 'Cancel RSVP' : 'RSVP Schedule'}
               </Button>
-            </div>
+            </div >
             <div className="flex flex-col gap-2.5 px-5 pt-5 pb-[60px]">
               {/* Schedule Description */}
               <h2 className="font-bold">Location</h2>
@@ -228,11 +159,12 @@ export default function EventViewScheduleDetailsPage() {
               {/* Schedule Description */}
               {currentSchedule?.description && <RenderHTMLString htmlString={currentSchedule?.description} />}
             </div>
-          </div>
-        </div>
-      </div>
-      {eventSpace && <EventViewDetailsPanel eventSpace={eventSpace} />}
-    </div>
+          </div >
+        </div >
+      </div >
+      {eventSpace && <EventViewDetailsPanel eventSpace={eventSpace} />
+      }
+    </div >
   );
 }
 
