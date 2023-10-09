@@ -37,6 +37,7 @@ export default function EventViewScheduleDetailsPage() {
   const { eventSpace, isLoading } = useEventDetails();
   const [rsvpUpdated, setRsvpUpdated] = useState(false);
   const { scheduleName, scheduleId, trackId } = router.query;
+  const [hasRsvpd, setHasRsvpd] = useState(false);
   const currentSchedule = eventSpace?.schedules.find((scheduleItem) => scheduleItem.name === scheduleName);
   const trackItem = eventSpace?.tracks.find((trackItem) => trackItem.id === trackId);
   const startTime =
@@ -67,6 +68,7 @@ export default function EventViewScheduleDetailsPage() {
       console.log(scheduleId, 'scheduleId');
       const result = await rsvpSchedule(scheduleId as string, event_space_id as string);
       setRsvpUpdated(true);
+      setHasRsvpd(true);
       console.log(result, 'rsvp updated');
     } catch (error) {
       console.log(error);
@@ -135,8 +137,15 @@ export default function EventViewScheduleDetailsPage() {
                   <h3>By: drivenfast</h3>
                 </div>
               </div>
-              <Button variant="primary" size="lg" className="rounded-2xl justify-center" leftIcon={BsFillTicketFill} onClick={handleRsvpToSchedule}>
-                RSVP Schedule
+              <Button
+                variant="primary"
+                size="lg"
+                className={`rounded-2xl justify-center ${hasRsvpd ? 'animate-rsvp' : ''}`}
+                leftIcon={BsFillTicketFill}
+                onClick={handleRsvpToSchedule}
+                disabled={hasRsvpd}
+              >
+                {hasRsvpd ? "RSVP'd" : 'RSVP Schedule'}
               </Button>
             </div>
             <div className="flex flex-col gap-2.5 px-5 pt-5 pb-[60px]">
