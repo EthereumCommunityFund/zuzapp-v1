@@ -1,24 +1,29 @@
-import TrackItemCard from "@/components/tracks/TrackItemCard";
-import MyDropdown from "@/components/ui/DropDown";
-import Pagination from "@/components/ui/Pagination";
-import Speaker from "@/components/ui/Speaker";
-import UserFacingTrack from "@/components/ui/UserFacingTrack";
-import Button from "@/components/ui/buttons/Button";
-import { Label } from "@/components/ui/label";
-import { useEventSpace } from "@/context/EventSpaceContext";
-import { TrackUpdateRequestBody } from "@/types";
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import { BiEditAlt, BiPlusCircle } from "react-icons/bi";
-import { HiArrowLeft, HiCalendar, HiCog, HiLocationMarker, HiMicrophone, HiTag, HiUserGroup } from "react-icons/hi";
-import EventViewHeader from "../eventview/EventViewHeader";
-import useEventDetails from "@/hooks/useCurrentEventSpace";
-import { Loader } from "../ui/Loader";
-import RenderHTMLString from "../ui/RenderHTMLString";
-import EventViewDetailsPanel from "../eventview/EventViewDetailsPanel";
-import { QueryClient, dehydrate } from "react-query";
-import { fetchEventSpaceById } from "@/services/fetchEventSpaceDetails";
-import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
+import TrackItemCard from '@/components/tracks/TrackItemCard';
+import MyDropdown from '@/components/ui/DropDown';
+import Pagination from '@/components/ui/Pagination';
+import Speaker from '@/components/ui/Speaker';
+import UserFacingTrack from '@/components/ui/UserFacingTrack';
+import Button from '@/components/ui/buttons/Button';
+import { Label } from '@/components/ui/label';
+import { useEventSpace } from '@/context/EventSpaceContext';
+import { TrackUpdateRequestBody } from '@/types';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { BiEditAlt, BiPlusCircle } from 'react-icons/bi';
+import { HiArrowLeft, HiCalendar, HiCog, HiLocationMarker, HiMicrophone, HiTag, HiUserGroup } from 'react-icons/hi';
+import EventViewHeader from '../eventview/EventViewHeader';
+import useEventDetails from '@/hooks/useCurrentEventSpace';
+import { Loader } from '../ui/Loader';
+import RenderHTMLString from '../ui/RenderHTMLString';
+import EventViewDetailsPanel from '../eventview/EventViewDetailsPanel';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
+import Update from '@/pages/dashboard/events/space/tracks/update';
+import EventViewTrackUpdate from '../eventview/EventViewTrackUpdate';
+import AddSchedulePage from '@/pages/dashboard/events/space/tracks/schedules/addschedule';
+import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
+import { Database } from '@/database.types';
+import { QueryClient, dehydrate } from 'react-query';
+import { fetchEventSpaceById } from '@/services/fetchEventSpaceDetails';
 
 interface ITrackDetailsPageTemplate {
   trackItem: TrackUpdateRequestBody;
@@ -29,6 +34,7 @@ export default function OnlineTrackDetailsPageTemplate(props: ITrackDetailsPageT
   const { trackItem } = props;
   const { eventSpace, isLoading } = useEventDetails();
   const { event_space_id, trackId, track_title } = router.query;
+
   // const handlePageChange = (page: number) => {
   //   setCurrentPage(page);
   // };
@@ -76,9 +82,19 @@ export default function OnlineTrackDetailsPageTemplate(props: ITrackDetailsPageT
                   Tracks
                 </Button>
               )}
-              <Button variant="quiet" className="rounded-xl" leftIcon={BiEditAlt}>
-                Edit
-              </Button>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="quiet" className="rounded-xl text-lg font-bold" leftIcon={BiEditAlt}>
+                    Edit
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="w-3/5 overflow-x-auto sm:w-3/4">
+                  <DialogHeader>
+                    <Label className="text-2xl font-bold">Edit Track</Label>
+                  </DialogHeader>
+                  <EventViewTrackUpdate className="px-0 text-white text-2xl" />
+                </DialogContent>
+              </Dialog>
             </div>
             <div className="flex flex-col gap-[10px] p-5 "> {/* Track Info */}
               <img src={trackItem?.image as string} alt="track image" className="lg:h-[496px] md:h-full rounded-[10px]" />
