@@ -90,7 +90,7 @@ export default function InPersonEventViewPageTemplate({ eventSpace }: IInPersonE
                 Apply to Event
               </Button>
             </div>
-            <div className="flex gap-3 text-lg">
+            <div className="flex gap-3 text-lg md:flex-row sm:flex-col sm:text-sm">
               <span className="rounded-full flex px-4 py-1 items-center gap-1 opacity-60 bg-[#FFFFFF10] font-bold">
                 <HiCalendar /> {formattedStartDate} - {formattedEndDate}
               </span>
@@ -103,7 +103,7 @@ export default function InPersonEventViewPageTemplate({ eventSpace }: IInPersonE
             {' '}
             {/* About */}
             <h3 className="text-lg font-bold text-white/70">ABOUT THIS EVENT</h3>
-            <h2 className="text-3xl font-bold text-white/80">What is ZuConnect?</h2>
+            <h2 className="text-2xl font-bold text-white/80">What is ZuConnect?</h2>
             <Dialog>
               <DialogTrigger asChild>
                 <Button variant="quiet" size="lg" className="rounded-2xl inline-block text-white/70 font-bold hover:text-white">

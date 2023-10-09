@@ -8,7 +8,7 @@ export default function RenderHTMLString({ htmlString, height }: RenderHTMLStrin
     height ? (
       <div className={`h-[500px] overflow-y-auto text-white`} dangerouslySetInnerHTML={{ __html: htmlString }} />
     ) : (
-      <div className={`overflow-y-auto text-white`} dangerouslySetInnerHTML={{ __html: htmlString }} />
+      <div className={`overflow-y-auto text-white md:w-full`} dangerouslySetInnerHTML={{ __html: htmlString }} />
     )
   );
 }

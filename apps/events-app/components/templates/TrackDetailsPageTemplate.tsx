@@ -72,7 +72,7 @@ export default function OnlineTrackDetailsPageTemplate(props: ITrackDetailsPageT
     <div className="flex gap-4 lg:flex-row sm:flex-col">
       <div className="flex flex-col lg:w-[1000px] sm:w-full">
         <EventViewHeader imgPath={eventSpace?.image_url as string} name={eventSpace?.name as string} tagline={eventSpace?.tagline as string} />
-        <div className="p-5 gap-[30px] lg:max-w-[1000px] md:w-full">
+        <div className="md:p-5 sm:p-0 gap-[30px] lg:max-w-[1000px] md:w-full">
           <div className="flex flex-col gap-[10px] p-2.5 bg-componentPrimary rounded-xl">
             <div className="flex justify-between">
               {' '}
@@ -101,7 +101,7 @@ export default function OnlineTrackDetailsPageTemplate(props: ITrackDetailsPageT
               <div className="flex flex-col gap-[10px] p-2.5"> {/* Tracks Name */}
                 <h2 className="font-bold text-2xl">{trackItem.name}</h2>
                 <RenderHTMLString htmlString={trackItem.description as string} />
-                <span className="rounded-xl flex px-4 py-1 items-center gap-1 opacity-60 bg-[#FFFFFF10] font-bold justify-start w-[320px] text-lg">
+                <span className="rounded-xl flex px-4 py-1 items-center gap-1 opacity-60 bg-[#FFFFFF10] font-bold justify-start md:w-[320px] md:text-lg sm:text-[7px] sm:w-fit">
                   <HiCalendar size={25} /> November 29 - November 11
                 </span>
               </div>

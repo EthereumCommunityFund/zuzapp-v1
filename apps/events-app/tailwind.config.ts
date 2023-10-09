@@ -109,7 +109,7 @@ module.exports = {
       },
     },
     screens: {
-      'sm': '390px',
+      'sm': '320px',
       'md': '810px',
       'lg': '1200px',
 

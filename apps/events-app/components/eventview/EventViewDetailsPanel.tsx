@@ -10,7 +10,7 @@ interface IEventViewDetailsPanel {
 export default function EventViewDetailsPanel(props: IEventViewDetailsPanel) {
   const { eventSpace } = props;
   return (
-    <div className="flex flex-col pt-5 pb-10 gap-5 min-w-[450px] lg:px-0 sm:pl-5">
+    <div className="flex flex-col pt-5 pb-10 gap-5 md:min-w-[450px] lg:px-0 sm:px-3">
       <div className="pb-10 gap-2.5">
         <div className="flex flex-col gap-3">
           <h2 className="font-bold p-3.5 border-b border-b-background text-xl">
@@ -42,7 +42,7 @@ export default function EventViewDetailsPanel(props: IEventViewDetailsPanel) {
                 <HiCog className="text-2xl" />
                 <Label>Organizers</Label>
               </div>
-              <div className="flex gap-[6px]">
+              <div className="flex gap-[6px] md:flex-row sm:flex-col">
                 <Speaker title="QJ" />
                 <Speaker title="Janine Leger" />
               </div>
@@ -53,7 +53,7 @@ export default function EventViewDetailsPanel(props: IEventViewDetailsPanel) {
                   <HiMicrophone className="text-2xl" />
                   <h2>Speakers</h2>
                 </div>
-                <div className="flex gap-[6px]">
+                <div className="flex gap-[6px] md:flex-row sm:flex-col">
                   <Speaker title="Avery Longname" />
                   <Speaker title="Janine Leger" />
                 </div>

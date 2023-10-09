@@ -75,8 +75,8 @@ export default function OnlineEventViewPageTemplate({ eventSpace }: IOnlineEvent
               </div>
               <Button variant="primaryGreen" size="lg" className="rounded-full sm:w-full md:w-auto lg:w-auto justify-center" leftIcon={BsArrowRightCircleFill}>Apply to Event</Button>
             </div>
-            <div className="flex gap-3 text-lg">
-              <span className="rounded-full flex px-4 py-1 items-center gap-1 opacity-60 bg-[#FFFFFF10] font-bold">
+            <div className="flex gap-3 text-lg md:flex-row sm:flex-col sm:text-sm">
+              <span className="rounded-2xl flex px-4 py-1 items-center gap-1 opacity-60 bg-[#FFFFFF10] font-bold">
                 <HiCalendar /> {formattedStartDate} - {formattedEndDate}
               </span>
               <span className="rounded-2xl flex px-4 py-1 items-center gap-1 opacity-60 bg-[#FFFFFF10] font-bold">
@@ -88,7 +88,7 @@ export default function OnlineEventViewPageTemplate({ eventSpace }: IOnlineEvent
             {' '}
             {/* About */}
             <h3 className="text-lg font-bold text-white/70">About This Event</h3>
-            <h2 className="text-3xl font-bold text-white/80">What is ZuConnect?</h2>
+            <h2 className="text-2xl font-bold text-white/80">What is ZuConnect?</h2>
             <p className="text-white/70 font-bold">
               Embark on a transformative journey at ZuConnect— a two-week popup village in Istanbul where the luminaries of crypto, AI, governance, decentralized science, and culture coalesce. Here,
               the brightest minds convene to co-work, foster collaborations, and have a joyous time.
@@ -110,7 +110,7 @@ export default function OnlineEventViewPageTemplate({ eventSpace }: IOnlineEvent
             </Dialog>
           </div>
         </div>
-        <div className="lg:w-1/4 md:w-full flex flex-col px-10 py-5 gap-5 lg:fixed lg:right-0">
+        <div className="lg:w-1/4 md:w-full flex flex-col md:px-10 py-5 gap-5 lg:fixed lg:right-0 sm:px-3 sm:text-sm">
           <h2 className="border-b pb-3 text-2xl font-bold border-white/10">Details</h2>
           <div className="flex gap-4 items-center text-lg font-bold">
             <UserGroup />

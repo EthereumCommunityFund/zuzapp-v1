@@ -81,7 +81,7 @@ export default function EventViewTracksAlleSchedulesPage() {
         <h2 className="p-3.5 gap-[10px] font-bold text-xl sm:hidden lg:flex">
           Schedules: Sort & Filter
         </h2>
-        <div className="flex lg:flex-col sm:flex-row w-full p-2.5 gap-5">
+        <div className="flex lg:flex-col md:flex-row sm:flex-col w-full p-2.5 md:gap-5 sm:gap-3 text-sm">
           <DropDownMenu
             data={categoryList}
             header={'Select Categories'}

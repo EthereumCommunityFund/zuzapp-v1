@@ -39,7 +39,7 @@ export const DashboardProvider = ({
     );
   return (
     <>
-      <div className="flex relative bg-[#222222] text-white md:h-14 md:flex-col sm:h-14 sm:flex-col">
+      <div className="flex relative bg-[#222222] text-white md:h-14 md:flex-col sm:h-14 sm:flex-col md:text-xs">
         {
           !checkIfCurrentRouteIsInEventViewRoutes() ? (
             <DashboardNavigation />
@@ -59,7 +59,7 @@ export const DashboardProvider = ({
                   </div>
                 </>
               ) : (
-                <div className="flex-1 mx-auto px-8 sm:px-0 relative lg:top-10 md:top-0 sm:top-0 bg-pagePrimary md:flex md:flex-col sm:flex sm:flex-col">
+                <div className="flex-1 mx-auto px-8 sm:px-0 relative lg:top-10 md:top-0 sm:top-0 bg-pagePrimary md:flex md:flex-col sm:flex sm:flex-col sm:w-full">
                   {children}
                 </div>
               )}

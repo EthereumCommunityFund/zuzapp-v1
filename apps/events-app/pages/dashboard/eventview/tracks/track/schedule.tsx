@@ -65,15 +65,15 @@ export default function EventViewTrackDetailsPage() {
 
   return (
     <div className="flex gap-4 lg:flex-row sm:flex-col">
-      <div className="flex flex-col w-[1200px]">
+      <div className="flex flex-col lg:w-[1000px] sm:w-full">
         <EventViewHeader imgPath={eventSpace?.image_url as string} name={eventSpace?.name as string} tagline={eventSpace?.tagline as string} />
-        <div className="p-5 gap-[30px] max-w-[1200px] h-full">
+        <div className="md:p-5 sm:p-0 gap-[30px] max-w-[1200px] h-full">
           <div className="flex flex-col gap-[10px] p-2.5 bg-componentPrimary rounded-2xl h-full">
             <div className="flex justify-between">
               {' '}
               {/* Tracks and Edit Button */}
               {eventSpace && (
-                <Button variant="ghost" className="text-lg font-bold" leftIcon={HiArrowLeft} onClick={() => handleBackToTrackClick(eventSpace?.id)}>
+                <Button variant="ghost" className="md:text-lg sm:text-base font-bold" leftIcon={HiArrowLeft} onClick={() => handleBackToTrackClick(eventSpace?.id)}>
                   Back to Track
                 </Button>
               )}
@@ -81,7 +81,7 @@ export default function EventViewTrackDetailsPage() {
                 Edit
               </Button>
             </div>
-            <div className="flex flex-col gap-2.5 p-2.5 ">
+            <div className="flex flex-col gap-2.5 md:p-2.5 sm:p-0">
               {' '}
               {/* Schedule Info */}
               <div className="flex flex-col gap-2.5 p-5">
@@ -107,13 +107,13 @@ export default function EventViewTrackDetailsPage() {
           </div>
         </div>
       </div>
-      <div className="flex flex-col px-10 gap-1 right-0">
+      <div className="flex flex-col md:px-10 gap-1 right-0">
         <div className="flex flex-col gap-5 py-5">
           <div className="flex flex-col p-2.5 gap-2.5">
             {trackItem?.image && <img src={trackItem?.image as string} className="lg:h-[200px] rounded-2xl" alt="zuzalu" />}
             {startDate && endDate && <EventDataDate startDate={startDate} endDate={endDate} />}
           </div>
-          <div className="flex flex-col p-2.5 gap-2.5 w-[300px]">
+          <div className="flex flex-col p-2.5 gap-2.5 sm:w-[300px] sm:text-sm md:text-base">
             <Label className="text-xl">{trackItem?.name}</Label>
             {trackItem?.description && <RenderHTMLString height="" htmlString={trackItem?.description} />}
           </div>

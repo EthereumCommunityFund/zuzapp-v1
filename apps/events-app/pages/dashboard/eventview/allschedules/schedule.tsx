@@ -98,18 +98,18 @@ export default function EventViewScheduleDetailsPage() {
 
   return (
     <div className="flex gap-4 lg:flex-row sm:flex-col">
-      <div className="flex flex-col lg:w-[1000px]">
+      <div className="flex flex-col lg:w-[1000px] sm:w-full">
         <EventViewHeader
           imgPath={eventSpace?.image_url as string}
           name={eventSpace?.name as string}
           tagline={eventSpace?.tagline as string}
         />
-        <div className="p-5 gap-[30px] lg:max-w-[1000px] sm:sm:w-full">
+        <div className="md:p-5 sm:p-0 gap-[30px] max-w-[1200px] h-full">
           <div className="flex flex-col gap-[10px] p-2.5 bg-componentPrimary rounded-2xl">
             <div className="flex justify-between">
               {' '}
               {/* Tracks and Edit Button */}
-              <Button variant="ghost" className="opacity-70 text-lg" leftIcon={HiArrowLeft} onClick={handleBackToSchedule}>
+              <Button variant="ghost" className="md:text-lg sm:text-base font-bold" leftIcon={HiArrowLeft} onClick={handleBackToSchedule}>
                 Back to Schedules
               </Button>
               <Dialog>
