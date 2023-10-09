@@ -117,9 +117,7 @@ export default function OnlineTrackDetailsPageTemplate(props: ITrackDetailsPageT
           <div className="flex flex-col gap-[10px] overflow-hidden rounded-[10px]">
             {eventSpace &&
               eventSpace?.schedules.map(
-                (schedule, idx) =>
-                  schedule.track_id === trackItem?.id && <UserFacingTrack key={idx} scheduleData={schedule} onClick={() => handleItemClick(schedule.name, trackItem?.id, eventSpace.id)} />
-              )}
+                (schedule, idx) => schedule.track_id === trackItem?.id && <UserFacingTrack key={idx} scheduleData={schedule} onClick={() => handleItemClick(schedule.name, trackItem?.id, eventSpace.id)} />              )}
           </div>
         </div>
       </div>

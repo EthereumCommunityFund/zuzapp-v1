@@ -88,7 +88,6 @@ export default function EventViewTracksAlleSchedulesPage() {
             headerIcon={SelectCategories}
             multiple={true}
             value={""}
-
             headerClassName={'rounded-full bg-borderPrimary'}
             optionsClassName={''}
           />
@@ -98,7 +97,6 @@ export default function EventViewTracksAlleSchedulesPage() {
             headerIcon={Calendar}
             multiple={true}
             value={""}
-
             headerClassName={'rounded-full bg-borderPrimary'}
             optionsClassName={''}
           />
@@ -108,7 +106,6 @@ export default function EventViewTracksAlleSchedulesPage() {
             headerIcon={SelectLocation}
             multiple={true}
             value={""}
-
             headerClassName={'rounded-full bg-borderPrimary'}
             optionsClassName={''}
           />

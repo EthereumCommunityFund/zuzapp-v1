@@ -63,7 +63,6 @@ export const DashboardProvider = ({
                   {children}
                 </div>
               )}
-
           </div>
         </div>
       </div>

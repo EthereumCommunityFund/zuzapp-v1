@@ -38,8 +38,6 @@ export default function DashboardHeader() {
             <Image src="/images/Logo.png" alt="Zuzalu Logo" width={150} height={35} />
           </Link>
         </div>
-
-
         <nav
           className={`dashboard-menu min-w-[260px] fixed hidden flex-col h-screen border-r border-r-gray-800 bg-[#2F3232] py-10 px-6 transition-transform duration-300 ${dashboardOpen && "open"
             }`}
@@ -81,12 +79,6 @@ export default function DashboardHeader() {
             )}
           </div>
         </nav>
-
-
-
-
-
-
         <div className="hidden md:block">
           <input type="text" placeholder="Search" className="w-96 h-10 rounded-3xl px-5 bg-zinc-800" />
         </div>

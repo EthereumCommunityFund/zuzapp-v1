@@ -171,8 +171,16 @@ export default function EventViewTrackDetailsPage() {
                   <h3 className="float-right">By: drivenfast</h3>
                 </div>
               </div>
-              <Button size="lg" variant="quiet" className="rounded-full text-center flex justify-center" leftIcon={BsFillTicketFill}>
-                RSVP Schedule
+              <Button
+                variant="primary"
+                size="lg"
+                className={`rounded-2xl justify-center ${
+                  rsvpUpdated ? "animate-rsvp" : ""
+                }`}
+                leftIcon={BsFillTicketFill}
+                onClick={handleRsvpAction}
+              >
+                {hasRsvpd ? "Cancel RSVP" : "RSVP Schedule"}
               </Button>
             </div>
             <div className="flex flex-col gap-2.5 px-5 pt-5 pb-[60px]">
@@ -191,7 +199,9 @@ export default function EventViewTrackDetailsPage() {
           </div>
           <div className="flex flex-col p-2.5 gap-2.5 sm:w-[300px] sm:text-sm md:text-base">
             <Label className="text-xl">{trackItem?.name}</Label>
-            {trackItem?.description && <RenderHTMLString height="" htmlString={trackItem?.description} />}
+            {trackItem?.description && (
+              <RenderHTMLString height="" htmlString={trackItem?.description} />
+            )}
           </div>
         </div>
         {eventSpace && <EventViewDetailsPanel eventSpace={eventSpace} />}
