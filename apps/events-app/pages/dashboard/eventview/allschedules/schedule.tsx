@@ -1,29 +1,35 @@
-import EventViewHeader from '@/components/eventview/EventViewHeader';
-import TrackItemCard from '@/components/tracks/TrackItemCard';
-import MyDropdown from '@/components/ui/DropDown';
-import Pagination from '@/components/ui/Pagination';
-import RenderHTMLString from '@/components/ui/RenderHTMLString';
-import Speaker from '@/components/ui/Speaker';
-import UserFacingTrack from '@/components/ui/UserFacingTrack';
-import Button from '@/components/ui/buttons/Button';
-import { Label } from '@/components/ui/label';
-import EventDataDate from '@/components/ui/labels/event-data-date';
-import EventDataTime from '@/components/ui/labels/event-data-time';
-import EventData from '@/components/ui/labels/event-data-time';
-import { useEventSpace } from '@/context/EventSpaceContext';
-import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
-import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
-import { BiEditAlt, BiLeftArrow } from 'react-icons/bi';
-import { BsFillTicketFill } from 'react-icons/bs';
-import { HiArrowLeft, HiCalendar, HiCog, HiLocationMarker, HiMicrophone, HiTag, HiUserGroup } from 'react-icons/hi';
-import { EventSpaceDetailsType } from '@/types';
-import { fetchEventSpaceById } from '@/services/fetchEventSpaceDetails';
-import { QueryClient, dehydrate, useQuery } from 'react-query';
-import useEventDetails from '@/hooks/useCurrentEventSpace';
-import { Loader } from '@/components/ui/Loader';
-import EventViewDetailsPanel from '@/components/eventview/EventViewDetailsPanel';
-import { cancelUserRsvp, checkUserRsvp, rsvpSchedule } from '@/controllers';
+import EventViewHeader from "@/components/eventview/EventViewHeader";
+import TrackItemCard from "@/components/tracks/TrackItemCard";
+import MyDropdown from "@/components/ui/DropDown";
+import Pagination from "@/components/ui/Pagination";
+import RenderHTMLString from "@/components/ui/RenderHTMLString";
+import Speaker from "@/components/ui/Speaker";
+import UserFacingTrack from "@/components/ui/UserFacingTrack";
+import Button from "@/components/ui/buttons/Button";
+import { Label } from "@/components/ui/label";
+import EventDataDate from "@/components/ui/labels/event-data-date";
+import EventDataTime from "@/components/ui/labels/event-data-time";
+import EventData from "@/components/ui/labels/event-data-time";
+import { useEventSpace } from "@/context/EventSpaceContext";
+import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
+import { useRouter } from "next/router";
+import { useState } from "react";
+import { BiEditAlt, BiLeftArrow } from "react-icons/bi";
+import { BsFillTicketFill } from "react-icons/bs";
+import {
+  HiArrowLeft,
+
+} from "react-icons/hi";
+
+import { fetchEventSpaceById } from "@/services/fetchEventSpaceDetails";
+import { QueryClient, dehydrate, useQuery } from "react-query";
+import useEventDetails from "@/hooks/useCurrentEventSpace";
+import { Loader } from "@/components/ui/Loader";
+import EventViewDetailsPanel from "@/components/eventview/EventViewDetailsPanel";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import UpdateSchedulePage from "../../events/space/tracks/schedules/updateSchedule";
+import ScheduleEditForm from "@/components/commons/ScheduleEditForm";
+import { rsvpSchedule } from "@/controllers";
 
 export default function EventViewScheduleDetailsPage() {
   const router = useRouter();
@@ -31,7 +37,6 @@ export default function EventViewScheduleDetailsPage() {
   const { eventSpace, isLoading } = useEventDetails();
   const [rsvpUpdated, setRsvpUpdated] = useState(false);
   const { scheduleName, scheduleId, trackId } = router.query;
-  const [hasRsvpd, setHasRsvpd] = useState(false);
   const currentSchedule = eventSpace?.schedules.find((scheduleItem) => scheduleItem.name === scheduleName);
   const trackItem = eventSpace?.tracks.find((trackItem) => trackItem.id === trackId);
   const startTime =
@@ -57,47 +62,14 @@ export default function EventViewScheduleDetailsPage() {
     });
   };
 
-  const handleRsvpAction = async () => {
+  const handleRsvpToSchedule = async () => {
     try {
-      if (hasRsvpd) {
-        const result = await cancelUserRsvp(scheduleId as string, event_space_id as string);
-        console.log(result, 'cancelrsvp');
-        setHasRsvpd(false);
-      } else {
-        console.log(scheduleId, 'scheduleId');
-        const result = await rsvpSchedule(scheduleId as string, event_space_id as string);
-        console.log(result, 'rsvp updated');
-        setHasRsvpd(true);
-      }
+      console.log(scheduleId, 'scheduleId');
+      const result = await rsvpSchedule(scheduleId as string, event_space_id as string);
+      setRsvpUpdated(true);
+      console.log(result, 'rsvp updated');
     } catch (error) {
       console.log(error);
-    }
-  };
-
-  const checkIfUserHasRsvpd = async () => {
-    try {
-      const result = await checkUserRsvp(scheduleId as string, event_space_id as string);
-      const hasRsvp = result?.data?.hasRSVPed;
-      setHasRsvpd(hasRsvp);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const handleEnterSchedule = async (id: string, scheduleTrackId: string) => {
-    const scheduleTrackTitle = eventSpace?.tracks.find((trackItem) => trackItem.id === scheduleTrackId)?.name;
-    try {
-      router.push({
-        pathname: `/dashboard/eventview/allschedules/updateschedule`,
-        query: {
-          event_space_id,
-          trackId: scheduleTrackId,
-          scheduleId: id,
-          track_title: scheduleTrackTitle,
-        },
-      });
-    } catch (error) {
-      console.error('Error fetching space details', error);
     }
   };
 
