@@ -35,15 +35,14 @@ export default function OnlineTrackDetailsPageTemplate(props: ITrackDetailsPageT
   const { trackItem } = props;
   const { eventSpace, isLoading } = useEventDetails();
   const { event_space_id, trackId, track_title } = router.query;
-
   // const handlePageChange = (page: number) => {
   //   setCurrentPage(page);
   // };
-  const handleItemClick = (scheduleName: string, trackId: string | undefined, event_space_id: string, scheduleId: string) => {
+  const handleItemClick = (scheduleName: string, trackId: string | undefined, event_space_id: string) => {
     console.log('TrackDetailsPage Track Id', trackId);
     router.push({
       pathname: '/dashboard/eventview/tracks/track/schedule',
-      query: { scheduleName, trackId, event_space_id, scheduleId },
+      query: { scheduleName, trackId, event_space_id },
     });
   };
 
@@ -83,19 +82,9 @@ export default function OnlineTrackDetailsPageTemplate(props: ITrackDetailsPageT
                   Tracks
                 </Button>
               )}
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button variant="quiet" className="rounded-xl text-lg font-bold" leftIcon={BiEditAlt}>
-                    Edit
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="w-3/5 overflow-x-auto sm:w-3/4">
-                  <DialogHeader>
-                    <Label className="text-2xl font-bold">Edit Track</Label>
-                  </DialogHeader>
-                  <EventViewTrackUpdate className="px-0 text-white text-2xl" />
-                </DialogContent>
-              </Dialog>
+              <Button variant="quiet" className="rounded-xl" leftIcon={BiEditAlt}>
+                Edit
+              </Button>
             </div>
             <div className="flex flex-col gap-[10px] p-5 "> {/* Track Info */}
               <img src={trackItem?.image as string} alt="track image" className="lg:h-[496px] md:h-full rounded-[10px]" />
@@ -119,9 +108,7 @@ export default function OnlineTrackDetailsPageTemplate(props: ITrackDetailsPageT
             {eventSpace &&
               eventSpace?.schedules.map(
                 (schedule, idx) =>
-                  schedule.track_id === trackItem?.id && (
-                    <UserFacingTrack key={idx} scheduleData={schedule} onClick={() => handleItemClick(schedule.name, trackItem?.id, eventSpace.id, schedule?.id)} />
-                  )
+                  schedule.track_id === trackItem?.id && <UserFacingTrack key={idx} scheduleData={schedule} onClick={() => handleItemClick(schedule.name, trackItem?.id, eventSpace.id)} />
               )}
           </div>
         </div>
