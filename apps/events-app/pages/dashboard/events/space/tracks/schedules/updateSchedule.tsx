@@ -39,9 +39,6 @@ import Autocomplete from '@mui/material/Autocomplete';
 import { fetchScheduleByID, updateSchedule } from '../../../../../../controllers/schedule.controller';
 import Link from 'next/link';
 import { toast } from '@/components/ui/use-toast';
-import ScheduleEditForm from '@/components/commons/ScheduleEditForm';
-import fetchSchedulesByTrackId from '@/services/fetchSchedulesByTrackId';
-import { Loader } from '@/components/ui/Loader';
 
 type Organizer = {
   name: string;
@@ -52,42 +49,307 @@ type TagItemProp = {
   name: string;
 };
 
-
 export default function UpdateSchedulePage() {
   const router = useRouter();
   const { event_space_id, trackId, scheduleId, track_title } = router.query;
+  const [selectedEventFormat, setSelectedEventFormat] = useState('');
 
+  const [schedule, setSchedule] = useState<ScheduleUpdateRequestBody>({
+    name: '',
+    format: 'in-person',
+    description: '',
+    date: '',
+    start_time: '',
+    end_time: '',
+    all_day: false,
+    schedule_frequency: 'once',
+    images: [''],
+    video_call_link: '',
+    live_stream_url: '',
+    location_id: '',
+    event_type: '',
+    experience_level: '',
+    limit_rsvp: false,
+    rsvp_amount: 1,
+    event_space_id: '',
+    track_id: '',
+    tags: [''],
+    organizers: [
+      {
+        name: '',
+        role: '',
+      },
+    ],
+  });
+  const [startDate, setStartDate] = useState<Date | undefined>();
+  const [optionTags, setOptionTags] = useState<TagItemProp[]>([]);
+  const [tags, setTags] = useState<string[]>([]);
+  const [tagItem, setTagItem] = useState<TagItemProp>({ name: '' });
+  const [eventItem, setEventItem] = useState({
+    name: '',
+    role: 'speaker',
+  });
+  const [organizers, setOrganizers] = useState<any>([]);
+  const [frequency, setFrequency] = useState<'once' | 'everyday' | 'weekly'>('once');
+  const [savedLocations, setSavedLocations] = useState<LocationUpdateRequestBody[]>([]);
+  const [locationId, setLocationId] = useState('');
+  const [experienceLevel, setExperienceLevel] = useState('');
+  const [initialEvent, setInitialEvent] = useState('');
+  const handleChangeSwitch = () => {
+    setSchedule({ ...schedule, all_day: !schedule.all_day });
+  };
+  const [startTime, setStartTime] = useState(dayjs('2023-11-17T00:00'));
+  const [endTime, setEndTime] = useState(dayjs('2023-11-17T23:59'));
+  const [scheduleUpdated, setScheduleUpdated] = useState(false);
+  const [isLimit, setIsLimit] = useState(false);
+
+  const formSchema = z.object({
+    name: z.string().min(2, {
+      message: 'Schedule name is required.',
+    }),
+    format: z.enum(['in-person', 'online', 'hybrid'], {
+      required_error: 'You need to select a format.',
+    }),
+    date: z
+      .date({
+        required_error: 'You need to select a valid date for this schedule.',
+        invalid_type_error: 'You need to select a valid date for this schedule.',
+      })
+      .refine(
+        (date) => {
+          if (date) {
+            console.log(date, `date`);
+            const today = dayjs();
+            const selectedDate = dayjs(date);
+            return selectedDate.isAfter(today);
+          }
+          return false;
+        },
+        {
+          message: 'You need to select a valid date for this schedule.',
+        }
+      ),
+    description: z.string().min(10, {
+      message: 'Description is required and must be a minimum of 5',
+    }),
+    video_call_link: z.string().optional().or(z.literal('')),
+    live_stream_url: z.string().optional().or(z.literal('')),
+  });
 
   const {
-    data: schedule,
+    data: eventSpace,
     isLoading,
     isError,
-  } = useQuery<ScheduleUpdateRequestBody, Error>(
-    ['currentSchedule', scheduleId], // Query key
-    () => fetchSchedulesByTrackId(trackId as string), // Query function
+  } = useQuery<EventSpaceDetailsType, Error>(
+    ['currentEventSpace', event_space_id], // Query key
+    () => fetchEventSpaceById(event_space_id as string), // Query function
     {
       enabled: !!event_space_id, // Only execute the query if event_space_id is available
-      onSuccess(data) {
-        console.log(data);
-      },
     }
   );
 
+  const [eventType, setEventType] = useState('');
+
+  const handleLimitRSVP = () => {
+    setSchedule({ ...schedule, limit_rsvp: !schedule.limit_rsvp });
+  };
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: schedule?.name,
+      format: schedule?.format,
+      date: schedule?.date !== '' ? new Date(schedule?.date) : new Date(),
+      description: '',
+      video_call_link: schedule?.video_call_link,
+      live_stream_url: schedule?.live_stream_url,
+    },
+  });
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    if (values.format !== 'in-person' && (!values.video_call_link || values.video_call_link === '')) {
+      form.setError('video_call_link', {
+        message: 'Video call link is required for online or hybrid events',
+      });
+      return;
+    }
+    if (values.format !== 'in-person' && (!values.live_stream_url || values.live_stream_url === '')) {
+      form.setError('live_stream_url', {
+        message: 'Live stream link is required for in-person or hybrid events',
+      });
+      return;
+    }
+    if (values.format === 'in-person' && locationId === '') {
+      toast({
+        title: 'Error',
+        description: 'Location is required for in-person events',
+        variant: 'destructive',
+      });
+      return;
+    }
+    const updatedOrganizers = (schedule.organizers as any).map((user: any) => {
+      if (user.name) {
+        return {
+          ...user,
+          name: user.name,
+          role: 'speaker',
+          // name: undefined, // this will remove the name key from the object
+        };
+      } else {
+        return {
+          ...user,
+        };
+      }
+    });
+    console.log(updatedOrganizers);
+
+    const additionalPayload = {
+      event_space_id: schedule.event_space_id,
+      start_time: schedule.start_time as unknown as string,
+      end_time: schedule.end_time as unknown as string,
+      event_type: (schedule.event_type as unknown as []).length > 0 ? JSON.stringify([schedule.event_type]) : ((eventSpace?.event_type as string[])[0] as unknown as string[]),
+      experience_level:
+        (schedule.experience_level as unknown as []).length > 0 ? (JSON.stringify([schedule.experience_level]) as unknown as string[]) : [(eventSpace?.experience_level as string[])[0]],
+      tags: schedule.tags,
+      schedule_frequency: schedule.schedule_frequency,
+      location_id: schedule.location_id,
+      organizers: updatedOrganizers,
+      video_call_link: schedule.video_call_link,
+      live_stream_url: schedule.live_stream_url,
+      all_day: schedule.all_day,
+      track_id: trackId,
+      limit_rsvp: schedule.limit_rsvp,
+      ...(eventSpace?.event_space_type === 'tracks' && {
+        track_id: trackId as string,
+      }),
+      ...(schedule.limit_rsvp ? { rsvp_amount: schedule.rsvp_amount } : {}),
+      // isLimit && rsvp_amount: rsvpAmount
+    };
+    const payload: any = { ...values, ...additionalPayload };
+    console.log(payload);
+    try {
+      console.log(payload, 'payload');
+      const result = await updateSchedule(scheduleId as string, payload, event_space_id as string);
+      // setSwitchDialogue(true);
+      setScheduleUpdated(true);
+      console.log(result, 'result');
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const handleEventFormatChange = (e: string) => {
+    setSelectedEventFormat(e);
+    // setEventFormat(selectedEventFormat);
+  };
+
+  const handleRemoveSpeaker = (index: number) => {
+    const updatedItems = [...(schedule.organizers as Organizer[]).slice(0, index), ...(schedule.organizers as Organizer[]).slice(index + 1)];
+    setSchedule({ ...schedule, organizers: updatedItems as any });
+  };
+
+  const handleRemoveTag = (index: number) => {
+    const updatedItems = [...(schedule.tags as string[]).slice(0, index), ...(schedule.tags as string[]).slice(index + 1)];
+    console.log(updatedItems);
+    setSchedule({ ...schedule, tags: updatedItems });
+  };
+
+  const defaultProps = {
+    options: optionTags,
+    getOptionLabel: (option: { name: string }) => option.name,
+  };
+
+  useEffect(() => {
+    const fetchLocationDetails = async () => {
+      try {
+        const result = await fetchLocationsByEventSpace(event_space_id as string);
+        console.log(result);
+        setSavedLocations(result?.data?.data);
+        setLocationId(result.data.data[0].id);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    const fetchTags = async () => {
+      try {
+        const result = await fetchAllTags();
+        console.log(result);
+        setOptionTags(result.data.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    const fetchCurrentSchedule = async () => {
+      try {
+        const result = await fetchScheduleByID(scheduleId as string);
+        console.log(result, 'result');
+        setSchedule({
+          ...result.data.data,
+          event_type: JSON.parse(result.data.data.event_type)[0],
+          experience_level: JSON.parse(result.data.data.experience_level)[0],
+        });
+        setStartDate(new Date(result.data.data.date));
+
+        form.reset({
+          name: result.data.data.name,
+          format: result.data.data.format,
+          date: new Date(result.data.data.date),
+          description: result.data.data.description,
+          video_call_link: result.data.data.video_call_link,
+          live_stream_url: result.data.data.live_stream_url,
+        });
+        console.log(result.data.data.date);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchCurrentSchedule();
+
+    fetchLocationDetails();
+    fetchTags();
+  }, []);
+
+  useEffect(() => {
+    console.log(form.formState.errors);
+    //get the first item from the errors object
+    const firstError = Object.values(form.formState.errors)[0];
+    if (firstError) {
+      toast({
+        title: 'Error',
+        description: firstError?.message,
+        variant: 'destructive',
+      });
+    }
+  }, [form.formState.errors]);
+
+  const handleEnterTrack = async () => {
+    try {
+      router.push({
+        pathname: `/dashboard/events/space/tracks/schedules`,
+        query: {
+          event_space_id: event_space_id,
+          trackTitle: track_title,
+          trackId: trackId,
+        },
+      });
+    } catch (error) {
+      console.error('Error fetching space details', error);
+    }
+  };
 
   // const formated = formatDate('2023-09-27T23:00:00+00:00');
   // console.log(formated, 'formated');
 
-  if (isLoading) {
-    return <Loader />
-  }
-
   return (
-    <div className="flex items-start gap-[60px] self-stretch px-10 py-5">
+    <div className="flex items-start gap-[60px] self-stretch md:px-10 px-2.5 py-5">
       <DetailsBar />
       <div className="flex flex-col items-start gap-[17px] flex-1">
         <div className="flex items-center gap-[17px] self-stretch">
           <Button
-            className="rounded-[40px] py-2.5 px-3.5 bg-bgPrimary border-none hover:bg-[#363636] duration-200 text-textSecondary hover:text-textSecondary"
+            className="rounded-[40px] text-base md:text-xl py-2.5 px-3.5 bg-bgPrimary border-none hover:bg-[#363636] duration-200 text-textSecondary hover:text-textSecondary"
             size="lg"
             leftIcon={HiArrowLeft}
             onClick={() => router.back()}
@@ -99,19 +361,7 @@ export default function UpdateSchedulePage() {
             <span className="text-sm opacity-70">You are editing a schedule for this track</span>
           </div>
         </div>
-        {schedule &&
-          <ScheduleEditForm
-            name={schedule.name}
-            format={schedule.format}
-            description={schedule.description}
-            date={schedule.date}
-            start_time={schedule.start_time}
-            end_time={schedule.end_time}
-            schedule_frequency={schedule.schedule_frequency}
-            location_id={schedule.location_id}
-            event_space_id={event_space_id as string}
-          />}
-        {/* <div className="flex py-5 px-4 flex-col items-center gap-8 self-stretch rounded-2xl border border-[#FFFFFF10] bg-[#2E3131]">
+        <div className="flex py-5 px-4 flex-col items-center gap-8 self-stretch rounded-2xl border border-[#FFFFFF10] bg-[#2E3131]">
           <div className="flex flex-col items-center gap-[34px] self-stretch w-full">
             <FormTitle name="Update Schedule" />
             {scheduleUpdated ? (
@@ -314,6 +564,7 @@ export default function UpdateSchedulePage() {
                           <option value="everyday">Everyday</option>
                           <option value="weekly">Weekly</option>
                         </select>
+                        {/* <InputFieldDark type={InputFieldType.Option} placeholder={'Only Once'} /> */}
                       </div>
                       <line></line>
                     </div>
@@ -323,7 +574,7 @@ export default function UpdateSchedulePage() {
                     <div className="flex flex-col items-start gap-5 self-stretch w-full pt-5">
                       <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
                         <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select Location</Label>
-                        
+                        {/* <InputFieldDark type={InputFieldType.Option} placeholder={'The Dome'} /> */}
                         <select
                           onChange={(e) =>
                             setSchedule({
@@ -438,7 +689,7 @@ export default function UpdateSchedulePage() {
                           </button>
                         </div>
 
-                        <div className="flex gap-2.5">
+                        <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5">
                           {schedule.organizers?.map((organizer: any, index: number) => (
                             <div key={index} className="flex gap-2.5 items-center rounded-[8px] px-2 py-1.5 bg-white bg-opacity-10">
                               <button type="button" className="flex gap-2.5 items-center">
@@ -482,7 +733,7 @@ export default function UpdateSchedulePage() {
                     </div>
                     <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
                       <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select Experience Level</Label>
-                      
+                      {/* <InputFieldDark type={InputFieldType.Option} placeholder={'Beginner'} /> */}
 
                       <select
                         onChange={(e) =>
@@ -554,7 +805,7 @@ export default function UpdateSchedulePage() {
                             +
                           </button>
                         </div>
-                        <div className="flex gap-2.5">
+                        <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5">
                           {schedule.tags?.map((tag, index) => {
                             const id = uuidv4();
                             return (
@@ -597,14 +848,20 @@ export default function UpdateSchedulePage() {
                       )}
                     </div>
                   </div>
-                  
-                 
+                  {/* <EditionButtons
+                  type={'schedule'}
+                  leftButtonName={'Discard Schedule'}
+                  rightButtonName={'Update Schedule'}
+                  leftButtonIcon={CgClose}
+                  rightButtonIcon={FaCircleArrowUp}
+                  switchDialogue={switchDialogue}
+                /> */}
                   <div className="flex justify-center pt-8">
-                    <div className="flex gap-[30px] w-full">
-                      <Button className="rounded-full w-1/2 flex justify-center" variant="quiet" size="lg" type="button" leftIcon={CgClose}>
+                    <div className="flex flex-col md:flex-row gap-[30px] w-full">
+                      <Button className="rounded-full w-full md:w-1/2 flex justify-center" variant="quiet" size="lg" type="button" leftIcon={CgClose}>
                         <span>Discard Schedule</span>
                       </Button>
-                      <Button className="rounded-full w-1/2 flex justify-center" variant="blue" size="lg" type="submit" leftIcon={FaCircleArrowUp}>
+                      <Button className="rounded-full w-full md:w-1/2 flex justify-center" variant="blue" size="lg" type="submit" leftIcon={FaCircleArrowUp}>
                         <span>Update Schedule</span>
                       </Button>
                     </div>
@@ -613,7 +870,7 @@ export default function UpdateSchedulePage() {
               </Form>
             )}
           </div>
-        </div> */}
+        </div>
       </div>
     </div>
   );

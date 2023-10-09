@@ -5,7 +5,7 @@ import Container from "@/components/ui/Container";
 
 export default function CreateEventsPage() {
   return (
-    <div className="mx-auto w-[680px] py-10" >
+    <div className="mx-auto md:w-[80%] w-[95%] py-10" >
       <CreateEventTemplate />
     </div>
   );

@@ -8,7 +8,7 @@ import { BsFillPlusCircleFill } from 'react-icons/bs';
 import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
 import { Database } from '@/database.types';
 import { useQuery } from 'react-query';
-import fetchSchedulesByTrackId from '@/services/fetchSchedulesByTrackId';
+import fetchSchedulesByTrackId from '@/services/fetchScedulesByTrackId';
 import { ScheduleUpdateRequestBody } from '@/types';
 import { HiArrowRight } from 'react-icons/hi2';
 import { Loader } from '@/components/ui/Loader';
@@ -95,7 +95,7 @@ export default function SchedulesDashboardPage() {
   }
   return (
     <div className="pt-10">
-      <div className="flex flex-col items-start gap-10 self-stretch pb-[60px] px-20">
+      <div className="flex flex-col items-start gap-10 px-5 self-stretch pb-[60px] lg:px-20">
         <div className="w-full flex flex-col justify-start items-start relative p-0 gap-[30px] rounded-0">
           <div className="flex w-full justify-between items-center flex-1 flex-grow-0">
             <Button

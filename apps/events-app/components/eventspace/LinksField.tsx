@@ -132,7 +132,7 @@ export default function LinkField({ socialLinks, extraLinks, setSocialLinks, set
                 ></IconButton>  
               </div>
             </div>
-            <div className="flex gap-2.5">
+            <div className="flex items-start flex-wrap gap-2.5">
               {socialLinks?.map((item, index) => {
                 const id = v4();
                 return (
@@ -219,7 +219,7 @@ export default function LinkField({ socialLinks, extraLinks, setSocialLinks, set
                 ></IconButton>  
               </div>
             </div>
-            <div className="flex gap-2.5">
+            <div className="flex items-start flex-wrap gap-2.5">
               {extraLinks?.map((item, index) => {
                 const id = v4();
                 return (

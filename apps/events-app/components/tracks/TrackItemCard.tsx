@@ -19,19 +19,19 @@ export default function TrackItem(props: IProps) {
 
   return (
     <div
-      className="flex items-center justify-between w-full bg-itemHover rounded-2xl py-3.5 px-3 hover:bg-trackItemHover duration-200"
+      className="flex md:items-center text-sm md:text-base justify-between w-full bg-itemHover rounded-2xl py-3.5 px-3 hover:bg-trackItemHover duration-200"
       onClick={onClick}
     >
       <div className="flex items-center gap-2">
         <div className="w-28 h-fit bg-white rounded-lg p-1">
           <img src={trackImage} alt="track-image" className="rounded-lg h-20" />
         </div>
-        <div className="flex flex-col w-[382px] justify-center items-start gap-[14px] self-stretch">
-          <span className="rounded-full flex px-4 py-1 items-center gap-1 bg-[#FFFFFF10] text-white font-bold">
+        <div className="flex flex-col justify-center items-start gap-[14px] self-stretch">
+          <span className="rounded-full flex px-4  py-1 items-center gap-1 bg-[#FFFFFF10] text-white font-bold">
             {trackTitle}
           </span>
           <div className="flex flex-col justify-center items-start gap-[14px] self-stretch">
-            <span className="rounded-full flex px-4 py-1 items-center gap-1 opacity-60 bg-[#FFFFFF10] font-bold">
+            <span className="rounded-full text-sm md:text-base flex px-4 py-1 items-center gap-1 opacity-60 bg-[#FFFFFF10] font-bold">
               <HiCalendar /> October 29 - November 11
             </span>
             {/* <span className="flex items-center gap-1 self-stretch opacity-60 font-bold">
@@ -44,10 +44,11 @@ export default function TrackItem(props: IProps) {
         <div className="w-full">
           <Button
             variant="dark"
-            className="bg-white/20 text-white/70 rounded-full"
+            className="bg-white/20 text-white/70 rounded-full text-sm md:text-base"
             leftIcon={HiArrowRight}
+            onClick={onClick}
           >
-            Enter Track
+            <span className="hidden md:block">Enter track</span>
           </Button>
         </div>
       </div>

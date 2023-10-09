@@ -42,10 +42,10 @@ export default function EditionButtons(props: IEditionButtons) {
   const { event_space_id } = router.query;
   return (
     <>
-      <div className="flex gap-[30px] w-full">
+      <div className="flex flex-col lg:flex-row gap-[30px] w-full">
         <Button
           onClick={() => router.back()}
-          className="rounded-full w-1/2 flex justify-center"
+          className="rounded-full w-full lg:w-1/2 flex justify-center"
           variant="quiet"
           size="lg"
           type="button"
@@ -57,7 +57,7 @@ export default function EditionButtons(props: IEditionButtons) {
           <DialogTrigger asChild>
             <Button
               isLoading={isLoading}
-              className="rounded-full w-1/2 flex justify-center"
+              className="rounded-full w-full lg:w-1/2 flex justify-center"
               variant="blue"
               size="lg"
               type="submit"

@@ -3,7 +3,7 @@ import { eventDetailsList } from '../../constant/eventdetails';
 
 export default function EventSpaceDetailsNavBar() {
   return (
-    <div className="flex flex-col pt-3 rounded-s-xl opacity-70 w-[400px] gap-5 fixed">
+    <div className="lg:flex hidden flex-col pt-3 rounded-s-xl opacity-70 w-[400px] gap-5 fixed">
       <div className="flex gap-[10px] pl-3  items-center font-bold">
         <HiCalendar className="w-5 h-5" /> Event Space Details
       </div>
