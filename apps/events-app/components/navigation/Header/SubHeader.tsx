@@ -66,7 +66,6 @@ export default function SubHeader() {
             {tabButtonLists.map((tabButton, index: number) => {
               return <TabButton key={index} name={tabButton.name} ButtonIcon={tabButton.icon} onClick={() => goTabButton(tabButton.path, index)} isActive={index === activeTab} />;
             })}
-            
           </div>
           <AddToEventButton className="hidden sm:block" />
         </>
