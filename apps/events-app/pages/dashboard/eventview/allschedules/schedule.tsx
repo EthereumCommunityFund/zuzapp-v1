@@ -29,32 +29,29 @@ import EventViewDetailsPanel from "@/components/eventview/EventViewDetailsPanel"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import UpdateSchedulePage from "../../events/space/tracks/schedules/updateSchedule";
 import ScheduleEditForm from "@/components/commons/ScheduleEditForm";
+import { rsvpSchedule } from "@/controllers";
 
 export default function EventViewScheduleDetailsPage() {
   const router = useRouter();
   const { event_space_id } = router.query;
   const { eventSpace, isLoading } = useEventDetails();
-
-  const { scheduleName, trackId } = router.query;
-  const currentSchedule = eventSpace?.schedules.find(
-    (scheduleItem) => scheduleItem.name === scheduleName
-  );
-  const trackItem = eventSpace?.tracks.find(
-    (trackItem) => trackItem.id === trackId
-  );
+  const [rsvpUpdated, setRsvpUpdated] = useState(false);
+  const { scheduleName, scheduleId, trackId } = router.query;
+  const currentSchedule = eventSpace?.schedules.find((scheduleItem) => scheduleItem.name === scheduleName);
+  const trackItem = eventSpace?.tracks.find((trackItem) => trackItem.id === trackId);
   const startTime =
     currentSchedule &&
-    new Date(currentSchedule.start_time).toLocaleTimeString("en-US", {
-      hour: "2-digit",
-      minute: "2-digit",
+    new Date(currentSchedule.start_time).toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
     });
   const endTime =
     currentSchedule &&
-    new Date(currentSchedule.end_time).toLocaleTimeString("en-US", {
-      hour: "2-digit",
-      minute: "2-digit",
+    new Date(currentSchedule.end_time).toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
     });
-  console.log("All Schedules / Schedule eventSpace", eventSpace);
+  console.log('All Schedules / Schedule eventSpace', eventSpace);
 
   const handleBackToSchedule = () => {
     router.push({
@@ -65,8 +62,19 @@ export default function EventViewScheduleDetailsPage() {
     });
   };
 
+  const handleRsvpToSchedule = async () => {
+    try {
+      console.log(scheduleId, 'scheduleId');
+      const result = await rsvpSchedule(scheduleId as string, event_space_id as string);
+      setRsvpUpdated(true);
+      console.log(result, 'rsvp updated');
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   if (isLoading) {
-    return <Loader />
+    return <Loader />;
   }
 
   return (
@@ -80,14 +88,9 @@ export default function EventViewScheduleDetailsPage() {
         <div className="p-5 gap-[30px] lg:max-w-[1000px] sm:sm:w-full">
           <div className="flex flex-col gap-[10px] p-2.5 bg-componentPrimary rounded-2xl">
             <div className="flex justify-between">
-              {" "}
+              {' '}
               {/* Tracks and Edit Button */}
-              <Button
-                variant="ghost"
-                className="opacity-70 text-lg"
-                leftIcon={HiArrowLeft}
-                onClick={handleBackToSchedule}
-              >
+              <Button variant="ghost" className="opacity-70 text-lg" leftIcon={HiArrowLeft} onClick={handleBackToSchedule}>
                 Back to Schedules
               </Button>
               <Dialog>
@@ -117,15 +120,11 @@ export default function EventViewScheduleDetailsPage() {
 
             </div>
             <div className="flex flex-col gap-2.5 p-2.5 ">
-              {" "}
+              {' '}
               {/* Schedule Info */}
               <div className="flex flex-col gap-2.5 p-5">
                 <span className="text-sm">TRACK/THEME</span>
-                <div className="flex items-start">
-                  {startTime && endTime && (
-                    <EventDataTime startTime={startTime} endTime={endTime} />
-                  )}
-                </div>
+                <div className="flex items-start">{startTime && endTime && <EventDataTime startTime={startTime} endTime={endTime} />}</div>
                 <h2 className="text-3xl font-bold">{currentSchedule?.name}</h2>
                 <div className="flex gap-[6px]">
                   {currentSchedule?.organizers?.map((organizer) => (
@@ -136,12 +135,7 @@ export default function EventViewScheduleDetailsPage() {
                   <h3>By: drivenfast</h3>
                 </div>
               </div>
-              <Button
-                variant="primary"
-                size="lg"
-                className="rounded-2xl justify-center"
-                leftIcon={BsFillTicketFill}
-              >
+              <Button variant="primary" size="lg" className="rounded-2xl justify-center" leftIcon={BsFillTicketFill} onClick={handleRsvpToSchedule}>
                 RSVP Schedule
               </Button>
             </div>
@@ -151,9 +145,7 @@ export default function EventViewScheduleDetailsPage() {
             </div>
             <div className="flex flex-col gap-2.5 px-5 pt-5 pb-[60px] font-bold">
               {/* Schedule Description */}
-              {currentSchedule?.description && (
-                <RenderHTMLString htmlString={currentSchedule?.description} />
-              )}
+              {currentSchedule?.description && <RenderHTMLString htmlString={currentSchedule?.description} />}
             </div>
           </div>
         </div>
@@ -166,9 +158,7 @@ export default function EventViewScheduleDetailsPage() {
 export const getServerSideProps = async (ctx: any) => {
   const queryClient = new QueryClient();
   const { event_space_id } = ctx.query;
-  await queryClient.prefetchQuery("currentEventSpace", () =>
-    fetchEventSpaceById(event_space_id)
-  );
+  await queryClient.prefetchQuery('currentEventSpace', () => fetchEventSpaceById(event_space_id));
   const supabase = createPagesServerClient(ctx);
 
   let {
@@ -184,10 +174,7 @@ export const getServerSideProps = async (ctx: any) => {
     };
 
   // get profile from session
-  const { data: profile, error } = await supabase
-    .from("profile")
-    .select("*")
-    .eq("uuid", session.user.id);
+  const { data: profile, error } = await supabase.from('profile').select('*').eq('uuid', session.user.id);
 
   return {
     props: {
