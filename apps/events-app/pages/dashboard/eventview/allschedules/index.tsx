@@ -31,7 +31,7 @@ const categoryList: DropDownMenuItemType[] = [
 
 export default function EventViewTracksAlleSchedulesPage() {
   const router = useRouter();
-  const { event_space_id } = router.query;
+  const { event_space_id, trackId, track_title } = router.query;
   const { eventSpace, isLoading } = useEventDetails();
 
   console.log(isLoading, 'is loading');
@@ -41,6 +41,17 @@ export default function EventViewTracksAlleSchedulesPage() {
       pathname: `/dashboard/eventview/allschedules/schedule`,
       query: { scheduleName, trackId, event_space_id },
     });
+  };
+
+  const handleAddSchedule = async () => {
+    try {
+      router.push({
+        pathname: `/dashboard/eventview/allschedules/addschedule`,
+        query: { event_space_id, trackId: trackId, track_title: track_title, quickAccess: true },
+      });
+    } catch (error) {
+      console.error('Error fetching space details', error);
+    }
   };
 
   if (isLoading) {
