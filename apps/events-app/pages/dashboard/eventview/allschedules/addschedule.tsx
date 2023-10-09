@@ -295,7 +295,7 @@ export default function AddSchedulePage(props: any) {
 
   return (
     <div className="flex items-start gap-[60px] self-stretch px-10 py-5">
-      {/* <DetailsBar /> */}
+      <DetailsBar />
       <div className="flex flex-col items-start gap-[17px] flex-1">
         <div className="flex items-center gap-[17px] self-stretch">
           <Button
@@ -328,7 +328,7 @@ export default function AddSchedulePage(props: any) {
                 </div>
               ) : (
                 <Form {...form}>
-                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-10 w-full mt-10">
+                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-10 w-full">
                     <FormField
                       control={form.control}
                       name="format"
