@@ -22,11 +22,9 @@ import EventViewTrackUpdate from '../eventview/EventViewTrackUpdate';
 import AddSchedulePage from '@/pages/dashboard/events/space/tracks/schedules/addschedule';
 import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
 import { Database } from '@/database.types';
-<<<<<<< HEAD
 import { QueryClient, dehydrate } from 'react-query';
 import { fetchEventSpaceById } from '@/services/fetchEventSpaceDetails';
-=======
->>>>>>> 231a9f0 (merged changes from responsive dashboard)
+
 
 interface ITrackDetailsPageTemplate {
   trackItem: TrackUpdateRequestBody;
@@ -99,19 +97,9 @@ export default function OnlineTrackDetailsPageTemplate(props: ITrackDetailsPageT
                 </DialogContent>
               </Dialog>
             </div>
-<<<<<<< HEAD
             <div className="flex flex-col gap-[10px] p-5 "> {/* Track Info */}
               <img src={trackItem?.image as string} alt="track image" className="lg:h-[496px] md:h-full rounded-[10px]" />
               <div className="flex flex-col gap-[10px] p-2.5"> {/* Tracks Name */}
-=======
-            <div className="flex flex-col gap-[10px] p-5 ">
-              {' '}
-              {/* Track Info */}
-              <img src={trackItem?.image as string} alt="track image" className=" h-[496px] rounded-[10px]" />
-              <div className="flex flex-col gap-[10px] p-2.5">
-                {' '}
-                {/* Tracks Name */}
->>>>>>> 231a9f0 (merged changes from responsive dashboard)
                 <h2 className="font-bold text-2xl">{trackItem.name}</h2>
                 <RenderHTMLString htmlString={trackItem.description as string} />
                 <span className="rounded-xl flex px-4 py-1 items-center gap-1 opacity-60 bg-[#FFFFFF10] font-bold justify-start md:w-[320px] md:text-lg sm:text-[7px] sm:w-fit">
@@ -140,23 +128,15 @@ export default function OnlineTrackDetailsPageTemplate(props: ITrackDetailsPageT
       </div>
       {eventSpace && <EventViewDetailsPanel eventSpace={eventSpace} />}
     </div>
-<<<<<<< HEAD
   )
 }
+
 
 export const getServerSideProps = async (ctx: any) => {
   const queryClient = new QueryClient();
   const { event_space_id } = ctx.query;
   await queryClient.prefetchQuery('currentEventSpace', () => fetchEventSpaceById(event_space_id));
   const supabase = createPagesServerClient(ctx);
-=======
-  );
-}
-
-export const getServerSideProps = async (ctx: any) => {
-  const supabase = createPagesServerClient<Database>(ctx);
-
->>>>>>> 231a9f0 (merged changes from responsive dashboard)
   let {
     data: { session },
   } = await supabase.auth.getSession();
@@ -177,10 +157,7 @@ export const getServerSideProps = async (ctx: any) => {
       initialSession: session,
       user: session?.user,
       profile: profile,
-<<<<<<< HEAD
       dehydratedState: dehydrate(queryClient),
-=======
->>>>>>> 231a9f0 (merged changes from responsive dashboard)
     },
   };
 };
