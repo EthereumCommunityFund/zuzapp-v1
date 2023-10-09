@@ -88,11 +88,11 @@ export default function AddTrackForm({ onTrackSubmit }: { onTrackSubmit: (values
         </div>
         {payload.image_urls.length == 0 && <p className="text-sm text-btnRed">Select at least one image</p>}
         {payload.image_urls.length > 0 && (
-          <div className="flex gap-5">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-5">
             {payload.image_urls.map((source, index) => (
               <div className="w-full" key={index}>
                 <div className="rounded-[10px] w-[130px] h-[100px] bg-pagePrimary relative">
-                  <IconButton variant="dark" className="rounded-full absolute right-[-5px] top-[-5px]" onClick={() => handleRemoveImage(index)} icon={CgClose} />
+                  <IconButton variant="dark" className="rounded-full absolute right-[-5px] top-[-5px] z-10" onClick={() => handleRemoveImage(index)} icon={CgClose} />
                   <Image src={source as string} alt="" fill className="object-contain" />
                 </div>
               </div>
@@ -100,11 +100,11 @@ export default function AddTrackForm({ onTrackSubmit }: { onTrackSubmit: (values
           </div>
         )}
         <div className="flex justify-center pt-8">
-          <div className="flex gap-[30px] w-full">
-            <Button className="rounded-full w-1/2 flex justify-center" variant="quiet" size="lg" type="button" leftIcon={CgClose}>
+          <div className="flex flex-col md:flex-row gap-[30px] w-full">
+            <Button className="rounded-full w-full md:w-1/2 flex justify-center" variant="quiet" size="lg" type="button" leftIcon={CgClose}>
               <span>Discard Track</span>
             </Button>
-            <Button className="rounded-full w-1/2 flex justify-center" variant="blue" size="lg" onClick={() => form.handleSubmit(onSubmit)()} leftIcon={FaCircleArrowUp}>
+            <Button className="rounded-full w-full md:w-1/2 flex justify-center" variant="blue" size="lg" onClick={() => form.handleSubmit(onSubmit)()} leftIcon={FaCircleArrowUp}>
               <span>Add a Track</span>
             </Button>
           </div>

@@ -1,4 +1,4 @@
-import Button from '../ui/buttons/Button';
+import Button from "../ui/buttons/Button";
 
 interface IEventViewHeader {
   imgPath: string;
@@ -15,8 +15,8 @@ export default function EventViewHeader(props: IEventViewHeader) {
         <h2 className="font-bold text-3xl">{name}</h2>
         <span className="font-semibold opacity-70">{tagline}</span>
       </div>
-      <Button variant="primaryGreen" className="rounded-[20px] text-base w-[150px] h-10 items-center p-2">
-        <span className="mx-auto">Apply to Event</span>
+      <Button variant="primaryGreen" className="rounded-[20px] text-base w-[150px] h-10 items-center">
+        <span className="mx-auto" >Apply to Event</span>
       </Button>
     </div>
   );

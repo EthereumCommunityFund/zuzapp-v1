@@ -33,7 +33,7 @@ export default function EventSpaceCard(props: IProps) {
     <>
       <div
         key={index}
-        className="flex flex-row justify-between md:items-center border border-white/10 bg-[#2F3232E5] rounded-2xl px-3 md:px-5 py-5 mt-5 hover:bg-itemHover"
+        className="flex md:flex-row gap-4 md:gap-0 flex-col justify-between md:items-center border border-white/10 bg-[#2F3232E5] rounded-2xl px-3 md:px-5 py-5 mt-5 hover:bg-itemHover"
       >
         <div>
           <span className="bg-[#67DBFF]/20 text-[#67DBFF] rounded-full text-xs py-1 px-2 block w-fit font-extrabold">
@@ -41,12 +41,12 @@ export default function EventSpaceCard(props: IProps) {
           </span>
           <h4 className="text-xl md:text-2xl font-bold mt-3">{eventTitle}</h4>
         </div>
-        <div>
+        <div className="w-full md:w-auto">
           <div className="w-full">
             <Button
               size="lg"
               variant="dark"
-              className="bg-white/20 text-white/70 rounded-full hover:font-bold hover:bg-white/20 border-none"
+              className="bg-white/20 text-white/70 flex justify-center items-center rounded-full w-full hover:font-bold hover:bg-white/20 border-none"
               leftIcon={HiArrowRight}
               onClick={handleEnterSpace}
             >

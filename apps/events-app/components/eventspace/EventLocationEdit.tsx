@@ -228,7 +228,7 @@ export default function EventLocationEdit({
               </div>
             )}
             <Button
-              className="rounded-full w-1/2 flex justify-center"
+              className="rounded-full md:w-1/2 w-full flex justify-center"
               variant="blue"
               size="lg"
               type="submit"
