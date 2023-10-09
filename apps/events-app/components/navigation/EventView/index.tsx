@@ -60,12 +60,12 @@ export default function EventViewNavigation() {
       >
         <div className="flex-1 flex flex-col gap-5 max-w-max">
           <div className="mt-10 flex-1">
-            <Button size="lg" variant="quiet-SM" className="lg:pb-10 md:pb-2 sm:pb-1 opacity-80 sm:text-[12px]" leftIcon={ArrowCircleLeft} onClick={handleBackToEvents}>
+            <Button size="lg" variant="quiet-SM" className="lg:pb-10 md:pb-2 sm:pb-1 opacity-80" leftIcon={ArrowCircleLeft} onClick={handleBackToEvents}>
               Back to Events
             </Button>
-            <div className="flex flex-col gap-3.5 pb-10">
-              <span className="font-semibold">Navigate Event</span>
-              <ul className="space-y-3">
+            <div className="flex flex-col gap-3.5 lg:pb-10 md:pb-1">
+              <span className="font-semibold md:hidden lg:contents sm:hidden">Navigate Event</span>
+              <ul className="space-y-3 lg:block sm:flex sm:items-end overflow-x-auto min-w-[350px]">
                 {routes.map((route, index) => (route.name &&
                   <li
                     key={index}

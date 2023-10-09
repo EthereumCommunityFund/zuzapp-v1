@@ -63,7 +63,7 @@ export default function EventViewTracksPage() {
       {isLoading ? (
         <Loader />
       ) : (
-        <div className="flex gap-4 lg:flex-row sm:flex-col-reverse lg:bg-pagePrimary md:bg-componentPrimary">
+        <div className="flex gap-4 lg:flex-row sm:flex-col-reverse lg:bg-pagePrimary sm:bg-componentPrimary">
           <div className="flex flex-col lg:w-3/4 sm:w-full gap-5">
             <EventViewHeader
               imgPath={eventSpace?.image_url as string}
@@ -72,7 +72,7 @@ export default function EventViewTracksPage() {
             />
             <div className="lg:py-5 lg:px-14 sm:py-3">
               <div className="p-2.5 md:bg-componentPrimary rounded-2xl">
-                <div className="flex flex-col gap-[10px] overflow-hidden p-3">
+                <div className="flex flex-col gap-[10px] overflow-hidden md:p-3">
                   {eventSpace?.tracks.map((item, idx) => (
                     <TrackItemCard
                       key={idx}
