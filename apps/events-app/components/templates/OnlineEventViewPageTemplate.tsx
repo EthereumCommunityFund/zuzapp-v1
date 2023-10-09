@@ -73,7 +73,9 @@ export default function OnlineEventViewPageTemplate({ eventSpace }: IOnlineEvent
                 <h2 className="font-semibold text-[30px]">{name}</h2>
                 <span className="text-white/80 font-bold">{tagline}</span>
               </div>
-              <Button variant="primaryGreen" size="lg" className="rounded-full sm:w-full md:w-auto lg:w-auto justify-center" leftIcon={BsArrowRightCircleFill}>Apply to Event</Button>
+              <Button variant="primaryGreen" size="lg" className="rounded-full sm:w-full lg:w-inherit md:w-auto p-2 justify-center" leftIcon={BsArrowRightCircleFill}>
+                Apply to Event
+              </Button>
             </div>
             <div className="flex gap-3 text-lg md:flex-row sm:flex-col sm:text-sm">
               <span className="rounded-2xl flex px-4 py-1 items-center gap-1 opacity-60 bg-[#FFFFFF10] font-bold">
@@ -88,7 +90,7 @@ export default function OnlineEventViewPageTemplate({ eventSpace }: IOnlineEvent
             {' '}
             {/* About */}
             <h3 className="text-lg font-bold text-white/70">About This Event</h3>
-            <h2 className="text-2xl font-bold text-white/80">What is ZuConnect?</h2>
+            <h2 className="text-3xl font-bold text-white/80">What is ZuConnect?</h2>
             <p className="text-white/70 font-bold">
               Embark on a transformative journey at ZuConnect— a two-week popup village in Istanbul where the luminaries of crypto, AI, governance, decentralized science, and culture coalesce. Here,
               the brightest minds convene to co-work, foster collaborations, and have a joyous time.
