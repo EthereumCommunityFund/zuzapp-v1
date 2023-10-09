@@ -34,6 +34,7 @@ export default function OnlineTrackDetailsPageTemplate(props: ITrackDetailsPageT
   const { trackItem } = props;
   const { eventSpace, isLoading } = useEventDetails();
   const { event_space_id, trackId, track_title } = router.query;
+
   // const handlePageChange = (page: number) => {
   //   setCurrentPage(page);
   // };
