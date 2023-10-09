@@ -65,11 +65,7 @@ export default function EventViewTracksAlleSchedulesPage() {
         <div className="flex flex-col gap-2.5 lg:px-9 md:px-5">
           <div className="bg-componentPrimary rounded-2xl lg:px-5 lg:pt-8">
             <div>
-<<<<<<< HEAD
-              <Button variant="blue" size="lg" className="rounded-full sm:w-full lg:w-fit justify-center" leftIcon={BiPlusCircle}>
-=======
-              <Button variant="blue" size="lg" className="rounded-xl" leftIcon={BiPlusCircle} onClick={handleAddSchedule}>
->>>>>>> 231a9f0 (merged changes from responsive dashboard)
+              <Button variant="blue" size="lg" className="rounded-full sm:w-full lg:w-fit justify-center" leftIcon={BiPlusCircle}>=======
                 Add a Schedule
               </Button>
             </div>
@@ -81,7 +77,6 @@ export default function EventViewTracksAlleSchedulesPage() {
           </div>
         </div>
       </div>
-<<<<<<< HEAD
       <div className="lg:w-1/4 sm:w-full flex lg:flex-col lg:pl-10 gap-5 lg:fixed lg:right-0 min-w-fit">
         <h2 className="p-3.5 gap-[10px] font-bold text-xl sm:hidden lg:flex">
           Schedules: Sort & Filter
@@ -117,14 +112,6 @@ export default function EventViewTracksAlleSchedulesPage() {
             headerClassName={'rounded-full bg-borderPrimary'}
             optionsClassName={''}
           />
-=======
-      <div className="flex flex-col gap-5 px-5 py-2.5 w-1/4 fixed right-0">
-        <h2 className="p-3.5 gap-[10px] font-bold text-2xl border-b-2 border-borderPrimary">Schedules: Sort & Filter</h2>
-        <div className="flex flex-col p-2.5 gap-5 ">
-          <DropDownMenu data={categoryList} header={'Select Categories'} headerIcon={SelectCategories} multiple={true} value={''} onChange={() => {}} headerClassName={''} optionsClassName={''} />
-          <DropDownMenu data={categoryList} header={'Select Dates'} headerIcon={Calendar} multiple={true} value={''} onChange={() => {}} headerClassName={''} optionsClassName={''} />
-          <DropDownMenu data={categoryList} header={'Select Location'} headerIcon={SelectLocation} multiple={true} value={''} onChange={() => {}} headerClassName={''} optionsClassName={''} />
->>>>>>> 231a9f0 (merged changes from responsive dashboard)
         </div>
       </div>
     </div>
