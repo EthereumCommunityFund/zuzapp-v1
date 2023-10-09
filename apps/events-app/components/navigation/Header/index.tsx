@@ -38,55 +38,47 @@ export default function DashboardHeader() {
             <Image src="/images/Logo.png" alt="Zuzalu Logo" width={150} height={35} />
           </Link>
         </div>
-
-
         <nav
-        className={`dashboard-menu min-w-[260px] fixed lg:hidden flex flex-col h-screen border-r border-r-gray-800 bg-[#2F3232] py-10 px-6 transition-transform duration-300 ${dashboardOpen && "open"
-          }`}
-      >
-        <div className="flex-1 flex flex-col opacity-70">
-          <div className=" mt-14 flex-1">
-            <ul className="space-y-2">
-              {routes.map((route, index) => (
-                <li
-                  key={route.path}
-                  onClick={handleClick}
-                  className={`flex items-center space-x-2 py-1 px-3 hover:bg-white/20 rounded-3xl ${router.pathname === route.path && "bg-white/20"
-                    }`}
-                >
-                  {route.icon && <route.icon size={30} />}
-                  <Link href={route.path} className="w-full ">
-                    {route.title}
+          className={`dashboard-menu min-w-[260px] fixed hidden flex-col h-screen border-r border-r-gray-800 bg-[#2F3232] py-10 px-6 transition-transform duration-300 ${dashboardOpen && "open"
+            }`}
+        >
+          <div className="flex-1 flex flex-col opacity-70">
+            <div className=" mt-14 flex-1">
+              <ul className="space-y-2">
+                {routes.map((route, index) => (
+                  <li
+                    key={route.path}
+                    onClick={handleClick}
+                    className={`flex items-center space-x-2 py-1 px-3 hover:bg-white/20 rounded-3xl ${router.pathname === route.path && "bg-white/20"
+                      }`}
+                  >
+                    {route.icon && <route.icon size={30} />}
+                    <Link href={route.path} className="w-full ">
+                      {route.title}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            {/* Profile navigation */}
+            {isAuthenticated && (
+              <ul className="flex flex-col gap-[31px]">
+                <li onClick={handleClick} className="flex items-center space-x-2">
+                  <Link href={"/dashboard/events/myspaces"} className="w-full">
+                    <Button
+                      size="base"
+                      variant={"primaryGreen"}
+                      className="rounded-full w-full text-base"
+                      leftIcon={FaCog}
+                    >
+                      My Event Spaces
+                    </Button>
                   </Link>
                 </li>
-              ))}
-            </ul>
+              </ul>
+            )}
           </div>
-          {/* Profile navigation */}
-          {isAuthenticated && (
-            <ul className="flex flex-col gap-[31px]">
-              <li  onClick={handleClick} className="flex items-center space-x-2">
-                <Link href={"/dashboard/events/myspaces"} className="w-full">
-                  <Button
-                    size="base"
-                    variant={"primaryGreen"}
-                    className="rounded-full w-full text-base"
-                    leftIcon={FaCog}
-                  >
-                    My Event Spaces
-                  </Button>
-                </Link>
-              </li>
-            </ul>
-          )}
-        </div>
-      </nav>
-
-
-
-
-
-
+        </nav>
         <div className="hidden md:block">
           <input type="text" placeholder="Search" className="w-96 h-10 rounded-3xl px-5 bg-zinc-800" />
         </div>

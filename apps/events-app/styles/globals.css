@@ -86,9 +86,11 @@
   0% {
     transform: scale(1);
   }
+
   50% {
     transform: scale(1.05);
   }
+  
   100% {
     transform: scale(1);
   }
@@ -96,7 +98,7 @@
 
 @media (max-width: 640px) {
   .dashboard-menu {
-    @apply fixed bottom-0 left-0 right-0 z-10 flex justify-around;
+    @apply fixed top-0 left-0 right-0 z-10 flex justify-around;
     @apply p-2;
     @apply -translate-x-full;
   }
@@ -107,7 +109,3 @@
 }
 
 @import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
-
-#MuiAutocomplete-listbox {
-  background-color: black;
-}

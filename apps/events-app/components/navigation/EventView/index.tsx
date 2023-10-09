@@ -55,9 +55,8 @@ export default function EventViewNavigation() {
       {/* Overlay that can close the dashboard menu */}
       <div className={`md:hidden fixed inset-0 bg-black/10 z-10 ${dashboardOpen ? 'block' : 'hidden'}`} onClick={handleClick}></div>
       <nav
-        className={`z-50 dashboard-menu lg:w-[300px] md:w-full sm:w-full fixed flex flex-col lg:h-screen md:h-auto sm:h-auto border-r border-r-gray-800 bg-pagePrimary lg:py-10 md:pt-10 sm:pt-10 pl-10 transition-transform duration-300 ${
-          dashboardOpen && 'open'
-        }`}
+        className={`z-50 lg:w-[250px] md:w-full sm:w-full fixed flex flex-col lg:h-screen md:h-auto sm:h-auto border-r border-r-gray-800 bg-pagePrimary lg:py-10 md:pt-10 sm:pt-10 lg:pl-10 md:text-base sm:text-[12px] transition-transform duration-300 ${dashboardOpen && "open"
+          }`}
       >
         <div className="flex-1 flex flex-col gap-5 max-w-max">
           <div className="mt-10 flex-1">
@@ -66,23 +65,23 @@ export default function EventViewNavigation() {
             </Button>
             <div className="flex flex-col gap-3.5 lg:pb-10 md:pb-1">
               <span className="font-semibold md:hidden lg:contents sm:hidden">Navigate Event</span>
-              <ul className="space-y-3 md:flex md:items-end lg:block sm:flex sm:items-end">
-                {routes.map(
-                  (route, index) =>
-                    route.name && (
-                      <li
-                        key={index}
-                        className={`flex items-center font-bold space-x-2 py-1 px-3 opacity-70 rounded-xl hover:bg-white/20 md:hover:border-b duration-200 ${router.pathname.includes(route.path)}`}
-                      >
-                        {route.icon && <route.icon size={30} />}
-                        <Link href={`${route.path}?event_space_id=${event_space_id}`}>{route.name}</Link>
-                      </li>
-                    )
-                )}
+              <ul className="space-y-3 lg:block sm:flex sm:items-end overflow-x-auto min-w-[350px]">
+                {routes.map((route, index) => (route.name &&
+                  <li
+                    key={index}
+                    className={`flex items-center font-bold space-x-2 py-1 px-3 opacity-70 rounded-xl hover:bg-white/20 md:hover:border-b duration-200 ${router.pathname.includes(route.path)
+                      }`}
+                  >
+                    {route.icon && <route.icon size={30} />}
+                    <Link href={`${route.path}?event_space_id=${event_space_id}`} >
+                      {route.name}
+                    </Link>
+                  </li>
+                ))}
               </ul>
             </div>
-            {router.pathname.includes('dashboard/eventview/tracks') && (
-              <div className="flex flex-col gap-3 rounded-md p-2 bg-black font-bold">
+            {router.pathname.includes("dashboard/eventview/tracks") && (
+              <div className="flex-col gap-3 rounded-md p-2 bg-black font-bold sm:hidden lg:flex">
                 <h2>Organizer</h2>
                 <Button variant="ghost" className="p-2 w-full gap-3 text-base" onClick={handleEditEvent}>
                   <MdOutlineModeEdit />
@@ -90,8 +89,8 @@ export default function EventViewNavigation() {
                 </Button>
               </div>
             )}
-            {router.pathname.includes('dashboard/eventview/allschedules') && (
-              <div className="flex flex-col gap-3 rounded-md p-2 bg-black font-bold">
+            {router.pathname.includes("dashboard/eventview/allschedules") && (
+              <div className="flex-col gap-3 rounded-md p-2 bg-black font-bold sm:hidden lg:flex">
                 <h2>Organizer</h2>
                 <Button variant="ghost" className="p-2 w-full gap-3 text-base" onClick={handleEditSchedules}>
                   <MdOutlineModeEdit />

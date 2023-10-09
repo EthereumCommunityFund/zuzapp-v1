@@ -12,19 +12,21 @@ type DropDownMenu = {
   headerIcon?: any;
   multiple: boolean;
   value: string | string[];
-  onChange: (newValue: string) => void;
+
   className?: string;
   headerClassName: string;
   optionsClassName: string;
 };
 
 export const DropDownMenu = (props: DropDownMenu) => {
-  const { data, header, headerIcon: HeaderIcon, multiple, value, onChange, className, headerClassName, optionsClassName } = props;
-  
+  const { data, header, headerIcon: HeaderIcon, multiple, value, className, headerClassName, optionsClassName } = props;
+
+  const [selectedCategories, setSelectedCategories] = useState();
+
   return (
     <>
-      <Listbox as={"div"} className={cn("w-full relative", className)} value={value} onChange={onChange} multiple={multiple}>
-        <Listbox.Button className={cn("relative w-full inline-flex justify-between item-center cursor-pointer bg-inputField py-2 px-2 shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm", headerClassName)}>
+      <Listbox as={"div"} className={cn("w-full relative", className)} value={selectedCategories} multiple={multiple} onChange={setSelectedCategories}>
+        <Listbox.Button className={cn("relative w-full inline-flex justify-between item-center cursor-pointer bg-trackItemHover border border-borderSecondary py-2 px-2 shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm", headerClassName)}>
           <div className='flex gap-2 items-center font-semibold pl-2'>
             {HeaderIcon && <HeaderIcon />}
             {header.charAt(0).toUpperCase() + header.slice(1)}
