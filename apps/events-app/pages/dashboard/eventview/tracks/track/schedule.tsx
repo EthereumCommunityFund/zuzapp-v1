@@ -10,7 +10,6 @@ import { useEventSpace } from '@/context/EventSpaceContext';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
-<<<<<<< HEAD
 import { BiEditAlt, BiLeftArrow } from "react-icons/bi";
 import { BsFillTicketFill } from "react-icons/bs";
 import { HiArrowLeft, HiCog, HiLocationMarker, HiMicrophone, HiTag, HiUserGroup } from "react-icons/hi";
@@ -20,13 +19,8 @@ import EventViewDetailsPanel from "@/components/eventview/EventViewDetailsPanel"
 import { QueryClient, dehydrate } from "react-query";
 import { fetchEventSpaceById } from "@/services/fetchEventSpaceDetails";
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
-=======
-import { BiEditAlt, BiLeftArrow } from 'react-icons/bi';
-import { BsFillTicketFill } from 'react-icons/bs';
-import { HiArrowLeft, HiCog, HiLocationMarker, HiMicrophone, HiTag, HiUserGroup } from 'react-icons/hi';
-import useEventDetails from '@/hooks/useCurrentEventSpace';
-import { Loader } from '@/components/ui/Loader';
->>>>>>> 231a9f0 (merged changes from responsive dashboard)
+import { cancelUserRsvp, checkUserRsvp, rsvpSchedule } from '@/controllers';
+
 interface IEventLink {
   name: string;
   link: string;
@@ -35,7 +29,9 @@ interface IEventLink {
 export default function EventViewTrackDetailsPage() {
   const { eventSpace, isLoading } = useEventDetails();
   const router = useRouter();
-  const { scheduleName, trackId, event_space_id, track_title } = router.query;
+  const { scheduleName, trackId, event_space_id, track_title, scheduleId } = router.query;
+  const [rsvpUpdated, setRsvpUpdated] = useState(false);
+  const [hasRsvpd, setHasRsvpd] = useState(false);
   const currentSchedule = eventSpace?.schedules.find((scheduleItem) => scheduleItem.name === scheduleName);
   const trackItem = eventSpace?.tracks.find((trackItem) => trackItem.id === trackId);
   const startTime = currentSchedule && new Date(currentSchedule.start_time).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
@@ -66,7 +62,32 @@ export default function EventViewTrackDetailsPage() {
       console.error('Error fetching space details', error);
     }
   };
+  const handleRsvpAction = async () => {
+    try {
+      if (hasRsvpd) {
+        const result = await cancelUserRsvp(scheduleId as string, event_space_id as string);
+        console.log(result, 'cancelrsvp');
+        setHasRsvpd(false);
+      } else {
+        console.log(scheduleId, 'scheduleId');
+        const result = await rsvpSchedule(scheduleId as string, event_space_id as string);
+        console.log(result, 'rsvp updated');
+        setHasRsvpd(true);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
+  const checkIfUserHasRsvpd = async () => {
+    try {
+      const result = await checkUserRsvp(scheduleId as string, event_space_id as string);
+      const hasRsvp = result?.data?.hasRSVPed;
+      setHasRsvpd(hasRsvp);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   if (isLoading) {
     return <Loader />;
   }
@@ -81,11 +102,7 @@ export default function EventViewTrackDetailsPage() {
               {' '}
               {/* Tracks and Edit Button */}
               {eventSpace && (
-<<<<<<< HEAD
                 <Button variant="ghost" className="md:text-lg sm:text-base font-bold" leftIcon={HiArrowLeft} onClick={() => handleBackToTrackClick(eventSpace?.id)}>
-=======
-                <Button variant="ghost" className="text-lg font-bold" leftIcon={HiArrowLeft} onClick={() => handleBackToTrackClick(eventSpace?.id)}>
->>>>>>> 231a9f0 (merged changes from responsive dashboard)
                   Back to Track
                 </Button>
               )}
@@ -93,11 +110,7 @@ export default function EventViewTrackDetailsPage() {
                 Edit
               </Button>
             </div>
-<<<<<<< HEAD
             <div className="flex flex-col gap-2.5 md:p-2.5 sm:p-0">
-=======
-            <div className="flex flex-col gap-2.5 p-2.5 ">
->>>>>>> 231a9f0 (merged changes from responsive dashboard)
               {' '}
               {/* Schedule Info */}
               <div className="flex flex-col gap-2.5 p-5">
@@ -111,8 +124,8 @@ export default function EventViewTrackDetailsPage() {
                   <h3 className="float-right">By: drivenfast</h3>
                 </div>
               </div>
-              <Button size="lg" variant="quiet" className="rounded-full text-center flex justify-center" leftIcon={BsFillTicketFill}>
-                RSVP Schedule
+              <Button variant="primary" size="lg" className={`rounded-2xl justify-center ${rsvpUpdated ? 'animate-rsvp' : ''}`} leftIcon={BsFillTicketFill} onClick={handleRsvpAction}>
+                {hasRsvpd ? 'Cancel RSVP' : 'RSVP Schedule'}
               </Button>
             </div>
             <div className="flex flex-col gap-2.5 px-5 pt-5 pb-[60px]">
@@ -137,7 +150,6 @@ export default function EventViewTrackDetailsPage() {
         {eventSpace && <EventViewDetailsPanel eventSpace={eventSpace} />}
       </div>
     </div>
-<<<<<<< HEAD
   )
 }
 
@@ -170,7 +182,3 @@ export const getServerSideProps = async (ctx: any) => {
     },
   };
 };
-=======
-  );
-}
->>>>>>> 231a9f0 (merged changes from responsive dashboard)

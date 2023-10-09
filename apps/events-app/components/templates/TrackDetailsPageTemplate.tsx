@@ -41,11 +41,11 @@ export default function OnlineTrackDetailsPageTemplate(props: ITrackDetailsPageT
   // const handlePageChange = (page: number) => {
   //   setCurrentPage(page);
   // };
-  const handleItemClick = (scheduleName: string, trackId: string | undefined, event_space_id: string) => {
+  const handleItemClick = (scheduleName: string, trackId: string | undefined, event_space_id: string, scheduleId: string) => {
     console.log('TrackDetailsPage Track Id', trackId);
     router.push({
       pathname: '/dashboard/eventview/tracks/track/schedule',
-      query: { scheduleName, trackId, event_space_id },
+      query: { scheduleName, trackId, event_space_id, scheduleId },
     });
   };
 
@@ -131,7 +131,9 @@ export default function OnlineTrackDetailsPageTemplate(props: ITrackDetailsPageT
             {eventSpace &&
               eventSpace?.schedules.map(
                 (schedule, idx) =>
-                  schedule.track_id === trackItem?.id && <UserFacingTrack key={idx} scheduleData={schedule} onClick={() => handleItemClick(schedule.name, trackItem?.id, eventSpace.id)} />
+                  schedule.track_id === trackItem?.id && (
+                    <UserFacingTrack key={idx} scheduleData={schedule} onClick={() => handleItemClick(schedule.name, trackItem?.id, eventSpace.id, schedule?.id)} />
+                  )
               )}
           </div>
         </div>
