@@ -1,7 +1,8 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 import { NextApiRequest } from "next";
 
-export const permissionConfig = {
+
+export const permissionConfig: any = {
     // Event space
     '/api/eventspace/:id/update': {
         allowedUsers: ['creator', 'collaborator'],
@@ -11,11 +12,15 @@ export const permissionConfig = {
         allowedUsers: ['creator'],
         verify: verifyEventSpace,
     },
+    '/api/eventspace/:id/changeStatus': {
+        allowedUsers: ['creator', 'collaborator'],
+        verify: verifyEventSpace,
+    },
 
     // Schedules
     '/api/schedule/create': {
         allowedUsers: ["creator", "collaborator"],
-        verify: verifyEventSpaceAccess, // Assuming you'll verify against an associated event_space_id
+        verify: verifyEventSpaceAccess,
     },
     '/api/schedule/:id/update': {
         allowedUsers: ['creator'],
@@ -29,7 +34,7 @@ export const permissionConfig = {
     // Tracks
     '/api/track/create': {
         allowedUsers: ['creator'],
-        verify: verifyEventSpaceAccess, // Assuming you'll verify against an associated event_space_id
+        verify: verifyEventSpaceAccess,
     },
     '/api/track/:id/update': {
         allowedUsers: ['creator'],
@@ -43,7 +48,7 @@ export const permissionConfig = {
     // Invites
     '/api/invite/createInvite': {
         allowedUsers: ['creator'],
-        verify: verifyEventSpaceAccess, // Assuming you'll verify against an associated event_space_id
+        verify: verifyEventSpaceAccess,
     },
     '/api/invite/:id/update': {
         allowedUsers: ['creator'],
@@ -56,15 +61,15 @@ export const permissionConfig = {
 
     // Locations
     '/api/location/create': {
-        allowedUsers: ['creator'],
-        verify: verifyEventSpaceAccess, // Assuming you'll verify against an associated event_space_id
+        allowedUsers: ['creator', 'collaborator'],
+        verify: verifyEventSpaceAccess,
     },
     '/api/location/:id/update': {
-        allowedUsers: ['creator'],
+        allowedUsers: ['creator', 'collaborator'],
         verify: verifyLocationAccess,
     },
     '/api/location/:id/delete': {
-        allowedUsers: ['creator'],
+        allowedUsers: ['creator', 'collaborator'],
         verify: verifyLocationAccess,
     },
 
@@ -131,7 +136,7 @@ async function verifyScheduleAccess(supabase: SupabaseClient, req: NextApiReques
         .eq('id', scheduleId);
 
     if (!scheduleData || !scheduleData[0] || scheduleData[0].event_space_id !== eventSpaceId) {
-        return false;  // Provided event_space_id doesn't match the schedule's actual event_space_id
+        return false;
     }
     return verifyEventSpaceAccess(supabase, req, allowedUsers);
 }
@@ -145,7 +150,7 @@ async function verifyTrackAccess(supabase: SupabaseClient, req: NextApiRequest, 
         .eq('id', trackId);
 
     if (!trackData || !trackData[0] || trackData[0].event_space_id !== eventSpaceId) {
-        return false;  // Provided event_space_id doesn't match the track's actual event_space_id
+        return false;
     }
     return verifyEventSpaceAccess(supabase, req, allowedUsers);
 }
@@ -163,7 +168,7 @@ async function verifyInviteAccess(supabase: SupabaseClient, req: NextApiRequest,
         .eq('id', inviteId);
 
     if (!inviteData || !inviteData[0] || inviteData[0].event_space_id !== eventSpaceId) {
-        return false;  // Provided event_space_id doesn't match the invite's actual event_space_id
+        return false;
     }
 
     return verifyEventSpaceAccess(supabase, req, allowedUsers);
@@ -180,7 +185,7 @@ async function verifyLocationAccess(supabase: SupabaseClient, req: NextApiReques
         .eq('id', locationId);
 
     if (!locationData || !locationData[0] || locationData[0].event_space_id !== eventSpaceId) {
-        return false;  // Provided event_space_id doesn't match the location's actual event_space_id
+        return false;
     }
 
     return verifyEventSpaceAccess(supabase, req, allowedUsers);

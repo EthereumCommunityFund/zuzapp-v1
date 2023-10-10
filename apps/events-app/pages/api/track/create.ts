@@ -43,4 +43,4 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 }
 
 
-export default withSession(withAuthorization("creator", handler));
+export default withSession(withAuthorization(handler));

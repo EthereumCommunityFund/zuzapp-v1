@@ -13,7 +13,7 @@ import UrlPattern from 'url-pattern';
 
 
 
-const withAuthorization = (permission: Permissions, handler: NextApiHandler) => {
+const withAuthorization = (handler: NextApiHandler) => {
     return async (req: NextApiRequest, res: NextApiResponse) => {
         const { event_space_id, id } = req.query
         const errors = validateUUID(event_space_id);
@@ -31,7 +31,6 @@ const withAuthorization = (permission: Permissions, handler: NextApiHandler) => 
             return regex.match(url as string)
         });
 
-        // console.log(routeConfigKey, "route to config key");
 
 
 
@@ -40,7 +39,6 @@ const withAuthorization = (permission: Permissions, handler: NextApiHandler) => 
         if (!routeConfig) {
             return res.status(403).send("Access forbidden");
         }
-        // console.log(routeConfig, "route config")
 
 
         const supabase = createPagesServerClient<Database>({ req, res });
@@ -52,68 +50,6 @@ const withAuthorization = (permission: Permissions, handler: NextApiHandler) => 
         }
 
         return handler(req, res)
-
-
-        // if (permission === "creator") {
-        //     // creatorAuthorization(req, res);
-        //     const supabase = createPagesServerClient<Database>({ req, res });
-
-
-        //     const { data, error } = await supabase
-        //         .from('eventspace')
-        //         .select('creator_id')
-        //         .eq('id', event_space_id as string)
-        //     if (error) {
-        //         logToFile("server error", error?.message, error?.code, req.body?.user?.email || "Unknown user");
-        //         return res.status(500).send("Internal server error");
-        //     }
-
-
-        //     if (!data || data.length < 1) {
-        //         return res.status(404).send("Not found");
-        //     }
-        //     let event_space_response = data[0];
-        //     if (event_space_response.creator_id !== req.body.user.id) {
-        //         return res.status(403).send("You are not authorized");
-        //     }
-        //     return handler(req, res)
-        // }
-
-        // if (permission === "collaborator") {
-        //     const supabase = createPagesServerClient<Database>({ req, res });
-        //     const { data, error } = await supabase
-        //         .from('eventspace')
-        //         .select('creator_id')
-        //         .eq('id', event_space_id as string)
-        //     if (error) {
-        //         logToFile("server error", error?.message, error?.code, req.body?.user?.email || "Unknown user");
-        //         return res.status(500).send("Internal server error");
-        //     }
-
-        //     if (!data || data.length < 1) {
-        //         return res.status(404).send("Not found");
-        //     }
-        //     let event_space_response = data[0];
-
-        //     if (event_space_response.creator_id !== req.body.user.id) {
-        //         // Check if the user has an accepted invitation
-        //         const { data: inviteData, error: inviteError } = await supabase
-        //             .from('eventspaceinvites')
-        //             .select('*')
-        //             .eq('event_space_id', event_space_id as string)
-        //             .eq('invitee_id', req.body.user.id)
-        //             .eq('status', 'accepted');
-
-        //         if (inviteError) {
-        //             logToFile("server error", inviteError.message, inviteError.code, req.body?.user?.email || "Unknown user");
-        //             return res.status(500).send("Internal server error");
-        //         }
-        //         if (!inviteData || inviteData.length < 1) {
-        //             return res.status(403).send("You are not authorized");
-        //         }
-        //     }
-        //     return handler(req, res)
-        // }
     }
 
 }
