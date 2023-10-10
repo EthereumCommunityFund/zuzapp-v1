@@ -13,7 +13,7 @@
     "react-responsive-carousel": "^3.2.23",
     "turbo": "latest"
   },
-  "name": "Zuzapp-main",
+  "name": "zuzalu-city",
   "packageManager": "yarn@1.22.19",
   "workspaces": [
     "apps/*",
