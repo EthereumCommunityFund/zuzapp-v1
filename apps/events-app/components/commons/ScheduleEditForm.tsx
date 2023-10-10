@@ -87,7 +87,7 @@ export default function ScheduleEditForm({
   });
   const [startDate, setStartDate] = useState<Date | undefined>(scheduleData.date as Date);
   const [optionTags, setOptionTags] = useState<TagItemProp[]>([]);
-  const [tags, setTags] = useState<string[]>([]);
+
   const [tagItem, setTagItem] = useState<TagItemProp>({ name: '' });
   const [eventItem, setEventItem] = useState({
     name: '',
@@ -566,7 +566,7 @@ export default function ScheduleEditForm({
                         <option className="bg-componentPrimary origin-top-right rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" value="weekly">Weekly</option>
                       </select>
                     </div>
-                    <line></line>
+
                   </div>
                 </div>
                 <div className="w-full">
@@ -751,7 +751,6 @@ export default function ScheduleEditForm({
                           {...defaultProps}
                           id="controlled-demo"
                           sx={{ color: "black", width: "100%" }}
-                          color="black"
                           value={tagItem}
                           onChange={(event: any, newValue) => {
                             console.log("onChange", event, newValue);
@@ -767,6 +766,7 @@ export default function ScheduleEditForm({
                               sx: {
                                 color: "white",
                                 backgroundColor: "#242727",
+                                pointerEvents: "auto",
                               }
                             }
                           }}
@@ -792,7 +792,11 @@ export default function ScheduleEditForm({
                           onClick={() => {
                             if (tagItem.name === '')
                               return;
-                            setTags([...tags, tagItem.name]);
+                            setSchedule({
+                              ...schedule,
+                              tags: [...(schedule.tags as string[]), tagItem.name],
+                            });
+
                             setTagItem({ name: '' });
                           }}
                           className="flex gap-2.5 text-lg font-normal leading-[1.2] text-white items-center rounded-[8px] px-2 py-1 bg-componentPrimary bg-opacity-10"
@@ -801,7 +805,7 @@ export default function ScheduleEditForm({
                         </button>
                       </div>
                       <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5">
-                        {tags?.map((tag, index) => (
+                        {schedule.tags?.map((tag, index) => (
                           <div key={index} className="flex w-full items-center rounded-[8px] px-2 py-1.5 bg-white bg-opacity-10">
                             <button type='button' className="flex gap-2.5 items-center">
                               <GoXCircle onClick={() => handleRemoveTag(index)} className="top-0.5 left-0.5 w-4 h-4" />
