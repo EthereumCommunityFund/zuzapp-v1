@@ -77,7 +77,7 @@ export default function ScheduleEditForm({
     rsvp_amount: scheduleData.rsvp_amount,
     event_space_id: scheduleData.event_space_id,
     track_id: scheduleData.track_id,
-    tags: [''],
+    tags: scheduleData.tags,
     organizers: [
       {
         name: '',
@@ -805,7 +805,7 @@ export default function ScheduleEditForm({
                         </button>
                       </div>
                       <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5">
-                        {schedule.tags?.map((tag, index) => (
+                        {schedule.tags && schedule.tags?.map((tag, index) => (
                           <div key={index} className="flex w-full items-center rounded-[8px] px-2 py-1.5 bg-white bg-opacity-10">
                             <button type='button' className="flex gap-2.5 items-center">
                               <GoXCircle onClick={() => handleRemoveTag(index)} className="top-0.5 left-0.5 w-4 h-4" />
