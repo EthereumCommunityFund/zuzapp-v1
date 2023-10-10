@@ -102,11 +102,11 @@ export default function ScheduleItemCard() {
                 <div></div>
                 <Button
                   variant="dark"
-                  className="bg-white/20 text-white/70 rounded-full text-sm md:text-base mx-2"
+                  className="bg-white/20 text-black rounded-full text-sm md:text-base mx-2"
                   leftIcon={HiArrowRight}
                   onClick={() => handleEnterSchedule(schedule.id, schedule.track_id as string)}
                 >
-                  <span className="hidden md:block">Enter track</span>
+                  <span className="hidden md:block">Enter Schedule</span>
                 </Button>
               </div>
             </div>

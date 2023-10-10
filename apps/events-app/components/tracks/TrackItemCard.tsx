@@ -1,8 +1,8 @@
-import { BsFillTicketFill } from "react-icons/bs";
-import { HiArrowRight, HiCalendar } from "react-icons/hi";
-import Button from "../ui/buttons/Button";
-import router, { useRouter } from "next/router";
-import { TrackCreateRequestBody } from "@/types";
+import { BsFillTicketFill } from 'react-icons/bs';
+import { HiArrowRight, HiCalendar } from 'react-icons/hi';
+import Button from '../ui/buttons/Button';
+import router, { useRouter } from 'next/router';
+import { TrackCreateRequestBody } from '@/types';
 
 interface IProps {
   trackTitle: string;
@@ -27,11 +27,9 @@ export default function TrackItem(props: IProps) {
           <img src={trackImage} alt="track-image" className="rounded-lg" width={130} height={100} />
         </div>
         <div className="flex flex-col w-[382px] justify-center items-start gap-[14px] self-stretch">
-          <span className="rounded-full flex px-4 py-1 items-center gap-1 bg-[#FFFFFF10] text-white font-bold md:text-lg sm:text-base">
-            {trackTitle}
-          </span>
+          <span className="rounded-full flex px-4 py-1 items-center gap-1 bg-[#FFFFFF10] text-white font-bold md:text-lg sm:text-base">{trackTitle}</span>
           <div className="flex flex-col justify-center items-start gap-[14px] self-stretch">
-            <span className="rounded-2xp flex md:px-4 sm:px-1 py-1 items-center gap-1 opacity-60 bg-[#FFFFFF10] font-bold md:text-base sm:text-[10px]">
+            <span className="rounded-lg flex md:px-4 sm:px-1 py-1 items-center gap-1 opacity-60 bg-[#FFFFFF10] font-bold md:text-base sm:text-[10px]">
               <HiCalendar /> October 29 - November 11
             </span>
             {/* <span className="flex items-center gap-1 self-stretch opacity-60 font-bold">
@@ -40,19 +38,17 @@ export default function TrackItem(props: IProps) {
           </div>
         </div>
       </div>
-      {!onClick &&
-        <div>
-          <div className="w-full">
-            <Button
-              variant="dark"
-              className="bg-white/20 text-white/70 rounded-full"
-              leftIcon={HiArrowRight}
-            >
-              Enter Track
-            </Button>
-          </div>
+
+      <div>
+        <div className="w-full">
+          {/* <Button variant="dark" className="bg-white/20 text-white/70 rounded-full" leftIcon={HiArrowRight}>
+            Enter Track
+          </Button> */}
+          <Button variant="dark" className="bg-white/20 text-black rounded-full text-sm md:text-base mx-2" leftIcon={HiArrowRight}>
+            <span className="hidden md:block">Enter Track</span>
+          </Button>
         </div>
-      }
+      </div>
     </div>
   );
 }
