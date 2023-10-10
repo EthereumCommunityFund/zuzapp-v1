@@ -2,12 +2,7 @@ import { NextApiHandler } from "next";
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs"; import { Database } from "@/database.types";
 import { NextApiRequest, NextApiResponse } from "next";
 import { validateUUID } from "@/validators";
-import handler from "../eventspace";
-import { string } from "joi";
-import { logToFile } from "@/utils/logger";
 import { permissionConfig } from "@/utils/permissions";
-import pathToRegexp from 'path-to-regexp';
-type Permissions = "creator" | "collaborator"
 import UrlPattern from 'url-pattern';
 
 
