@@ -24,12 +24,14 @@ import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
 import { Database } from '@/database.types';
 import { QueryClient, dehydrate } from 'react-query';
 import { fetchEventSpaceById } from '@/services/fetchEventSpaceDetails';
+import UpdateTrackTemplate from '@/pages/dashboard/events/space/tracks/update';
+import ScheduleEditForm from '../commons/ScheduleEditForm';
 
 interface ITrackDetailsPageTemplate {
   trackItem: TrackUpdateRequestBody;
 }
 
-export default function OnlineTrackDetailsPageTemplate(props: ITrackDetailsPageTemplate) {
+export default function TrackDetailsPageTemplate(props: ITrackDetailsPageTemplate) {
   const router = useRouter();
   const { trackItem } = props;
   const { eventSpace, isLoading } = useEventDetails();
@@ -88,11 +90,11 @@ export default function OnlineTrackDetailsPageTemplate(props: ITrackDetailsPageT
                     Edit
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="w-3/5 overflow-x-auto sm:w-3/4">
+                <DialogContent className="lg:w-3/5 lg:h-3/5 overflow-x-auto sm:w-3/4">
                   <DialogHeader>
                     <Label className="text-2xl font-bold">Edit Track</Label>
                   </DialogHeader>
-                  <EventViewTrackUpdate className="px-0 text-white text-2xl" />
+                  <EventViewTrackUpdate className='text-white' />
                 </DialogContent>
               </Dialog>
             </div>
@@ -109,15 +111,48 @@ export default function OnlineTrackDetailsPageTemplate(props: ITrackDetailsPageT
           </div>
         </div>
         <div className="p-4 w-full">
-          <Button variant="blue" size="lg" className="rounded-xl flex justify-center w-full" leftIcon={BiPlusCircle} onClick={handleAddSchedule}>
-            Add a Schedule
-          </Button>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button variant="blue" size="lg" className="rounded-xl flex justify-center w-full" leftIcon={BiPlusCircle}>
+                Add a Schedule
+              </Button>
+            </DialogTrigger>
+            <DialogContent className='lg:w-3/5 lg:h-3/5 overflow-y-auto'>
+              <DialogDescription className="text-white">
+                <ScheduleEditForm
+                  title={'Add a Schedule'}
+                  isFromAllSchedules={false}
+                  scheduleData={{
+                    name: '',
+                    format: 'in-person',
+                    description: '',
+                    date: '',
+                    start_time: '',
+                    end_time: '',
+                    all_day: undefined,
+                    schedule_frequency: 'once',
+                    images: undefined,
+                    video_call_link: undefined,
+                    live_stream_url: undefined,
+                    location_id: '',
+                    event_type: undefined,
+                    experience_level: undefined,
+                    limit_rsvp: undefined,
+                    rsvp_amount: undefined,
+                    event_space_id: '',
+                    track_id: undefined,
+                    tags: undefined,
+                    organizers: undefined
+                  }} />
+              </DialogDescription>
+            </DialogContent>
+          </Dialog>
         </div>
         <div className="flex flex-col gap-2.5 p-5 w-full">
           <div className="flex flex-col gap-[10px] overflow-hidden rounded-[10px]">
             {eventSpace &&
               eventSpace?.schedules.map(
-                (schedule, idx) => schedule.track_id === trackItem?.id && <UserFacingTrack key={idx} scheduleData={schedule} onClick={() => handleItemClick(schedule.name, trackItem?.id, eventSpace.id)} />              )}
+                (schedule, idx) => schedule.track_id === trackItem?.id && <UserFacingTrack key={idx} scheduleData={schedule} onClick={() => handleItemClick(schedule.name, trackItem?.id, eventSpace.id)} />)}
           </div>
         </div>
       </div>

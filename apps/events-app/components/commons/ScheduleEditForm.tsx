@@ -44,48 +44,39 @@ type TagItemProp = {
   name: string;
 };
 
+interface IScheduleEditForm {
+  title: string,
+  isFromAllSchedules: boolean,
+  scheduleData: ScheduleUpdateRequestBody,
+}
+
 export default function ScheduleEditForm({
-  name = '',
-  format = 'in-person',
-  description = '',
-  date = '',
-  start_time = '',
-  end_time = '',
-  all_day = false,
-  schedule_frequency = 'once',
-  images = [''],
-  video_call_link = '',
-  live_stream_url = '',
-  location_id = '',
-  event_type = '',
-  experience_level = '',
-  limit_rsvp = false,
-  rsvp_amount = 1,
-  event_space_id = '',
-  track_id = '',
-}: ScheduleUpdateRequestBody) {
+  title,
+  isFromAllSchedules,
+  scheduleData,
+}: IScheduleEditForm) {
   const router = useRouter();
   const { trackId, scheduleId, track_title } = router.query;
-
+  console.log("Schedule Description in ScheduleEditForm", scheduleData.description);
   const [schedule, setSchedule] = useState<ScheduleUpdateRequestBody>({
-    name: name,
-    format: format,
-    description: description,
-    date: date,
-    start_time: start_time,
-    end_time: end_time,
-    all_day: all_day,
-    schedule_frequency: schedule_frequency,
-    images: images,
-    video_call_link: video_call_link,
-    live_stream_url: live_stream_url,
-    location_id: location_id,
-    event_type: event_type,
-    experience_level: experience_level,
-    limit_rsvp: limit_rsvp,
-    rsvp_amount: rsvp_amount,
-    event_space_id: event_space_id,
-    track_id: track_id,
+    name: scheduleData.name,
+    format: scheduleData.format,
+    description: scheduleData.description,
+    date: scheduleData.date,
+    start_time: scheduleData.start_time,
+    end_time: scheduleData.end_time,
+    all_day: scheduleData.all_day,
+    schedule_frequency: scheduleData.schedule_frequency,
+    images: scheduleData.images,
+    video_call_link: scheduleData.video_call_link,
+    live_stream_url: scheduleData.live_stream_url,
+    location_id: scheduleData.location_id,
+    event_type: scheduleData.event_type,
+    experience_level: scheduleData.experience_level,
+    limit_rsvp: scheduleData.limit_rsvp,
+    rsvp_amount: scheduleData.rsvp_amount,
+    event_space_id: scheduleData.event_space_id,
+    track_id: scheduleData.track_id,
     tags: [''],
     organizers: [
       {
@@ -94,7 +85,7 @@ export default function ScheduleEditForm({
       },
     ],
   });
-  const [startDate, setStartDate] = useState<Date | undefined>();
+  const [startDate, setStartDate] = useState<Date | undefined>(scheduleData.date as Date);
   const [optionTags, setOptionTags] = useState<TagItemProp[]>([]);
   const [tags, setTags] = useState<string[]>([]);
   const [tagItem, setTagItem] = useState<TagItemProp>({ name: '' });
@@ -108,7 +99,9 @@ export default function ScheduleEditForm({
   const [locationId, setLocationId] = useState('');
   const [experienceLevel, setExperienceLevel] = useState('');
   const [initialEvent, setInitialEvent] = useState('');
+  const [isAllDay, setIsAllDay] = useState<boolean>(scheduleData.all_day as boolean);
   const handleChangeSwitch = () => {
+    setIsAllDay(!isAllDay);
     setSchedule({ ...schedule, all_day: !schedule.all_day });
   };
   const [startTime, setStartTime] = useState(dayjs('2023-11-17T00:00'));
@@ -155,10 +148,10 @@ export default function ScheduleEditForm({
     isLoading,
     isError,
   } = useQuery<EventSpaceDetailsType, Error>(
-    ['currentEventSpace', event_space_id], // Query key
-    () => fetchEventSpaceById(event_space_id as string), // Query function
+    ['currentEventSpace', scheduleData.event_space_id], // Query key
+    () => fetchEventSpaceById(scheduleData.event_space_id as string), // Query function
     {
-      enabled: !!event_space_id, // Only execute the query if event_space_id is available
+      enabled: !!scheduleData.event_space_id, // Only execute the query if event_space_id is available
     }
   );
 
@@ -172,7 +165,7 @@ export default function ScheduleEditForm({
       name: schedule?.name,
       format: schedule?.format,
       date: schedule?.date !== '' ? new Date(schedule?.date) : new Date(),
-      description: '',
+      description: schedule.description,
       video_call_link: schedule?.video_call_link,
       live_stream_url: schedule?.live_stream_url,
     },
@@ -240,7 +233,7 @@ export default function ScheduleEditForm({
     console.log(payload);
     try {
       console.log(payload, 'payload');
-      const result = await updateSchedule(scheduleId as string, payload, event_space_id as string);
+      const result = await updateSchedule(scheduleId as string, payload, scheduleData.event_space_id as string);
       // setSwitchDialogue(true);
       setScheduleUpdated(true);
       console.log(result, 'result');
@@ -264,6 +257,10 @@ export default function ScheduleEditForm({
     setSelectedTrackId(e.target.value);
   };
 
+  const handleFrequencySelect = (e: any) => {
+    setFrequency(e.target.value);
+  }
+
   const defaultProps = {
     options: optionTags,
     getOptionLabel: (option: { name: string }) => option.name,
@@ -272,7 +269,7 @@ export default function ScheduleEditForm({
   useEffect(() => {
     const fetchLocationDetails = async () => {
       try {
-        const result = await fetchLocationsByEventSpace(event_space_id as string);
+        const result = await fetchLocationsByEventSpace(scheduleData.event_space_id as string);
         console.log(result);
         setSavedLocations(result?.data?.data);
         setLocationId(result.data.data[0].id);
@@ -340,7 +337,7 @@ export default function ScheduleEditForm({
       router.push({
         pathname: `/dashboard/events/space/tracks/schedules`,
         query: {
-          event_space_id: event_space_id,
+          event_space_id: scheduleData.event_space_id,
           trackTitle: track_title,
           trackId: trackId,
         },
@@ -357,7 +354,7 @@ export default function ScheduleEditForm({
     <div className="flex flex-col items-start gap-[17px] flex-1">
       <div className="flex flex-col items-center gap-8 self-stretch rounded-2xl">
         <div className="flex flex-col items-center gap-[34px] self-stretch w-full text-white">
-          <FormTitle name="Update Schedule" />
+          <FormTitle name={title} />
           {scheduleUpdated ? (
             <div className="flex flex-col items-center">
               <h3 className="font-bold text-xl">Your Schedule Has Been Updated</h3>
@@ -428,6 +425,27 @@ export default function ScheduleEditForm({
                     </FormItem>
                   )}
                 />
+                {isFromAllSchedules && (
+                  <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
+                    <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
+                      Select Track
+                    </Label>
+                    <select
+                      onChange={handleTrackSelect}
+                      title="Track List"
+                      value={selectedTrackId}
+                      defaultValue={selectedTrackId}
+                      className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
+                    >
+                      <option value="">Select Track</option>
+                      {eventSpace?.tracks.map((track: any) => (
+                        <option key={track.id} value={track.id}>
+                          {track.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
                 <div className="w-full">
                   <FormField
                     control={form.control}
@@ -445,40 +463,33 @@ export default function ScheduleEditForm({
                   <h2 className="text-xl opacity-70 self-stretch">Schedule Date & Times</h2>
                   <div className="flex flex-col items-start gap-5 self-stretch w-full pt-5">
                     <div className="flex gap-5">
-                      <SwitchButton value={schedule.all_day} onClick={handleChangeSwitch} />
+                      <SwitchButton value={isAllDay} onClick={handleChangeSwitch} />
                       <span className="text-lg opacity-70 self-stretch">All Day</span>
                     </div>
                     <div className="flex flex-col items-center gap-[30px] self-stretch w-full">
-                      {schedule.date !== '' && (
-                        <FormField
-                          control={form.control}
-                          name="date"
-                          render={({ field }) => (
-                            <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                              <span className="text-lg opacity-70 self-stretch">Start Date</span>
-                              <CustomDatePicker defaultDate={undefined} selectedDate={startDate as Date} handleDateChange={field.onChange} {...field} />
-                              <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">Click & Select or type in a date</h3>
-                              <FormMessage />
-                            </div>
-                          )}
-                        />
-                      )}
+                      <FormField
+                        control={form.control}
+                        name="date"
+                        render={({ field }) => (
+                          <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
+                            <span className="text-lg opacity-70 self-stretch">Start Date</span>
 
+                            <CustomDatePicker defaultDate={undefined} selectedDate={field.value} handleDateChange={field.onChange} {...field} />
+
+                            <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">Click & Select or type in a date</h3>
+                            <FormMessage />
+                          </div>
+                        )}
+                      />
                       {!schedule.all_day && (
                         <>
                           <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <div className="flex justify-between gap-10 text-white">
                               <TimePicker
                                 label="Start Time"
-                                // slotProps={{ textField: { color: 'white' }}}
-                                value={dayjs(schedule?.start_time) as unknown as string}
-                                // className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
-                                onChange={(newValue: string | Date | null | undefined) =>
-                                  setSchedule({
-                                    ...schedule,
-                                    start_time: newValue as string,
-                                  })
-                                }
+                                value={startTime}
+                                className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
+                                onChange={(newValue: any) => setStartTime(newValue)}
                                 sx={{
                                   input: {
                                     color: 'white',
@@ -495,18 +506,14 @@ export default function ScheduleEditForm({
                                   width: '100%',
                                   // borderColor: "white",
                                   // borderWidth: "1px",
-                                  border: '1px solid #4b4a4a',
+                                  border: '1px solid #1A1A1A',
                                 }}
                               />
                               <TimePicker
                                 label="End Time"
-                                value={dayjs(schedule?.end_time) as unknown as string}
-                                onChange={(newValue: string | Date | null | undefined) =>
-                                  setSchedule({
-                                    ...schedule,
-                                    end_time: newValue as string,
-                                  })
-                                }
+                                value={endTime}
+                                className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
+                                onChange={(newValue: any) => setEndTime(newValue)}
                                 sx={{
                                   input: {
                                     color: 'white',
@@ -523,7 +530,7 @@ export default function ScheduleEditForm({
                                   width: '100%',
                                   // borderColor: "white",
                                   // borderWidth: "1px",
-                                  border: '1px solid #4b4a4a',
+                                  border: '1px solid #1A1A1A',
                                 }}
                               />
                             </div>
@@ -536,29 +543,23 @@ export default function ScheduleEditForm({
                       <select
                         // onChange={(e) => setFrequency(e.target.value as any)}
                         className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
-                        title="frequency"
+                        title="Timezone"
                       >
-                        <option value="once">UTC</option>
+                        <option className="bg-componentPrimary origin-top-right rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" value="once">UTC</option>
                       </select>
                     </div>
                     <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
                       <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select Schedule Frequency</Label>
                       <select
-                        value={schedule.schedule_frequency}
-                        onChange={(e) =>
-                          setSchedule({
-                            ...schedule,
-                            schedule_frequency: e.target.value as any,
-                          })
-                        }
+                        onChange={handleFrequencySelect}
+                        value={frequency}
                         className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
                         title="frequency"
                       >
-                        <option value="once">Once</option>
-                        <option value="everyday">Everyday</option>
-                        <option value="weekly">Weekly</option>
+                        <option className="bg-componentPrimary origin-top-right rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" value="once">Once</option>
+                        <option className="bg-componentPrimary origin-top-right rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" value="everyday">Everyday</option>
+                        <option className="bg-componentPrimary origin-top-right rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" value="weekly">Weekly</option>
                       </select>
-                      {/* <InputFieldDark type={InputFieldType.Option} placeholder={'Only Once'} /> */}
                     </div>
                     <line></line>
                   </div>

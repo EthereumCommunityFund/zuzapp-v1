@@ -31,13 +31,17 @@ import EventViewDetailsPanel from "@/components/eventview/EventViewDetailsPanel"
 import { QueryClient, dehydrate } from "react-query";
 import { fetchEventSpaceById } from "@/services/fetchEventSpaceDetails";
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import UpdateSchedulePage from "@/pages/dashboard/events/space/tracks/schedules/updateSchedule";
+import ScheduleEditForm from "@/components/commons/ScheduleEditForm";
+import { ScheduleUpdateRequestBody } from "@/types";
 
 interface IEventLink {
   name: string;
   link: string;
 }
 
-export default function EventViewTrackDetailsPage() {
+export default function EventViewScheduleDetailsPage() {
   const { eventSpace, isLoading } = useEventDetails();
   const router = useRouter();
   const { scheduleName, trackId, event_space_id, track_title, scheduleId } =
@@ -50,6 +54,7 @@ export default function EventViewTrackDetailsPage() {
   const trackItem = eventSpace?.tracks.find(
     (trackItem) => trackItem.id === trackId
   );
+  console.log("schedule description", currentSchedule?.description);
   const startTime =
     currentSchedule &&
     new Date(currentSchedule.start_time).toLocaleTimeString("en-US", {
@@ -153,9 +158,19 @@ export default function EventViewTrackDetailsPage() {
                   Back to Track
                 </Button>
               )}
-              <Button variant="quiet" className="rounded-xl" leftIcon={BiEditAlt} onClick={() => handleEnterSchedule(currentSchedule?.id as string, currentSchedule?.track_id as string)}>
-                Edit
-              </Button>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="quiet" className="rounded-xl" leftIcon={BiEditAlt}>
+                    Edit
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="h-3/5 lg:w-3/5 overflow-y-auto">
+                  <ScheduleEditForm
+                    title='Update Schedule'
+                    isFromAllSchedules={false}
+                    scheduleData={currentSchedule as ScheduleUpdateRequestBody} />
+                </DialogContent>
+              </Dialog>
             </div>
             <div className="flex flex-col gap-2.5 md:p-2.5 sm:p-0">
               {' '}
@@ -174,9 +189,8 @@ export default function EventViewTrackDetailsPage() {
               <Button
                 variant="primary"
                 size="lg"
-                className={`rounded-2xl justify-center ${
-                  rsvpUpdated ? "animate-rsvp" : ""
-                }`}
+                className={`rounded-2xl justify-center ${rsvpUpdated ? "animate-rsvp" : ""
+                  }`}
                 leftIcon={BsFillTicketFill}
                 onClick={handleRsvpAction}
               >

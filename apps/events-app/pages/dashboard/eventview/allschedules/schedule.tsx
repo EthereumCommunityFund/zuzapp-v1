@@ -34,6 +34,7 @@ import {
   checkUserRsvpBySchedule,
   rsvpSchedule,
 } from "@/controllers";
+import { ScheduleUpdateRequestBody } from "@/types";
 
 export default function EventViewScheduleDetailsPage() {
   const router = useRouter();
@@ -142,19 +143,19 @@ export default function EventViewScheduleDetailsPage() {
               <Button variant="ghost" className="md:text-lg sm:text-base font-bold" leftIcon={HiArrowLeft} onClick={handleBackToSchedule}>
                 Back to Schedules
               </Button>
-              <Button
-                variant="quiet"
-                className="rounded-xl bg-componentPrimary text-lg"
-                leftIcon={BiEditAlt}
-                onClick={() =>
-                  handleEnterSchedule(
-                    currentSchedule?.id as string,
-                    currentSchedule?.track_id as string
-                  )
-                }
-              >
-                Edit
-              </Button>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="quiet" className="rounded-xl" leftIcon={BiEditAlt}>
+                    Edit
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="h-3/5 lg:w-3/5 overflow-y-auto">
+                  <ScheduleEditForm
+                    title='Update Schedule'
+                    isFromAllSchedules={true}
+                    scheduleData={currentSchedule as ScheduleUpdateRequestBody} />
+                </DialogContent>
+              </Dialog>
             </div>
             <div className="flex flex-col gap-2.5 p-2.5 ">
               {' '}
@@ -177,9 +178,8 @@ export default function EventViewScheduleDetailsPage() {
               <Button
                 variant="primary"
                 size="lg"
-                className={`rounded-2xl justify-center ${
-                  rsvpUpdated ? "animate-rsvp" : ""
-                }`}
+                className={`rounded-2xl justify-center ${rsvpUpdated ? "animate-rsvp" : ""
+                  }`}
                 leftIcon={BsFillTicketFill}
                 onClick={handleRsvpAction}
               >
