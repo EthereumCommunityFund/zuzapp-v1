@@ -73,7 +73,7 @@ export default function OnlineTrackDetailsPageTemplate(props: ITrackDetailsPageT
       <div className="flex flex-col md:min-w-[1000px] sm:w-full">
         <EventViewHeader imgPath={eventSpace?.image_url as string} name={eventSpace?.name as string} tagline={eventSpace?.tagline as string} />
         <div className="md:p-5 sm:p-0 gap-[30px] lg:max-w-[1000px] md:w-full">
-          <div className="flex flex-col gap-[10px] p-2.5 bg-componentPrimary rounded-xl">
+          <div className="flex flex-col gap-[10px] px-2.5 py-5 bg-componentPrimary rounded-xl">
             <div className="flex justify-between">
               {' '}
               {/* Tracks and Edit Button */}
