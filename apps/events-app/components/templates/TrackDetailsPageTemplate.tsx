@@ -1,17 +1,29 @@
-import TrackItemCard from "@/components/tracks/TrackItemCard";
-import MyDropdown from "@/components/ui/DropDown";
-import Pagination from "@/components/ui/Pagination";
-import Speaker from "@/components/ui/Speaker";
-import UserFacingTrack from "@/components/ui/UserFacingTrack";
-import Button from "@/components/ui/buttons/Button";
-import { Label } from "@/components/ui/label";
-import { useEventSpace } from "@/context/EventSpaceContext";
-import { TrackUpdateRequestBody } from "@/types";
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import { BiEditAlt, BiPlusCircle } from "react-icons/bi";
-import { HiArrowLeft, HiCalendar, HiCog, HiLocationMarker, HiMicrophone, HiTag, HiUserGroup } from "react-icons/hi";
-import EventViewHeader from "../eventview/EventViewHeader";
+import TrackItemCard from '@/components/tracks/TrackItemCard';
+import MyDropdown from '@/components/ui/DropDown';
+import Pagination from '@/components/ui/Pagination';
+import Speaker from '@/components/ui/Speaker';
+import UserFacingTrack from '@/components/ui/UserFacingTrack';
+import Button from '@/components/ui/buttons/Button';
+import { Label } from '@/components/ui/label';
+import { useEventSpace } from '@/context/EventSpaceContext';
+import { TrackUpdateRequestBody } from '@/types';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { BiEditAlt, BiPlusCircle } from 'react-icons/bi';
+import { HiArrowLeft, HiCalendar, HiCog, HiLocationMarker, HiMicrophone, HiTag, HiUserGroup } from 'react-icons/hi';
+import EventViewHeader from '../eventview/EventViewHeader';
+import useEventDetails from '@/hooks/useCurrentEventSpace';
+import { Loader } from '../ui/Loader';
+import RenderHTMLString from '../ui/RenderHTMLString';
+import EventViewDetailsPanel from '../eventview/EventViewDetailsPanel';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
+import Update from '@/pages/dashboard/events/space/tracks/update';
+import EventViewTrackUpdate from '../eventview/EventViewTrackUpdate';
+import AddSchedulePage from '@/pages/dashboard/events/space/tracks/schedules/addschedule';
+import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
+import { Database } from '@/database.types';
+import { QueryClient, dehydrate } from 'react-query';
+import { fetchEventSpaceById } from '@/services/fetchEventSpaceDetails';
 
 interface ITrackDetailsPageTemplate {
   trackItem: TrackUpdateRequestBody;
@@ -19,41 +31,77 @@ interface ITrackDetailsPageTemplate {
 
 export default function OnlineTrackDetailsPageTemplate(props: ITrackDetailsPageTemplate) {
   const router = useRouter();
-  const { trackItem } = props
-  const { eventSpace } = useEventSpace();
+  const { trackItem } = props;
+  const { eventSpace, isLoading } = useEventDetails();
+  const { event_space_id, trackId, track_title } = router.query;
 
   // const handlePageChange = (page: number) => {
   //   setCurrentPage(page);
   // };
-  const handleItemClick = (scheduleName: string, trackId: string | undefined) => {
-    console.log("TrackDetailsPage Track Id", trackId);
+  const handleItemClick = (scheduleName: string, trackId: string | undefined, event_space_id: string) => {
+    console.log('TrackDetailsPage Track Id', trackId);
     router.push({
-      pathname: "/dashboard/eventview/tracks/track/schedule",
-      query: { scheduleName, trackId }
+      pathname: '/dashboard/eventview/tracks/track/schedule',
+      query: { scheduleName, trackId, event_space_id },
     });
-  }
+  };
 
-  const handleBackToTracksClick = () => {
-    router.push("/dashboard/eventview/tracks");
-  }
+  const handleBackToTracksClick = (event_space_id: string) => {
+    router.push({
+      pathname: '/dashboard/eventview/tracks',
+      query: { event_space_id },
+    });
+  };
 
+  const handleAddSchedule = async () => {
+    try {
+      router.push({
+        pathname: `/dashboard/eventview/allschedules/addschedule`,
+        query: { event_space_id, trackId: trackId, track_title: track_title },
+      });
+    } catch (error) {
+      console.error('Error fetching space details', error);
+    }
+  };
+
+  if (isLoading) {
+    return <Loader />;
+  }
 
   return (
-    <div className="flex gap-4">
-      <div className="flex flex-col w-[1000px]">
+    <div className="flex gap-4 lg:flex-row sm:flex-col">
+      <div className="flex flex-col md:min-w-[1000px] sm:w-full">
         <EventViewHeader imgPath={eventSpace?.image_url as string} name={eventSpace?.name as string} tagline={eventSpace?.tagline as string} />
-        <div className="p-5 gap-[30px] max-w-[1000px]">
-          <div className="flex flex-col gap-[10px] p-2.5 bg-componentPrimary rounded-xl">
-            <div className="flex justify-between">  {/* Tracks and Edit Button */}
-              <Button variant="ghost" className="text-lg font-bold" leftIcon={HiArrowLeft} onClick={handleBackToTracksClick}>Tracks</Button>
-              <Button variant="quiet" className="rounded-xl" leftIcon={BiEditAlt}>Edit</Button>
+        <div className="md:p-5 sm:p-0 gap-[30px] lg:max-w-[1000px] md:w-full">
+          <div className="flex flex-col gap-[10px] px-2.5 py-5 bg-componentPrimary rounded-xl">
+            <div className="flex justify-between">
+              {' '}
+              {/* Tracks and Edit Button */}
+              {eventSpace && (
+                <Button variant="ghost" className="text-lg font-bold" leftIcon={HiArrowLeft} onClick={() => handleBackToTracksClick(eventSpace?.id)}>
+                  Tracks
+                </Button>
+              )}
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="quiet" className="rounded-xl text-lg font-bold" leftIcon={BiEditAlt}>
+                    Edit
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="w-3/5 overflow-x-auto sm:w-3/4">
+                  <DialogHeader>
+                    <Label className="text-2xl font-bold">Edit Track</Label>
+                  </DialogHeader>
+                  <EventViewTrackUpdate className="px-0 text-white text-2xl" />
+                </DialogContent>
+              </Dialog>
             </div>
             <div className="flex flex-col gap-[10px] p-5 "> {/* Track Info */}
-              <img src={trackItem.image as string} alt="track image" className=" h-[496px] rounded-[10px]" />
+              <img src={trackItem?.image as string} alt="track image" className="lg:h-[496px] md:h-full rounded-[10px]" />
               <div className="flex flex-col gap-[10px] p-2.5"> {/* Tracks Name */}
                 <h2 className="font-bold text-2xl">{trackItem.name}</h2>
-                <p className="font-bold opacity-70">{trackItem.description}</p>
-                <span className="rounded-xl flex px-4 py-1 items-center gap-1 opacity-60 bg-[#FFFFFF10] font-bold justify-start w-[320px] text-lg">
+                <RenderHTMLString htmlString={trackItem.description as string} />
+                <span className="rounded-xl flex px-4 py-1 items-center gap-1 opacity-60 bg-[#FFFFFF10] font-bold justify-start md:w-[320px] md:text-lg sm:w-fit">
                   <HiCalendar size={25} /> November 29 - November 11
                 </span>
               </div>
@@ -61,96 +109,50 @@ export default function OnlineTrackDetailsPageTemplate(props: ITrackDetailsPageT
           </div>
         </div>
         <div className="p-4 w-full">
-          <Button variant="blue" size="lg" className="rounded-xl flex justify-center w-full" leftIcon={BiPlusCircle}>
+          <Button variant="blue" size="lg" className="rounded-xl flex justify-center w-full" leftIcon={BiPlusCircle} onClick={handleAddSchedule}>
             Add a Schedule
           </Button>
         </div>
         <div className="flex flex-col gap-2.5 p-5 w-full">
           <div className="flex flex-col gap-[10px] overflow-hidden rounded-[10px]">
-            {
-              eventSpace?.schedules.map((schedule, idx) => (
-                schedule.track_id === trackItem.id && (
-                  <UserFacingTrack key={idx} scheduleData={schedule} onClick={() => handleItemClick(schedule.name, trackItem.id)} />
-                )
-              ))
-            }
+            {eventSpace &&
+              eventSpace?.schedules.map(
+                (schedule, idx) => schedule.track_id === trackItem?.id && <UserFacingTrack key={idx} scheduleData={schedule} onClick={() => handleItemClick(schedule.name, trackItem?.id, eventSpace.id)} />              )}
           </div>
         </div>
       </div>
-      <div className="flex flex-col pt-5 pb-10 gap-5">
-        <div className="flex flex-col gap-3">
-          <h2 className="font-bold p-3.5 border-b border-b-background text-xl">Details</h2>
-          <div className="flex gap-2 items-center">
-            <Label className="opacity-60">Format: </Label>
-            <Label className="opacity-70 font-bold text-base">In-Person</Label>
-          </div>
-          <div className="flex gap-2 items-center">
-            <Label className="opacity-60">Type: </Label>
-            <Label className="opacity-70 font-bold text-base">Meetup</Label>
-          </div>
-          <div className="flex gap-2 items-center">
-            <Label className="opacity-60">Expereicne Level: </Label>
-            <Label className="opacity-70 font-bold text-base">Greenies</Label>
-          </div>
-        </div>
-        <div className="pb-10 gap-2.5">
-          <div className="flex flex-col gap-5  rounded-[10px]">
-            <div className="flex flex-col border-b border-b-background pb-5 gap-5">
-              <div className="flex gap-2.5 items-center">
-                <HiCog className="text-2xl" />
-                <h2>Organizers</h2>
-              </div>
-              <div className="flex gap-[6px]">
-                <Speaker title="QJ" />
-                <Speaker title="Janine Leger" />
-              </div>
-            </div>
-            <div className="flex flex-col gap-5">
-              <div className="flex flex-col border-b border-b-background pb-5 gap-5">
-                <div className="flex gap-2.5 items-center">
-                  <HiMicrophone className="text-2xl" />
-                  <h2>Speakers</h2>
-                </div>
-                <div className="flex gap-[6px]">
-                  <Speaker title="Avery Longname" />
-                  <Speaker title="Janine Leger" />
-                </div>
-              </div>
-            </div>
-            <div className="flex flex-col gap-5">
-              <div className="flex flex-col border-b border-b-background pb-5 gap-5">
-                <div className="flex gap-2.5 items-center">
-                  <HiTag className="text-2xl" />
-                  <h2>Tags</h2>
-                </div>
-                <div className="flex gap-2.5">
-                  <Label className="rounded-xl opacity-70 bg-itemBgPrimary p-2 text-lg">Tag2</Label>
-                  <Label className="rounded-xl opacity-70 bg-itemBgPrimary p-2 text-lg">Tag2</Label>
-                  <Label className="rounded-xl opacity-70 bg-itemBgPrimary p-2 text-lg">Tag2</Label>
-                  <Label className="rounded-xl opacity-70 bg-itemBgPrimary p-2 text-lg">Tag2</Label>
-                </div>
-              </div>
-            </div>
-            <div className="flex flex-col pb-2.5 gap-5">
-              <div className="flex gap-2.5 items-center">
-                <HiLocationMarker className="text-2xl" />
-                <h2>Location</h2>
-              </div>
-              <div className="flex gap-2.5">
-                <img src="/images/1.png" width={100} height={50} alt="333" />
-                <div className="flex flex-col gap-[6px]">
-                  <h2 className="font-bold">Soho House Istanbul</h2>
-                  <Label className="opacity-70">Beyoglu, Istanbul, Turkey</Label>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="flex p-2.5 text-xl items-center gap-3">
-            <HiUserGroup className="text-2xl" />
-            <span>14 going</span>
-          </div>
-        </div>
-      </div>
+      {eventSpace && <EventViewDetailsPanel eventSpace={eventSpace} />}
     </div>
   )
 }
+
+
+export const getServerSideProps = async (ctx: any) => {
+  const queryClient = new QueryClient();
+  const { event_space_id } = ctx.query;
+  await queryClient.prefetchQuery('currentEventSpace', () => fetchEventSpaceById(event_space_id));
+  const supabase = createPagesServerClient(ctx);
+  let {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  if (!session)
+    return {
+      props: {
+        initialSession: null,
+        user: null,
+      },
+    };
+
+  // get profile from session
+  const { data: profile, error } = await supabase.from('profile').select('*').eq('uuid', session.user.id);
+
+  return {
+    props: {
+      initialSession: session,
+      user: session?.user,
+      profile: profile,
+      dehydratedState: dehydrate(queryClient),
+    },
+  };
+};

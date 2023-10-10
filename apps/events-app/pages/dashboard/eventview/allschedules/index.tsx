@@ -1,103 +1,113 @@
-import EventViewHeader from "@/components/eventview/EventViewHeader";
-import TrackItemCard from "@/components/tracks/TrackItemCard";
-import MyDropdown from "@/components/ui/DropDown";
-import { List } from "@/components/ui/DropDownMenu";
-import Pagination from "@/components/ui/Pagination";
-import UserFacingTrack from "@/components/ui/UserFacingTrack";
-import Button from "@/components/ui/buttons/Button";
-import {
-  Calendar,
-  SelectCategories,
-  SelectLocation,
-} from "@/components/ui/icons";
-import { fetchEventSpaceById } from "@/services/fetchEventSpaceDetails";
-import { DropDownMenuItemType } from "@/types";
-import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
-import { useRouter } from "next/router";
-import { useState } from "react";
-import { BiLeftArrow, BiPlusCircle } from "react-icons/bi";
-import { QueryClient, dehydrate, useQuery } from "react-query";
-import { EventSpaceDetailsType } from "@/types";
-import useEventDetails from "@/hooks/useCurrentEventSpace";
+import EventViewHeader from '@/components/eventview/EventViewHeader';
+import TrackItemCard from '@/components/tracks/TrackItemCard';
+import MyDropdown from '@/components/ui/DropDown';
+import { DropDownMenu } from '@/components/ui/DropDownMenu';
+import Pagination from '@/components/ui/Pagination';
+import UserFacingTrack from '@/components/ui/UserFacingTrack';
+import Button from '@/components/ui/buttons/Button';
+import { Calendar, SelectCategories, SelectLocation } from '@/components/ui/icons';
+import { fetchEventSpaceById } from '@/services/fetchEventSpaceDetails';
+import { DropDownMenuItemType } from '@/types';
+import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
+import { BiLeftArrow, BiPlusCircle } from 'react-icons/bi';
+import { QueryClient, dehydrate, useQuery } from 'react-query';
+import { EventSpaceDetailsType } from '@/types';
+import useEventDetails from '@/hooks/useCurrentEventSpace';
+import { Loader } from '@/components/ui/Loader';
 
 const categoryList: DropDownMenuItemType[] = [
   {
-    name: "Network States",
+    name: 'Network States',
   },
   {
-    name: "Character Cities",
+    name: 'Character Cities',
   },
   {
-    name: "Coordinations",
+    name: 'Coordinations',
   },
 ];
 
 export default function EventViewTracksAlleSchedulesPage() {
   const router = useRouter();
-  const { event_space_id } = router.query;
+  const { event_space_id, trackId, track_title } = router.query;
   const { eventSpace, isLoading } = useEventDetails();
 
-  console.log(isLoading, "is loading");
+  console.log(isLoading, 'is loading');
 
-  const handleItemClick = (scheduleName: string, trackId?: string) => {
+  const handleItemClick = (scheduleName: string, scheduleId: string, trackId?: string) => {
     router.push({
       pathname: `/dashboard/eventview/allschedules/schedule`,
-      query: { scheduleName, trackId, event_space_id },
+      query: { scheduleName, trackId, event_space_id, scheduleId },
     });
   };
+
+  const handleAddSchedule = async () => {
+    try {
+      router.push({
+        pathname: `/dashboard/eventview/allschedules/addschedule`,
+        query: { event_space_id, trackId: trackId, track_title: track_title, quickAccess: true },
+      });
+    } catch (error) {
+      console.error('Error fetching space details', error);
+    }
+  };
+
+  if (isLoading) {
+    return <Loader />;
+  }
+
   return (
-    <div className="flex gap-4">
-      <div className="flex flex-col w-[1000px] gap-10">
-        <EventViewHeader
-          imgPath={eventSpace?.image_url as string}
-          name={eventSpace?.name as string}
-          tagline={eventSpace?.tagline as string}
-        />
-        <div className="flex flex-col gap-2.5 p-[30px]">
-          <div className="p-8 bg-componentPrimary rounded-2xl">
-            <div>
-              <Button
-                variant="blue"
-                size="lg"
-                className="rounded-xl"
-                leftIcon={BiPlusCircle}
-              >
+    <div className="flex gap-4 lg:flex-row mt-5 lg:mt-0 pb-24 lg:pb-0 sm:flex-col-reverse lg:bg-pagePrimary md:bg-componentPrimary">
+      <div className="flex flex-col lg:w-3/4 sm:w-full pb-30 gap-5">
+        <EventViewHeader imgPath={eventSpace?.image_url as string} name={eventSpace?.name as string} tagline={eventSpace?.tagline as string} />
+        <div className="flex flex-col gap-2.5 lg:px-9 md:px-5">
+          <div className="bg-componentPrimary lg:rounded-2xl lg:px-5 lg:pt-8">
+            <div className='p-5'>
+              <Button variant="blue" size="lg" className="rounded-full sm:w-full lg:w-fit justify-center" leftIcon={BiPlusCircle}>
                 Add a Schedule
               </Button>
             </div>
-            <div className=" p-2.5 gap-[10px] overflow-hidden rounded-[10px]">
+            <div className=" p-2.5 gap-[10px] flex flex-col overflow-hidden rounded-[10px] pb-36">
               {eventSpace?.schedules.map((schedule, id) => (
-                <UserFacingTrack
-                  key={schedule.id}
-                  onClick={() =>
-                    handleItemClick(schedule.name, schedule.track_id)
-                  }
-                  scheduleData={schedule}
-                />
+                <UserFacingTrack key={schedule.id} onClick={() => handleItemClick(schedule.name, schedule.id, schedule.track_id)} scheduleData={schedule} />
               ))}
             </div>
           </div>
         </div>
       </div>
-      <div className="flex flex-col gap-5 px-5 py-2.5 w-1/4 fixed right-0">
-        <h2 className="p-3.5 gap-[10px] font-bold text-2xl border-b-2 border-borderPrimary">
+      <div className="lg:w-1/4 sm:w-full flex lg:flex-col lg:pl-10 gap-5 lg:fixed lg:right-0 min-w-fit">
+        <h2 className="p-3.5 gap-[10px] font-bold text-xl sm:hidden lg:flex">
           Schedules: Sort & Filter
         </h2>
-        <div className="flex flex-col p-2.5 gap-5 ">
-          <List
+        <div className="flex lg:flex-col md:flex-row sm:flex-col w-full p-2.5 md:gap-5 sm:gap-3 text-sm">
+          <DropDownMenu
             data={categoryList}
-            header={"Select Categories"}
+            header={'Select Categories'}
             headerIcon={SelectCategories}
+            multiple={true}
+            value={""}
+            headerClassName={'rounded-full bg-borderPrimary'}
+            optionsClassName={''}
           />
-          <List
+          <DropDownMenu
             data={categoryList}
-            header={"Select Dates"}
+            header={'Select Dates'}
             headerIcon={Calendar}
+            multiple={true}
+            value={""}
+            headerClassName={'rounded-full bg-borderPrimary'}
+            optionsClassName={''}
           />
-          <List
+          <DropDownMenu
             data={categoryList}
-            header={"Select Location"}
+            header={'Select Location'}
             headerIcon={SelectLocation}
+            multiple={true}
+            value={""}
+            headerClassName={'rounded-full bg-borderPrimary'}
+            optionsClassName={''}
           />
         </div>
       </div>
@@ -108,9 +118,7 @@ export default function EventViewTracksAlleSchedulesPage() {
 export const getServerSideProps = async (ctx: any) => {
   const queryClient = new QueryClient();
   const { event_space_id } = ctx.query;
-  await queryClient.prefetchQuery("currentEventSpace", () =>
-    fetchEventSpaceById(event_space_id)
-  );
+  await queryClient.prefetchQuery('currentEventSpace', () => fetchEventSpaceById(event_space_id));
   const supabase = createPagesServerClient(ctx);
   let {
     data: { session },
@@ -125,10 +133,7 @@ export const getServerSideProps = async (ctx: any) => {
     };
 
   // get profile from session
-  const { data: profile, error } = await supabase
-    .from("profile")
-    .select("*")
-    .eq("uuid", session.user.id);
+  const { data: profile, error } = await supabase.from('profile').select('*').eq('uuid', session.user.id);
 
   return {
     props: {

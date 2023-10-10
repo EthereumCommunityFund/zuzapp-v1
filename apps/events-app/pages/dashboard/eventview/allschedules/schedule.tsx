@@ -13,48 +13,50 @@ import EventData from "@/components/ui/labels/event-data-time";
 import { useEventSpace } from "@/context/EventSpaceContext";
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BiEditAlt, BiLeftArrow } from "react-icons/bi";
 import { BsFillTicketFill } from "react-icons/bs";
 import {
   HiArrowLeft,
-  HiCalendar,
-  HiCog,
-  HiLocationMarker,
-  HiMicrophone,
-  HiTag,
-  HiUserGroup,
+
 } from "react-icons/hi";
-import { EventSpaceDetailsType } from "@/types";
+
 import { fetchEventSpaceById } from "@/services/fetchEventSpaceDetails";
 import { QueryClient, dehydrate, useQuery } from "react-query";
 import useEventDetails from "@/hooks/useCurrentEventSpace";
+import { Loader } from "@/components/ui/Loader";
+import EventViewDetailsPanel from "@/components/eventview/EventViewDetailsPanel";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import UpdateSchedulePage from "../../events/space/tracks/schedules/updateSchedule";
+import ScheduleEditForm from "@/components/commons/ScheduleEditForm";
+import {
+  cancelUserRsvpBySchedule,
+  checkUserRsvpBySchedule,
+  rsvpSchedule,
+} from "@/controllers";
 
 export default function EventViewScheduleDetailsPage() {
   const router = useRouter();
   const { event_space_id } = router.query;
   const { eventSpace, isLoading } = useEventDetails();
-
-  const { scheduleName, trackId } = router.query;
-  const currentSchedule = eventSpace?.schedules.find(
-    (scheduleItem) => scheduleItem.name === scheduleName
-  );
-  const trackItem = eventSpace?.tracks.find(
-    (trackItem) => trackItem.id === trackId
-  );
+  const [rsvpUpdated, setRsvpUpdated] = useState(false);
+  const { scheduleName, scheduleId, trackId } = router.query;
+  const [hasRsvpd, setHasRsvpd] = useState(false);
+  const currentSchedule = eventSpace?.schedules.find((scheduleItem) => scheduleItem.name === scheduleName);
+  const trackItem = eventSpace?.tracks.find((trackItem) => trackItem.id === trackId);
   const startTime =
     currentSchedule &&
-    new Date(currentSchedule.start_time).toLocaleTimeString("en-US", {
-      hour: "2-digit",
-      minute: "2-digit",
+    new Date(currentSchedule.start_time).toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
     });
   const endTime =
     currentSchedule &&
-    new Date(currentSchedule.end_time).toLocaleTimeString("en-US", {
-      hour: "2-digit",
-      minute: "2-digit",
+    new Date(currentSchedule.end_time).toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
     });
-  console.log("All Schedules / Schedule eventSpace", eventSpace);
+  console.log('All Schedules / Schedule eventSpace', eventSpace);
 
   const handleBackToSchedule = () => {
     router.push({
@@ -65,50 +67,109 @@ export default function EventViewScheduleDetailsPage() {
     });
   };
 
+  const handleRsvpAction = async () => {
+    try {
+      if (hasRsvpd) {
+        const result = await cancelUserRsvpBySchedule(
+          scheduleId as string,
+          event_space_id as string
+        );
+        console.log(result, "cancelrsvp");
+        setHasRsvpd(false);
+      } else {
+        console.log(scheduleId, "scheduleId");
+        const result = await rsvpSchedule(
+          scheduleId as string,
+          event_space_id as string
+        );
+        console.log(result, "rsvp updated");
+        setHasRsvpd(true);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const checkIfUserHasRsvpd = async () => {
+    try {
+      const result = await checkUserRsvpBySchedule(
+        scheduleId as string,
+        event_space_id as string
+      );
+      const hasRsvp = result?.data?.hasRSVPed;
+      setHasRsvpd(hasRsvp);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleEnterSchedule = async (id: string, scheduleTrackId: string) => {
+    const scheduleTrackTitle = eventSpace?.tracks.find(
+      (trackItem) => trackItem.id === scheduleTrackId
+    )?.name;
+    try {
+      router.push({
+        pathname: `/dashboard/eventview/allschedules/updateschedule`,
+        query: {
+          event_space_id,
+          trackId: scheduleTrackId,
+          scheduleId: id,
+          track_title: scheduleTrackTitle,
+        },
+      });
+    } catch (error) {
+      console.error('Error fetching space details', error);
+    }
+  };
+
+  if (isLoading) {
+    return <Loader />;
+  }
+
   return (
-    <div className="flex gap-4 font-bold">
-      <div className="flex flex-col w-[1000px]">
+    <div className="flex gap-4 lg:flex-row sm:flex-col">
+      <div className="flex flex-col lg:w-[1000px] sm:w-full">
         <EventViewHeader
           imgPath={eventSpace?.image_url as string}
           name={eventSpace?.name as string}
           tagline={eventSpace?.tagline as string}
         />
-        <div className="p-5 gap-[30px] max-w-[1000px]">
+        <div className="md:p-5 sm:p-0 gap-[30px] max-w-[1200px] h-full">
           <div className="flex flex-col gap-[10px] p-2.5 bg-componentPrimary rounded-2xl">
             <div className="flex justify-between">
-              {" "}
+              {' '}
               {/* Tracks and Edit Button */}
-              <Button
-                variant="ghost"
-                className="opacity-70 text-lg"
-                leftIcon={HiArrowLeft}
-                onClick={handleBackToSchedule}
-              >
+              <Button variant="ghost" className="md:text-lg sm:text-base font-bold" leftIcon={HiArrowLeft} onClick={handleBackToSchedule}>
                 Back to Schedules
               </Button>
               <Button
                 variant="quiet"
                 className="rounded-xl bg-componentPrimary text-lg"
                 leftIcon={BiEditAlt}
+                onClick={() =>
+                  handleEnterSchedule(
+                    currentSchedule?.id as string,
+                    currentSchedule?.track_id as string
+                  )
+                }
               >
                 Edit
               </Button>
             </div>
             <div className="flex flex-col gap-2.5 p-2.5 ">
-              {" "}
+              {' '}
               {/* Schedule Info */}
               <div className="flex flex-col gap-2.5 p-5">
                 <span className="text-sm">TRACK/THEME</span>
-                <div className="flex items-start">
-                  {startTime && endTime && (
-                    <EventDataTime startTime={startTime} endTime={endTime} />
-                  )}
-                </div>
+                <div className="flex items-start">{startTime && endTime && <EventDataTime startTime={startTime} endTime={endTime} />}</div>
                 <h2 className="text-3xl font-bold">{currentSchedule?.name}</h2>
                 <div className="flex gap-[6px]">
-                  <Speaker title={"QJ"} />
-                  <Speaker title={"Janine Leger"} />
-                </div>
+                  {
+                    currentSchedule?.organizers?.map((organizer) => (
+                      <Speaker title={organizer.name} />
+                    ))
+                  }
+                </div >
                 <div className="flex justify-end">
                   <h3>By: drivenfast</h3>
                 </div>
@@ -116,146 +177,35 @@ export default function EventViewScheduleDetailsPage() {
               <Button
                 variant="primary"
                 size="lg"
-                className="rounded-2xl justify-center"
+                className={`rounded-2xl justify-center ${
+                  rsvpUpdated ? "animate-rsvp" : ""
+                }`}
                 leftIcon={BsFillTicketFill}
+                onClick={handleRsvpAction}
               >
-                RSVP Schedule
+                {hasRsvpd ? "Cancel RSVP" : "RSVP Schedule"}
               </Button>
-            </div>
+            </div >
             <div className="flex flex-col gap-2.5 px-5 pt-5 pb-[60px]">
               {/* Schedule Description */}
               <h2 className="font-bold">Location</h2>
             </div>
             <div className="flex flex-col gap-2.5 px-5 pt-5 pb-[60px] font-bold">
               {/* Schedule Description */}
-              {currentSchedule?.description && (
-                <RenderHTMLString htmlString={currentSchedule?.description} />
-              )}
+              {currentSchedule?.description && <RenderHTMLString htmlString={currentSchedule?.description} />}
             </div>
-          </div>
-        </div>
-      </div>
-      <div className="flex flex-col pt-5 pb-10 gap-5">
-        <div className="flex flex-col gap-3">
-          <h2 className="font-bold p-3.5 border-b border-b-background text-xl">
-            Details
-          </h2>
-          <div className="flex gap-2 items-center">
-            <Label className="opacity-60">Format: </Label>
-            <Label className="opacity-70 font-bold text-base">In-Person</Label>
-          </div>
-          <div className="flex gap-2 items-center">
-            <Label className="opacity-60">Type: </Label>
-            <Label className="opacity-70 font-bold text-base">Meetup</Label>
-          </div>
-          <div className="flex gap-2 items-center">
-            <Label className="opacity-60">Expereicne Level: </Label>
-            <Label className="opacity-70 font-bold text-base">Greenies</Label>
-          </div>
-        </div>
-        <div className="pb-10 gap-2.5">
-          <div className="flex flex-col gap-3">
-            <h2 className="font-bold p-3.5 border-b border-b-background text-xl">
-              Details
-            </h2>
-            <div className="flex gap-2 items-center">
-              <Label className="opacity-60">Format: </Label>
-              <Label className="opacity-70 font-bold text-base">
-                {eventSpace?.format.toUpperCase()}
-              </Label>
-            </div>
-            <div className="flex gap-2 items-center">
-              <Label className="opacity-60">Type: </Label>
-              <Label className="opacity-70 font-bold text-base">
-                {eventSpace?.event_type?.join(", ")}
-              </Label>
-            </div>
-            <div className="flex gap-2 items-center">
-              <Label className="opacity-60">Expereicne Level: </Label>
-              <Label className="opacity-70 font-bold text-base">
-                {eventSpace?.experience_level}
-              </Label>
-            </div>
-          </div>
-          <div className="pb-10 gap-2.5">
-            <div className="flex flex-col gap-5  rounded-[10px]">
-              <div className="flex flex-col border-b border-b-background pb-5 gap-5">
-                <div className="flex gap-2.5 items-center pt-5">
-                  <HiCog className="text-2xl" />
-                  <Label>Organizers</Label>
-                </div>
-                <div className="flex gap-[6px]">
-                  <Speaker title="QJ" />
-                  <Speaker title="Janine Leger" />
-                </div>
-              </div>
-              <div className="flex flex-col gap-5">
-                <div className="flex flex-col border-b border-b-background pb-5 gap-5">
-                  <div className="flex gap-2.5 items-center">
-                    <HiMicrophone className="text-2xl" />
-                    <h2>Speakers</h2>
-                  </div>
-                  <div className="flex gap-[6px]">
-                    <Speaker title="Avery Longname" />
-                    <Speaker title="Janine Leger" />
-                  </div>
-                </div>
-              </div>
-              <div className="flex flex-col gap-5">
-                <div className="flex flex-col border-b border-b-background pb-5 gap-5">
-                  <div className="flex gap-2.5 items-center">
-                    <HiTag className="text-2xl" />
-                    <h2>Tags</h2>
-                  </div>
-                  <div className="flex gap-2.5">
-                    <Label className="rounded-xl opacity-70 bg-itemBgPrimary p-2 text-lg">
-                      Tag2
-                    </Label>
-                    <Label className="rounded-xl opacity-70 bg-itemBgPrimary p-2 text-lg">
-                      Tag2
-                    </Label>
-                    <Label className="rounded-xl opacity-70 bg-itemBgPrimary p-2 text-lg">
-                      Tag2
-                    </Label>
-                    <Label className="rounded-xl opacity-70 bg-itemBgPrimary p-2 text-lg">
-                      Tag2
-                    </Label>
-                  </div>
-                </div>
-              </div>
-              <div className="flex flex-col pb-2.5 gap-5">
-                <div className="flex gap-2.5 items-center">
-                  <HiLocationMarker className="text-2xl" />
-                  <h2>Location</h2>
-                </div>
-                <div className="flex gap-2.5">
-                  <img src="/images/1.png" width={100} height={50} alt="333" />
-                  <div className="flex flex-col gap-[6px]">
-                    <h2 className="font-bold">Soho House Istanbul</h2>
-                    <Label className="opacity-70">
-                      Beyoglu, Istanbul, Turkey
-                    </Label>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="flex p-2.5 text-xl items-center gap-3">
-              <HiUserGroup className="text-2xl" />
-              <span>14 going</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+          </div >
+        </div >
+      </div >
+      {eventSpace && <EventViewDetailsPanel eventSpace={eventSpace} />}
+    </div >
   );
 }
 
 export const getServerSideProps = async (ctx: any) => {
   const queryClient = new QueryClient();
   const { event_space_id } = ctx.query;
-  await queryClient.prefetchQuery("currentEventSpace", () =>
-    fetchEventSpaceById(event_space_id)
-  );
+  await queryClient.prefetchQuery('currentEventSpace', () => fetchEventSpaceById(event_space_id));
   const supabase = createPagesServerClient(ctx);
 
   let {
@@ -271,10 +221,7 @@ export const getServerSideProps = async (ctx: any) => {
     };
 
   // get profile from session
-  const { data: profile, error } = await supabase
-    .from("profile")
-    .select("*")
-    .eq("uuid", session.user.id);
+  const { data: profile, error } = await supabase.from('profile').select('*').eq('uuid', session.user.id);
 
   return {
     props: {

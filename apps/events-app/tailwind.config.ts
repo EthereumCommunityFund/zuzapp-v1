@@ -74,7 +74,8 @@ module.exports = {
         btnStrongerGreen: "#79916E",
         btnStrongerGreenHover: "#96B488",
         borderPrimary: "#393939",
-        userFacingItem: "#393C3C"
+        userFacingItem: "#393C3C",
+        borderSecondary: "#575959"
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -108,10 +109,10 @@ module.exports = {
       },
     },
     screens: {
-      'sm': '390px',
+      'sm': '320px',
       'md': '810px',
       'lg': '1200px',
-      'xl': '1400px',
+
     }
   },
   plugins: [require("tailwindcss-animate")],

@@ -122,7 +122,7 @@ export default function EditTrackForm({ onTrackSubmit, trackDetails }: { onTrack
         </div>
         {payload.image_urls.length == 0 && <p className="text-sm text-btnRed">Select at least one image</p>}
         {payload.image_urls.length > 0 && (
-          <div className="flex space-x-3">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-5">
             {payload.image_urls.map((source, index) => (
               <div className="" key={index}>
                 <div className="rounded-[10px] w-[130px] h-[100px] bg-pagePrimary relative">
@@ -134,11 +134,11 @@ export default function EditTrackForm({ onTrackSubmit, trackDetails }: { onTrack
           </div>
         )}
         <div className="flex justify-center pt-8">
-          <div className="flex gap-[30px] w-full">
-            <Button onClick={handleDeleteTrack} className="rounded-full w-1/2 flex justify-center" variant="quiet" size="lg" type="button" leftIcon={CgClose}>
+          <div className="flex flex-col lg:flex-row gap-[30px] w-full">
+            <Button onClick={handleDeleteTrack} className="rounded-full w-full md:w-1/2 flex justify-center" variant="quiet" size="lg" type="button" leftIcon={CgClose}>
               <span>Discard Track</span>
             </Button>
-            <Button className="rounded-full w-1/2 flex justify-center" variant="blue" size="lg" onClick={() => form.handleSubmit(onSubmit)()} leftIcon={FaCircleArrowUp}>
+            <Button className="rounded-full w-full md:w-1/2 flex justify-center" variant="blue" size="lg" onClick={() => form.handleSubmit(onSubmit)()} leftIcon={FaCircleArrowUp}>
               <span>Update Track</span>
             </Button>
           </div>

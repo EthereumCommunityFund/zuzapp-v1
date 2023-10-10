@@ -32,7 +32,7 @@ export default function DashboardNavigation() {
       </div>
       {/* Overlay that can close the dashboard menu */}
       <div
-        className={`md:hidden fixed inset-0 bg-black/10 z-10 ${dashboardOpen ? "block" : "hidden"
+        className={` hidden fixed inset-0 bg-black/10 z-10 ${dashboardOpen ? "block" : "hidden"
           }`}
         onClick={handleClick}
       ></div>

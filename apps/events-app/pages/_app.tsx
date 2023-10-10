@@ -6,9 +6,7 @@ import GlobalProvider from "../context/GlobalContext";
 import "../styles/globals.css";
 import "../styles/quill.css";
 import { DashboardProvider } from "@/components/ui-providers/DashboardLayout";
-import { QueryClient, QueryClientProvider } from "react-query";
-import { Hydrate } from "react-query";
-
+import { Hydrate, QueryClient, QueryClientProvider } from "react-query";
 import { EventSpaceProvider } from "@/context/EventSpaceContext";
 import { EventSpacesProvider } from "@/context/EventSpacesContext";
 import { Toaster } from "@/components/ui/toaster";
