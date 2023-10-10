@@ -27,6 +27,13 @@ export default function SubHeader() {
     setActiveTab(index);
   };
 
+  const exitButton = () => {
+    router.push({
+      pathname: '/dashboard/events/space/dashboard',
+      query: { event_space_id: event_space_id }, // Pass space ID as a query parameter
+    });
+  };
+
   useEffect(() => {
     const currentUrl = router.asPath;
     if (currentUrl.includes('/events/space/dashboard')) {
@@ -56,7 +63,7 @@ export default function SubHeader() {
               className="rounded-[40px] text-sm py-2.5 px-3.5 bg-bgPrimary border-none hover:bg-[#363636] duration-200 text-textSecondary hover:text-textSecondary"
               size="lg"
               leftIcon={FaCircleArrowLeft}
-              onClick={goBackToPreviousPage}
+              onClick={exitButton}
             >
               Exit
             </Button>
