@@ -32,7 +32,7 @@ export default function DashboardHeader() {
     <div className="fixed top-0 left-0 w-full z-50 border-b border-white/10">
       <header className="w-full py-3 px-5 md:px-8 flex sm:justify-between justify-end items-center bg-[#2F3232] ">
         <div className="flex gap-2 w-[265px]">
-          <IconButton onClick={handleClick} variant="dark" className="lg:hidden rounded-full z-50 bg-componentPrimary border-none hover:b-- duration-200" icon={HiMenuAlt1} />
+          <IconButton onClick={handleClick} variant="dark" className=" rounded-full lg:hidden z-50 bg-componentPrimary border-none hover:b-- duration-200" icon={HiMenuAlt1} />
           <Link href="/">
             {/* create responsive image */}
             <Image src="/images/Logo.png" alt="Zuzalu Logo" width={150} height={35} />
