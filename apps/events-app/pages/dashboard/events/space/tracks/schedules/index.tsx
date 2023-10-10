@@ -85,7 +85,7 @@ export default function SchedulesDashboardPage() {
     }).format(date);
   }
   return (
-    <div className="pt-10">
+    <div className="">
       <div className="flex flex-col items-start gap-10 self-stretch pb-[60px] px-5 lg:px-20">
         <div className="w-full flex flex-col justify-start items-start relative p-0 gap-[30px] rounded-0">
           <div className="flex w-full justify-between items-center flex-1 flex-grow-0">
@@ -130,10 +130,18 @@ export default function SchedulesDashboardPage() {
               </Button>
 
               <div className="flex mt-2 md:mt-0 items-start gap-3">
-                <Button className="rounded-[40px] py-2.5 px-3.5 bg-bgPrimary border-none hover:bg-[#363636] duration-200 text-sm text-textSecondary hover:text-textSecondary" size="lg" leftIcon={HiSelector}>
+                <Button
+                  className="rounded-[40px] py-2.5 px-3.5 bg-bgPrimary border-none hover:bg-[#363636] duration-200 text-sm text-textSecondary hover:text-textSecondary"
+                  size="lg"
+                  leftIcon={HiSelector}
+                >
                   Sort
                 </Button>
-                <Button className="rounded-[40px] py-2.5 px-3.5 bg-bgPrimary border-none hover:bg-[#363636] duration-200 text-sm text-textSecondary hover:text-textSecondary" size="lg" leftIcon={HiCog}>
+                <Button
+                  className="rounded-[40px] py-2.5 px-3.5 bg-bgPrimary border-none hover:bg-[#363636] duration-200 text-sm text-textSecondary hover:text-textSecondary"
+                  size="lg"
+                  leftIcon={HiCog}
+                >
                   Select
                 </Button>
               </div>
@@ -142,7 +150,6 @@ export default function SchedulesDashboardPage() {
         </div>
 
         {isLoading ? <Loader /> : <ScheduleItemCard />}
-
       </div>
     </div>
   );

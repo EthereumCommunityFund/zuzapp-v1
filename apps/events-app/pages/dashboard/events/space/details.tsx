@@ -1,20 +1,20 @@
-import EventLocation from "@/components/eventspace/EventLocation";
-import EventSpaceDetails from "@/components/eventspace/EventSpaceDetails";
-import EventSpaceDetailsNavBar from "@/components/eventspace/EventSpaceDetailsNavBar";
-import Button from "@/components/ui/buttons/Button";
+import EventLocation from '@/components/eventspace/EventLocation';
+import EventSpaceDetails from '@/components/eventspace/EventSpaceDetails';
+import EventSpaceDetailsNavBar from '@/components/eventspace/EventSpaceDetailsNavBar';
+import Button from '@/components/ui/buttons/Button';
 
-import { EventSpaceDetailsType } from "@/types";
-import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
+import { EventSpaceDetailsType } from '@/types';
+import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
 
-import { useRouter } from "next/router";
-import { QueryClient, dehydrate, useQuery } from "react-query";
-import { HiArrowLeft } from "react-icons/hi";
+import { useRouter } from 'next/router';
+import { QueryClient, dehydrate, useQuery } from 'react-query';
+import { HiArrowLeft } from 'react-icons/hi';
 
-import { fetchEventSpaceById } from "../../../../services/fetchEventSpaceDetails";
-import { Loader } from "@/components/ui/Loader";
-import { arrayFromLength } from "@/lib/helper";
-import { DetailsFormSkeleton } from "@/components/commons/DetailsFormSkeleton";
-import useCurrentEventSpace from "@/hooks/useCurrentEventSpace";
+import { fetchEventSpaceById } from '../../../../services/fetchEventSpaceDetails';
+import { Loader } from '@/components/ui/Loader';
+import { arrayFromLength } from '@/lib/helper';
+import { DetailsFormSkeleton } from '@/components/commons/DetailsFormSkeleton';
+import useCurrentEventSpace from '@/hooks/useCurrentEventSpace';
 
 export default function EventSpaceDetailsPage() {
   const router = useRouter();
@@ -24,7 +24,7 @@ export default function EventSpaceDetailsPage() {
   };
 
   const { eventSpace, isLoading, isError } = useCurrentEventSpace();
-  console.log(isLoading, "isloading");
+  console.log(isLoading, 'isloading');
   if (isLoading) {
     return <Loader />;
   }
@@ -32,21 +32,21 @@ export default function EventSpaceDetailsPage() {
     return <p>Error loading space details</p>;
   }
   return (
-    <div className="flex flex-col py-5 w-full items-center gap-[10px] bg-componentPrimary lg:bg-transparent self-stretch">
+    <div className="flex flex-col w-full items-center gap-[10px] bg-componentPrimary lg:bg-transparent self-stretch">
       <div className="flex items-start gap-8 self-stretch ">
         <EventSpaceDetailsNavBar />
         <div className="flex flex-col gap-5 items-start lg:ml-[300px] w-full">
           <div className="mx-5">
-          <Button
-            className="rounded-[40px] py-2.5 px-3.5 bg-bgPrimary border-none hover:bg-[#363636] duration-200 text-textSecondary hover:text-textSecondary"
-            size="lg"
-            leftIcon={HiArrowLeft}
-            onClick={goBackToPreviousPage}
-          >
-            Back
-          </Button>
+            <Button
+              className="rounded-[40px] py-2.5 px-3.5 bg-bgPrimary border-none hover:bg-[#363636] duration-200 text-textSecondary hover:text-textSecondary"
+              size="lg"
+              leftIcon={HiArrowLeft}
+              onClick={goBackToPreviousPage}
+            >
+              Back
+            </Button>
           </div>
-         
+
           {eventSpace && <EventSpaceDetails eventSpace={eventSpace} />}
           {/* <EventLocation /> */}
         </div>
@@ -75,10 +75,7 @@ export const getServerSideProps = async (ctx: any) => {
     };
 
   // get profile from session
-  const { data: profile, error } = await supabase
-    .from("profile")
-    .select("*")
-    .eq("uuid", session.user.id);
+  const { data: profile, error } = await supabase.from('profile').select('*').eq('uuid', session.user.id);
 
   return {
     props: {
