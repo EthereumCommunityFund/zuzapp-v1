@@ -50,14 +50,14 @@ export default function Tracks() {
   );
 
   return (
-    <div className="flex flex-col flex-1 items-center gap-[10px] pt-10 px-20 pb-0 self-stretch">
-      <div className="flex flex-col items-center gap-[44px] self-stretch mx-auto w-[82%]">
+    <div className="flex flex-col flex-1 items-center gap-[10px] pt-10 lg:px-20 pb-0 self-stretch">
+      <div className="flex flex-col items-center gap-[44px] self-stretch w-[92%] mx-auto lg:w-[82%]">
         <div className="flex flex-col items-start gap-7 self-stretch">
-          <span className="text-[50px] font-bold leading-[1.2]">Tracks</span>
-          <div className="flex justify-between items-start self-stretch">
+          <span className="md:text-[50px] text-4xl font-bold leading-[1.2]">Tracks</span>
+          <div className="flex justify-between flex-col gap-y-5 md:flex-row items-start self-stretch">
             <Button
               variant="blue"
-              className="rounded-full font-bold"
+              className="rounded-full w-full flex items-center justify-center md:w-auto font-bold"
               size="lg"
               leftIcon={BiSolidPlusCircle}
               onClick={handleAddTrack}

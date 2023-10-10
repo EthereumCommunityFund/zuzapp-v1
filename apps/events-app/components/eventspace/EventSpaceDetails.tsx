@@ -28,6 +28,7 @@ import IconButton from '../ui/buttons/IconButton';
 import { RxPlus } from 'react-icons/rx';
 import { toast } from '../ui/use-toast';
 import { add } from 'libsodium-wrappers';
+import dayjs, { Dayjs } from 'dayjs';
 
 interface EventSpaceDetailsProps {
   eventSpace: EventSpaceDetailsType;
@@ -40,11 +41,27 @@ const formSchema = z.object({
   format: z.enum(['in-person', 'online', 'hybrid'], {
     required_error: 'You need to select an event type.',
   }),
-  start_date: z.date().refine((date) => date instanceof Date, {
-    message: 'Start date is required.',
-  }),
-  end_date: z.date().refine((date) => date instanceof Date, {
-    message: 'End date is required.',
+  start_date: z
+    .date({
+      required_error: 'You need to select a valid date for this event.',
+      invalid_type_error: 'You need to select a valid date for this event.',
+    })
+    .refine(
+      (date) => {
+        if (date) {
+          const today = dayjs();
+          const selectedDate = dayjs(date);
+          return selectedDate.isAfter(today);
+        }
+        return false;
+      },
+      {
+        message: 'You cannot create an event in the past.',
+      }
+    ),
+  end_date: z.date({
+    required_error: 'You need to select a valid date for this event.',
+    invalid_type_error: 'You need to select a valid date for this event.',
   }),
   description: z.string().min(10, {
     message: 'Description is required and is a minimum of 10 characters',
@@ -99,13 +116,21 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace }) => 
     defaultValues: {
       name: name,
       format: format,
-      start_date: start_date !== undefined ? new Date(start_date) : new Date(),
-      end_date: end_date !== undefined ? new Date(end_date) : new Date(),
+      start_date: start_date !== undefined && start_date !== null ? new Date(start_date) : new Date(),
+      end_date: end_date !== undefined && end_date !== null ? new Date(end_date) : new Date(),
       description: description,
     },
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    const endDate = dayjs(values.end_date);
+    const startDate = dayjs(values.start_date);
+    if (endDate.isBefore(startDate)) {
+      form.setError('end_date', {
+        message: 'End date cannot be earlier than start date',
+      });
+      return;
+    }
     const additionalPayload = {
       id: event_space_id as string,
       status: status,
@@ -186,7 +211,7 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace }) => 
 
   return (
     <>
-      <div className="flex flex-col py-5 px-10 items-center gap-[10px] self-stretch w-full">
+      <div className="flex flex-col py-5 items-center gap-[10px] self-stretch w-full">
         {detailsUpdated ? (
           <div className="flex flex-col items-center">
             <h3 className="font-bold text-xl">Your Details Have Been Updated</h3>
@@ -198,7 +223,7 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace }) => 
           </div>
         ) : (
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmitWithEnter)} className="flex py-10 px-4 flex-col items-center gap-8 rounded-2xl border border-white border-opacity-10 bg-componentPrimary w-full">
+            <form onSubmit={form.handleSubmit(onSubmitWithEnter)} className="flex lg:py-8 px-4 flex-col items-center gap-8 lg:rounded-2xl lg:border border-white border-opacity-10 lg:bg-componentPrimary w-full">
               <div className="flex flex-col gap-[34px] w-full">
                 <h1 className="text-[25px] font-normal leading-[1.2]">Event Space Details</h1>
                 <h2 className="text-2xl opacity-80 leading-[1.2]">Event Basics</h2>
@@ -340,7 +365,7 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace }) => 
                         ></IconButton>
                       </div>
                     </div>
-                    <div className="flex gap-2.5">
+                    <div className="flex items-start flex-wrap gap-2.5">
                       {eventType?.map((eventCategory, index) => (
                         <div key={eventCategory} className="flex gap-2.5 items-center rounded-[8px] px-2 py-1.5 bg-white bg-opacity-10">
                           <button type="button" className="flex gap-2.5 items-center">
@@ -371,7 +396,7 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace }) => 
                         ></IconButton>
                       </div>
                     </div>
-                    <div className="flex gap-2.5">
+                    <div className="flex place-content-start items-start flex-wrap gap-2.5">
                       {experienceLevels?.map((experience, index) => (
                         <div key={experience} className="flex gap-2.5 items-center rounded-[8px] px-2 py-1.5 bg-white bg-opacity-10">
                           <button type="button" className="flex gap-2.5 items-center">
@@ -384,11 +409,11 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace }) => 
                   </div>
                 </div>
                 <div className="flex justify-center pt-8">
-                  <div className="flex gap-[30px] w-full">
-                    <Button className="rounded-full w-1/2 flex justify-center" variant="quiet" size="lg" type="button" leftIcon={CgClose}>
+                  <div className="flex flex-col lg:flex-row gap-[30px] w-full">
+                    <Button className="rounded-full w-full lg:w-1/2 flex justify-center" variant="quiet" size="lg" type="button" leftIcon={CgClose}>
                       <span>Discard Edit</span>
                     </Button>
-                    <Button className="rounded-full w-1/2 flex justify-center" variant="blue" size="lg" onClick={() => form.handleSubmit(onSubmit)()} leftIcon={FaCircleArrowUp}>
+                    <Button className="rounded-full w-full lg:w-1/2 flex justify-center" variant="blue" size="lg" onClick={() => form.handleSubmit(onSubmit)()} leftIcon={FaCircleArrowUp}>
                       <span>Save Edit</span>
                     </Button>
                   </div>

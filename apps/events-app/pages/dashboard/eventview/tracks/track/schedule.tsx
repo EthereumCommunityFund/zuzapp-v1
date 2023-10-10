@@ -12,9 +12,26 @@ import { useEffect, useState } from "react";
 
 import { BiEditAlt, BiLeftArrow } from "react-icons/bi";
 import { BsFillTicketFill } from "react-icons/bs";
-import { HiArrowLeft, HiCog, HiLocationMarker, HiMicrophone, HiTag, HiUserGroup } from "react-icons/hi";
+import {
+  HiArrowLeft,
+  HiCog,
+  HiLocationMarker,
+  HiMicrophone,
+  HiTag,
+  HiUserGroup,
+} from "react-icons/hi";
 import useEventDetails from "@/hooks/useCurrentEventSpace";
 import { Loader } from "@/components/ui/Loader";
+import {
+  cancelUserRsvpBySchedule,
+  checkUserRsvpBySchedule,
+  rsvpSchedule,
+} from "@/controllers";
+import EventViewDetailsPanel from "@/components/eventview/EventViewDetailsPanel";
+import { QueryClient, dehydrate } from "react-query";
+import { fetchEventSpaceById } from "@/services/fetchEventSpaceDetails";
+import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
+
 interface IEventLink {
   name: string;
   link: string;
@@ -23,145 +40,202 @@ interface IEventLink {
 export default function EventViewTrackDetailsPage() {
   const { eventSpace, isLoading } = useEventDetails();
   const router = useRouter();
-  const { scheduleName, trackId } = router.query;
-  const currentSchedule = eventSpace?.schedules.find((scheduleItem) => (scheduleItem.name === scheduleName));
-  const trackItem = eventSpace?.tracks.find((trackItem) => (trackItem.id === trackId));
-  const startTime = currentSchedule && new Date(currentSchedule.start_time).toLocaleTimeString('en-US', { hour: "2-digit", minute: "2-digit" });
-  const endTime = currentSchedule && new Date(currentSchedule.end_time).toLocaleTimeString('en-US', { hour: "2-digit", minute: "2-digit" });
-  const startDate = currentSchedule && new Date(currentSchedule.start_time).toLocaleDateString('en-US', { month: 'long', day: '2-digit' });
-  const endDate = currentSchedule && new Date(currentSchedule.end_time).toLocaleDateString('en-US', { month: 'long', day: '2-digit' });
-
+  const { scheduleName, trackId, event_space_id, track_title, scheduleId } =
+    router.query;
+  const [rsvpUpdated, setRsvpUpdated] = useState(false);
+  const [hasRsvpd, setHasRsvpd] = useState(false);
+  const currentSchedule = eventSpace?.schedules.find(
+    (scheduleItem) => scheduleItem.name === scheduleName
+  );
+  const trackItem = eventSpace?.tracks.find(
+    (trackItem) => trackItem.id === trackId
+  );
+  const startTime =
+    currentSchedule &&
+    new Date(currentSchedule.start_time).toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  const endTime =
+    currentSchedule &&
+    new Date(currentSchedule.end_time).toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  const startDate =
+    currentSchedule &&
+    new Date(currentSchedule.start_time).toLocaleDateString("en-US", {
+      month: "long",
+      day: "2-digit",
+    });
+  const endDate =
+    currentSchedule &&
+    new Date(currentSchedule.end_time).toLocaleDateString("en-US", {
+      month: "long",
+      day: "2-digit",
+    });
 
   const handleBackToTrackClick = (event_space_id: string) => {
     router.push({
       pathname: "/dashboard/eventview/tracks/track",
-      query: { trackId, event_space_id }
+      query: { trackId, event_space_id },
     });
-  }
+  };
 
+  const handleEnterSchedule = async (id: string, scheduleTrackId: string) => {
+    const scheduleTrackTitle = eventSpace?.tracks.find(
+      (trackItem) => trackItem.id === scheduleTrackId
+    )?.name;
+    try {
+      router.push({
+        pathname: `/dashboard/eventview/allschedules/updateschedule`,
+        query: {
+          event_space_id,
+          trackId: scheduleTrackId,
+          scheduleId: id,
+          track_title: scheduleTrackTitle,
+        },
+      });
+    } catch (error) {
+      console.error("Error fetching space details", error);
+    }
+  };
+  const handleRsvpAction = async () => {
+    try {
+      if (hasRsvpd) {
+        const result = await cancelUserRsvpBySchedule(
+          scheduleId as string,
+          event_space_id as string
+        );
+        console.log(result, "cancelrsvp");
+        setHasRsvpd(false);
+      } else {
+        console.log(scheduleId, "scheduleId");
+        const result = await rsvpSchedule(
+          scheduleId as string,
+          event_space_id as string
+        );
+        console.log(result, "rsvp updated");
+        setHasRsvpd(true);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const checkIfUserHasRsvpd = async () => {
+    try {
+      const result = await checkUserRsvpBySchedule(
+        scheduleId as string,
+        event_space_id as string
+      );
+      const hasRsvp = result?.data?.hasRSVPed;
+      setHasRsvpd(hasRsvp);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   if (isLoading) {
-    return <Loader />
+    return <Loader />;
   }
 
   return (
-    <div className="flex gap-4">
-      <div className="flex flex-col w-[1200px]">
+    <div className="flex gap-4 lg:flex-row sm:flex-col">
+      <div className="flex flex-col lg:min-w-[1000px] sm:w-full">
         <EventViewHeader imgPath={eventSpace?.image_url as string} name={eventSpace?.name as string} tagline={eventSpace?.tagline as string} />
-        <div className="p-5 gap-[30px] max-w-[1200px] h-full">
+        <div className="md:p-5 sm:p-0 gap-[30px] max-w-[1000px] h-full">
           <div className="flex flex-col gap-[10px] p-2.5 bg-componentPrimary rounded-2xl h-full">
-            <div className="flex justify-between">  {/* Tracks and Edit Button */}
-              {eventSpace && <Button variant="ghost" className="text-lg font-bold" leftIcon={HiArrowLeft} onClick={() => handleBackToTrackClick(eventSpace?.id)}>Back to Track</Button>}
-              <Button variant="quiet" className="rounded-xl" leftIcon={BiEditAlt}>Edit</Button>
+            <div className="flex justify-between">
+              {' '}
+              {/* Tracks and Edit Button */}
+              {eventSpace && (
+                <Button variant="ghost" className="md:text-lg sm:text-base font-bold" leftIcon={HiArrowLeft} onClick={() => handleBackToTrackClick(eventSpace?.id)}>
+                  Back to Track
+                </Button>
+              )}
+              <Button variant="quiet" className="rounded-xl" leftIcon={BiEditAlt} onClick={() => handleEnterSchedule(currentSchedule?.id as string, currentSchedule?.track_id as string)}>
+                Edit
+              </Button>
             </div>
-            <div className="flex flex-col gap-2.5 p-2.5 "> {/* Schedule Info */}
+            <div className="flex flex-col gap-2.5 md:p-2.5 sm:p-0">
+              {' '}
+              {/* Schedule Info */}
               <div className="flex flex-col gap-2.5 p-5">
                 {startTime && endTime && <EventDataTime startTime={startTime} endTime={endTime} />}
-                <h2 className='text-2xl font-extrabold'>{currentSchedule?.name}</h2>
+                <h2 className="text-2xl font-extrabold">{currentSchedule?.name}</h2>
                 <div className="flex gap-[6px]">
-                  <Speaker title={"QJ"} />
-                  <Speaker title={"Janine Leger"} />
+                  <Speaker title={'QJ'} />
+                  <Speaker title={'Janine Leger'} />
                 </div>
                 <div>
                   <h3 className="float-right">By: drivenfast</h3>
                 </div>
               </div>
-              <Button size="lg" variant="quiet" className="rounded-full text-center flex justify-center" leftIcon={BsFillTicketFill}>RSVP Schedule</Button>
+              <Button
+                variant="primary"
+                size="lg"
+                className={`rounded-2xl justify-center ${
+                  rsvpUpdated ? "animate-rsvp" : ""
+                }`}
+                leftIcon={BsFillTicketFill}
+                onClick={handleRsvpAction}
+              >
+                {hasRsvpd ? "Cancel RSVP" : "RSVP Schedule"}
+              </Button>
             </div>
-            <div className="flex flex-col gap-2.5 px-5 pt-5 pb-[60px]">{/* Schedule Description */}
+            <div className="flex flex-col gap-2.5 px-5 pt-5 pb-[60px]">
+              {/* Schedule Description */}
               <h2 className="font-bold">Description</h2>
-              <div className="opacity-90">
-                {currentSchedule?.description && <RenderHTMLString height="" htmlString={currentSchedule?.description} />}
-              </div>
+              <div className="opacity-90">{currentSchedule?.description && <RenderHTMLString height="" htmlString={currentSchedule?.description} />}</div>
             </div>
           </div>
         </div>
       </div>
-      <div className="flex flex-col px-10 gap-1 right-0">
+      <div className="flex flex-col md:px-10 gap-1 right-0">
         <div className="flex flex-col gap-5 py-5">
           <div className="flex flex-col p-2.5 gap-2.5">
-            {trackItem?.image && <img src={trackItem?.image as string} className="h-[200px] rounded-2xl" alt="zuzalu" />}
+            {trackItem?.image && <img src={trackItem?.image as string} className="lg:h-[200px] rounded-2xl" alt="zuzalu" />}
             {startDate && endDate && <EventDataDate startDate={startDate} endDate={endDate} />}
           </div>
-          <div className="flex flex-col p-2.5 gap-2.5 w-[300px]">
+          <div className="flex flex-col p-2.5 gap-2.5 sm:w-[300px] sm:text-sm md:text-base">
             <Label className="text-xl">{trackItem?.name}</Label>
-            {trackItem?.description && <RenderHTMLString height="" htmlString={trackItem?.description} />}
+            {trackItem?.description && (
+              <RenderHTMLString height="" htmlString={trackItem?.description} />
+            )}
           </div>
         </div>
-        <div className="flex flex-col gap-2.5">
-          <div className="flex flex-col gap-3">
-            <h2 className="font-bold p-3.5 border-b border-b-background text-xl">Details</h2>
-            <div className="flex gap-2 items-center">
-              <Label className="opacity-60">Format: </Label>
-              <Label className="opacity-70 font-bold text-base">{eventSpace?.format.toUpperCase()}</Label>
-            </div>
-            <div className="flex gap-2 items-center">
-              <Label className="opacity-60">Type: </Label>
-              <Label className="opacity-70 font-bold text-base">{eventSpace?.event_type?.join(', ')}</Label>
-            </div>
-            <div className="flex gap-2 items-center">
-              <Label className="opacity-60">Expereicne Level: </Label>
-              <Label className="opacity-70 font-bold text-base">{eventSpace?.experience_level?.join(', ')}</Label>
-            </div>
-          </div>
-          <div className="pb-10 gap-2.5">
-            <div className="flex flex-col gap-5  rounded-[10px]">
-              <div className="flex flex-col border-b border-b-background pb-5 gap-5">
-                <div className="flex gap-2.5 items-center">
-                  <HiCog className="text-2xl" />
-                  <h2>Organizers</h2>
-                </div>
-                <div className="flex gap-[6px]">
-                  <Speaker title="QJ" />
-                  <Speaker title="Janine Leger" />
-                </div>
-              </div>
-              <div className="flex flex-col gap-5">
-                <div className="flex flex-col border-b border-b-background pb-5 gap-5">
-                  <div className="flex gap-2.5 items-center">
-                    <HiMicrophone className="text-2xl" />
-                    <h2>Speakers</h2>
-                  </div>
-                  <div className="flex gap-[6px]">
-                    <Speaker title="Avery Longname" />
-                    <Speaker title="Janine Leger" />
-                  </div>
-                </div>
-              </div>
-              <div className="flex flex-col gap-5">
-                <div className="flex flex-col border-b border-b-background pb-5 gap-5">
-                  <div className="flex gap-2.5 items-center">
-                    <HiTag className="text-2xl" />
-                    <h2>Tags</h2>
-                  </div>
-                  <div className="flex gap-2.5">
-                    <Label className="rounded-xl opacity-70 bg-itemBgPrimary p-2 text-lg">Tag2</Label>
-                    <Label className="rounded-xl opacity-70 bg-itemBgPrimary p-2 text-lg">Tag2</Label>
-                    <Label className="rounded-xl opacity-70 bg-itemBgPrimary p-2 text-lg">Tag2</Label>
-                    <Label className="rounded-xl opacity-70 bg-itemBgPrimary p-2 text-lg">Tag2</Label>
-                  </div>
-                </div>
-              </div>
-              <div className="flex flex-col pb-2.5 gap-5">
-                <div className="flex gap-2.5 items-center">
-                  <HiLocationMarker className="text-2xl" />
-                  <h2>Location</h2>
-                </div>
-                <div className="flex gap-2.5">
-                  <img src="/images/1.png" width={100} height={50} alt="333" />
-                  <div className="flex flex-col gap-[6px]">
-                    <h2 className="font-bold">Soho House Istanbul</h2>
-                    <Label className="opacity-70">Beyoglu, Istanbul, Turkey</Label>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="flex p-2.5 text-xl items-center gap-3">
-              <HiUserGroup className="text-2xl" />
-              <span>14 going</span>
-            </div>
-          </div>
-        </div>
+        {eventSpace && <EventViewDetailsPanel eventSpace={eventSpace} />}
       </div>
     </div>
   )
 }
+
+export const getServerSideProps = async (ctx: any) => {
+  const queryClient = new QueryClient();
+  const { event_space_id } = ctx.query;
+  await queryClient.prefetchQuery('currentEventSpace', () => fetchEventSpaceById(event_space_id));
+  const supabase = createPagesServerClient(ctx);
+  let {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  if (!session)
+    return {
+      props: {
+        initialSession: null,
+        user: null,
+      },
+    };
+
+  // get profile from session
+  const { data: profile, error } = await supabase.from('profile').select('*').eq('uuid', session.user.id);
+
+  return {
+    props: {
+      initialSession: session,
+      user: session?.user,
+      profile: profile,
+      dehydratedState: dehydrate(queryClient),
+    },
+  };
+};
