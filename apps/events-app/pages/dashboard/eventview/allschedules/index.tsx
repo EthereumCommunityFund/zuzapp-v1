@@ -16,6 +16,8 @@ import { QueryClient, dehydrate, useQuery } from 'react-query';
 import { EventSpaceDetailsType } from '@/types';
 import useEventDetails from '@/hooks/useCurrentEventSpace';
 import { Loader } from '@/components/ui/Loader';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import ScheduleEditForm from '@/components/commons/ScheduleEditForm';
 
 const categoryList: DropDownMenuItemType[] = [
   {
@@ -65,13 +67,44 @@ export default function EventViewTracksAlleSchedulesPage() {
         <div className="flex flex-col gap-2.5 lg:px-9 md:px-5">
           <div className="bg-componentPrimary rounded-2xl lg:px-5 lg:pt-8">
             <div>
-              <Button variant="blue" size="lg" className="rounded-full sm:w-full lg:w-fit justify-center" leftIcon={BiPlusCircle}>
-                Add a Schedule
-              </Button>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="blue" size="lg" className="rounded-full sm:w-full lg:w-fit justify-center" leftIcon={BiPlusCircle}>
+                    Add a Schedule
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="md:w-3/5 md:h-3/5 overflow-x-auto sm:w-3/4">
+                  <ScheduleEditForm
+                    title={'Add'}
+                    isFromAllSchedules={true}
+                    scheduleData={{
+                      name: '',
+                      format: 'in-person',
+                      description: '',
+                      date: '',
+                      start_time: '',
+                      end_time: '',
+                      all_day: undefined,
+                      schedule_frequency: 'once',
+                      images: undefined,
+                      video_call_link: undefined,
+                      live_stream_url: undefined,
+                      location_id: '',
+                      event_type: undefined,
+                      experience_level: undefined,
+                      limit_rsvp: undefined,
+                      rsvp_amount: undefined,
+                      event_space_id: event_space_id as string,
+                      track_id: undefined,
+                      tags: undefined,
+                      organizers: undefined
+                    }} />
+                </DialogContent>
+              </Dialog>
             </div>
             <div className=" p-2.5 gap-[10px] overflow-hidden rounded-[10px] sm:pb-36">
               {eventSpace?.schedules.map((schedule, id) => (
-                <UserFacingTrack key={schedule.id} onClick={() => handleItemClick(schedule.name, schedule.id, schedule.track_id)} scheduleData={schedule} />
+                <UserFacingTrack key={id} onClick={() => handleItemClick(schedule.name, schedule.id, schedule.track_id)} scheduleData={schedule} />
               ))}
             </div>
           </div>

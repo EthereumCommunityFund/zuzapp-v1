@@ -57,7 +57,7 @@ export default function ScheduleEditForm({
 }: IScheduleEditForm) {
   const router = useRouter();
   const { trackId, scheduleId, track_title } = router.query;
-  console.log("Schedule Description in ScheduleEditForm", scheduleData.description);
+  console.log("Schedule Data", scheduleData);
   const [schedule, setSchedule] = useState<ScheduleUpdateRequestBody>({
     name: scheduleData.name,
     format: scheduleData.format,
@@ -269,6 +269,7 @@ export default function ScheduleEditForm({
   useEffect(() => {
     const fetchLocationDetails = async () => {
       try {
+        console.log("evnet space id", scheduleData.event_space_id);
         const result = await fetchLocationsByEventSpace(scheduleData.event_space_id as string);
         console.log(result);
         setSavedLocations(result?.data?.data);
@@ -354,7 +355,7 @@ export default function ScheduleEditForm({
     <div className="flex flex-col items-start gap-[17px] flex-1">
       <div className="flex flex-col items-center gap-8 self-stretch rounded-2xl">
         <div className="flex flex-col items-center gap-[34px] self-stretch w-full text-white">
-          <FormTitle name={title} />
+          <FormTitle name={`${title} Schedule`} />
           {scheduleUpdated ? (
             <div className="flex flex-col items-center">
               <h3 className="font-bold text-xl">Your Schedule Has Been Updated</h3>
@@ -753,7 +754,9 @@ export default function ScheduleEditForm({
                   </div>
                   <div className="flex flex-col items-start gap-6 self-stretch">
                     <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                      <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Add Tags</Label>
+                      <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
+                        Add Tags
+                      </Label>
                       <div className="flex w-full text-white gap-5">
                         <Autocomplete
                           {...defaultProps}
@@ -767,6 +770,14 @@ export default function ScheduleEditForm({
                           }}
                           onInputChange={(event, newInputValue) => {
                             setTagItem({ name: newInputValue });
+                          }}
+                          slotProps={{
+                            paper: {
+                              sx: {
+                                color: "white",
+                                backgroundColor: "#242727",
+                              }
+                            }
                           }}
                           renderInput={(params) => (
                             <TextField
@@ -793,6 +804,7 @@ export default function ScheduleEditForm({
                               ...schedule,
                               tags: [...(schedule.tags as string[]), tagItem.name],
                             });
+                            setTags([...tags, tagItem.name]);
                             setTagItem({ name: '' });
                           }}
                           className="flex gap-2.5 text-lg font-normal leading-[1.2] text-white items-center rounded-[8px] px-2 py-1 bg-white bg-opacity-10"
@@ -801,10 +813,10 @@ export default function ScheduleEditForm({
                         </button>
                       </div>
                       <div className="flex gap-2.5">
-                        {schedule.tags?.map((tag, index) => {
-                          const id = uuidv4();
+                        {tags?.map((tag, index) => {
+
                           return (
-                            <div key={id} className="flex gap-2.5 items-center rounded-[8px] px-2 py-1.5 bg-white bg-opacity-10">
+                            <div key={index} className="flex gap-2.5 items-center rounded-[8px] px-2 py-1.5 bg-white bg-opacity-10">
                               <button type="button" className="flex gap-2.5 items-center">
                                 <GoXCircle onClick={() => handleRemoveTag(index)} className="top-0.5 left-0.5 w-4 h-4" />
                                 <span className="text-lg font-semibold leading-[1.2] text-white self-stretch">{tag}</span>
@@ -857,7 +869,7 @@ export default function ScheduleEditForm({
                       <span>Discard Schedule</span>
                     </Button>
                     <Button className="rounded-full w-1/2 flex justify-center" variant="blue" size="lg" type="submit" leftIcon={FaCircleArrowUp}>
-                      <span>Update Schedule</span>
+                      <span>{title} Schedule</span>
                     </Button>
                   </div>
                 </div>

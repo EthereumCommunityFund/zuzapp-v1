@@ -41,7 +41,7 @@ export default function TrackDetailsPageTemplate(props: ITrackDetailsPageTemplat
   //   setCurrentPage(page);
   // };
   const handleItemClick = (scheduleName: string, trackId: string | undefined, event_space_id: string) => {
-    console.log('TrackDetailsPage Track Id', trackId);
+
     router.push({
       pathname: '/dashboard/eventview/tracks/track/schedule',
       query: { scheduleName, trackId, event_space_id },
@@ -55,16 +55,16 @@ export default function TrackDetailsPageTemplate(props: ITrackDetailsPageTemplat
     });
   };
 
-  const handleAddSchedule = async () => {
-    try {
-      router.push({
-        pathname: `/dashboard/eventview/allschedules/addschedule`,
-        query: { event_space_id, trackId: trackId, track_title: track_title },
-      });
-    } catch (error) {
-      console.error('Error fetching space details', error);
-    }
-  };
+  // const handleAddSchedule = async () => {
+  //   try {
+  //     router.push({
+  //       pathname: `/dashboard/eventview/allschedules/addschedule`,
+  //       query: { event_space_id, trackId: trackId, track_title: track_title },
+  //     });
+  //   } catch (error) {
+  //     console.error('Error fetching space details', error);
+  //   }
+  // };
 
   if (isLoading) {
     return <Loader />;
@@ -120,7 +120,7 @@ export default function TrackDetailsPageTemplate(props: ITrackDetailsPageTemplat
             <DialogContent className='lg:w-3/5 lg:h-3/5 overflow-y-auto'>
               <DialogDescription className="text-white">
                 <ScheduleEditForm
-                  title={'Add a Schedule'}
+                  title={'Add'}
                   isFromAllSchedules={false}
                   scheduleData={{
                     name: '',
@@ -139,8 +139,8 @@ export default function TrackDetailsPageTemplate(props: ITrackDetailsPageTemplat
                     experience_level: undefined,
                     limit_rsvp: undefined,
                     rsvp_amount: undefined,
-                    event_space_id: '',
-                    track_id: undefined,
+                    event_space_id: event_space_id as string,
+                    track_id: trackId as string,
                     tags: undefined,
                     organizers: undefined
                   }} />

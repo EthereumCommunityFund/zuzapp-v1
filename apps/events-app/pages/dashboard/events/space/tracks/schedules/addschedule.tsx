@@ -391,7 +391,7 @@ export default function AddSchedulePage(props: any) {
                           Select Track
                         </Label>
                         <select
-                          onChange={handleTrackSelect}
+                          onChange={handleTracksSelect}
                           title="Track List"
                           value={selectedTrackId}
                           defaultValue={selectedTrackId}
