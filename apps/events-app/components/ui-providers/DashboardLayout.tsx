@@ -42,7 +42,7 @@ export const DashboardProvider = ({ children }: { children: React.ReactNode }) =
                 <div className="flex-1 mx-auto pt-10 lg:px-10 relative top-20">{children}</div>
               </>
             ) : (
-              <div className="flex-1 mx-auto lg:px-10 pt-6 lg:pt-0 relative mt-24 xl:mt-0 xl:top-10 bg-pagePrimary">{children}</div>
+              <div className="flex-1 mx-auto lg:px-10 pt-10 lg:pt-0 relative top-20 bg-pagePrimary">{children}</div>
             )}
           </div>
         </div>
