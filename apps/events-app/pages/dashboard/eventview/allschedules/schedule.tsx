@@ -57,7 +57,7 @@ export default function EventViewScheduleDetailsPage() {
       hour: '2-digit',
       minute: '2-digit',
     });
-  console.log('All Schedules / Schedule eventSpace', eventSpace);
+
 
   const handleBackToSchedule = () => {
     router.push({

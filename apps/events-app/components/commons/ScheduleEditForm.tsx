@@ -57,7 +57,7 @@ export default function ScheduleEditForm({
 }: IScheduleEditForm) {
   const router = useRouter();
   const { trackId, scheduleId, track_title } = router.query;
-  console.log("Schedule Data", scheduleData);
+
   const [schedule, setSchedule] = useState<ScheduleUpdateRequestBody>({
     name: scheduleData.name,
     format: scheduleData.format,
@@ -98,6 +98,7 @@ export default function ScheduleEditForm({
   const [savedLocations, setSavedLocations] = useState<LocationUpdateRequestBody[]>([]);
   const [locationId, setLocationId] = useState('');
   const [experienceLevel, setExperienceLevel] = useState('');
+  const [eventCategory, setEventCategory] = useState('');
   const [initialEvent, setInitialEvent] = useState('');
   const [isAllDay, setIsAllDay] = useState<boolean>(scheduleData.all_day as boolean);
   const handleChangeSwitch = () => {
@@ -350,6 +351,9 @@ export default function ScheduleEditForm({
 
   // const formated = formatDate('2023-09-27T23:00:00+00:00');
   // console.log(formated, 'formated');
+  if (isLoading) {
+    return <Loader />
+  }
 
   return (
     <div className="flex flex-col items-start gap-[17px] flex-1">
@@ -686,7 +690,7 @@ export default function ScheduleEditForm({
                       </div>
 
                       <div className="flex gap-2.5">
-                        {schedule.organizers?.map((organizer: any, index: number) => (
+                        {organizers?.map((organizer: any, index: number) => (
                           <div key={index} className="flex gap-2.5 items-center rounded-[8px] px-2 py-1.5 bg-white bg-opacity-10">
                             <button type="button" className="flex gap-2.5 items-center">
                               <GoXCircle onClick={() => handleRemoveSpeaker(index)} className="top-0.5 left-0.5 w-4 h-4" />
@@ -701,30 +705,22 @@ export default function ScheduleEditForm({
                 <div className="w-full flex flex-col gap-6">
                   <h2 className="text-lg opacity-70 self-stretch font-bold pb-5">Schedule Labels</h2>
                   <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                    <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select Event Category</Label>
-
+                    <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
+                      Select Event Category
+                    </Label>
                     <select
-                      onChange={(e) => {
-                        setSchedule({
-                          ...schedule,
-                          event_type: e.target.value,
-                        });
-                        // setInitialEvent(e.target.value)
-                        console.log(schedule.event_type);
-                      }}
-                      value={schedule.event_type}
-                      // value={schedule.event_type}
+                      onChange={(e) => setEventCategory(e.target.value)}
+                      value={eventCategory}
                       title="category"
-                      className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
-                    >
-                      {eventSpace?.event_type?.map((category, index) => {
-                        const id = uuidv4();
-                        return (
-                          <option key={id} value={category}>
-                            {category}
-                          </option>
-                        );
-                      })}
+                      className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10">
+                      {eventSpace?.event_type?.length === 0 ||
+                        (eventSpace?.event_type === null && <option value="">No saved categories</option>)
+                      }
+                      {eventSpace?.event_type?.map((category) => (
+                        <option key={category} value={category}>
+                          {category}
+                        </option>
+                      ))}
                     </select>
                   </div>
                   <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
@@ -732,24 +728,17 @@ export default function ScheduleEditForm({
                     {/* <InputFieldDark type={InputFieldType.Option} placeholder={'Beginner'} /> */}
 
                     <select
-                      onChange={(e) =>
-                        setSchedule({
-                          ...schedule,
-                          experience_level: e.target.value,
-                        })
-                      }
-                      value={schedule.experience_level}
+                      onChange={(e) => setExperienceLevel(e.target.value)}
+                      value={experienceLevel}
                       title="category"
                       className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
                     >
-                      {eventSpace?.experience_level?.map((category) => {
-                        const id = uuidv4();
-                        return (
-                          <option key={id} value={category}>
-                            {category}
-                          </option>
-                        );
-                      })}
+                      {eventSpace?.experience_level?.length === 0 || (eventSpace?.experience_level === null && <option value="">No saved experience levels</option>)}
+                      {eventSpace?.experience_level?.map((category) => (
+                        <option key={category} value={category}>
+                          {category}
+                        </option>
+                      ))}
                     </select>
                   </div>
                   <div className="flex flex-col items-start gap-6 self-stretch">
@@ -757,13 +746,15 @@ export default function ScheduleEditForm({
                       <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
                         Add Tags
                       </Label>
-                      <div className="flex w-full text-white gap-5">
+                      <div className="flex w-full text-white outline-none rounded-lg pr-3 pl-2.5 bg-inputField gap-2.5 border border-white/10 border-opacity-10 items-center">
                         <Autocomplete
                           {...defaultProps}
                           id="controlled-demo"
-                          sx={{ color: 'white', width: '100%' }}
+                          sx={{ color: "black", width: "100%" }}
+                          color="black"
                           value={tagItem}
                           onChange={(event: any, newValue) => {
+                            console.log("onChange", event, newValue);
                             if (newValue) {
                               setTagItem({ name: newValue.name });
                             }
@@ -799,31 +790,25 @@ export default function ScheduleEditForm({
                         <button
                           type="button"
                           onClick={() => {
-                            if (tagItem.name === '') return;
-                            setSchedule({
-                              ...schedule,
-                              tags: [...(schedule.tags as string[]), tagItem.name],
-                            });
+                            if (tagItem.name === '')
+                              return;
                             setTags([...tags, tagItem.name]);
                             setTagItem({ name: '' });
                           }}
-                          className="flex gap-2.5 text-lg font-normal leading-[1.2] text-white items-center rounded-[8px] px-2 py-1 bg-white bg-opacity-10"
+                          className="flex gap-2.5 text-lg font-normal leading-[1.2] text-white items-center rounded-[8px] px-2 py-1 bg-componentPrimary bg-opacity-10"
                         >
                           +
                         </button>
                       </div>
-                      <div className="flex gap-2.5">
-                        {tags?.map((tag, index) => {
-
-                          return (
-                            <div key={index} className="flex gap-2.5 items-center rounded-[8px] px-2 py-1.5 bg-white bg-opacity-10">
-                              <button type="button" className="flex gap-2.5 items-center">
-                                <GoXCircle onClick={() => handleRemoveTag(index)} className="top-0.5 left-0.5 w-4 h-4" />
-                                <span className="text-lg font-semibold leading-[1.2] text-white self-stretch">{tag}</span>
-                              </button>
-                            </div>
-                          );
-                        })}
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5">
+                        {tags?.map((tag, index) => (
+                          <div key={index} className="flex w-full items-center rounded-[8px] px-2 py-1.5 bg-white bg-opacity-10">
+                            <button type='button' className="flex gap-2.5 items-center">
+                              <GoXCircle onClick={() => handleRemoveTag(index)} className="top-0.5 left-0.5 w-4 h-4" />
+                              <span className="text-lg font-semibold leading-[1.2] text-white self-stretch">{tag}</span>
+                            </button>
+                          </div>
+                        ))}
                       </div>
                     </div>
                     <line />
