@@ -21,7 +21,7 @@ import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
 import { Database } from '@/database.types';
 import CustomDatePicker from '@/components/ui/DatePicker';
 import { useRouter } from 'next/router';
-import { fetchLocationsByEventSpace, fetchAllTags, fetchScheduleByID, updateSchedule } from '@/controllers';
+import { fetchLocationsByEventSpace, fetchAllTags, fetchScheduleByID, updateSchedule, createSchedule } from '@/controllers';
 import { useQuery } from 'react-query';
 import { fetchEventSpaceById } from '@/services/fetchEventSpaceDetails';
 import dayjs, { Dayjs } from 'dayjs';
@@ -56,7 +56,7 @@ export default function ScheduleEditForm({
   scheduleData,
 }: IScheduleEditForm) {
   const router = useRouter();
-  const { trackId, scheduleId, track_title } = router.query;
+  const { trackId, scheduleId, event_space_id } = router.query;
 
   const [schedule, setSchedule] = useState<ScheduleUpdateRequestBody>({
     name: scheduleData.name,
@@ -102,6 +102,7 @@ export default function ScheduleEditForm({
   const [eventCategory, setEventCategory] = useState('');
   const [initialEvent, setInitialEvent] = useState('');
   const [isAllDay, setIsAllDay] = useState<boolean>(scheduleData.all_day as boolean);
+  const [rsvpAmount, setRsvpAmount] = useState(1);
   const handleChangeSwitch = () => {
     setIsAllDay(!isAllDay);
     setSchedule({ ...schedule, all_day: !schedule.all_day });
@@ -157,8 +158,11 @@ export default function ScheduleEditForm({
     }
   );
 
+  const [eventType, setEventType] = useState('');
+
   const handleLimitRSVP = () => {
     setSchedule({ ...schedule, limit_rsvp: !schedule.limit_rsvp });
+    setIsLimit(!isLimit);
   };
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -209,38 +213,76 @@ export default function ScheduleEditForm({
     });
     console.log(updatedOrganizers);
 
-    const additionalPayload = {
-      event_space_id: schedule.event_space_id,
-      start_time: schedule.start_time as unknown as string,
-      end_time: schedule.end_time as unknown as string,
-      event_type: (schedule.event_type as unknown as []).length > 0 ? JSON.stringify([schedule.event_type]) : ((eventSpace?.event_type as string[])[0] as unknown as string[]),
-      experience_level:
-        (schedule.experience_level as unknown as []).length > 0 ? (JSON.stringify([schedule.experience_level]) as unknown as string[]) : [(eventSpace?.experience_level as string[])[0]],
-      tags: tags,
-      schedule_frequency: schedule.schedule_frequency,
-      location_id: schedule.location_id,
-      organizers: updatedOrganizers,
-      video_call_link: schedule.video_call_link,
-      live_stream_url: schedule.live_stream_url,
-      all_day: schedule.all_day,
-      track_id: trackId,
-      limit_rsvp: schedule.limit_rsvp,
-      ...(eventSpace?.event_space_type === 'tracks' && {
-        track_id: trackId as string,
-      }),
-      ...(schedule.limit_rsvp ? { rsvp_amount: schedule.rsvp_amount } : {}),
-      // isLimit && rsvp_amount: rsvpAmount
-    };
-    const payload: any = { ...values, ...additionalPayload };
-    console.log(payload);
-    try {
+    if (title === 'Update') {
+      const additionalPayload = {
+        event_space_id: schedule.event_space_id as string,
+        start_time: startTime as unknown as Date,
+        end_time: endTime as unknown as Date,
+        event_type: eventType.length > 0 ? [eventType] : eventSpace?.event_type?.[0] ? [eventSpace?.event_type[0]] : [eventSpace?.event_type || 'Meetup'],
+        experience_level: experienceLevel.length > 0 ? [experienceLevel] : eventSpace?.experience_level?.[0] ? [eventSpace?.experience_level[0]] : [eventSpace?.experience_level || 'Beginner'],
+        tags: tags,
+        schedule_frequency: frequency,
+        location_id: locationId === '' ? '403a376c-7ac7-4460-b15d-6cc5eabf5e6c' : locationId,
+        organizers,
+        all_day: isAllDay,
+        limit_rsvp: isLimit,
+        ...(eventSpace?.event_space_type === 'tracks' && {
+          track_id: selectedTrackId ? selectedTrackId : (trackId as string),
+        }),
+        ...(isLimit ? { rsvp_amount: rsvpAmount } : {}),
+        // isLimit && rsvp_amount: rsvpAmount
+      };
+      const payload: any = { ...values, ...additionalPayload };
+      console.log(payload);
+      try {
+        console.log(payload, 'payload');
+        const result = await updateSchedule(scheduleId as string, payload, scheduleData.event_space_id as string);
+        // setSwitchDialogue(true);
+        setScheduleUpdated(true);
+        console.log(result, 'result');
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    if (title === 'Add') {
+      const additionalPayload = {
+        event_space_id: event_space_id as string,
+        start_time: startTime as unknown as Date,
+        end_time: endTime as unknown as Date,
+        event_type: eventType.length > 0 ? [eventType] : eventSpace?.event_type?.[0] ? [eventSpace?.event_type[0]] : [eventSpace?.event_type || 'Meetup'],
+        experience_level: experienceLevel.length > 0 ? [experienceLevel] : eventSpace?.experience_level?.[0] ? [eventSpace?.experience_level[0]] : [eventSpace?.experience_level || 'Beginner'],
+        tags: tags,
+        schedule_frequency: frequency,
+        location_id: locationId === '' ? '403a376c-7ac7-4460-b15d-6cc5eabf5e6c' : locationId,
+        organizers,
+        all_day: isAllDay,
+        limit_rsvp: isLimit,
+        ...(eventSpace?.event_space_type === 'tracks' && {
+          track_id: selectedTrackId ? selectedTrackId : (trackId as string),
+        }),
+        ...(isLimit ? { rsvp_amount: rsvpAmount } : {}),
+        // isLimit && rsvp_amount: rsvpAmount
+      };
+      const payload = {
+        ...values,
+        ...additionalPayload,
+        video_call_link: values.video_call_link === '' ? 'https://youtube.com' : values.video_call_link,
+        live_stream_url: values.live_stream_url === '' ? 'https://youtube.com' : values.live_stream_url,
+      };
       console.log(payload, 'payload');
-      const result = await updateSchedule(scheduleId as string, payload, scheduleData.event_space_id as string);
-      // setSwitchDialogue(true);
-      setScheduleUpdated(true);
-      console.log(result, 'result');
-    } catch (error) {
-      console.log(error);
+      try {
+        const result = await createSchedule(payload as any, schedule.event_space_id as string);
+        setScheduleUpdated(true);
+        console.log(result, 'result');
+      } catch (error: any) {
+        console.log(error);
+        toast({
+          title: 'Error',
+          description: error?.response.data?.error,
+          variant: 'destructive',
+        });
+      }
     }
   }
 
@@ -253,6 +295,11 @@ export default function ScheduleEditForm({
     const updatedItems = [...(schedule.tags as string[]).slice(0, index), ...(schedule.tags as string[]).slice(index + 1)];
     console.log(updatedItems);
     setSchedule({ ...schedule, tags: updatedItems });
+  };
+
+  const handleRemoveOrganizer = (index: number) => {
+    const updatedItems = [...organizers.slice(0, index), ...organizers.slice(index + 1)];
+    setOrganizers(updatedItems);
   };
 
   const handleTrackSelect = (e: any) => {
@@ -335,13 +382,12 @@ export default function ScheduleEditForm({
     }
   }, [form.formState.errors]);
 
-  const handleEnterTrack = async () => {
+  const handleEnterSchedules = async () => {
     try {
       router.push({
         pathname: `/dashboard/events/space/tracks/schedules`,
         query: {
           event_space_id: scheduleData.event_space_id,
-          trackTitle: track_title,
           trackId: trackId,
         },
       });
@@ -364,7 +410,7 @@ export default function ScheduleEditForm({
           {scheduleUpdated ? (
             <div className="flex flex-col items-center">
               <h3 className="font-bold text-xl">Your Schedule Has Been Updated</h3>
-              <Button onClick={handleEnterTrack} variant="primary" className="mt-8 bg-[#67DBFF]/20 text-[#67DBFF] rounded-full" leftIcon={HiArrowRight}>
+              <Button onClick={handleEnterSchedules} variant="primary" className="mt-8 bg-[#67DBFF]/20 text-[#67DBFF] rounded-full" leftIcon={HiArrowRight}>
                 Go to schedules
               </Button>
             </div>
@@ -639,33 +685,30 @@ export default function ScheduleEditForm({
                           <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">Enter Name</h2>
                           <InputFieldDark
                             type={InputFieldType.Primary}
-                            value={eventItem?.name}
-                            onChange={(e) => {
-                              console.log((e.target as HTMLInputElement).value);
+                            value={eventItem.name}
+                            onChange={(e) =>
                               setEventItem({
                                 ...eventItem,
                                 name: (e.target as HTMLInputElement).value,
-                              });
-                            }}
+                              })
+                            }
                             placeholder={'Enter the name'}
                           />
                         </div>
                         <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
                           <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select Role</h2>
                           <select
-                            title="speaker"
+                            onChange={(e) => setEventItem({
+                              ...eventItem,
+                              role: e.target.value
+                            })}
+                            title="location"
                             value={eventItem.role}
-                            onChange={(e) =>
-                              setEventItem({
-                                ...eventItem,
-                                role: e.target.value,
-                              })
-                            }
                             className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
                           >
-                            <option value="speaker">Speaker</option>
-                            <option value="organizer">Organizer</option>
-                            <option value="facilitator">Facilitator</option>
+                            <option value='organizer'>Organizer</option>
+                            <option value='speaker'>Speaker</option>
+                            <option value='facilitator'>Facilitator</option>
                           </select>
                         </div>
 
@@ -673,18 +716,8 @@ export default function ScheduleEditForm({
                           type="button"
                           onClick={() => {
                             if (eventItem.name === '') return;
-                            console.log("eventItem", eventItem);
-                            setSchedule({
-                              ...schedule,
-                              organizers: [...(schedule.organizers as Organizer[]), eventItem],
-                            });
                             setOrganizers([...organizers, eventItem]);
-                            setEventItem({
-                              name: '',
-                              role: 'speaker',
-                            });
-
-                            console.log("organizers", organizers, schedule.organizers);
+                            setEventItem({ name: '', role: 'speaker' });
                           }}
                           className="flex gap-2.5 mb-2 text-lg font-normal leading-[1.2] text-white items-center rounded-[8px] px-2 py-1 bg-white bg-opacity-10"
                         >
@@ -692,12 +725,12 @@ export default function ScheduleEditForm({
                         </button>
                       </div>
 
-                      <div className="flex gap-2.5">
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5">
                         {organizers?.map((organizer: any, index: number) => (
                           <div key={index} className="flex gap-2.5 items-center rounded-[8px] px-2 py-1.5 bg-white bg-opacity-10">
                             <button type="button" className="flex gap-2.5 items-center">
-                              <GoXCircle onClick={() => handleRemoveSpeaker(index)} className="top-0.5 left-0.5 w-4 h-4" />
-                              <span className="text-lg font-semibold leading-[1.2] text-white self-stretch">{organizer.name ? organizer.name : organizer.name}</span>
+                              <GoXCircle onClick={() => handleRemoveOrganizer(index)} className="top-0.5 left-0.5 w-4 h-4" />
+                              <span className="text-lg font-semibold leading-[1.2] text-white self-stretch">{organizer.name}</span>
                             </button>
                           </div>
                         ))}
@@ -825,23 +858,17 @@ export default function ScheduleEditForm({
                   <span className="text-lg opacity-70 self-stretch">Advanced</span>
                   <div className="flex flex-col items-center gap-5 self-stretch">
                     <div className="flex items-center gap-5 self-stretch">
-                      <SwitchButton value={schedule.limit_rsvp} onClick={handleLimitRSVP} />
+                      <SwitchButton value={isLimit} onClick={handleLimitRSVP} />
                       <span className="flex-1 text-base font-semibold leading-[1.2]">Limit RSVPs</span>
                     </div>
-                    {schedule.limit_rsvp && (
+                    {isLimit && (
                       <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
                         <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select an Amount</Label>
                         <input
                           type="number"
                           className="bg-gray-600 w-full outline-none px-4 rounded-md py-2"
                           placeholder={'50'}
-                          value={schedule.rsvp_amount}
-                          onChange={(e) =>
-                            setSchedule({
-                              ...schedule,
-                              rsvp_amount: e.target.value as unknown as number,
-                            })
-                          }
+                          onChange={(e) => setRsvpAmount(e.target.value as unknown as number)}
                         />
                       </div>
                     )}
