@@ -1,9 +1,8 @@
 import { fetchAllEventSpaces } from '@/controllers/eventspace.controller';
-import { RouteOptions } from '@/types';
 
-export async function fetchPublishedEventSpaces({ page, limit }: RouteOptions) {
+export async function fetchPublishedEventSpaces() {
   try {
-    const response = await fetchAllEventSpaces({ page, limit });
+    const response = await fetchAllEventSpaces();
     return response?.data?.data;
   } catch (error) {
     console.error('Error fetching event spaces:', error);

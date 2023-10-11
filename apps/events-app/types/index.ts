@@ -240,9 +240,3 @@ export type DropDownMenuItemType = {
   icon?: IconType;
   name: string;
 };
-
-
-export type RouteOptions = {
-  page: number;
-  limit: number
-}

@@ -9,30 +9,18 @@ const fetchInvitedEventSpaces = async (req: NextApiRequest, res: NextApiResponse
     const supabase = createPagesServerClient<Database>({ req, res });
 
     const { user } = req.body;
-    const page = parseInt(req.query.page as string) || 1;
-    const limit = parseInt(req.query.limit as string) || 10;
-    const offset = (page - 1) * limit;
 
     const errors = validateUUID(user.id);
     if (errors.length > 0) {
         return res.status(400).json({ errors });
     }
 
-    // Get the total count of accepted invites
-    const { count } = await supabase
-        .from('eventspaceinvites')
-        .select('event_space_id', { count: 'exact' })
-        .eq('invitee_id', user.id)
-        .eq('status', 'accepted');
-
     // Fetch accepted invites for the user
     const invitedSpacesResult = await supabase
         .from('eventspaceinvites')
         .select('event_space_id')
         .eq('invitee_id', user.id)
-        .eq('status', 'accepted')
-        .limit(limit)
-        .range(offset, offset + limit - 1);
+        .eq('status', 'accepted');
 
     if (invitedSpacesResult.error) {
         logToFile("server error", invitedSpacesResult.error.message, invitedSpacesResult.error.code, user.email);
@@ -73,9 +61,10 @@ const fetchInvitedEventSpaces = async (req: NextApiRequest, res: NextApiResponse
         return data;
     }));
 
+    // Filter out any null results due to errors
     const filteredData = eventSpacesData.filter(space => space !== null);
 
-    return res.status(200).json({ data: filteredData, currentPage: page, limit: limit, totalCount: count });
+    return res.status(200).json({ data: filteredData });
 };
 
 export default withSession(fetchInvitedEventSpaces);

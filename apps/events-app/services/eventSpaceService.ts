@@ -1,12 +1,8 @@
 import { fetchEventSpacesByUser } from '@/controllers/eventspace.controller';
 
-type RouteOptions = {
-  page: number;
-  limit: number
-}
-export async function fetchUserEventSpaces({ page, limit }: RouteOptions) {
+export async function fetchUserEventSpaces() {
   try {
-    const response = await fetchEventSpacesByUser({ page, limit });
+    const response = await fetchEventSpacesByUser();
     return response.data.data;
   } catch (error) {
     console.error('Error fetching event spaces:', error);

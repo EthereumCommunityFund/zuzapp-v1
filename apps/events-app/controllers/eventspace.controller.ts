@@ -1,10 +1,5 @@
-
-
-let default_limit = 10
-let default_page = 1
-
 import axiosInstance from '../src/axiosInstance';
-import { EventSpaceCreateRequestBody, EventSpaceStatusUpdateRequestBody, EventSpaceUpdateRequestBody, RouteOptions } from '../types';
+import { EventSpaceCreateRequestBody, EventSpaceStatusUpdateRequestBody, EventSpaceUpdateRequestBody } from '../types';
 
 // gets an event space
 export const fetchEventSpace = async (id: string) => {
@@ -12,23 +7,17 @@ export const fetchEventSpace = async (id: string) => {
 };
 
 // gets all event spaces created by a user
-export const fetchEventSpacesByUser = async (options: RouteOptions) => {
-  let limit = options.limit || default_limit;
-  let page = options.page || default_page
-  return await axiosInstance.get(`/api/eventspace/fetchByUser?limit=${limit}&page=${page}`);
+export const fetchEventSpacesByUser = async () => {
+  return await axiosInstance.get(`/api/eventspace/fetchByUser`);
 };
 
-export const fetchInvitedEventSpaces = async (options: RouteOptions) => {
-  let limit = options.limit || default_limit;
-  let page = options.page || default_page
-  return await axiosInstance.get(`/api/eventspace/fetchByInvite?limit=${limit}&page=${page}`);
+export const fetchInvitedEventSpaces = async () => {
+  return await axiosInstance.get(`/api/eventspace/fetchByInvite`);
 };
 
 // gets publisbed event spaces
-export const fetchAllEventSpaces = async (options: RouteOptions) => {
-  let limit = options.limit || default_limit;
-  let page = options.page || default_page
-  return await axiosInstance.get(`/api/eventspace?limit=${limit}&page=${page}`);
+export const fetchAllEventSpaces = async () => {
+  return await axiosInstance.get(`/api/eventspace`);
 };
 
 // creates an event space

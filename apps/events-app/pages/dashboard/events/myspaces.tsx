@@ -13,9 +13,7 @@ export default function MyEventSpacesPage() {
     isError,
   } = useQuery<EventSpaceDetailsType[], Error>(
     ["eventSpaces"], // Query key
-    () => {
-      return fetchUserEventSpaces({ page: 1, limit: 10 });
-    },
+    fetchUserEventSpaces,
 
     {
       onSuccess: (data) => {
@@ -26,7 +24,7 @@ export default function MyEventSpacesPage() {
 
   const { data: invitedSpaces } = useQuery<EventSpaceDetailsType[], Error>(
     ["invitedSpaces"], // Query key
-    () => fetchInvitedEvents({ limit: 10, page: 1 }),
+    fetchInvitedEvents,
     {
       onSuccess: (data) => {
         console.log("Event Spaces:", data);

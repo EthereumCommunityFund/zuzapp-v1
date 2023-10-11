@@ -57,13 +57,13 @@ export default function OnlineEventViewPageTemplate({ eventSpace }: IOnlineEvent
   return (
     <>
       <div className="flex gap-10 md:flex-col sm:flex-col">
-        <div className="lg:w-2/3 md:w-full flex flex-col rounded-2xl bg-componentPrimary lg:min-w-[600px]">
+        <div className="lg:w-2/3 md:w-full flex flex-col mb-10 md:rounded-2xl bg-componentPrimary lg:min-w-[600px]">
           {' '}
           {/* Information */}
           <div className="rounded-xl p-5">
-            <img src={eventSpace.image_url} className="w-full pb-5 rounded-2xl" alt="" height={600} />
+            <img src={eventSpace.image_url} className="w-full lg:pb-5 rounded-2xl" alt="" height={600} />
           </div>
-          <div className="flex flex-col gap-2.5 pb-5 border-b-2 border-white/10 w-full p-5">
+          <div className="flex flex-col gap-2.5 pb-5 border-b-2 border-white/10 w-full lg:pt-5 px-5">
             <div className="items-center justify-between w-full pb-5 sm:flex-col sm:gap-3 sm:flex md:flex md:flex-row">
               <div className="flex flex-col gap-3 sm:w-full md:w-auto">
                 <div className="flex items-center gap-3 text-[#D7FFC4]/80">
@@ -86,7 +86,7 @@ export default function OnlineEventViewPageTemplate({ eventSpace }: IOnlineEvent
               </span>
             </div>
           </div>
-          <div className="flex flex-col gap-4 p-5 border-b-2 border-white/10">
+          <div className="flex flex-col gap-4 p-5 border-white/10">
             {' '}
             {/* About */}
             <h3 className="text-lg font-bold text-white/70">About This Event</h3>
@@ -112,7 +112,7 @@ export default function OnlineEventViewPageTemplate({ eventSpace }: IOnlineEvent
             </Dialog>
           </div>
         </div>
-        <div className="lg:w-1/4 md:w-full flex flex-col md:px-10 py-5 gap-5 lg:fixed lg:right-0 sm:px-3 sm:text-sm">
+        <div className="lg:w-1/4 md:w-full flex flex-col pr-10 py-5 gap-5 lg:fixed lg:right-0 px-3 lg:px-0 sm:text-sm">
           <h2 className="border-b pb-3 text-2xl font-bold border-white/10">Details</h2>
           <div className="flex gap-4 items-center text-lg font-bold">
             <UserGroup />
