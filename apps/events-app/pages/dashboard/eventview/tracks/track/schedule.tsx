@@ -54,7 +54,7 @@ export default function EventViewScheduleDetailsPage() {
   const trackItem = eventSpace?.tracks.find(
     (trackItem) => trackItem.id === trackId
   );
-  console.log("schedule description", currentSchedule?.description);
+  console.log("Current Schedule", currentSchedule);
   const startTime =
     currentSchedule &&
     new Date(currentSchedule.start_time).toLocaleTimeString("en-US", {
@@ -179,8 +179,9 @@ export default function EventViewScheduleDetailsPage() {
                 {startTime && endTime && <EventDataTime startTime={startTime} endTime={endTime} />}
                 <h2 className="text-2xl font-extrabold">{currentSchedule?.name}</h2>
                 <div className="flex gap-[6px]">
-                  <Speaker title={'QJ'} />
-                  <Speaker title={'Janine Leger'} />
+                  {currentSchedule?.organizers?.map((organizer) => (
+                    <Speaker title={organizer.name} />
+                  ))}
                 </div>
                 <div>
                   <h3 className="float-right">By: drivenfast</h3>
