@@ -59,7 +59,7 @@ export default function HomePageTemplate() {
     isError,
   } = useQuery<EventSpaceDetailsType[], Error>(
     ["publishedEventSpaces"], // Query key
-    () => fetchPublishedEventSpaces(),
+    () => fetchPublishedEventSpaces({ page: 1, limit: 10 }),
     {
       onSuccess: (data) => {
         console.log("HomePageTemplate Event Spaces:", data);

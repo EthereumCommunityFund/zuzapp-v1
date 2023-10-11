@@ -18,7 +18,7 @@ export default function EventViewNavigation() {
   if (!event_space_id) {
     router.push('/404');
   }
-  const [dashboardOpen, setDashboardOpen] = React.useState(true);
+  const [dashboardOpen, setDashboardOpen] = React.useState(false);
   const routes = eventViewRoutes;
 
   const handleClick = () => {
@@ -55,7 +55,7 @@ export default function EventViewNavigation() {
       {/* Overlay that can close the dashboard menu */}
       <div className={`md:hidden fixed inset-0 bg-black/10 z-10 ${dashboardOpen ? 'block' : 'hidden'}`} onClick={handleClick}></div>
       <nav
-        className={`z-50 lg:w-[250px] md:w-full sm:w-full fixed flex flex-col lg:h-screen md:h-auto sm:h-auto border-r border-r-gray-800 bg-pagePrimary lg:py-10 md:pt-10 sm:pt-10 lg:pl-10 md:text-base sm:text-[12px] transition-transform duration-300 ${dashboardOpen && "open"
+        className={`z-50 lg:w-[250px] w-full fixed flex flex-col lg:h-screen border-r border-r-gray-800 bg-pagePrimary lg:py-10 lg:pl-10 md:text-base text-[12px] transition-transform duration-300 ${dashboardOpen && "open"
           }`}
       >
         <div className="flex-1 flex flex-col gap-5 max-w-max">
@@ -65,7 +65,7 @@ export default function EventViewNavigation() {
             </Button>
             <div className="flex flex-col gap-3.5 lg:pb-10 md:pb-1">
               <span className="font-semibold md:hidden lg:contents sm:hidden">Navigate Event</span>
-              <ul className="space-y-3 lg:block sm:flex sm:items-end overflow-x-auto min-w-[350px]">
+              <ul className="space-y-3 lg:block sm:flex sm:items-end overflow-x-auto">
                 {routes.map((route, index) => (route.name &&
                   <li
                     key={index}

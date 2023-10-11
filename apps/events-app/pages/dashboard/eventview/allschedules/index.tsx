@@ -61,7 +61,7 @@ export default function EventViewTracksAlleSchedulesPage() {
   }
 
   return (
-    <div className="flex gap-4 lg:flex-row sm:flex-col-reverse lg:bg-pagePrimary md:bg-componentPrimary">
+    <div className="flex gap-4 lg:flex-row mt-5 lg:mt-0 pb-24 lg:pb-0 sm:flex-col-reverse lg:bg-pagePrimary md:bg-componentPrimary">
       <div className="flex flex-col lg:w-3/4 sm:w-full pb-30 gap-5">
         <EventViewHeader imgPath={eventSpace?.image_url as string} name={eventSpace?.name as string} tagline={eventSpace?.tagline as string} />
         <div className="flex flex-col gap-2.5 lg:px-9 md:px-5">
@@ -101,7 +101,7 @@ export default function EventViewTracksAlleSchedulesPage() {
                 </DialogContent>
               </Dialog>
             </div>
-            <div className=" p-2.5 gap-[10px] overflow-hidden rounded-[10px] sm:pb-36">
+            <div className=" p-2.5 gap-[10px] flex flex-col overflow-hidden rounded-[10px] pb-36">
               {eventSpace?.schedules.map((schedule, id) => (
                 <UserFacingTrack key={id} onClick={() => handleItemClick(schedule.name, schedule.id, schedule.track_id)} scheduleData={schedule} />
               ))}

@@ -223,7 +223,10 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace }) => 
           </div>
         ) : (
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmitWithEnter)} className="flex lg:py-8 px-4 flex-col items-center gap-8 lg:rounded-2xl lg:border border-white border-opacity-10 lg:bg-componentPrimary w-full">
+            <form
+              onSubmit={form.handleSubmit(onSubmitWithEnter)}
+              className="flex lg:py-8 px-4 flex-col items-center gap-8 lg:rounded-2xl lg:border border-white border-opacity-10 lg:bg-componentPrimary w-full"
+            >
               <div className="flex flex-col gap-[34px] w-full">
                 <h1 className="text-[25px] font-normal leading-[1.2]">Event Space Details</h1>
                 <h2 className="text-2xl opacity-80 leading-[1.2]">Event Basics</h2>

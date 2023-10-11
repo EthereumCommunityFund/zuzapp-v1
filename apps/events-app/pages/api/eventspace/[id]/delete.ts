@@ -51,4 +51,4 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(status).send({ message: "Event space deleted" });
 };
 
-export default withSession(withAuthorization('creator', handler));
+export default withSession(withAuthorization(handler));

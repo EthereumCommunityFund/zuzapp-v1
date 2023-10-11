@@ -1,6 +1,6 @@
 {
   "name": "consumer-client",
-  "version": "0.0.15",
+  "version": "0.2.0",
   "license": "GPL-3.0-or-later",
   "private": true,
   "scripts": {
@@ -65,6 +65,7 @@
     "supabase": "^1.93.0",
     "tailwind-merge": "^1.14.0",
     "tailwindcss-animate": "^1.0.7",
+    "url-pattern": "^1.0.3",
     "uuid": "^9.0.1",
     "winston": "^3.10.0",
     "zod": "^3.22.2"

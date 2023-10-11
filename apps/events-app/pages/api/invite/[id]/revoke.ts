@@ -31,4 +31,4 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(200).json({ message: "Invite revoked successfully" });
 };
 
-export default withSession(withAuthorization("creator", handler));
+export default withSession(withAuthorization(handler));

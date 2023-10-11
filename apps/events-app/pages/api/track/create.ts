@@ -4,6 +4,7 @@ import withSession from "../middlewares/withSession";
 import { Database } from "@/database.types";
 import { logToFile } from "@/utils/logger";
 import { validateTrackCreation } from "@/validators";
+import withAuthorization from "../middlewares/withAuthorization";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
@@ -41,4 +42,5 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     });
 }
 
-export default withSession(handler);
+
+export default withSession(withAuthorization(handler));
