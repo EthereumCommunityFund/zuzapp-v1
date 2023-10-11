@@ -84,20 +84,19 @@ export default function EventViewTracksAlleSchedulesPage() {
                       date: '',
                       start_time: '',
                       end_time: '',
-                      all_day: undefined,
+                      all_day: false,
                       schedule_frequency: 'once',
-                      images: undefined,
-                      video_call_link: undefined,
-                      live_stream_url: undefined,
+                      images: [''],
+                      video_call_link: '',
+                      live_stream_url: '',
                       location_id: '',
-                      event_type: undefined,
-                      experience_level: undefined,
-                      limit_rsvp: undefined,
-                      rsvp_amount: undefined,
+                      event_type: '',
+                      experience_level: '',
+                      limit_rsvp: false,
+                      rsvp_amount: 1,
                       event_space_id: event_space_id as string,
-                      track_id: undefined,
-                      tags: undefined,
-                      organizers: undefined
+                      track_id: '',
+                      tags: ['']
                     }} />
                 </DialogContent>
               </Dialog>

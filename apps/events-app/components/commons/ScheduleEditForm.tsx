@@ -71,13 +71,13 @@ export default function ScheduleEditForm({
     video_call_link: scheduleData.video_call_link,
     live_stream_url: scheduleData.live_stream_url,
     location_id: scheduleData.location_id,
-    event_type: scheduleData.event_type,
+    event_type: "tracks",
     experience_level: scheduleData.experience_level,
     limit_rsvp: scheduleData.limit_rsvp,
     rsvp_amount: scheduleData.rsvp_amount,
     event_space_id: scheduleData.event_space_id,
     track_id: scheduleData.track_id,
-    tags: scheduleData.tags,
+    tags: [''],
     organizers: [
       {
         name: '',
@@ -88,6 +88,7 @@ export default function ScheduleEditForm({
   const [startDate, setStartDate] = useState<Date | undefined>(scheduleData.date as Date);
   const [optionTags, setOptionTags] = useState<TagItemProp[]>([]);
 
+  const [tags, setTags] = useState<string[]>([]);
   const [tagItem, setTagItem] = useState<TagItemProp>({ name: '' });
   const [eventItem, setEventItem] = useState({
     name: '',
@@ -215,7 +216,7 @@ export default function ScheduleEditForm({
       event_type: (schedule.event_type as unknown as []).length > 0 ? JSON.stringify([schedule.event_type]) : ((eventSpace?.event_type as string[])[0] as unknown as string[]),
       experience_level:
         (schedule.experience_level as unknown as []).length > 0 ? (JSON.stringify([schedule.experience_level]) as unknown as string[]) : [(eventSpace?.experience_level as string[])[0]],
-      tags: schedule.tags,
+      tags: tags,
       schedule_frequency: schedule.schedule_frequency,
       location_id: schedule.location_id,
       organizers: updatedOrganizers,
@@ -796,7 +797,7 @@ export default function ScheduleEditForm({
                               ...schedule,
                               tags: [...(schedule.tags as string[]), tagItem.name],
                             });
-
+                            tags.push(tagItem.name);
                             setTagItem({ name: '' });
                           }}
                           className="flex gap-2.5 text-lg font-normal leading-[1.2] text-white items-center rounded-[8px] px-2 py-1 bg-componentPrimary bg-opacity-10"
@@ -805,7 +806,7 @@ export default function ScheduleEditForm({
                         </button>
                       </div>
                       <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5">
-                        {schedule.tags && schedule.tags?.map((tag, index) => (
+                        {tags && tags.length > 0 && tags.map((tag, index) => (
                           <div key={index} className="flex w-full items-center rounded-[8px] px-2 py-1.5 bg-white bg-opacity-10">
                             <button type='button' className="flex gap-2.5 items-center">
                               <GoXCircle onClick={() => handleRemoveTag(index)} className="top-0.5 left-0.5 w-4 h-4" />
