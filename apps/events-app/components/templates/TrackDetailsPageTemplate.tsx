@@ -6,7 +6,7 @@ import UserFacingTrack from '@/components/ui/UserFacingTrack';
 import Button from '@/components/ui/buttons/Button';
 import { Label } from '@/components/ui/label';
 import { useEventSpace } from '@/context/EventSpaceContext';
-import { TrackUpdateRequestBody } from '@/types';
+import { TrackType, TrackUpdateRequestBody } from '@/types';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { BiEditAlt, BiPlusCircle } from 'react-icons/bi';
@@ -26,7 +26,7 @@ import { QueryClient, dehydrate } from 'react-query';
 import { fetchEventSpaceById } from '@/services/fetchEventSpaceDetails';
 
 interface ITrackDetailsPageTemplate {
-  trackItem: TrackUpdateRequestBody;
+  trackItem: TrackType;
 }
 
 export default function OnlineTrackDetailsPageTemplate(props: ITrackDetailsPageTemplate) {
@@ -70,9 +70,9 @@ export default function OnlineTrackDetailsPageTemplate(props: ITrackDetailsPageT
 
   return (
     <div className="flex gap-4 lg:flex-row sm:flex-col">
-      <div className="flex flex-col md:min-w-[1000px] sm:w-full">
+      <div className="flex flex-col lg:min-w-[66.67%] lg:max-w-[66.67%] w-full">
         <EventViewHeader imgPath={eventSpace?.image_url as string} name={eventSpace?.name as string} tagline={eventSpace?.tagline as string} />
-        <div className="md:p-5 sm:p-0 gap-[30px] lg:max-w-[1000px] md:w-full">
+        <div className="md:p-5 sm:p-0 gap-[30px] md:w-full">
           <div className="flex flex-col gap-[10px] px-2.5 py-5 bg-componentPrimary rounded-xl">
             <div className="flex justify-between">
               {' '}
@@ -96,9 +96,13 @@ export default function OnlineTrackDetailsPageTemplate(props: ITrackDetailsPageT
                 </DialogContent>
               </Dialog>
             </div>
-            <div className="flex flex-col gap-[10px] p-5 "> {/* Track Info */}
+            <div className="flex flex-col gap-[10px] p-5 ">
+              {' '}
+              {/* Track Info */}
               <img src={trackItem?.image as string} alt="track image" className="lg:h-[496px] md:h-full rounded-[10px]" />
-              <div className="flex flex-col gap-[10px] p-2.5"> {/* Tracks Name */}
+              <div className="flex flex-col gap-[10px] p-2.5">
+                {' '}
+                {/* Tracks Name */}
                 <h2 className="font-bold text-2xl">{trackItem.name}</h2>
                 <RenderHTMLString htmlString={trackItem.description as string} />
                 <span className="rounded-xl flex px-4 py-1 items-center gap-1 opacity-60 bg-[#FFFFFF10] font-bold justify-start md:w-[320px] md:text-lg sm:w-fit">
@@ -117,15 +121,16 @@ export default function OnlineTrackDetailsPageTemplate(props: ITrackDetailsPageT
           <div className="flex flex-col gap-[10px] overflow-hidden rounded-[10px]">
             {eventSpace &&
               eventSpace?.schedules.map(
-                (schedule, idx) => schedule.track_id === trackItem?.id && <UserFacingTrack key={idx} scheduleData={schedule} onClick={() => handleItemClick(schedule.name, trackItem?.id, eventSpace.id)} />              )}
+                (schedule, idx) =>
+                  schedule.track_id === trackItem?.id && <UserFacingTrack key={idx} scheduleData={schedule} onClick={() => handleItemClick(schedule.name, trackItem?.id, eventSpace.id)} />
+              )}
           </div>
         </div>
       </div>
       {eventSpace && <EventViewDetailsPanel eventSpace={eventSpace} />}
     </div>
-  )
+  );
 }
-
 
 export const getServerSideProps = async (ctx: any) => {
   const queryClient = new QueryClient();

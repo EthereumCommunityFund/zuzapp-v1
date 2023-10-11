@@ -759,11 +759,11 @@ export default function UpdateSchedulePage() {
                     <div className="flex flex-col items-start gap-6 self-stretch">
                       <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
                         <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Add Tags</Label>
-                        <div className="flex w-full text-white gap-5">
+                        <div className="flex w-full text-white outline-none rounded-lg pr-3 pl-2.5 bg-inputField gap-2.5 border border-white/10 border-opacity-10 items-center">
                           <Autocomplete
                             {...defaultProps}
                             id="controlled-demo"
-                            sx={{ color: 'white', width: '100%' }}
+                            sx={{ color: 'black', width: '100%' }}
                             value={tagItem}
                             onChange={(event: any, newValue) => {
                               if (newValue) {
@@ -772,6 +772,14 @@ export default function UpdateSchedulePage() {
                             }}
                             onInputChange={(event, newInputValue) => {
                               setTagItem({ name: newInputValue });
+                            }}
+                            slotProps={{
+                              paper: {
+                                sx: {
+                                  color: 'white',
+                                  backgroundColor: '#242727',
+                                },
+                              },
                             }}
                             renderInput={(params) => (
                               <TextField

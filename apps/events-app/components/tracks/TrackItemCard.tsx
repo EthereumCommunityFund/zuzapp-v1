@@ -1,8 +1,8 @@
-import { BsFillTicketFill } from 'react-icons/bs';
-import { HiArrowRight, HiCalendar } from 'react-icons/hi';
-import Button from '../ui/buttons/Button';
-import router, { useRouter } from 'next/router';
-import { TrackCreateRequestBody } from '@/types';
+import { BsFillTicketFill } from "react-icons/bs";
+import { HiArrowRight, HiCalendar } from "react-icons/hi";
+import Button from "../ui/buttons/Button";
+import router, { useRouter } from "next/router";
+import { TrackCreateRequestBody } from "@/types";
 
 interface IProps {
   trackTitle: string;
@@ -19,15 +19,36 @@ export default function TrackItem(props: IProps) {
 
   return (
     <div
-      className="flex items-center justify-between w-full bg-itemHover rounded-2xl py-3.5 px-3 hover:bg-trackItemHover duration-200 border border-borderSecondary sm:text-sm md:h-32"
+      className="flex md:items-center items-start justify-between w-full bg-itemHover rounded-2xl py-3.5 px-3 hover:bg-trackItemHover duration-200 border border-borderSecondary sm:text-sm md:h-32"
       onClick={onClick}
     >
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 w-full md:w-auto">
         <div className="bg-white rounded-lg p-1 lg:h-fit">
-          <img src={trackImage} alt="track-image" className="rounded-lg" width={130} height={100} />
+          <img
+            src={trackImage}
+            alt="track-image"
+            className="rounded-lg"
+            width={130}
+            height={100}
+          />
         </div>
-        <div className="flex flex-col w-[382px] justify-center items-start gap-[14px] self-stretch">
-          <span className="rounded-full flex px-4 py-1 items-center gap-1 bg-[#FFFFFF10] text-white font-bold md:text-lg sm:text-base">{trackTitle}</span>
+        <div className="flex flex-col justify-center items-start gap-[14px] w-full md:w-auto self-stretch">
+          <div className="flex items-center w-full gap-5 justify-between">
+            <span className="rounded-full flex px-4 py-1 items-center gap-1 bg-[#FFFFFF10] text-white font-bold md:text-lg sm:text-base">
+              {trackTitle}
+            </span>
+            <div className=" md:hidden block">
+         
+              <Button
+                variant="dark"
+                className="bg-white/20  text-black rounded-full text-sm md:text-base mx-2"
+                leftIcon={HiArrowRight}
+              >
+                <span className="hidden">Enter Track</span>
+              </Button>
+            </div>
+          </div>
+
           <div className="flex flex-col justify-center items-start gap-[14px] self-stretch">
             <span className="rounded-lg flex md:px-4 sm:px-1 py-1 items-center gap-1 opacity-60 bg-[#FFFFFF10] font-bold md:text-base sm:text-[10px]">
               <HiCalendar /> October 29 - November 11
@@ -40,11 +61,15 @@ export default function TrackItem(props: IProps) {
       </div>
 
       <div>
-        <div className="w-full">
+        <div className="w-full hidden md:block">
           {/* <Button variant="dark" className="bg-white/20 text-white/70 rounded-full" leftIcon={HiArrowRight}>
             Enter Track
           </Button> */}
-          <Button variant="dark" className="bg-white/20 text-black rounded-full text-sm md:text-base mx-2" leftIcon={HiArrowRight}>
+          <Button
+            variant="dark"
+            className="bg-white/20  text-black rounded-full text-sm md:text-base mx-2"
+            leftIcon={HiArrowRight}
+          >
             <span className="hidden md:block">Enter Track</span>
           </Button>
         </div>

@@ -9,7 +9,7 @@ interface IEventViewHeader {
 export default function EventViewHeader(props: IEventViewHeader) {
   const { imgPath, name, tagline } = props;
   return (
-    <div className={"flex md:px-10 pb-2 gap-[10px] lg:rounded-full lg:h-[60px] justify-between items-center lg:bg-inherit lg:backdrop-blur-none sm:backdrop-blur-sm lg:relative md:flex-row sm:fixed sm:bottom-0 sm:bg-white/10 sm:flex-col w-full z-[1000]"}>
+    <div className={"flex md:px-10 lg:p-2.5 pb-2 gap-[10px] lg:rounded-full lg:h-[60px] justify-between items-center lg:bg-inherit lg:backdrop-blur-none sm:backdrop-blur-sm lg:relative md:flex-row sm:fixed sm:bottom-0 sm:bg-white/10 sm:flex-col w-full z-[1000]"}>
       <div className="sm:flex sm:flex-row items-center gap-5 sm:justify-left w-full sm:py-3 sm:px-3 md:px-0">
         <img src={imgPath} className="rounded-xl" width={90} height={90} alt="event" />
         <div className="flex flex-col gap-2 w-3/4">

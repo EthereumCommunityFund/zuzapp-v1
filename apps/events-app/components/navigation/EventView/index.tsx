@@ -59,7 +59,7 @@ export default function EventViewNavigation() {
           }`}
       >
         <div className="flex-1 flex flex-col gap-5 max-w-max">
-          <div className="mt-10 flex-1">
+          <div className="lg:mt-10 flex-1">
             <Button size="lg" variant="quiet-SM" className="lg:pb-10 md:pb-2 sm:pb-1 opacity-80" leftIcon={ArrowCircleLeft} onClick={handleBackToEvents}>
               Back to Events
             </Button>

@@ -60,55 +60,37 @@ export default function EventViewTracksAlleSchedulesPage() {
 
   return (
     <div className="flex gap-4 lg:flex-row mt-5 lg:mt-0 pb-24 lg:pb-0 sm:flex-col-reverse lg:bg-pagePrimary md:bg-componentPrimary">
-      <div className="flex flex-col lg:w-3/4 sm:w-full pb-30 gap-5">
+      <div className="flex flex-col lg:w-2/3 sm:w-full pb-30 lg:pb-0 gap-5">
         <EventViewHeader imgPath={eventSpace?.image_url as string} name={eventSpace?.name as string} tagline={eventSpace?.tagline as string} />
         <div className="flex flex-col gap-2.5 lg:px-9 md:px-5">
           <div className="bg-componentPrimary lg:rounded-2xl lg:px-5 lg:pt-8">
-            <div className='p-5'>
+            <div className="p-5">
               <Button variant="blue" size="lg" className="rounded-full sm:w-full lg:w-fit justify-center" leftIcon={BiPlusCircle}>
                 Add a Schedule
               </Button>
             </div>
             <div className=" p-2.5 gap-[10px] flex flex-col overflow-hidden rounded-[10px] pb-36">
-              {eventSpace?.schedules.map((schedule, id) => (
+              {eventSpace?.schedules?.map((schedule, id) => (
                 <UserFacingTrack key={schedule.id} onClick={() => handleItemClick(schedule.name, schedule.id, schedule.track_id)} scheduleData={schedule} />
               ))}
             </div>
           </div>
         </div>
       </div>
-      <div className="lg:w-1/4 sm:w-full flex lg:flex-col lg:pl-10 gap-5 lg:fixed lg:right-0 min-w-fit">
-        <h2 className="p-3.5 gap-[10px] font-bold text-xl sm:hidden lg:flex">
-          Schedules: Sort & Filter
-        </h2>
+      <div className="lg:w-1/4 sm:w-full flex lg:flex-col gap-5 lg:fixed lg:right-0 min-w-fit lg:mr-10">
+        <h2 className="p-3.5 gap-[10px] font-bold text-xl sm:hidden lg:flex">Schedules: Sort & Filter</h2>
         <div className="flex lg:flex-col md:flex-row sm:flex-col w-full p-2.5 md:gap-5 sm:gap-3 text-sm">
           <DropDownMenu
             data={categoryList}
             header={'Select Categories'}
             headerIcon={SelectCategories}
             multiple={true}
-            value={""}
+            value={''}
             headerClassName={'rounded-full bg-borderPrimary'}
             optionsClassName={''}
           />
-          <DropDownMenu
-            data={categoryList}
-            header={'Select Dates'}
-            headerIcon={Calendar}
-            multiple={true}
-            value={""}
-            headerClassName={'rounded-full bg-borderPrimary'}
-            optionsClassName={''}
-          />
-          <DropDownMenu
-            data={categoryList}
-            header={'Select Location'}
-            headerIcon={SelectLocation}
-            multiple={true}
-            value={""}
-            headerClassName={'rounded-full bg-borderPrimary'}
-            optionsClassName={''}
-          />
+          <DropDownMenu data={categoryList} header={'Select Dates'} headerIcon={Calendar} multiple={true} value={''} headerClassName={'rounded-full bg-borderPrimary'} optionsClassName={''} />
+          <DropDownMenu data={categoryList} header={'Select Location'} headerIcon={SelectLocation} multiple={true} value={''} headerClassName={'rounded-full bg-borderPrimary'} optionsClassName={''} />
         </div>
       </div>
     </div>
