@@ -141,7 +141,13 @@ export default function TrackDetailsPageTemplate(props: ITrackDetailsPageTemplat
                     rsvp_amount: 1,
                     event_space_id: event_space_id as string,
                     track_id: '',
-                    tags: ['']
+                    tags: [''],
+                    organizers: [
+                      {
+                        name: '',
+                        role: '',
+                      },
+                    ],
                   }} />
               </DialogDescription>
             </DialogContent>

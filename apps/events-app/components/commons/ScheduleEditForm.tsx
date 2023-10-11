@@ -673,7 +673,7 @@ export default function ScheduleEditForm({
                           type="button"
                           onClick={() => {
                             if (eventItem.name === '') return;
-                            console.log(eventItem);
+                            console.log("eventItem", eventItem);
                             setSchedule({
                               ...schedule,
                               organizers: [...(schedule.organizers as Organizer[]), eventItem],
@@ -683,6 +683,8 @@ export default function ScheduleEditForm({
                               name: '',
                               role: 'speaker',
                             });
+
+                            console.log("organizers", organizers, schedule.organizers);
                           }}
                           className="flex gap-2.5 mb-2 text-lg font-normal leading-[1.2] text-white items-center rounded-[8px] px-2 py-1 bg-white bg-opacity-10"
                         >

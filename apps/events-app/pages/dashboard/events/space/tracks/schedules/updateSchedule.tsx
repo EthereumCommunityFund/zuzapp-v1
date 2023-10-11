@@ -73,7 +73,7 @@ export default function UpdateSchedulePage() {
         </div>
         <div className="flex py-5 px-4 flex-col items-center gap-8 self-stretch rounded-2xl border border-[#FFFFFF10] bg-[#2E3131]">
           <ScheduleEditForm
-            title='Update Schedule'
+            title='Update'
             isFromAllSchedules={false}
             scheduleData={schedule} />
         </div>

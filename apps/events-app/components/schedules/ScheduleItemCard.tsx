@@ -7,6 +7,7 @@ import fetchSchedulesByTrackId from '@/services/fetchScedulesByTrackId';
 import { useRouter } from 'next/router';
 import { Loader } from '../ui/Loader';
 import useEventDetails from '@/hooks/useCurrentEventSpace';
+import fetchSchedulesByEvenSpaceId from '@/services/fetchScheduleByEventSpace';
 
 type IdProp = {
   id: string;
@@ -25,7 +26,7 @@ export default function ScheduleItemCard() {
     isError,
   } = useQuery<Joined<IdProp>[], Error>(
     ['schedules', event_space_id],
-    () => fetchSchedulesByTrackId(trackId as string),
+    () => fetchSchedulesByEvenSpaceId(event_space_id as string),
 
     {
       enabled: !!event_space_id,
