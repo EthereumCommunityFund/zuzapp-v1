@@ -42,7 +42,7 @@ export const DashboardProvider = ({ children }: { children: React.ReactNode }) =
                 <div className="flex-1 mx-auto pt-10 lg:px-10 relative top-20">{children}</div>
               </>
             ) : (
-              <div className="flex-1 mx-auto lg:px-10 pt-2.5 lg:pt-0 relative top-20 lg:top-5 bg-pagePrimary">{children}</div>
+              <div className={`flex-1 mx-auto lg:px-10 pt-2.5 lg:pt-0 relative lg:top-5 bg-pagePrimary ${router.pathname !== '/dashboard/home' ? 'top-20' : ""}`}>{children}</div>
             )}
           </div>
         </div>
