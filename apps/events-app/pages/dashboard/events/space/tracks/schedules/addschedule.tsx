@@ -80,6 +80,7 @@ export default function AddSchedulePage(props: any) {
   // >([]);
   // const [locationId, setLocationId] = useState("");
   const [experienceLevel, setExperienceLevel] = useState('');
+  const [eventCategory, setEventCategory] = useState('');
   const [videoLink, setVideoLink] = useState('');
   const [liveLink, setLiveLink] = useState('');
   const handleChangeSwitch = () => {
@@ -234,9 +235,7 @@ export default function AddSchedulePage(props: any) {
     setOrganizers(updatedItems);
   };
 
-  const handleTrackSelect = (e: any) => {
-    setSelectedTrackId(e.target.value)
-  }
+
 
   const handleFrequencySelect = (e: any) => {
     setFrequency(e.target.value);
@@ -391,7 +390,7 @@ export default function AddSchedulePage(props: any) {
                           Select Track
                         </Label>
                         <select
-                          onChange={handleTrackSelect}
+                          onChange={handleTracksSelect}
                           title="Track List"
                           value={selectedTrackId}
                           defaultValue={selectedTrackId}
@@ -651,8 +650,8 @@ export default function AddSchedulePage(props: any) {
                       <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
                         <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select Event Category</Label>
                         <select
-                          onChange={(e) => setExperienceLevel(e.target.value)}
-                          value={experienceLevel}
+                          onChange={(e) => setEventCategory(e.target.value)}
+                          value={eventCategory}
                           title="category"
                           className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10">
                           {eventSpace?.event_type?.length === 0 ||
@@ -696,6 +695,7 @@ export default function AddSchedulePage(props: any) {
                               color="black"
                               value={tagItem}
                               onChange={(event: any, newValue) => {
+                                console.log("onChange", event, newValue);
                                 if (newValue) {
                                   setTagItem({ name: newValue.name });
                                 }

@@ -6,28 +6,15 @@ import { Loader } from '@/components/ui/Loader';
 import { QueryClient, dehydrate } from 'react-query';
 import { fetchEventSpaceById } from '@/services/fetchEventSpaceDetails';
 import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
+import useTrackDetails from '@/hooks/useTrackDetails';
 
 export default function EventViewTrackDetailsPage() {
   const router = useRouter();
 
-  const { eventSpace, isLoading } = useEventDetails();
 
-  const [trackItem, setTrackItem] = useState<any>(); // Initialize trackItem as null
+  const { trackDetails, isLoading: LoadingTrack } = useTrackDetails();
 
-  useEffect(() => {
-    const trackId = router.query.trackId;
-    const track = eventSpace?.tracks.find((t) => t.id === trackId);
-
-    if (track) {
-      setTrackItem(track);
-    }
-  }, [router.query.trackId, eventSpace?.tracks]);
-
-  if (isLoading) {
-    return <Loader />;
-  }
-
-  return trackItem && <TrackDetailsPageTemplate trackItem={trackItem} />;
+  return trackDetails && <TrackDetailsPageTemplate trackItem={trackDetails} />;
 }
 
 export const getServerSideProps = async (ctx: any) => {

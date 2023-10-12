@@ -49,4 +49,4 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 }
 
 
-export default withSession(withAuthorization("collaborator", handler));
+export default withSession(withAuthorization(handler));
