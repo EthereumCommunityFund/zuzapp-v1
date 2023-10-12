@@ -1,4 +1,4 @@
-import { EventSpaceDetailsType } from '@/types';
+import { EventSpaceDetailsType, TrackUpdateRequestBody } from '@/types';
 import EventViewHeader from '@/components/eventview/EventViewHeader';
 import TrackItemCard from '@/components/tracks/TrackItemCard';
 import MyDropdown from '@/components/ui/DropDown';
@@ -18,6 +18,7 @@ import { Option } from 'react-dropdown';
 import { BiLeftArrow, BiSolidCategory } from 'react-icons/bi';
 import { QueryClient, dehydrate, useQuery } from 'react-query';
 import useEventDetails from '@/hooks/useCurrentEventSpace';
+import fetchTracksByEventSpaceId from '@/services/fetchTracksByEventSpace';
 
 export default function EventViewTracksPage() {
   const router = useRouter();
@@ -42,6 +43,25 @@ export default function EventViewTracksPage() {
     },
   ];
 
+  const {
+    data: tracks,
+    isLoading: LoadingTracks,
+    isError,
+  } = useQuery<TrackUpdateRequestBody[], Error>(
+    ['trackDetails', event_space_id],
+    () => fetchTracksByEventSpaceId(event_space_id as string),
+
+    {
+      enabled: !!event_space_id,
+      onSuccess: (data) => {
+        console.log('tracks', data);
+      },
+      onError: (error) => {
+        console.log('an error', error);
+        // router.push("/404");
+      },
+    }
+  );
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
@@ -60,20 +80,24 @@ export default function EventViewTracksPage() {
         <Loader />
       ) : (
         <div className="flex gap-4 lg:flex-row  mt-5 lg:mt-0 pb-24 lg:pb-0 sm:flex-col-reverse lg:bg-pagePrimary sm:bg-componentPrimary">
-          <div className="flex flex-col lg:w-3/4 sm:w-full gap-5">
+          <div className="flex flex-col lg:w-2/3 sm:w-full gap-5">
             <EventViewHeader imgPath={eventSpace?.image_url as string} name={eventSpace?.name as string} tagline={eventSpace?.tagline as string} />
-            <div className="lg:py-5 lg:px-10 sm:py-3">
+            <div className="lg:p-5 sm:py-3">
               <div className="p-2.5 md:bg-componentPrimary rounded-2xl">
-                <div className="flex flex-col gap-[10px] overflow-hidden md:p-3">
-                  {eventSpace?.tracks.map((item, idx) => (
-                    <TrackItemCard key={idx} trackId={item.id} trackTitle={item.name} trackImage={item.image as string} onClick={() => handleItemClick(item.name, item.id)} />
-                  ))}
-                </div>
+                {LoadingTracks ? (
+                  <Loader />
+                ) : (
+                  <div className="flex flex-col gap-[10px] overflow-hidden md:p-3">
+                    {tracks?.map((item, idx) => (
+                      <TrackItemCard key={idx} trackId={item.id} trackTitle={item.name} trackImage={item.image as string} onClick={() => handleItemClick(item.name, item.id)} />
+                    ))}
+                  </div>
+                )}
                 <div>{/* <Pagination totalPages={10} currentPage={1} onPageChange={handlePageChange} /> */}</div>
               </div>
             </div>
           </div>
-          <div className="lg:w-1/4 sm:w-full flex lg:flex-col lg:pl-10 gap-5 lg:fixed lg:right-0 min-w-fit">
+          <div className="lg:w-1/4 sm:w-full lg:mr-10 flex lg:flex-col gap-5 lg:fixed lg:right-0 min-w-fit">
             <h2 className="p-3.5 gap-[10px] font-bold text-xl sm:hidden lg:flex">Tracks: Sort & Filter</h2>
             <div className="flex lg:flex-col md:flex-row sm:flex-col w-full p-2.5 md:gap-5 sm:gap-3 text-sm">
               <DropDownMenu

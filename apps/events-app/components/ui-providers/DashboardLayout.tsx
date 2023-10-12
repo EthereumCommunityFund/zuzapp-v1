@@ -34,7 +34,7 @@ export const DashboardProvider = ({ children }: { children: React.ReactNode }) =
         {!checkIfCurrentRouteIsInEventViewRoutes() ? <DashboardNavigation /> : <EventViewNavigation />}
         <DashboardHeader />
 
-        <div className="mt-16 relative lg:left-[300px] lg:w-[calc(100%-300px)]">
+        <div className="mt-16 relative lg:left-[250px] lg:w-[calc(100%-250px)]">
           <div className="h-[90vh] mx-auto relative ">
             {checkIfCurrentRouteIsInDashboardRoutes() ? (
               <>
@@ -42,7 +42,7 @@ export const DashboardProvider = ({ children }: { children: React.ReactNode }) =
                 <div className="flex-1 mx-auto pt-10 lg:px-10 relative top-20">{children}</div>
               </>
             ) : (
-              <div className="flex-1 mx-auto lg:px-10 pt-10 lg:pt-0 relative top-20 bg-pagePrimary">{children}</div>
+              <div className="flex-1 mx-auto lg:px-10 pt-2.5 lg:pt-0 relative top-20 lg:top-5 bg-pagePrimary">{children}</div>
             )}
           </div>
         </div>

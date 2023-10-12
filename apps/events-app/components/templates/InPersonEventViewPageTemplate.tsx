@@ -74,9 +74,9 @@ export default function InPersonEventViewPageTemplate({ eventSpace }: IInPersonE
           {' '}
           {/* Information */}
           <div className="rounded-xl p-5">
-            <img src={eventSpace.image_url} className="w-full pb-5 rounded-2xl" alt="" height={600} />
+            <img src={eventSpace.image_url} className="w-full lg:pb-5 rounded-2xl" alt="" height={600} />
           </div>
-          <div className="flex flex-col gap-2.5 pb-5 border-b-2 border-white/10 w-full p-5">
+          <div className="flex flex-col gap-2.5 pb-5 border-b-2 border-white/10 w-full md:pt-5 px-5">
             <div className="items-center justify-between w-full pb-5 sm:flex-col sm:gap-3 sm:flex md:flex md:flex-row">
               <div className="flex flex-col gap-3 sm:w-full md:w-auto">
                 <div className="flex items-center gap-3 text-[#D7FFC4]/80">
@@ -99,7 +99,7 @@ export default function InPersonEventViewPageTemplate({ eventSpace }: IInPersonE
               </span>
             </div>
           </div>
-          <div className="flex flex-col gap-4 p-5 border-b-2 border-white/10">
+          <div className="flex flex-col gap-4 p-5 border-white/10">
             {' '}
             {/* About */}
             <h3 className="text-lg font-bold text-white/70">ABOUT THIS EVENT</h3>
