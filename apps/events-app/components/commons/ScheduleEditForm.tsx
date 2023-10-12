@@ -108,6 +108,7 @@ export default function ScheduleEditForm({
   const [scheduleUpdated, setScheduleUpdated] = useState(false);
   const [isLimit, setIsLimit] = useState(false);
   const [selectedTrackId, setSelectedTrackId] = useState<string>(trackId as string);
+  const [newScheduleId, setNewScheduleId] = useState<string>('');
 
   const formSchema = z.object({
     name: z.string().min(2, {
@@ -273,6 +274,7 @@ export default function ScheduleEditForm({
       console.log(payload, 'payload');
       try {
         const result = await createSchedule(payload as any, schedule.event_space_id as string);
+        setNewScheduleId(result.data.data);
         setScheduleUpdated(true);
         console.log(result, 'result');
       } catch (error: any) {
@@ -390,12 +392,14 @@ export default function ScheduleEditForm({
   }, [form.formState.errors]);
 
   const handleEnterSchedules = async () => {
+    console.log("newScheduleId", newScheduleId);
     try {
       router.push({
-        pathname: isFromAllSchedules ? `/dashboard/eventview/allschedules` : `/dashboard/eventview/tracks/track`,
+        pathname: isFromAllSchedules ? `/dashboard/eventview/tracks/track/schedule` : `/dashboard/eventview/allschedules//schedule`,
         query: {
           event_space_id: event_space_id,
           trackId: trackId,
+          scheduleId: title === 'Add' ? newScheduleId : scheduleId,
         },
       });
     } catch (error) {
