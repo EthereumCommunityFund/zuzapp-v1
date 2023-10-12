@@ -15,11 +15,14 @@ import { BsFillTicketFill } from 'react-icons/bs';
 import { HiArrowLeft, HiCog, HiLocationMarker, HiMicrophone, HiTag, HiUserGroup } from 'react-icons/hi';
 import useEventDetails from '@/hooks/useCurrentEventSpace';
 import { Loader } from '@/components/ui/Loader';
-import { cancelUserRsvpBySchedule, checkUserRsvpBySchedule, rsvpSchedule } from '@/controllers';
+import { cancelUserRsvpBySchedule, checkUserRsvpBySchedule, fetchScheduleByID, rsvpSchedule } from '@/controllers';
 import EventViewDetailsPanel from '@/components/eventview/EventViewDetailsPanel';
 import { QueryClient, dehydrate } from 'react-query';
 import { fetchEventSpaceById } from '@/services/fetchEventSpaceDetails';
 import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
+import { ScheduleUpdateRequestBody } from '@/types';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import ScheduleEditForm from '@/components/commons/ScheduleEditForm';
 
 interface IEventLink {
   name: string;
