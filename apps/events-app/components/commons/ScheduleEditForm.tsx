@@ -392,7 +392,7 @@ export default function ScheduleEditForm({
   const handleEnterSchedules = async () => {
     try {
       router.push({
-        pathname: `/dashboard/events/space/tracks/schedules`,
+        pathname: isFromAllSchedules ? `/dashboard/eventview/allschedules` : `/dashboard/eventview/tracks/track`,
         query: {
           event_space_id: event_space_id,
           trackId: trackId,
@@ -416,8 +416,8 @@ export default function ScheduleEditForm({
           <FormTitle name={`${title} Schedule`} />
           {scheduleUpdated ? (
             <div className="flex flex-col items-center">
-              <h3 className="font-bold text-xl">Your Schedule Has Been Updated</h3>
-              <Button onClick={handleEnterSchedules} variant="primary" className="mt-8 bg-[#67DBFF]/20 text-[#67DBFF] rounded-full" leftIcon={HiArrowRight}>
+              <h3 className="font-bold text-xl">{title === 'Add' ? `Your Schedule Has Been Created` : `Your Schedule Has Been Updated`}</h3>
+              <Button onClick={handleEnterSchedules} variant="primary" size='lg' className="mt-8 bg-[#67DBFF]/20 text-[#67DBFF] rounded-full" leftIcon={HiArrowRight}>
                 Go to schedules
               </Button>
             </div>
