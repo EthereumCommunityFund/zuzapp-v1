@@ -32,18 +32,23 @@ import ScheduleEditForm from "@/components/commons/ScheduleEditForm";
 import {
   cancelUserRsvpBySchedule,
   checkUserRsvpBySchedule,
+  fetchSchedule,
+  fetchScheduleByID,
   rsvpSchedule,
 } from "@/controllers";
+import { ScheduleUpdateRequestBody } from "@/types";
+
 
 export default function EventViewScheduleDetailsPage() {
   const router = useRouter();
-  const { event_space_id } = router.query;
+  const { event_space_id, scheduleId, trackId } = router.query;
   const { eventSpace, isLoading } = useEventDetails();
   const [rsvpUpdated, setRsvpUpdated] = useState(false);
-  const { scheduleName, scheduleId, trackId } = router.query;
+  const [currentSchedule, setCurrentSchedule] = useState<ScheduleUpdateRequestBody>()
   const [hasRsvpd, setHasRsvpd] = useState(false);
-  const currentSchedule = eventSpace?.schedules.find((scheduleItem) => scheduleItem.name === scheduleName);
+
   const trackItem = eventSpace?.tracks.find((trackItem) => trackItem.id === trackId);
+
   const startTime =
     currentSchedule &&
     new Date(currentSchedule.start_time).toLocaleTimeString('en-US', {
@@ -56,7 +61,7 @@ export default function EventViewScheduleDetailsPage() {
       hour: '2-digit',
       minute: '2-digit',
     });
-  console.log('All Schedules / Schedule eventSpace', eventSpace);
+
 
   const handleBackToSchedule = () => {
     router.push({
@@ -103,24 +108,24 @@ export default function EventViewScheduleDetailsPage() {
     }
   };
 
-  const handleEnterSchedule = async (id: string, scheduleTrackId: string) => {
-    const scheduleTrackTitle = eventSpace?.tracks.find(
-      (trackItem) => trackItem.id === scheduleTrackId
-    )?.name;
-    try {
-      router.push({
-        pathname: `/dashboard/eventview/allschedules/updateschedule`,
-        query: {
-          event_space_id,
-          trackId: scheduleTrackId,
-          scheduleId: id,
-          track_title: scheduleTrackTitle,
-        },
-      });
-    } catch (error) {
-      console.error('Error fetching space details', error);
-    }
-  };
+  useEffect(() => {
+    const fetchCurrentSchedule = async () => {
+      try {
+        const result = await fetchScheduleByID(scheduleId as string);
+
+        setCurrentSchedule({
+          ...result.data.data,
+          event_type: JSON.parse(result.data.data.event_type)[0],
+          experience_level: JSON.parse(result.data.data.experience_level)[0],
+        });
+        console.log(result.data.data.date);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchCurrentSchedule();
+  }, []);
 
   if (isLoading) {
     return <Loader />;
@@ -142,19 +147,21 @@ export default function EventViewScheduleDetailsPage() {
               <Button variant="ghost" className="md:text-lg sm:text-base font-bold" leftIcon={HiArrowLeft} onClick={handleBackToSchedule}>
                 Back to Schedules
               </Button>
-              <Button
-                variant="quiet"
-                className="rounded-xl bg-componentPrimary text-lg"
-                leftIcon={BiEditAlt}
-                onClick={() =>
-                  handleEnterSchedule(
-                    currentSchedule?.id as string,
-                    currentSchedule?.track_id as string
-                  )
-                }
-              >
-                Edit
-              </Button>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="quiet" className="rounded-xl" leftIcon={BiEditAlt}>
+                    Edit
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="h-3/5 lg:w-3/5 overflow-y-auto">
+                  <ScheduleEditForm
+                    title='Update'
+                    isFromAllSchedules={true}
+                    scheduleId={scheduleId as string}
+                    trackId={trackId as string}
+                  />
+                </DialogContent>
+              </Dialog>
             </div>
             <div className="flex flex-col gap-2.5 p-2.5 ">
               {' '}
@@ -177,9 +184,8 @@ export default function EventViewScheduleDetailsPage() {
               <Button
                 variant="primary"
                 size="lg"
-                className={`rounded-2xl justify-center ${
-                  rsvpUpdated ? "animate-rsvp" : ""
-                }`}
+                className={`rounded-2xl justify-center ${rsvpUpdated ? "animate-rsvp" : ""
+                  }`}
                 leftIcon={BsFillTicketFill}
                 onClick={handleRsvpAction}
               >

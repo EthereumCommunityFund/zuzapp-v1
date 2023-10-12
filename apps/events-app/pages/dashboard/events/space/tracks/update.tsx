@@ -13,7 +13,7 @@ import { HiArrowRight } from "react-icons/hi";
 import { useQueryClient, useQuery } from "react-query";
 import { fetchTrackById } from "@/services/fetchTrack";
 
-export default function Update() {
+export default function UpdateTrackPageTemplate() {
   const [trackCreated, setTrackCreated] = useState(false);
   const router = useRouter();
   const { event_space_id, trackId } = router.query;

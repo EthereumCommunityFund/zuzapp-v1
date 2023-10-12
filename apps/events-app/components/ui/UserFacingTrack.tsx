@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import EventDataTime from './labels/event-data-time';
 
 interface IUserFacingTrack {
+  scheduleId?: string;
   scheduleData: ScheduleUpdateRequestBody;
   onClick: () => void;
 }
@@ -17,11 +18,8 @@ export default function UserFacingTrack(props: IUserFacingTrack) {
   const endDate = new Date(scheduleData.end_time).toLocaleDateString('en-US', { month: 'short', day: '2-digit' });
   const startTime = new Date(scheduleData.start_time).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
   const endTime = new Date(scheduleData.end_time).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-  console.log("scheduleData", scheduleData);
 
-  useEffect(() => {
-    console.log('Date', date);
-  });
+
 
   return (
     <div onClick={onClick} className="flex flex-col gap-3">

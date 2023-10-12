@@ -15,26 +15,32 @@ import { BsFillTicketFill } from 'react-icons/bs';
 import { HiArrowLeft, HiCog, HiLocationMarker, HiMicrophone, HiTag, HiUserGroup } from 'react-icons/hi';
 import useEventDetails from '@/hooks/useCurrentEventSpace';
 import { Loader } from '@/components/ui/Loader';
-import { cancelUserRsvpBySchedule, checkUserRsvpBySchedule, rsvpSchedule } from '@/controllers';
+import { cancelUserRsvpBySchedule, checkUserRsvpBySchedule, fetchScheduleByID, rsvpSchedule } from '@/controllers';
 import EventViewDetailsPanel from '@/components/eventview/EventViewDetailsPanel';
 import { QueryClient, dehydrate } from 'react-query';
 import { fetchEventSpaceById } from '@/services/fetchEventSpaceDetails';
 import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
+import { ScheduleUpdateRequestBody } from '@/types';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import ScheduleEditForm from '@/components/commons/ScheduleEditForm';
 
 interface IEventLink {
   name: string;
   link: string;
 }
 
-export default function EventViewTrackDetailsPage() {
+export default function EventViewScheduleDetailsPage() {
   const { eventSpace, isLoading } = useEventDetails();
   const router = useRouter();
-  const { scheduleName, trackId, event_space_id, track_title, scheduleId } = router.query;
-  console.log(scheduleId, 'scheduleID');
-  const [rsvpUpdated, setRsvpUpdated] = useState(false);
-  const [hasRsvpd, setHasRsvpd] = useState(false);
-  const currentSchedule = eventSpace?.schedules.find((scheduleItem) => scheduleItem.name === scheduleName);
-  const trackItem = eventSpace?.tracks.find((trackItem) => trackItem.id === trackId);
+  const { scheduleName, trackId, event_space_id, track_title, scheduleId } =
+    router.query;
+  const [rsvpUpdated, setRsvpUpdated] = useState<boolean>(false);
+  const [hasRsvpd, setHasRsvpd] = useState<boolean>(false);
+  const [currentSchedule, setCurrentSchedule] = useState<ScheduleUpdateRequestBody>();
+  const trackItem = eventSpace?.tracks.find(
+    (trackItem) => trackItem.id === trackId
+  );
+  console.log("Current Schedule", currentSchedule);
   const startTime =
     currentSchedule &&
     new Date(currentSchedule.start_time).toLocaleTimeString('en-US', {
@@ -67,22 +73,6 @@ export default function EventViewTrackDetailsPage() {
     });
   };
 
-  const handleEnterSchedule = async (id: string, scheduleTrackId: string) => {
-    const scheduleTrackTitle = eventSpace?.tracks.find((trackItem) => trackItem.id === scheduleTrackId)?.name;
-    try {
-      router.push({
-        pathname: `/dashboard/eventview/allschedules/updateschedule`,
-        query: {
-          event_space_id,
-          trackId: scheduleTrackId,
-          scheduleId: id,
-          track_title: scheduleTrackTitle,
-        },
-      });
-    } catch (error) {
-      console.error('Error fetching space details', error);
-    }
-  };
   const handleRsvpAction = async () => {
     try {
       if (hasRsvpd) {
@@ -109,6 +99,25 @@ export default function EventViewTrackDetailsPage() {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    const fetchCurrentSchedule = async () => {
+      try {
+        const result = await fetchScheduleByID(scheduleId as string);
+        console.log(result, 'result');
+        setCurrentSchedule({
+          ...result.data.data,
+          event_type: JSON.parse(result.data.data.event_type)[0],
+          experience_level: JSON.parse(result.data.data.experience_level)[0],
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchCurrentSchedule();
+  }, []);
+
   if (isLoading) {
     return <Loader />;
   }
@@ -127,9 +136,21 @@ export default function EventViewTrackDetailsPage() {
                   Back to Track
                 </Button>
               )}
-              <Button variant="quiet" className="rounded-xl" leftIcon={BiEditAlt} onClick={() => handleEnterSchedule(currentSchedule?.id as string, currentSchedule?.track_id as string)}>
-                Edit
-              </Button>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="quiet" className="rounded-xl" leftIcon={BiEditAlt}>
+                    Edit
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="h-3/5 lg:w-3/5 overflow-y-auto">
+                  <ScheduleEditForm
+                    title='Update'
+                    isFromAllSchedules={false}
+                    scheduleId={scheduleId as string}
+                    trackId={trackId as string}
+                  />
+                </DialogContent>
+              </Dialog>
             </div>
             <div className="flex flex-col gap-2.5 md:p-2.5 sm:p-0">
               {' '}
@@ -138,15 +159,23 @@ export default function EventViewTrackDetailsPage() {
                 {startTime && endTime && <EventDataTime startTime={startTime} endTime={endTime} />}
                 <h2 className="text-2xl font-extrabold">{currentSchedule?.name}</h2>
                 <div className="flex gap-[6px]">
-                  <Speaker title={'QJ'} />
-                  <Speaker title={'Janine Leger'} />
+                  {currentSchedule?.organizers?.map((organizer) => (
+                    <Speaker title={organizer.name} />
+                  ))}
                 </div>
                 <div>
                   <h3 className="float-right">By: drivenfast</h3>
                 </div>
               </div>
-              <Button variant="primary" size="lg" className={`rounded-2xl justify-center ${rsvpUpdated ? 'animate-rsvp' : ''}`} leftIcon={BsFillTicketFill} onClick={handleRsvpAction}>
-                {hasRsvpd ? 'Cancel RSVP' : 'RSVP Schedule'}
+              <Button
+                variant="primary"
+                size="lg"
+                className={`rounded-2xl justify-center ${rsvpUpdated ? "animate-rsvp" : ""
+                  }`}
+                leftIcon={BsFillTicketFill}
+                onClick={handleRsvpAction}
+              >
+                {hasRsvpd ? "Cancel RSVP" : "RSVP Schedule"}
               </Button>
             </div>
             <div className="flex flex-col gap-2.5 px-5 pt-5 pb-[60px]">
