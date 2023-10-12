@@ -79,13 +79,8 @@ export default function ScheduleEditForm({
     rsvp_amount: 1,
     event_space_id: '',
     track_id: '',
-    tags: [''],
-    organizers: [
-      {
-        name: '',
-        role: '',
-      },
-    ],
+    tags: [],
+    organizers: [],
   });
   const [startDate, setStartDate] = useState<Date | undefined>();
   const [optionTags, setOptionTags] = useState<TagItemProp[]>([]);
@@ -171,8 +166,8 @@ export default function ScheduleEditForm({
     defaultValues: {
       name: schedule?.name,
       format: schedule?.format,
-      date: schedule?.date !== '' ? new Date(schedule?.date) : new Date(),
-      description: schedule.description,
+      date: schedule?.date !== '' ? new Date(schedule?.date) : undefined,
+      description: '',
       video_call_link: schedule?.video_call_link,
       live_stream_url: schedule?.live_stream_url,
     },
@@ -253,20 +248,20 @@ export default function ScheduleEditForm({
     if (title === 'Add') {
       const additionalPayload = {
         event_space_id: event_space_id as string,
-        start_time: startTime as unknown as Date,
-        end_time: endTime as unknown as Date,
+        start_time: startTime,
+        end_time: endTime,
         event_type: eventType.length > 0 ? [eventType] : eventSpace?.event_type?.[0] ? [eventSpace?.event_type[0]] : [eventSpace?.event_type || 'Meetup'],
         experience_level: experienceLevel.length > 0 ? [experienceLevel] : eventSpace?.experience_level?.[0] ? [eventSpace?.experience_level[0]] : [eventSpace?.experience_level || 'Beginner'],
-        tags: tags,
-        schedule_frequency: frequency,
+        tags: schedule.tags,
+        schedule_frequency: schedule.schedule_frequency,
         location_id: locationId === '' ? '403a376c-7ac7-4460-b15d-6cc5eabf5e6c' : locationId,
         organizers,
         all_day: schedule.all_day,
-        limit_rsvp: isLimit,
+        limit_rsvp: schedule.limit_rsvp,
         ...(eventSpace?.event_space_type === 'tracks' && {
           track_id: selectedTrackId ? selectedTrackId : (trackId as string),
         }),
-        ...(isLimit ? { rsvp_amount: rsvpAmount } : {}),
+        ...(isLimit ? { rsvp_amount: schedule.rsvp_amount } : {}),
         // isLimit && rsvp_amount: rsvpAmount
       };
       const payload = {
@@ -316,6 +311,10 @@ export default function ScheduleEditForm({
 
   const handleFrequencySelect = (e: any) => {
     setFrequency(e.target.value);
+    setSchedule({
+      ...schedule,
+      schedule_frequency: e.target.value as any,
+    });
   }
 
   const defaultProps = {
@@ -533,9 +532,7 @@ export default function ScheduleEditForm({
                         render={({ field }) => (
                           <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
                             <span className="text-lg opacity-70 self-stretch">Start Date</span>
-
-                            <CustomDatePicker defaultDate={undefined} selectedDate={field.value} handleDateChange={field.onChange} {...field} />
-
+                            <CustomDatePicker defaultDate={undefined} selectedDate={startDate as Date} handleDateChange={field.onChange} {...field} />
                             <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">Click & Select or type in a date</h3>
                             <FormMessage />
                           </div>
@@ -547,9 +544,13 @@ export default function ScheduleEditForm({
                             <div className="flex justify-between gap-10 text-white">
                               <TimePicker
                                 label="Start Time"
-                                value={startTime}
+                                value={title === 'Add' ? dayjs(startTime) as unknown as string : dayjs(schedule.start_time) as unknown as string}
                                 className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
-                                onChange={(newValue: any) => setStartTime(newValue)}
+                                onChange={(newValue: string | Date | null | undefined) =>
+                                  setSchedule({
+                                    ...schedule,
+                                    start_time: newValue as string,
+                                  })}
                                 sx={{
                                   input: {
                                     color: 'white',
@@ -571,9 +572,13 @@ export default function ScheduleEditForm({
                               />
                               <TimePicker
                                 label="End Time"
-                                value={endTime}
+                                value={title === 'Add' ? dayjs(endTime) as unknown as string : dayjs(schedule.end_time) as unknown as string}
                                 className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
-                                onChange={(newValue: any) => setEndTime(newValue)}
+                                onChange={(newValue: string | Date | null | undefined) =>
+                                  setSchedule({
+                                    ...schedule,
+                                    end_time: newValue as string,
+                                  })}
                                 sx={{
                                   input: {
                                     color: 'white',
@@ -612,7 +617,7 @@ export default function ScheduleEditForm({
                       <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select Schedule Frequency</Label>
                       <select
                         onChange={handleFrequencySelect}
-                        value={frequency}
+                        value={schedule.schedule_frequency}
                         className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
                         title="frequency"
                       >
@@ -757,15 +762,22 @@ export default function ScheduleEditForm({
                       Select Event Category
                     </Label>
                     <select
-                      onChange={(e) => setEventCategory(e.target.value)}
-                      value={eventCategory}
+                      onChange={(e) => {
+                        setSchedule({
+                          ...schedule,
+                          event_type: e.target.value,
+                        });
+                        // setInitialEvent(e.target.value)
+                        console.log(schedule.event_type);
+                      }}
+                      value={schedule.event_type}
                       title="category"
                       className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10">
                       {eventSpace?.event_type?.length === 0 ||
                         (eventSpace?.event_type === null && <option value="">No saved categories</option>)
                       }
-                      {eventSpace?.event_type?.map((category) => (
-                        <option key={category} value={category}>
+                      {eventSpace?.event_type?.map((category, index) => (
+                        <option key={index} value={category}>
                           {category}
                         </option>
                       ))}
@@ -776,14 +788,19 @@ export default function ScheduleEditForm({
                     {/* <InputFieldDark type={InputFieldType.Option} placeholder={'Beginner'} /> */}
 
                     <select
-                      onChange={(e) => setExperienceLevel(e.target.value)}
-                      value={experienceLevel}
-                      title="category"
+                      onChange={(e) =>
+                        setSchedule({
+                          ...schedule,
+                          experience_level: e.target.value,
+                        })
+                      }
+                      value={schedule.experience_level}
+                      title="Experience Level"
                       className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
                     >
                       {eventSpace?.experience_level?.length === 0 || (eventSpace?.experience_level === null && <option value="">No saved experience levels</option>)}
-                      {eventSpace?.experience_level?.map((category) => (
-                        <option key={category} value={category}>
+                      {eventSpace?.experience_level?.map((category, index) => (
+                        <option key={index} value={category}>
                           {category}
                         </option>
                       ))}
@@ -870,17 +887,23 @@ export default function ScheduleEditForm({
                   <span className="text-lg opacity-70 self-stretch">Advanced</span>
                   <div className="flex flex-col items-center gap-5 self-stretch">
                     <div className="flex items-center gap-5 self-stretch">
-                      <SwitchButton value={isLimit} onClick={handleLimitRSVP} />
+                      <SwitchButton value={schedule.limit_rsvp} onClick={handleLimitRSVP} />
                       <span className="flex-1 text-base font-semibold leading-[1.2]">Limit RSVPs</span>
                     </div>
-                    {isLimit && (
+                    {schedule.limit_rsvp && (
                       <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
                         <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select an Amount</Label>
                         <input
                           type="number"
                           className="bg-gray-600 w-full outline-none px-4 rounded-md py-2"
                           placeholder={'50'}
-                          onChange={(e) => setRsvpAmount(e.target.value as unknown as number)}
+                          value={schedule.rsvp_amount}
+                          onChange={(e) =>
+                            setSchedule({
+                              ...schedule,
+                              rsvp_amount: e.target.value as unknown as number,
+                            })
+                          }
                         />
                       </div>
                     )}
