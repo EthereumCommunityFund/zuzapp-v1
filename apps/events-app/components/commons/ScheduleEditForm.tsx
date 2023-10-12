@@ -48,16 +48,18 @@ interface IScheduleEditForm {
   title: string,
   isFromAllSchedules: boolean,
   scheduleId?: string,
+  trackId: string,
 }
 
 export default function ScheduleEditForm({
   title,
   isFromAllSchedules,
   scheduleId,
+  trackId
 }: IScheduleEditForm) {
   const router = useRouter();
-  const { trackId, event_space_id } = router.query;
-
+  const { event_space_id } = router.query;
+  console.log("title,isFromAllSchedules, trackId", title, isFromAllSchedules, trackId);
   const [schedule, setSchedule] = useState<ScheduleUpdateRequestBody>({
     name: '',
     format: 'in-person',
@@ -110,7 +112,7 @@ export default function ScheduleEditForm({
   const [endTime, setEndTime] = useState(dayjs('2023-11-17T23:59'));
   const [scheduleUpdated, setScheduleUpdated] = useState(false);
   const [isLimit, setIsLimit] = useState(false);
-  const [selectedTrackId, setSelectedTrackId] = useState<string>('');
+  const [selectedTrackId, setSelectedTrackId] = useState<string>(trackId as string);
 
   const formSchema = z.object({
     name: z.string().min(2, {
@@ -227,7 +229,7 @@ export default function ScheduleEditForm({
         video_call_link: schedule.video_call_link,
         live_stream_url: schedule.live_stream_url,
         all_day: schedule.all_day,
-        track_id: trackId,
+        track_id: isFromAllSchedules ? schedule.track_id : trackId,
         limit_rsvp: schedule.limit_rsvp,
         ...(eventSpace?.event_space_type === 'tracks' && {
           track_id: trackId as string,
@@ -309,6 +311,7 @@ export default function ScheduleEditForm({
 
   const handleTrackSelect = (e: any) => {
     setSelectedTrackId(e.target.value);
+    setSchedule({ ...schedule, track_id: e.target.value });
   };
 
   const handleFrequencySelect = (e: any) => {

@@ -38,10 +38,10 @@ export default function EventViewTracksAlleSchedulesPage() {
 
   console.log(isLoading, 'is loading');
 
-  const handleItemClick = (scheduleName: string, scheduleId: string, trackId?: string) => {
+  const handleItemClick = (scheduleId: string, trackId?: string) => {
     router.push({
       pathname: `/dashboard/eventview/allschedules/schedule`,
-      query: { scheduleName, trackId, event_space_id, scheduleId },
+      query: { scheduleId, trackId, event_space_id },
     });
   };
 
@@ -77,33 +77,14 @@ export default function EventViewTracksAlleSchedulesPage() {
                   <ScheduleEditForm
                     title={'Add'}
                     isFromAllSchedules={true}
-                    scheduleData={{
-                      name: '',
-                      format: 'in-person',
-                      description: '',
-                      date: '',
-                      start_time: '',
-                      end_time: '',
-                      all_day: false,
-                      schedule_frequency: 'once',
-                      images: [''],
-                      video_call_link: '',
-                      live_stream_url: '',
-                      location_id: '',
-                      event_type: '',
-                      experience_level: '',
-                      limit_rsvp: false,
-                      rsvp_amount: 1,
-                      event_space_id: event_space_id as string,
-                      track_id: '',
-                      tags: ['']
-                    }} />
+                    trackId={trackId as string}
+                  />
                 </DialogContent>
               </Dialog>
             </div>
             <div className=" p-2.5 gap-[10px] flex flex-col overflow-hidden rounded-[10px] pb-36">
               {eventSpace?.schedules.map((schedule, id) => (
-                <UserFacingTrack key={id} onClick={() => handleItemClick(schedule.name, schedule.id, schedule.track_id)} scheduleData={schedule} />
+                <UserFacingTrack key={id} onClick={() => handleItemClick(schedule.id, schedule.track_id as string)} scheduleData={schedule} scheduleId={schedule.id} />
               ))}
             </div>
           </div>

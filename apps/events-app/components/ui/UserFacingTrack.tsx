@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import EventDataTime from './labels/event-data-time';
 
 interface IUserFacingTrack {
-  scheduleId: string;
+  scheduleId?: string;
   scheduleData: ScheduleUpdateRequestBody;
   onClick: () => void;
 }

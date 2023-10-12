@@ -122,6 +122,7 @@ export default function TrackDetailsPageTemplate(props: ITrackDetailsPageTemplat
                 <ScheduleEditForm
                   title={'Add'}
                   isFromAllSchedules={false}
+                  trackId={trackId as string}
                 />
               </DialogDescription>
             </DialogContent>

@@ -170,6 +170,7 @@ export default function EventViewScheduleDetailsPage() {
                     title='Update'
                     isFromAllSchedules={false}
                     scheduleId={scheduleId as string}
+                    trackId={trackId as string}
                   />
                 </DialogContent>
               </Dialog>

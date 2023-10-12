@@ -32,19 +32,23 @@ import ScheduleEditForm from "@/components/commons/ScheduleEditForm";
 import {
   cancelUserRsvpBySchedule,
   checkUserRsvpBySchedule,
+  fetchSchedule,
+  fetchScheduleByID,
   rsvpSchedule,
 } from "@/controllers";
 import { ScheduleUpdateRequestBody } from "@/types";
 
+
 export default function EventViewScheduleDetailsPage() {
   const router = useRouter();
-  const { event_space_id } = router.query;
+  const { event_space_id, scheduleId, trackId } = router.query;
   const { eventSpace, isLoading } = useEventDetails();
   const [rsvpUpdated, setRsvpUpdated] = useState(false);
-  const { scheduleName, scheduleId, trackId } = router.query;
+  const [currentSchedule, setCurrentSchedule] = useState<ScheduleUpdateRequestBody>()
   const [hasRsvpd, setHasRsvpd] = useState(false);
-  const currentSchedule = eventSpace?.schedules.find((scheduleItem) => scheduleItem.name === scheduleName);
+
   const trackItem = eventSpace?.tracks.find((trackItem) => trackItem.id === trackId);
+
   const startTime =
     currentSchedule &&
     new Date(currentSchedule.start_time).toLocaleTimeString('en-US', {
@@ -104,24 +108,24 @@ export default function EventViewScheduleDetailsPage() {
     }
   };
 
-  const handleEnterSchedule = async (id: string, scheduleTrackId: string) => {
-    const scheduleTrackTitle = eventSpace?.tracks.find(
-      (trackItem) => trackItem.id === scheduleTrackId
-    )?.name;
-    try {
-      router.push({
-        pathname: `/dashboard/eventview/allschedules/updateschedule`,
-        query: {
-          event_space_id,
-          trackId: scheduleTrackId,
-          scheduleId: id,
-          track_title: scheduleTrackTitle,
-        },
-      });
-    } catch (error) {
-      console.error('Error fetching space details', error);
-    }
-  };
+  useEffect(() => {
+    const fetchCurrentSchedule = async () => {
+      try {
+        const result = await fetchScheduleByID(scheduleId as string);
+
+        setCurrentSchedule({
+          ...result.data.data,
+          event_type: JSON.parse(result.data.data.event_type)[0],
+          experience_level: JSON.parse(result.data.data.experience_level)[0],
+        });
+        console.log(result.data.data.date);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchCurrentSchedule();
+  }, []);
 
   if (isLoading) {
     return <Loader />;
@@ -153,7 +157,9 @@ export default function EventViewScheduleDetailsPage() {
                   <ScheduleEditForm
                     title='Update'
                     isFromAllSchedules={true}
-                    scheduleData={currentSchedule as ScheduleUpdateRequestBody} />
+                    scheduleId={scheduleId as string}
+                    trackId={trackId as string}
+                  />
                 </DialogContent>
               </Dialog>
             </div>
