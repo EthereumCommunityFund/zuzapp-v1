@@ -75,7 +75,8 @@ export default function UpdateSchedulePage() {
           <ScheduleEditForm
             title='Update'
             isFromAllSchedules={false}
-            scheduleData={schedule} />
+            scheduleId={schedule.track_id as string}
+            trackId={track_title as string} />
         </div>
       </div>
     </div>
