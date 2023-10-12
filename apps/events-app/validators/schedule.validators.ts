@@ -24,7 +24,7 @@ const schedule_create_schema = Joi.object({
   rsvp_amount: Joi.number().integer().default(0),
   limit_rsvp: Joi.bool().optional(),
   event_space_id: Joi.string().uuid().required(),
-  track_id: Joi.string().uuid(),
+  track_id: Joi.string().uuid().required(),
   tags: Joi.array().items(Joi.string()).default([]),
   organizers: Joi.array().items(organizer_schema).default([]),
 });
@@ -55,7 +55,7 @@ const schedule_update_schema = Joi.object({
   limit_rsvp: Joi.bool().optional(),
   rsvp_amount: Joi.number().integer().default(50),
   event_space_id: Joi.string().uuid().required(),
-  track_id: Joi.string().uuid(),
+  track_id: Joi.string().uuid().required(),
   tags: Joi.array().items(Joi.string()).default([]),
   organizers: Joi.array().items(organizer_schema).default([]),
 });
