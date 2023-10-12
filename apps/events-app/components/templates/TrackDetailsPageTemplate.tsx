@@ -6,7 +6,7 @@ import UserFacingTrack from '@/components/ui/UserFacingTrack';
 import Button from '@/components/ui/buttons/Button';
 import { Label } from '@/components/ui/label';
 import { useEventSpace } from '@/context/EventSpaceContext';
-import { TrackType, TrackUpdateRequestBody } from '@/types';
+import { ScheduleDetailstype, TrackType, TrackUpdateRequestBody } from '@/types';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { BiEditAlt, BiPlusCircle } from 'react-icons/bi';
@@ -26,6 +26,7 @@ import { QueryClient, dehydrate } from 'react-query';
 import { fetchEventSpaceById } from '@/services/fetchEventSpaceDetails';
 import UpdateTrackTemplate from '@/pages/dashboard/events/space/tracks/update';
 import ScheduleEditForm from '../commons/ScheduleEditForm';
+import fetchSchedulesByTrackId from '@/services/fetchSchedulesByTrackId';
 
 interface ITrackDetailsPageTemplate {
   trackItem: TrackType;
@@ -34,12 +35,18 @@ interface ITrackDetailsPageTemplate {
 export default function TrackDetailsPageTemplate(props: ITrackDetailsPageTemplate) {
   const router = useRouter();
   const { trackItem } = props;
-  const { eventSpace, isLoading } = useEventDetails();
+  const { eventSpace } = useEventDetails();
   const { event_space_id, trackId, track_title } = router.query;
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [schedules, setSchedules] = useState<ScheduleDetailstype[]>();
 
   // const handlePageChange = (page: number) => {
   //   setCurrentPage(page);
   // };
+
+  const updateIsLoading = (newState: boolean) => {
+    setIsLoading(newState);
+  }
   const handleItemClick = (scheduleName: string, trackId: string | undefined, event_space_id: string, scheduleId: string) => {
 
     router.push({
@@ -66,7 +73,14 @@ export default function TrackDetailsPageTemplate(props: ITrackDetailsPageTemplat
   //   }
   // };
 
+  const fetchSchedules = async () => {
+    const response = await fetchSchedulesByTrackId(trackId as string);
+    setSchedules(response);
+    setIsLoading(false);
+  }
+
   if (isLoading) {
+    fetchSchedules();
     return <Loader />;
   }
 
@@ -127,6 +141,7 @@ export default function TrackDetailsPageTemplate(props: ITrackDetailsPageTemplat
                   title={'Add'}
                   isFromAllSchedules={false}
                   trackId={trackId as string}
+                  updateIsLoading={updateIsLoading}
                 />
               </DialogDescription>
             </DialogContent>
@@ -134,8 +149,8 @@ export default function TrackDetailsPageTemplate(props: ITrackDetailsPageTemplat
         </div>
         <div className="flex flex-col gap-2.5 p-5 w-full">
           <div className="flex flex-col gap-[10px] overflow-hidden rounded-[10px]">
-            {eventSpace &&
-              eventSpace?.schedules.map(
+            {schedules && eventSpace &&
+              schedules.map(
                 (schedule, idx) => schedule.track_id === trackItem?.id && <UserFacingTrack key={idx} scheduleId={schedule.id} scheduleData={schedule} onClick={() => handleItemClick(schedule.name, trackItem?.id, eventSpace.id, schedule.id)} />)}
           </div>
         </div>

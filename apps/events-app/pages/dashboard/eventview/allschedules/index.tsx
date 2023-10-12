@@ -7,7 +7,7 @@ import UserFacingTrack from '@/components/ui/UserFacingTrack';
 import Button from '@/components/ui/buttons/Button';
 import { Calendar, SelectCategories, SelectLocation } from '@/components/ui/icons';
 import { fetchEventSpaceById } from '@/services/fetchEventSpaceDetails';
-import { DropDownMenuItemType } from '@/types';
+import { DropDownMenuItemType, ScheduleDetailstype } from '@/types';
 import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
@@ -18,6 +18,7 @@ import useEventDetails from '@/hooks/useCurrentEventSpace';
 import { Loader } from '@/components/ui/Loader';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import ScheduleEditForm from '@/components/commons/ScheduleEditForm';
+import fetchSchedulesByEvenSpaceId from '@/services/fetchScheduleByEventSpace';
 
 const categoryList: DropDownMenuItemType[] = [
   {
@@ -34,7 +35,9 @@ const categoryList: DropDownMenuItemType[] = [
 export default function EventViewTracksAlleSchedulesPage() {
   const router = useRouter();
   const { event_space_id, trackId, track_title } = router.query;
-  const { eventSpace, isLoading } = useEventDetails();
+  const { eventSpace } = useEventDetails();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [schedules, setSchedules] = useState<ScheduleDetailstype[]>();
 
   console.log(isLoading, 'is loading');
 
@@ -45,18 +48,18 @@ export default function EventViewTracksAlleSchedulesPage() {
     });
   };
 
-  const handleAddSchedule = async () => {
-    try {
-      router.push({
-        pathname: `/dashboard/eventview/allschedules/addschedule`,
-        query: { event_space_id, trackId: trackId, track_title: track_title, quickAccess: true },
-      });
-    } catch (error) {
-      console.error('Error fetching space details', error);
-    }
-  };
+  const updateIsLoading = (newState: boolean) => {
+    setIsLoading(newState);
+  }
+
+  const fetchSchedules = async () => {
+    const response = await fetchSchedulesByEvenSpaceId(event_space_id as string);
+    setSchedules(response);
+    setIsLoading(false);
+  }
 
   if (isLoading) {
+    fetchSchedules();
     return <Loader />;
   }
 
@@ -78,12 +81,13 @@ export default function EventViewTracksAlleSchedulesPage() {
                     title={'Add'}
                     isFromAllSchedules={true}
                     trackId={trackId as string}
+                    updateIsLoading={updateIsLoading}
                   />
                 </DialogContent>
               </Dialog>
             </div>
             <div className=" p-2.5 gap-[10px] flex flex-col overflow-hidden rounded-[10px] pb-36">
-              {eventSpace?.schedules.map((schedule, id) => (
+              {schedules && schedules.map((schedule, id) => (
                 <UserFacingTrack key={id} onClick={() => handleItemClick(schedule.id, schedule.track_id as string)} scheduleData={schedule} scheduleId={schedule.id} />
               ))}
             </div>

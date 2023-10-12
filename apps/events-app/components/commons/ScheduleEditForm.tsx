@@ -49,13 +49,16 @@ interface IScheduleEditForm {
   isFromAllSchedules: boolean,
   scheduleId?: string,
   trackId: string,
+  updateIsLoading?: (newState: boolean) => void,
 }
 
 export default function ScheduleEditForm({
   title,
   isFromAllSchedules,
   scheduleId,
-  trackId
+  trackId,
+  // updateNewScheduleId
+  updateIsLoading,
 }: IScheduleEditForm) {
   const router = useRouter();
   const { event_space_id } = router.query;
@@ -108,7 +111,7 @@ export default function ScheduleEditForm({
   const [scheduleUpdated, setScheduleUpdated] = useState(false);
   const [isLimit, setIsLimit] = useState(false);
   const [selectedTrackId, setSelectedTrackId] = useState<string>(trackId as string);
-  const [newScheduleId, setNewScheduleId] = useState<string>('');
+
 
   const formSchema = z.object({
     name: z.string().min(2, {
@@ -247,6 +250,7 @@ export default function ScheduleEditForm({
     }
 
     if (title === 'Add') {
+      updateIsLoading && updateIsLoading(true);
       const additionalPayload = {
         event_space_id: event_space_id as string,
         start_time: startTime,
@@ -274,8 +278,7 @@ export default function ScheduleEditForm({
       console.log(payload, 'payload');
       try {
         const result = await createSchedule(payload as any, schedule.event_space_id as string);
-        setNewScheduleId(result.data.data);
-        setScheduleUpdated(true);
+
         console.log(result, 'result');
       } catch (error: any) {
         console.log(error);
@@ -285,13 +288,11 @@ export default function ScheduleEditForm({
           variant: 'destructive',
         });
       }
+      updateIsLoading && updateIsLoading(true);
     }
   }
 
-  const handleRemoveSpeaker = (index: number) => {
-    const updatedItems = [...(schedule.organizers as Organizer[]).slice(0, index), ...(schedule.organizers as Organizer[]).slice(index + 1)];
-    setSchedule({ ...schedule, organizers: updatedItems as any });
-  };
+
 
   const handleRemoveTag = (index: number) => {
     const updatedItems = [...(schedule.tags as string[]).slice(0, index), ...(schedule.tags as string[]).slice(index + 1)];
@@ -392,14 +393,14 @@ export default function ScheduleEditForm({
   }, [form.formState.errors]);
 
   const handleEnterSchedules = async () => {
-    console.log("newScheduleId", newScheduleId);
+
     try {
       router.push({
-        pathname: isFromAllSchedules ? `/dashboard/eventview/tracks/track/schedule` : `/dashboard/eventview/allschedules//schedule`,
+        pathname: isFromAllSchedules ? `/dashboard/eventview/tracks/track/schedule` : `/dashboard/eventview/allschedules/schedule`,
         query: {
           event_space_id: event_space_id,
           trackId: trackId,
-          scheduleId: title === 'Add' ? newScheduleId : scheduleId,
+          scheduleId: scheduleId,
         },
       });
     } catch (error) {
@@ -420,9 +421,9 @@ export default function ScheduleEditForm({
           <FormTitle name={`${title} Schedule`} />
           {scheduleUpdated ? (
             <div className="flex flex-col items-center">
-              <h3 className="font-bold text-xl">{title === 'Add' ? `Your Schedule Has Been Created` : `Your Schedule Has Been Updated`}</h3>
+              <h3 className="font-bold text-xl">Your Schedule Has Been Updated</h3>
               <Button onClick={handleEnterSchedules} variant="primary" size='lg' className="mt-8 bg-[#67DBFF]/20 text-[#67DBFF] rounded-full" leftIcon={HiArrowRight}>
-                Go to schedules
+                Go to Schedules
               </Button>
             </div>
           ) : (
