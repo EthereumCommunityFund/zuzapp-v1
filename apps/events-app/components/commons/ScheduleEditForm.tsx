@@ -50,6 +50,7 @@ interface IScheduleEditForm {
   scheduleId?: string,
   trackId: string,
   updateIsLoading?: (newState: boolean) => void,
+  handleModalOpen?: (newState: boolean) => void,
 }
 
 export default function ScheduleEditForm({
@@ -59,6 +60,7 @@ export default function ScheduleEditForm({
   trackId,
   // updateNewScheduleId
   updateIsLoading,
+  handleModalOpen
 }: IScheduleEditForm) {
   const router = useRouter();
   const { event_space_id } = router.query;
@@ -250,7 +252,7 @@ export default function ScheduleEditForm({
     }
 
     if (title === 'Add') {
-      updateIsLoading && updateIsLoading(true);
+
       const additionalPayload = {
         event_space_id: event_space_id as string,
         start_time: startTime,
@@ -278,7 +280,8 @@ export default function ScheduleEditForm({
       console.log(payload, 'payload');
       try {
         const result = await createSchedule(payload as any, schedule.event_space_id as string);
-
+        handleModalOpen && handleModalOpen(false);
+        updateIsLoading && updateIsLoading(true);
         console.log(result, 'result');
       } catch (error: any) {
         console.log(error);
@@ -288,7 +291,7 @@ export default function ScheduleEditForm({
           variant: 'destructive',
         });
       }
-      updateIsLoading && updateIsLoading(true);
+
     }
   }
 

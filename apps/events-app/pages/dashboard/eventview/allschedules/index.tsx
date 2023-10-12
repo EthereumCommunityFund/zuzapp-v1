@@ -10,7 +10,7 @@ import { fetchEventSpaceById } from '@/services/fetchEventSpaceDetails';
 import { DropDownMenuItemType, ScheduleDetailstype } from '@/types';
 import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BiLeftArrow, BiPlusCircle } from 'react-icons/bi';
 import { QueryClient, dehydrate, useQuery } from 'react-query';
 import { EventSpaceDetailsType } from '@/types';
@@ -38,6 +38,7 @@ export default function EventViewTracksAlleSchedulesPage() {
   const { eventSpace } = useEventDetails();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [schedules, setSchedules] = useState<ScheduleDetailstype[]>();
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   console.log(isLoading, 'is loading');
 
@@ -52,16 +53,22 @@ export default function EventViewTracksAlleSchedulesPage() {
     setIsLoading(newState);
   }
 
+  const handleModalOpen = (newState: boolean) => {
+    setIsModalOpen(newState);
+  }
+
   const fetchSchedules = async () => {
     const response = await fetchSchedulesByEvenSpaceId(event_space_id as string);
     setSchedules(response);
     setIsLoading(false);
   }
 
-  if (isLoading) {
-    fetchSchedules();
-    return <Loader />;
-  }
+  useEffect(() => {
+    if (isLoading) {
+      console.log("isLoading", isLoading);
+      fetchSchedules();
+    }
+  }, [isLoading]);
 
   return (
     <div className="flex gap-4 lg:flex-row mt-5 lg:mt-0 pb-24 lg:pb-0 sm:flex-col-reverse lg:bg-pagePrimary md:bg-componentPrimary">
@@ -76,21 +83,27 @@ export default function EventViewTracksAlleSchedulesPage() {
                     Add a Schedule
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="md:w-3/5 md:h-3/5 overflow-x-auto sm:w-3/4">
-                  <ScheduleEditForm
-                    title={'Add'}
-                    isFromAllSchedules={true}
-                    trackId={trackId as string}
-                    updateIsLoading={updateIsLoading}
-                  />
-                </DialogContent>
+                {
+                  <DialogContent className="md:w-3/5 md:h-3/5 overflow-x-auto sm:w-3/4">
+                    <ScheduleEditForm
+                      title={'Add'}
+                      isFromAllSchedules={true}
+                      trackId={trackId as string}
+                      updateIsLoading={updateIsLoading}
+                      handleModalOpen={handleModalOpen}
+                    />
+                  </DialogContent>
+                }
               </Dialog>
             </div>
-            <div className=" p-2.5 gap-[10px] flex flex-col overflow-hidden rounded-[10px] pb-36">
-              {schedules && schedules.map((schedule, id) => (
-                <UserFacingTrack key={id} onClick={() => handleItemClick(schedule.id, schedule.track_id as string)} scheduleData={schedule} scheduleId={schedule.id} />
-              ))}
-            </div>
+            {isLoading ?
+              <Loader /> :
+              <div className=" p-2.5 gap-[10px] flex flex-col overflow-hidden rounded-[10px] pb-36">
+                {schedules && schedules.map((schedule, id) => (
+                  <UserFacingTrack key={id} onClick={() => handleItemClick(schedule.id, schedule.track_id as string)} scheduleData={schedule} scheduleId={schedule.id} />
+                ))}
+              </div>
+            }
           </div>
         </div>
       </div>

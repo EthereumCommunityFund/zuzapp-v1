@@ -27,6 +27,8 @@ import { fetchEventSpaceById } from '@/services/fetchEventSpaceDetails';
 import UpdateTrackTemplate from '@/pages/dashboard/events/space/tracks/update';
 import ScheduleEditForm from '../commons/ScheduleEditForm';
 import fetchSchedulesByTrackId from '@/services/fetchSchedulesByTrackId';
+import React from 'react';
+import { DialogClose } from '@radix-ui/react-dialog';
 
 interface ITrackDetailsPageTemplate {
   trackItem: TrackType;
@@ -39,6 +41,7 @@ export default function TrackDetailsPageTemplate(props: ITrackDetailsPageTemplat
   const { event_space_id, trackId, track_title } = router.query;
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [schedules, setSchedules] = useState<ScheduleDetailstype[]>();
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   // const handlePageChange = (page: number) => {
   //   setCurrentPage(page);
@@ -62,6 +65,9 @@ export default function TrackDetailsPageTemplate(props: ITrackDetailsPageTemplat
     });
   };
 
+  const handleModalOpen = (newState: boolean) => {
+    setIsModalOpen(newState);
+  }
   // const handleAddSchedule = async () => {
   //   try {
   //     router.push({
@@ -79,10 +85,12 @@ export default function TrackDetailsPageTemplate(props: ITrackDetailsPageTemplat
     setIsLoading(false);
   }
 
-  if (isLoading) {
-    fetchSchedules();
-    return <Loader />;
-  }
+  useEffect(() => {
+    if (isLoading) {
+      console.log("isLoading", isLoading);
+      fetchSchedules();
+    }
+  }, [isLoading]);
 
   return (
     <div className="flex gap-4 lg:flex-row sm:flex-col">
@@ -131,29 +139,35 @@ export default function TrackDetailsPageTemplate(props: ITrackDetailsPageTemplat
         <div className="p-4 w-full">
           <Dialog>
             <DialogTrigger asChild>
-              <Button variant="blue" size="lg" className="rounded-xl flex justify-center w-full" leftIcon={BiPlusCircle}>
+              <Button variant="blue" size="lg" className="rounded-xl flex justify-center w-full" leftIcon={BiPlusCircle} onClick={() => handleModalOpen}>
                 Add a Schedule
               </Button>
             </DialogTrigger>
-            <DialogContent className='lg:w-3/5 lg:h-3/5 overflow-y-auto'>
-              <DialogDescription className="text-white">
-                <ScheduleEditForm
-                  title={'Add'}
-                  isFromAllSchedules={false}
-                  trackId={trackId as string}
-                  updateIsLoading={updateIsLoading}
-                />
-              </DialogDescription>
-            </DialogContent>
+            {isModalOpen &&
+              <DialogContent className='lg:w-3/5 lg:h-3/5 overflow-y-auto'>
+                <DialogDescription className="text-white">
+                  <ScheduleEditForm
+                    title={'Add'}
+                    isFromAllSchedules={false}
+                    trackId={trackId as string}
+                    updateIsLoading={updateIsLoading}
+                    handleModalOpen={handleModalOpen}
+                  />
+                </DialogDescription>
+              </DialogContent>
+            }
           </Dialog>
         </div>
-        <div className="flex flex-col gap-2.5 p-5 w-full">
-          <div className="flex flex-col gap-[10px] overflow-hidden rounded-[10px]">
-            {schedules && eventSpace &&
-              schedules.map(
-                (schedule, idx) => schedule.track_id === trackItem?.id && <UserFacingTrack key={idx} scheduleId={schedule.id} scheduleData={schedule} onClick={() => handleItemClick(schedule.name, trackItem?.id, eventSpace.id, schedule.id)} />)}
+        {isLoading ?
+          <Loader /> :
+          <div className="flex flex-col gap-2.5 p-5 w-full">
+            <div className="flex flex-col gap-[10px] overflow-hidden rounded-[10px]">
+              {schedules && eventSpace &&
+                schedules.map(
+                  (schedule, idx) => schedule.track_id === trackItem?.id && <UserFacingTrack key={idx} scheduleId={schedule.id} scheduleData={schedule} onClick={() => handleItemClick(schedule.name, trackItem?.id, eventSpace.id, schedule.id)} />)}
+            </div>
           </div>
-        </div>
+        }
       </div>
       {eventSpace && <EventViewDetailsPanel eventSpace={eventSpace} />}
     </div>
