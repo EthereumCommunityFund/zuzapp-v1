@@ -47,36 +47,36 @@ type TagItemProp = {
 interface IScheduleEditForm {
   title: string,
   isFromAllSchedules: boolean,
-  scheduleData: ScheduleUpdateRequestBody,
+  scheduleId?: string,
 }
 
 export default function ScheduleEditForm({
   title,
   isFromAllSchedules,
-  scheduleData,
+  scheduleId,
 }: IScheduleEditForm) {
   const router = useRouter();
-  const { trackId, scheduleId, event_space_id } = router.query;
+  const { trackId, event_space_id } = router.query;
 
   const [schedule, setSchedule] = useState<ScheduleUpdateRequestBody>({
-    name: scheduleData.name,
-    format: scheduleData.format,
-    description: scheduleData.description,
-    date: scheduleData.date,
-    start_time: scheduleData.start_time,
-    end_time: scheduleData.end_time,
-    all_day: scheduleData.all_day,
-    schedule_frequency: scheduleData.schedule_frequency,
-    images: scheduleData.images,
-    video_call_link: scheduleData.video_call_link,
-    live_stream_url: scheduleData.live_stream_url,
-    location_id: scheduleData.location_id,
-    event_type: "tracks",
-    experience_level: scheduleData.experience_level,
-    limit_rsvp: scheduleData.limit_rsvp,
-    rsvp_amount: scheduleData.rsvp_amount,
-    event_space_id: scheduleData.event_space_id,
-    track_id: scheduleData.track_id,
+    name: '',
+    format: 'in-person',
+    description: '',
+    date: '',
+    start_time: '',
+    end_time: '',
+    all_day: false,
+    schedule_frequency: 'once',
+    images: [''],
+    video_call_link: '',
+    live_stream_url: '',
+    location_id: '',
+    event_type: '',
+    experience_level: '',
+    limit_rsvp: false,
+    rsvp_amount: 1,
+    event_space_id: '',
+    track_id: '',
     tags: [''],
     organizers: [
       {
@@ -85,7 +85,7 @@ export default function ScheduleEditForm({
       },
     ],
   });
-  const [startDate, setStartDate] = useState<Date | undefined>(scheduleData.date as Date);
+  const [startDate, setStartDate] = useState<Date | undefined>();
   const [optionTags, setOptionTags] = useState<TagItemProp[]>([]);
 
   const [tags, setTags] = useState<string[]>([]);
@@ -101,10 +101,9 @@ export default function ScheduleEditForm({
   const [experienceLevel, setExperienceLevel] = useState('');
   const [eventCategory, setEventCategory] = useState('');
   const [initialEvent, setInitialEvent] = useState('');
-  const [isAllDay, setIsAllDay] = useState<boolean>(scheduleData.all_day as boolean);
+
   const [rsvpAmount, setRsvpAmount] = useState(1);
   const handleChangeSwitch = () => {
-    setIsAllDay(!isAllDay);
     setSchedule({ ...schedule, all_day: !schedule.all_day });
   };
   const [startTime, setStartTime] = useState(dayjs('2023-11-17T00:00'));
@@ -151,10 +150,10 @@ export default function ScheduleEditForm({
     isLoading,
     isError,
   } = useQuery<EventSpaceDetailsType, Error>(
-    ['currentEventSpace', scheduleData.event_space_id], // Query key
-    () => fetchEventSpaceById(scheduleData.event_space_id as string), // Query function
+    ['currentEventSpace', event_space_id], // Query key
+    () => fetchEventSpaceById(event_space_id as string), // Query function
     {
-      enabled: !!scheduleData.event_space_id, // Only execute the query if event_space_id is available
+      enabled: !!event_space_id, // Only execute the query if event_space_id is available
     }
   );
 
@@ -215,28 +214,32 @@ export default function ScheduleEditForm({
 
     if (title === 'Update') {
       const additionalPayload = {
-        event_space_id: schedule.event_space_id as string,
-        start_time: startTime as unknown as Date,
-        end_time: endTime as unknown as Date,
-        event_type: eventType.length > 0 ? [eventType] : eventSpace?.event_type?.[0] ? [eventSpace?.event_type[0]] : [eventSpace?.event_type || 'Meetup'],
-        experience_level: experienceLevel.length > 0 ? [experienceLevel] : eventSpace?.experience_level?.[0] ? [eventSpace?.experience_level[0]] : [eventSpace?.experience_level || 'Beginner'],
-        tags: tags,
-        schedule_frequency: frequency,
-        location_id: locationId === '' ? '403a376c-7ac7-4460-b15d-6cc5eabf5e6c' : locationId,
-        organizers,
-        all_day: isAllDay,
-        limit_rsvp: isLimit,
+        event_space_id: schedule.event_space_id,
+        start_time: schedule.start_time as unknown as string,
+        end_time: schedule.end_time as unknown as string,
+        event_type: (schedule.event_type as unknown as []).length > 0 ? JSON.stringify([schedule.event_type]) : ((eventSpace?.event_type as string[])[0] as unknown as string[]),
+        experience_level:
+          (schedule.experience_level as unknown as []).length > 0 ? (JSON.stringify([schedule.experience_level]) as unknown as string[]) : [(eventSpace?.experience_level as string[])[0]],
+        tags: schedule.tags,
+        schedule_frequency: schedule.schedule_frequency,
+        location_id: schedule.location_id,
+        organizers: updatedOrganizers,
+        video_call_link: schedule.video_call_link,
+        live_stream_url: schedule.live_stream_url,
+        all_day: schedule.all_day,
+        track_id: trackId,
+        limit_rsvp: schedule.limit_rsvp,
         ...(eventSpace?.event_space_type === 'tracks' && {
-          track_id: selectedTrackId ? selectedTrackId : (trackId as string),
+          track_id: trackId as string,
         }),
-        ...(isLimit ? { rsvp_amount: rsvpAmount } : {}),
+        ...(schedule.limit_rsvp ? { rsvp_amount: schedule.rsvp_amount } : {}),
         // isLimit && rsvp_amount: rsvpAmount
       };
       const payload: any = { ...values, ...additionalPayload };
       console.log(payload);
       try {
         console.log(payload, 'payload');
-        const result = await updateSchedule(scheduleId as string, payload, scheduleData.event_space_id as string);
+        const result = await updateSchedule(scheduleId as string, payload, event_space_id as string);
         // setSwitchDialogue(true);
         setScheduleUpdated(true);
         console.log(result, 'result');
@@ -256,7 +259,7 @@ export default function ScheduleEditForm({
         schedule_frequency: frequency,
         location_id: locationId === '' ? '403a376c-7ac7-4460-b15d-6cc5eabf5e6c' : locationId,
         organizers,
-        all_day: isAllDay,
+        all_day: schedule.all_day,
         limit_rsvp: isLimit,
         ...(eventSpace?.event_space_type === 'tracks' && {
           track_id: selectedTrackId ? selectedTrackId : (trackId as string),
@@ -299,7 +302,9 @@ export default function ScheduleEditForm({
 
   const handleRemoveOrganizer = (index: number) => {
     const updatedItems = [...organizers.slice(0, index), ...organizers.slice(index + 1)];
+    const updatedScheduleItems = [...(schedule.organizers as Organizer[]).slice(0, index), ...(schedule.organizers as Organizer[]).slice(index + 1)];
     setOrganizers(updatedItems);
+    setSchedule({ ...schedule, organizers: updatedScheduleItems as any });
   };
 
   const handleTrackSelect = (e: any) => {
@@ -318,8 +323,8 @@ export default function ScheduleEditForm({
   useEffect(() => {
     const fetchLocationDetails = async () => {
       try {
-        console.log("evnet space id", scheduleData.event_space_id);
-        const result = await fetchLocationsByEventSpace(scheduleData.event_space_id as string);
+        console.log("evnet space id", event_space_id);
+        const result = await fetchLocationsByEventSpace(event_space_id as string);
         console.log(result);
         setSavedLocations(result?.data?.data);
         setLocationId(result.data.data[0].id);
@@ -341,7 +346,7 @@ export default function ScheduleEditForm({
     const fetchCurrentSchedule = async () => {
       try {
         const result = await fetchScheduleByID(scheduleId as string);
-        console.log(result, 'result');
+
         setSchedule({
           ...result.data.data,
           event_type: JSON.parse(result.data.data.event_type)[0],
@@ -387,7 +392,7 @@ export default function ScheduleEditForm({
       router.push({
         pathname: `/dashboard/events/space/tracks/schedules`,
         query: {
-          event_space_id: scheduleData.event_space_id,
+          event_space_id: event_space_id,
           trackId: trackId,
         },
       });
@@ -515,7 +520,7 @@ export default function ScheduleEditForm({
                   <h2 className="text-xl opacity-70 self-stretch">Schedule Date & Times</h2>
                   <div className="flex flex-col items-start gap-5 self-stretch w-full pt-5">
                     <div className="flex gap-5">
-                      <SwitchButton value={isAllDay} onClick={handleChangeSwitch} />
+                      <SwitchButton value={schedule.all_day} onClick={handleChangeSwitch} />
                       <span className="text-lg opacity-70 self-stretch">All Day</span>
                     </div>
                     <div className="flex flex-col items-center gap-[30px] self-stretch w-full">
@@ -702,7 +707,7 @@ export default function ScheduleEditForm({
                               ...eventItem,
                               role: e.target.value
                             })}
-                            title="location"
+                            title="speaker"
                             value={eventItem.role}
                             className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
                           >
@@ -716,6 +721,10 @@ export default function ScheduleEditForm({
                           type="button"
                           onClick={() => {
                             if (eventItem.name === '') return;
+                            setSchedule({
+                              ...schedule,
+                              organizers: [...(schedule.organizers as Organizer[]), eventItem],
+                            });
                             setOrganizers([...organizers, eventItem]);
                             setEventItem({ name: '', role: 'speaker' });
                           }}
@@ -726,7 +735,7 @@ export default function ScheduleEditForm({
                       </div>
 
                       <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5">
-                        {organizers?.map((organizer: any, index: number) => (
+                        {schedule.organizers?.map((organizer: any, index: number) => (
                           <div key={index} className="flex gap-2.5 items-center rounded-[8px] px-2 py-1.5 bg-white bg-opacity-10">
                             <button type="button" className="flex gap-2.5 items-center">
                               <GoXCircle onClick={() => handleRemoveOrganizer(index)} className="top-0.5 left-0.5 w-4 h-4" />
@@ -841,7 +850,7 @@ export default function ScheduleEditForm({
                         </button>
                       </div>
                       <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5">
-                        {tags && tags.length > 0 && tags.map((tag, index) => (
+                        {schedule.tags && schedule.tags.length > 0 && schedule.tags.map((tag, index) => (
                           <div key={index} className="flex w-full items-center rounded-[8px] px-2 py-1.5 bg-white bg-opacity-10">
                             <button type='button' className="flex gap-2.5 items-center">
                               <GoXCircle onClick={() => handleRemoveTag(index)} className="top-0.5 left-0.5 w-4 h-4" />

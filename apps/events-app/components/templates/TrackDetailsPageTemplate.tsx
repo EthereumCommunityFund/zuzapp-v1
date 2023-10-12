@@ -40,11 +40,11 @@ export default function TrackDetailsPageTemplate(props: ITrackDetailsPageTemplat
   // const handlePageChange = (page: number) => {
   //   setCurrentPage(page);
   // };
-  const handleItemClick = (scheduleName: string, trackId: string | undefined, event_space_id: string) => {
+  const handleItemClick = (scheduleName: string, trackId: string | undefined, event_space_id: string, scheduleId: string) => {
 
     router.push({
       pathname: '/dashboard/eventview/tracks/track/schedule',
-      query: { scheduleName, trackId, event_space_id },
+      query: { scheduleName, trackId, event_space_id, scheduleId },
     });
   };
 
@@ -122,33 +122,7 @@ export default function TrackDetailsPageTemplate(props: ITrackDetailsPageTemplat
                 <ScheduleEditForm
                   title={'Add'}
                   isFromAllSchedules={false}
-                  scheduleData={{
-                    name: '',
-                    format: 'in-person',
-                    description: '',
-                    date: '',
-                    start_time: '',
-                    end_time: '',
-                    all_day: false,
-                    schedule_frequency: 'once',
-                    images: [''],
-                    video_call_link: '',
-                    live_stream_url: '',
-                    location_id: '',
-                    event_type: '',
-                    experience_level: '',
-                    limit_rsvp: false,
-                    rsvp_amount: 1,
-                    event_space_id: event_space_id as string,
-                    track_id: '',
-                    tags: [''],
-                    organizers: [
-                      {
-                        name: '',
-                        role: '',
-                      },
-                    ],
-                  }} />
+                />
               </DialogDescription>
             </DialogContent>
           </Dialog>
@@ -157,7 +131,7 @@ export default function TrackDetailsPageTemplate(props: ITrackDetailsPageTemplat
           <div className="flex flex-col gap-[10px] overflow-hidden rounded-[10px]">
             {eventSpace &&
               eventSpace?.schedules.map(
-                (schedule, idx) => schedule.track_id === trackItem?.id && <UserFacingTrack key={idx} scheduleData={schedule} onClick={() => handleItemClick(schedule.name, trackItem?.id, eventSpace.id)} />)}
+                (schedule, idx) => schedule.track_id === trackItem?.id && <UserFacingTrack key={idx} scheduleId={schedule.id} scheduleData={schedule} onClick={() => handleItemClick(schedule.name, trackItem?.id, eventSpace.id, schedule.id)} />)}
           </div>
         </div>
       </div>
