@@ -37,7 +37,7 @@ export default function DashboardNavigation() {
         onClick={handleClick}
       ></div>
       <nav
-        className={`dashboard-menu min-w-[260px] fixed flex flex-col h-screen border-r border-r-gray-800 bg-[#2F3232] py-10 px-6 transition-transform duration-300 ${dashboardOpen && "open"
+        className={`dashboard-menu min-w-[260px] z-10 fixed flex flex-col h-screen border-r border-r-gray-800 bg-[#2F3232] py-10 px-6 transition-transform duration-300 ${dashboardOpen && "open"
           }`}
       >
         <div className="flex-1 flex flex-col opacity-70">
