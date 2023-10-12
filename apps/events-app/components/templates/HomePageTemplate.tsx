@@ -78,7 +78,7 @@ export default function HomePageTemplate() {
   }
 
   return (
-    <div className="w-5/6 mx-auto ">
+    <div className="md:w-5/6 w-[95%] mx-auto ">
       <div
         className="w-full border border-white/10 rounded-2xl mt-5"
         style={{
@@ -157,7 +157,7 @@ export default function HomePageTemplate() {
                 key={index}
                 className="flex flex-col md:flex-row md:justify-between md:items-center border border-white/10 bg-componentPrimary hover:bg-itemHover rounded-lg px-3 md:px-5 py-3 mt-5 duration-200"
               >
-                <div className="flex flex-col md:flex-row space-x-3 md:items-center">
+                <div className="flex flex-col md:flex-row md:space-x-3 md:items-center">
                   <div>
                     <img
                       src={
@@ -165,18 +165,18 @@ export default function HomePageTemplate() {
                           ? event.image_url
                           : `/images/black-img.png`
                       }
-                      className="rounded-xl"
+                      className="rounded-xl w-full md:max-w-[150px] md:max-h-[120px] h-44"
                       alt="Event"
                       width={150}
                       height={120}
                     />
                   </div>
-                  <div className="space-y-2 mt-2 md:mt-0">
+                  <div className="space-y-2 space-x-0 mt-2 md:mt-0">
                     <h4 className="text-2xl font-bold">{event.name}</h4>
                     <h2 className="text-base font-semibold opacity-70 font-inter">
                       {event.tagline}
                     </h2>
-                    <div className="flex space-x-2">
+                    <div className="flex gap-2 flex-wrap">
                       <p className="flex items-center text-xs md:text-sm text-white/60 bg-white/10 rounded-full py-2 px-3 w-fit font-semibold">
                         <BsCalendar2Fill className="mr-2 text-sm md:text-base" />{" "}
                         {formatDate(event?.start_date)} -{" "}
@@ -193,7 +193,7 @@ export default function HomePageTemplate() {
                   <Button
                     size="lg"
                     variant={"primaryGreen"}
-                    className="rounded-full"
+                    className="rounded-full w-full flex items-center justify-center md:w-auto"
                     onClick={() => event.id && handleButtonClick(event.id)}
                   >
                     View Event
