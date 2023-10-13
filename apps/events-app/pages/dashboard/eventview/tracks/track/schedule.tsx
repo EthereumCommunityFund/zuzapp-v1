@@ -197,7 +197,7 @@ export default function EventViewScheduleDetailsPage() {
             {trackItem?.description && <RenderHTMLString height="" htmlString={trackItem?.description} />}
           </div>
         </div>
-        {eventSpace && <EventViewDetailsPanel eventSpace={eventSpace} />}
+        {eventSpace && currentSchedule?.tags && currentSchedule.organizers && <EventViewDetailsPanel eventSpace={eventSpace} organizers={currentSchedule.organizers} tags={currentSchedule.tags} />}
       </div>
     </div>
   );

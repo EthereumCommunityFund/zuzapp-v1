@@ -6,7 +6,7 @@ import UserFacingTrack from '@/components/ui/UserFacingTrack';
 import Button from '@/components/ui/buttons/Button';
 import { Label } from '@/components/ui/label';
 import { useEventSpace } from '@/context/EventSpaceContext';
-import { ScheduleDetailstype, TrackType, TrackUpdateRequestBody } from '@/types';
+import { OrganizerType, ScheduleDetailstype, TrackType, TrackUpdateRequestBody } from '@/types';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { BiEditAlt, BiPlusCircle } from 'react-icons/bi';
@@ -24,23 +24,27 @@ import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
 import { Database } from '@/database.types';
 import { QueryClient, dehydrate } from 'react-query';
 import { fetchEventSpaceById } from '@/services/fetchEventSpaceDetails';
-import UpdateTrackTemplate from '@/pages/dashboard/events/space/tracks/update';
+
 import ScheduleEditForm from '../commons/ScheduleEditForm';
 import fetchSchedulesByTrackId from '@/services/fetchSchedulesByTrackId';
 import React from 'react';
-import { DialogClose } from '@radix-ui/react-dialog';
+import { fetchAllSpeakers } from '@/controllers';
+
 
 interface ITrackDetailsPageTemplate {
   trackItem: TrackType;
+  organizers: [];
 }
 
-export default function TrackDetailsPageTemplate(props: ITrackDetailsPageTemplate) {
+export default function TrackDetailsPageTemplate(props: any) {
   const router = useRouter();
   const { trackItem } = props;
   const { eventSpace } = useEventDetails();
   const { event_space_id, trackId, track_title } = router.query;
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [schedules, setSchedules] = useState<ScheduleDetailstype[]>();
+  const [organizers, setOrganizers] = useState<OrganizerType[]>([]);
+  const [tags, setTags] = useState<string[]>([]);
 
 
   // const handlePageChange = (page: number) => {
@@ -66,26 +70,32 @@ export default function TrackDetailsPageTemplate(props: ITrackDetailsPageTemplat
   };
 
 
-  // const handleAddSchedule = async () => {
-  //   try {
-  //     router.push({
-  //       pathname: `/dashboard/eventview/allschedules/addschedule`,
-  //       query: { event_space_id, trackId: trackId, track_title: track_title },
-  //     });
-  //   } catch (error) {
-  //     console.error('Error fetching space details', error);
-  //   }
-  // };
+  console.log('eventSpace', eventSpace);
 
   const fetchSchedules = async () => {
-    const response = await fetchSchedulesByTrackId(trackId as string);
+    const response: ScheduleDetailstype[] = await fetchSchedulesByTrackId(trackId as string);
+    const allTagsSet: Set<string> = new Set();
+
+    response.forEach((schedule: ScheduleDetailstype) => {
+      if (schedule.tags) {
+        schedule.tags.forEach(tag => allTagsSet.add(tag));
+      }
+    });
+
+    const allTags: string[] = Array.from(allTagsSet);
+    setTags(allTags);
     setSchedules(response);
     setIsLoading(false);
   }
 
+  const fetchOrganizers = async () => {
+    const response = await fetchAllSpeakers();
+    setOrganizers(response.data.data);
+  }
+
   useEffect(() => {
     if (isLoading) {
-
+      fetchOrganizers();
       fetchSchedules();
     }
   }, [isLoading]);
@@ -164,7 +174,7 @@ export default function TrackDetailsPageTemplate(props: ITrackDetailsPageTemplat
           </div>
         }
       </div>
-      {eventSpace && <EventViewDetailsPanel eventSpace={eventSpace} />}
+      {eventSpace && <EventViewDetailsPanel eventSpace={eventSpace} organizers={organizers} tags={tags} />}
     </div>
   );
 }
