@@ -6,7 +6,7 @@ import UserFacingTrack from '@/components/ui/UserFacingTrack';
 import Button from '@/components/ui/buttons/Button';
 import { Label } from '@/components/ui/label';
 import { useEventSpace } from '@/context/EventSpaceContext';
-import { ScheduleDetailstype, TrackType, TrackUpdateRequestBody } from '@/types';
+import { OrganizerType, ScheduleDetailstype, TrackType, TrackUpdateRequestBody } from '@/types';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { BiEditAlt, BiPlusCircle } from 'react-icons/bi';
@@ -24,24 +24,28 @@ import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
 import { Database } from '@/database.types';
 import { QueryClient, dehydrate } from 'react-query';
 import { fetchEventSpaceById } from '@/services/fetchEventSpaceDetails';
-import UpdateTrackTemplate from '@/pages/dashboard/events/space/tracks/update';
+
 import ScheduleEditForm from '../commons/ScheduleEditForm';
 import fetchSchedulesByTrackId from '@/services/fetchSchedulesByTrackId';
 import React from 'react';
-import { DialogClose } from '@radix-ui/react-dialog';
+import { fetchAllSpeakers } from '@/controllers';
+
 
 interface ITrackDetailsPageTemplate {
   trackItem: TrackType;
+  organizers: [];
 }
 
-export default function TrackDetailsPageTemplate(props: ITrackDetailsPageTemplate) {
+export default function TrackDetailsPageTemplate(props: any) {
   const router = useRouter();
   const { trackItem } = props;
   const { eventSpace } = useEventDetails();
   const { event_space_id, trackId, track_title } = router.query;
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [schedules, setSchedules] = useState<ScheduleDetailstype[]>();
-
+  const [organizers, setOrganizers] = useState<OrganizerType[]>([]);
+  const [tags, setTags] = useState<string[]>([]);
+  console.log("trackItem", trackItem);
 
   // const handlePageChange = (page: number) => {
   //   setCurrentPage(page);
@@ -66,22 +70,35 @@ export default function TrackDetailsPageTemplate(props: ITrackDetailsPageTemplat
   };
 
 
-  // const handleAddSchedule = async () => {
-  //   try {
-  //     router.push({
-  //       pathname: `/dashboard/eventview/allschedules/addschedule`,
-  //       query: { event_space_id, trackId: trackId, track_title: track_title },
-  //     });
-  //   } catch (error) {
-  //     console.error('Error fetching space details', error);
-  //   }
-  // };
+  console.log('eventSpace', eventSpace);
 
   const fetchSchedules = async () => {
-    const response = await fetchSchedulesByTrackId(trackId as string);
+    const response: ScheduleDetailstype[] = await fetchSchedulesByTrackId(trackId as string);
+    const allTagsSet: Set<string> = new Set();
+    const allOrganizersSet: Set<OrganizerType> = new Set();
+
+    response.forEach((schedule: ScheduleDetailstype) => {
+      if (schedule.tags) {
+        schedule.tags.forEach(tag => allTagsSet.add(tag));
+      }
+      if (schedule.organizers) {
+        schedule.organizers.forEach((organizer: OrganizerType) => allOrganizersSet.add(organizer));
+      }
+    });
+
+    const allTags: string[] = Array.from(allTagsSet);
+    const allOrganizers: OrganizerType[] = Array.from(allOrganizersSet).filter((organizer, index, self) =>
+      index === self.findIndex((o) => (
+        o.role === organizer.role && o.name === organizer.name
+      ))
+    );
+    setTags(allTags);
+    setOrganizers(allOrganizers);
     setSchedules(response);
     setIsLoading(false);
   }
+
+
 
   useEffect(() => {
     if (isLoading) {
@@ -110,7 +127,7 @@ export default function TrackDetailsPageTemplate(props: ITrackDetailsPageTemplat
                     Edit
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="lg:w-3/5 lg:h-3/5 overflow-x-auto sm:w-3/4">
+                <DialogContent className="lg:w-3/5 lg:h-4/5 overflow-x-auto">
                   <DialogHeader>
                     <Label className="text-2xl font-bold">Edit Track</Label>
                   </DialogHeader>
@@ -141,7 +158,7 @@ export default function TrackDetailsPageTemplate(props: ITrackDetailsPageTemplat
                 Add a Schedule
               </Button>
             </DialogTrigger>
-            <DialogContent className='lg:w-3/5 lg:h-3/5 overflow-y-auto'>
+            <DialogContent className='lg:w-3/5 lg:h-4/5 overflow-y-auto'>
               <DialogDescription className="text-white">
                 <ScheduleEditForm
                   title={'Add'}
@@ -164,7 +181,7 @@ export default function TrackDetailsPageTemplate(props: ITrackDetailsPageTemplat
           </div>
         }
       </div>
-      {eventSpace && <EventViewDetailsPanel eventSpace={eventSpace} />}
+      {eventSpace && <EventViewDetailsPanel eventSpace={eventSpace} organizers={organizers} tags={tags} />}
     </div>
   );
 }

@@ -70,7 +70,7 @@ export default function InPersonEventViewPageTemplate({ eventSpace }: IInPersonE
   return (
     <>
       <div className="flex gap-10 md:flex-col sm:flex-col">
-        <div className="lg:w-2/3 md:w-full sm:w-full flex flex-col rounded-2xl bg-componentPrimary lg:min-w-[600px]">
+        <div className="lg:w-2/3 w-full flex flex-col lg:rounded-2xl bg-componentPrimary lg:min-w-[600px]">
           {' '}
           {/* Information */}
           <div className="rounded-xl p-5">
@@ -137,7 +137,7 @@ export default function InPersonEventViewPageTemplate({ eventSpace }: IInPersonE
             </Dialog>
           </div>
         </div>
-        <div className="lg:w-1/4 md:w-full flex flex-col px-10 py-5 gap-5 lg:fixed lg:right-0">
+        <div className="lg:w-1/4 md:w-full flex flex-col px-5 lg:px-10 py-5 gap-5 lg:fixed lg:right-0">
           <h2 className="border-b pb-3 text-2xl font-bold border-white/10">Details</h2>
           <div className="flex gap-4 items-center text-lg font-bold">
             <UserGroup />

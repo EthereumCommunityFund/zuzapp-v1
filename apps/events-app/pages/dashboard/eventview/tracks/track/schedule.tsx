@@ -20,7 +20,7 @@ import EventViewDetailsPanel from '@/components/eventview/EventViewDetailsPanel'
 import { QueryClient, dehydrate } from 'react-query';
 import { fetchEventSpaceById } from '@/services/fetchEventSpaceDetails';
 import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
-import { ScheduleUpdateRequestBody } from '@/types';
+import { OrganizerType, ScheduleUpdateRequestBody } from '@/types';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import ScheduleEditForm from '@/components/commons/ScheduleEditForm';
 
@@ -30,7 +30,7 @@ interface IEventLink {
 }
 
 export default function EventViewScheduleDetailsPage() {
-  const { eventSpace, isLoading } = useEventDetails();
+  const { eventSpace } = useEventDetails();
   const router = useRouter();
   const { scheduleName, trackId, event_space_id, track_title, scheduleId } =
     router.query;
@@ -65,6 +65,7 @@ export default function EventViewScheduleDetailsPage() {
       month: 'long',
       day: '2-digit',
     });
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const handleBackToTrackClick = (event_space_id: string) => {
     router.push({
@@ -103,6 +104,7 @@ export default function EventViewScheduleDetailsPage() {
   useEffect(() => {
     const fetchCurrentSchedule = async () => {
       try {
+        setIsLoading(true);
         const result = await fetchScheduleByID(scheduleId as string);
         console.log(result, 'result');
         setCurrentSchedule({
@@ -110,6 +112,7 @@ export default function EventViewScheduleDetailsPage() {
           event_type: JSON.parse(result.data.data.event_type)[0],
           experience_level: JSON.parse(result.data.data.experience_level)[0],
         });
+        setIsLoading(false);
       } catch (error) {
         console.log(error);
       }
@@ -118,73 +121,74 @@ export default function EventViewScheduleDetailsPage() {
     fetchCurrentSchedule();
   }, []);
 
-  if (isLoading) {
-    return <Loader />;
-  }
+
 
   return (
     <div className="flex gap-4 lg:flex-row sm:flex-col">
       <div className="flex flex-col lg:min-w-[66.67%] lg:max-w-[66.67%] sm:w-full">
         <EventViewHeader imgPath={eventSpace?.image_url as string} name={eventSpace?.name as string} tagline={eventSpace?.tagline as string} />
-        <div className="md:p-5 sm:p-0 gap-[30px]  h-full">
-          <div className="flex flex-col gap-[10px] p-2.5 bg-componentPrimary rounded-2xl h-full lg:h-auto">
-            <div className="flex justify-between">
-              {' '}
-              {/* Tracks and Edit Button */}
-              {eventSpace && (
-                <Button variant="ghost" className="md:text-lg sm:text-base font-bold" leftIcon={HiArrowLeft} onClick={() => handleBackToTrackClick(eventSpace?.id)}>
-                  Back to Track
-                </Button>
-              )}
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button variant="quiet" className="rounded-xl" leftIcon={BiEditAlt}>
-                    Edit
+        {isLoading ?
+          <Loader /> :
+          <div className="md:p-5 sm:p-0 gap-[30px]  h-full">
+            <div className="flex flex-col gap-[10px] p-2.5 bg-componentPrimary rounded-2xl h-full lg:h-auto">
+              <div className="flex justify-between">
+                {' '}
+                {/* Tracks and Edit Button */}
+                {eventSpace && (
+                  <Button variant="ghost" className="md:text-lg sm:text-base font-bold" leftIcon={HiArrowLeft} onClick={() => handleBackToTrackClick(eventSpace?.id)}>
+                    Back to Track
                   </Button>
-                </DialogTrigger>
-                <DialogContent className="h-3/5 lg:w-3/5 overflow-y-auto">
-                  <ScheduleEditForm
-                    title='Update'
-                    isFromAllSchedules={false}
-                    scheduleId={scheduleId as string}
-                    trackId={trackId as string}
-                  />
-                </DialogContent>
-              </Dialog>
-            </div>
-            <div className="flex flex-col gap-2.5 md:p-2.5 sm:p-0">
-              {' '}
-              {/* Schedule Info */}
-              <div className="flex flex-col gap-2.5 p-5">
-                {startTime && endTime && <EventDataTime startTime={startTime} endTime={endTime} />}
-                <h2 className="text-2xl font-extrabold">{currentSchedule?.name}</h2>
-                <div className="flex gap-[6px]">
-                  {currentSchedule?.organizers?.map((organizer) => (
-                    <Speaker title={organizer.name} />
-                  ))}
-                </div>
-                <div>
-                  <h3 className="float-right">By: drivenfast</h3>
-                </div>
+                )}
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button variant="quiet" className="rounded-xl" leftIcon={BiEditAlt}>
+                      Edit
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="h-3/5 lg:w-3/5 overflow-y-auto">
+                    <ScheduleEditForm
+                      title='Update'
+                      isFromAllSchedules={false}
+                      scheduleId={scheduleId as string}
+                      trackId={trackId as string}
+                    />
+                  </DialogContent>
+                </Dialog>
               </div>
-              <Button
-                variant="primary"
-                size="lg"
-                className={`rounded-2xl justify-center ${rsvpUpdated ? "animate-rsvp" : ""
-                  }`}
-                leftIcon={BsFillTicketFill}
-                onClick={handleRsvpAction}
-              >
-                {hasRsvpd ? "Cancel RSVP" : "RSVP Schedule"}
-              </Button>
-            </div>
-            <div className="flex flex-col gap-2.5 px-5 pt-5 pb-[60px]">
-              {/* Schedule Description */}
-              <h2 className="font-bold">Description</h2>
-              <div className="opacity-90">{currentSchedule?.description && <RenderHTMLString height="" htmlString={currentSchedule?.description} />}</div>
+              <div className="flex flex-col gap-2.5 md:p-2.5 sm:p-0">
+                {' '}
+                {/* Schedule Info */}
+                <div className="flex flex-col gap-2.5 p-5">
+                  {startTime && endTime && <EventDataTime startTime={startTime} endTime={endTime} />}
+                  <h2 className="text-2xl font-extrabold">{currentSchedule?.name}</h2>
+                  <div className="flex gap-[6px]">
+                    {currentSchedule?.organizers?.map((organizer: OrganizerType) => (
+                      organizer.role === 'speaker' && <Speaker title={organizer.name} />
+                    ))}
+                  </div>
+                  <div>
+                    <h3 className="float-right">By: drivenfast</h3>
+                  </div>
+                </div>
+                <Button
+                  variant="primary"
+                  size="lg"
+                  className={`rounded-2xl justify-center ${rsvpUpdated ? "animate-rsvp" : ""
+                    }`}
+                  leftIcon={BsFillTicketFill}
+                  onClick={handleRsvpAction}
+                >
+                  {hasRsvpd ? "Cancel RSVP" : "RSVP Schedule"}
+                </Button>
+              </div>
+              <div className="flex flex-col gap-2.5 px-5 pt-5 pb-[60px]">
+                {/* Schedule Description */}
+                <h2 className="font-bold">Description</h2>
+                <div className="opacity-90">{currentSchedule?.description && <RenderHTMLString height="" htmlString={currentSchedule?.description} />}</div>
+              </div>
             </div>
           </div>
-        </div>
+        }
       </div>
       <div className="flex flex-col md:px-10 lg:px-0 gap-1 right-0">
         <div className="flex flex-col gap-5 py-5">
@@ -197,7 +201,7 @@ export default function EventViewScheduleDetailsPage() {
             {trackItem?.description && <RenderHTMLString height="" htmlString={trackItem?.description} />}
           </div>
         </div>
-        {eventSpace && <EventViewDetailsPanel eventSpace={eventSpace} />}
+        {eventSpace && currentSchedule?.tags && currentSchedule.organizers && <EventViewDetailsPanel eventSpace={eventSpace} organizers={currentSchedule.organizers} tags={currentSchedule.tags} schedule={currentSchedule} />}
       </div>
     </div>
   );
