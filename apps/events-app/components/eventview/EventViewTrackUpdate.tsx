@@ -74,7 +74,7 @@ export default function EventViewTrackUpdate({ className }: IUpdate) {
   };
 
   return (
-    <div className={cn('flex flex-col py-5 px-10 items-center gap-[10px] self-stretch w-full', className)}>
+    <div className={cn('flex flex-col py-5 md:px-10 items-center gap-[10px] self-stretch w-full', className)}>
       {trackCreated ? (
         <div className="flex flex-col items-center">
           <h3 className="font-bold text-xl">Your Track Has Been Updated</h3>
