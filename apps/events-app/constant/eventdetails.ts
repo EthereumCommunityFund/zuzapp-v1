@@ -3,10 +3,7 @@ interface EventDeatils {
     description: string
 }
 export const eventDetailsList: EventDeatils[] = [
-    {
-        name: "Event Status",
-        description: "Status, Published or Not"
-    },
+
     {
         name: "Event Basics",
         description: "Name, Dates, Description"

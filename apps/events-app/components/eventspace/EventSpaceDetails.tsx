@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { EventSpaceDetailsType, InputFieldType } from '@/types';
 import EventLinks from './EventLinks';
@@ -22,13 +22,14 @@ import { updateEventSpace } from '@/controllers';
 import { useQueryClient } from 'react-query';
 import Button from '../ui/buttons/Button';
 import Link from 'next/link';
-import { HiArrowRight } from 'react-icons/hi';
+import { HiArrowLeft, HiArrowRight, HiCalendar } from 'react-icons/hi';
 import { EventBanner } from './EventBanner';
 import IconButton from '../ui/buttons/IconButton';
 import { RxPlus } from 'react-icons/rx';
 import { toast } from '../ui/use-toast';
 import { add } from 'libsodium-wrappers';
 import dayjs, { Dayjs } from 'dayjs';
+import { eventDetailsList } from '@/constant/eventdetails';
 
 interface EventSpaceDetailsProps {
   eventSpace: EventSpaceDetailsType;
@@ -101,6 +102,18 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace }) => 
     selectedOtherOption: '',
   });
 
+  const sectionRefs = [useRef(null), useRef(null), useRef(null), useRef(null), useRef(null)];
+
+  const scrollToRef = (ref: React.RefObject<HTMLDivElement>) => {
+    if (ref.current) {
+      window.scrollTo({
+        top: ref.current.offsetTop,
+        behavior: 'smooth'
+      });
+    }
+  };
+
+
   const handleRemoveEventType = (index: number) => {
     const updatedItems = [...eventType.slice(0, index), ...eventType.slice(index + 1)];
     setEventType(updatedItems);
@@ -109,6 +122,10 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace }) => 
   const handleRemoveExperienceLevels = (index: number) => {
     const updatedItems = [...experienceLevels.slice(0, index), ...experienceLevels.slice(index + 1)];
     setExperienceLevels(updatedItems);
+  };
+
+  const goBackToPreviousPage = () => {
+    router.back();
   };
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -210,224 +227,256 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace }) => 
   }, [form.formState.errors]);
 
   return (
-    <>
-      <div className="flex flex-col py-5 items-center gap-[10px] self-stretch w-full">
-        {detailsUpdated ? (
-          <div className="flex flex-col items-center">
-            <h3 className="font-bold text-xl">Your Details Have Been Updated</h3>
-            <Link href={`/dashboard/events/space/tracks?event_space_id=${event_space_id}`}>
-              <Button variant="primary" className="mt-8 bg-[#67DBFF]/20 text-[#67DBFF] rounded-full" leftIcon={HiArrowRight}>
-                Go to tracks
-              </Button>
-            </Link>
+    <div className="flex flex-col w-full items-center gap-[10px] bg-componentPrimary lg:bg-transparent self-stretch">
+      <div className="flex items-start gap-8 self-stretch ">
+        <div className="lg:flex hidden flex-col pt-3 rounded-s-xl opacity-70 w-[400px] gap-5 fixed">
+          <div className="flex gap-[10px] pl-3  items-center font-bold">
+            <HiCalendar className="w-5 h-5" /> Event Space Details
           </div>
-        ) : (
-          <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(onSubmitWithEnter)}
-              className="flex lg:py-8 px-4 flex-col items-center gap-8 lg:rounded-2xl lg:border border-white border-opacity-10 lg:bg-componentPrimary w-full"
-            >
-              <div className="flex flex-col gap-[34px] w-full">
-                <h1 className="text-[25px] font-normal leading-[1.2]">Event Space Details</h1>
-                <h2 className="text-2xl opacity-80 leading-[1.2]">Event Basics</h2>
-                <FormField
-                  control={form.control}
-                  name="name"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-lg">Event Space Name </FormLabel>
-                      <FormControl>
-                        <InputFieldDark type={InputFieldType.Primary} placeholder={'ZuConnect'} defaultValue={name} {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <div>
-                  <div className="flex gap-3">
-                    <FormField
-                      control={form.control}
-                      name="start_date"
-                      render={({ field }) => (
-                        <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                          <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">Start Date</h2>
-
-                          <CustomDatePicker defaultDate={undefined} selectedDate={field.value} handleDateChange={field.onChange} {...field} />
-
-                          <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">Click & Select or type in a date</h3>
-                          <FormMessage />
-                        </div>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="end_date"
-                      render={({ field }) => (
-                        <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                          <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">End Date</h2>
-                          <CustomDatePicker defaultDate={undefined} selectedDate={field.value} handleDateChange={field.onChange} {...field} />
-
-                          <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">Click & Select or type in a date</h3>
-                          <FormMessage />
-                        </div>
-                      )}
-                    />
-                  </div>
-                </div>
-                <div className="flex flex-col gap-[10px]">
-                  <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">Event Tagline</h2>
-                  <InputFieldDark type={InputFieldType.Primary} value={tag_line} onChange={(e) => setTagline((e.target as HTMLInputElement).value)} placeholder={'Coolest Web3 Events'} />
-                  <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">This will be the short tagline below your event title</h3>
-                </div>
-                <FormField
-                  control={form.control}
-                  name="description"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <div className="flex flex-col gap-[10px]">
-                          <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">Event Description</h2>
-                          <TextEditor value={field.value} onChange={field.onChange} />
-                        </div>
-                      </FormControl>
-                      <FormMessage>{form.formState.errors.description?.message}</FormMessage>
-                    </FormItem>
-                  )}
-                />
-
-                <EventBanner banner={banner} setBanner={setBanner} />
-
-                <div className="space-y-10">
-                  <FormField
-                    control={form.control}
-                    name="format"
-                    render={({ field }) => (
-                      <FormItem className="space-y-3">
-                        <FormLabel className="text-2xl opacity-80 leading-[1.2]">Event Format</FormLabel>
-                        <FormDescription>The format you select will determine what information will be required going forward</FormDescription>
-                        <FormControl>
-                          <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex flex-col md:flex-row justify-between">
-                            <FormItem className="flex items-center space-x-3 space-y-0 cursor-pointer p-3 hover:bg-btnPrimaryGreen/20 rounded-md focus:bg-btnPrimaryGreen/20">
-                              <FormControl>
-                                <RadioGroupItem value="in-person" />
-                              </FormControl>
-                              <FormLabel className="font-semibold text-white/60 text-base cursor-pointer">
-                                In-Person
-                                <span className="text-xs block">This is a physical event</span>
-                              </FormLabel>
-                            </FormItem>
-                            <FormItem className="flex items-center space-x-3 space-y-0 p-3 hover:bg-btnPrimaryGreen/20 rounded-md">
-                              <FormControl>
-                                <RadioGroupItem value="online" />
-                              </FormControl>
-                              <FormLabel className="font-semibold text-white/60 text-base cursor-pointer">
-                                Online
-                                <span className="text-xs block">Specifically Online Event</span>
-                              </FormLabel>
-                            </FormItem>
-                            <FormItem className="flex items-center space-x-3 space-y-0 p-3 hover:bg-btnPrimaryGreen/20 rounded-md">
-                              <FormControl>
-                                <RadioGroupItem value="hybrid" />
-                              </FormControl>
-                              <FormLabel className="font-semibold text-white/60 text-base cursor-pointer">
-                                Hybrid
-                                <span className="text-xs block">In-Person & Online</span>
-                              </FormLabel>
-                            </FormItem>
-                          </RadioGroup>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                {selectedEventFormat !== 'in-person' && (
-                  <EventLinks social_links={socialLinks} setSocialLinks={setSocialLinks} extra_links={extraLinks} setExtraLinks={setExtraLinks} formData={formData} setFormData={setFormData} />
-                )}
-                <div className="flex flex-col gap-[34px]">
-                  <div className="flex flex-col gap-2.5">
-                    <h2 className="h-6 opacity-70 font-bold text-xl leading-6">Manage Event Categories & Labels</h2>
-                    <span className="opacity-70 h-[18px] font-normal text-[13px] leading-[18.2px] tracking-[0.13px] self-stretch">
-                      These will be shared as attributes by subsequent Sub-Events & Schedules you create.
-                    </span>
-                  </div>
-
-                  <div className="flex flex-col gap-6">
-                    <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">Add Event Types</h2>
-                    <div className="flex space-x-3 items-center">
-                      <InputFieldDark type={InputFieldType.Primary} value={eventItem} onChange={(e) => setEventItem((e.target as HTMLInputElement).value)} placeholder={'Meetups, Workshops, etc'} />
-                      <div>
-                        <IconButton
-                          variant="dark"
-                          className="rounded-full"
-                          icon={RxPlus}
-                          onClick={() => {
-                            addEventTypes(eventItem);
-                          }}
-                        ></IconButton>
-                      </div>
-                    </div>
-                    <div className="flex items-start flex-wrap gap-2.5">
-                      {eventType?.map((eventCategory, index) => (
-                        <div key={eventCategory} className="flex gap-2.5 items-center rounded-[8px] px-2 py-1.5 bg-white bg-opacity-10">
-                          <button type="button" className="flex gap-2.5 items-center">
-                            <GoXCircleFill onClick={() => handleRemoveEventType(index)} className="top-0.5 left-0.5 w-4 h-4" />
-                            <span className="text-lg font-semibold leading-[1.2] text-white self-stretch">{eventCategory}</span>
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  <div className="flex flex-col gap-6">
-                    <span className="text-lg font-semibold leading-[1.2] text-white self-stretch">Experience Levels</span>
-                    <div className="flex space-x-3 items-center">
-                      <InputFieldDark
-                        type={InputFieldType.Primary}
-                        value={experienceItem}
-                        onChange={(e) => setExperienceItem((e.target as HTMLInputElement).value)}
-                        placeholder={'Beginner, Intermediate, Advanced, etc'}
-                      />
-                      <div>
-                        <IconButton
-                          variant="dark"
-                          className="rounded-full"
-                          icon={RxPlus}
-                          onClick={() => {
-                            addExperienceLevels(experienceItem);
-                          }}
-                        ></IconButton>
-                      </div>
-                    </div>
-                    <div className="flex place-content-start items-start flex-wrap gap-2.5">
-                      {experienceLevels?.map((experience, index) => (
-                        <div key={experience} className="flex gap-2.5 items-center rounded-[8px] px-2 py-1.5 bg-white bg-opacity-10">
-                          <button type="button" className="flex gap-2.5 items-center">
-                            <GoXCircleFill onClick={() => handleRemoveExperienceLevels(index)} className="top-0.5 left-0.5 w-4 h-4" />
-                            <span className="text-lg font-semibold leading-[1.2] text-white self-stretch">{experience}</span>
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-                <div className="flex justify-center pt-8">
-                  <div className="flex flex-col lg:flex-row gap-[30px] w-full">
-                    <Button className="rounded-full w-full lg:w-1/2 flex justify-center" variant="quiet" size="lg" type="button" leftIcon={CgClose}>
-                      <span>Discard Edit</span>
-                    </Button>
-                    <Button className="rounded-full w-full lg:w-1/2 flex justify-center" variant="blue" size="lg" onClick={() => form.handleSubmit(onSubmit)()} leftIcon={FaCircleArrowUp}>
-                      <span>Save Edit</span>
-                    </Button>
-                  </div>
-                </div>
+          <div className="flex flex-col gap-3">
+            {eventDetailsList.map((eventDetailsItem, index) => (
+              <div key={index} className=" rounded-xl flex flex-col gap-1 pl-3 py-2 hover:cursor-pointer w-[230px] hover:bg-[#292929] duration-200" onClick={() => scrollToRef(sectionRefs[index])}>
+                <div className="text-lg font-semibold opacity-90">{eventDetailsItem.name}</div>
+                <div className="text-xs font-light opacity-60">{eventDetailsItem.description}</div>
               </div>
-            </form>
-          </Form>
-        )}
-        <EventLocation />
+            ))}
+          </div>
+        </div>
+        <div className="flex flex-col gap-5 items-start lg:ml-[300px] w-full">
+          <div className="mx-5">
+            <Button
+              className="rounded-[40px] py-2.5 px-3.5 bg-bgPrimary border-none hover:bg-[#363636] duration-200 text-textSecondary hover:text-textSecondary"
+              size="lg"
+              leftIcon={HiArrowLeft}
+              onClick={goBackToPreviousPage}
+            >
+              Back
+            </Button>
+          </div>
+
+          <div className="flex flex-col py-5 items-center gap-[10px] self-stretch w-full">
+            {detailsUpdated ? (
+              <div className="flex flex-col items-center">
+                <h3 className="font-bold text-xl">Your Details Have Been Updated</h3>
+                <Link href={`/dashboard/events/space/tracks?event_space_id=${event_space_id}`}>
+                  <Button variant="primary" className="mt-8 bg-[#67DBFF]/20 text-[#67DBFF] rounded-full" leftIcon={HiArrowRight}>
+                    Go to tracks
+                  </Button>
+                </Link>
+              </div>
+            ) : (
+              <Form {...form}>
+                <form
+                  onSubmit={form.handleSubmit(onSubmitWithEnter)}
+                  className="flex lg:py-8 px-4 flex-col items-center gap-8 lg:rounded-2xl lg:border border-white border-opacity-10 lg:bg-componentPrimary w-full"
+                >
+                  <div className="flex flex-col gap-[34px] w-full">
+                    <h1 className="text-[25px] font-normal leading-[1.2]">Event Space Details</h1>
+                    <h2 className="text-2xl opacity-80 leading-[1.2]" ref={sectionRefs[0]}>Event Basics</h2>
+                    <FormField
+                      control={form.control}
+                      name="name"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-lg">Event Space Name </FormLabel>
+                          <FormControl>
+                            <InputFieldDark type={InputFieldType.Primary} placeholder={'ZuConnect'} defaultValue={name} {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <div>
+                      <div className="flex gap-3">
+                        <FormField
+                          control={form.control}
+                          name="start_date"
+                          render={({ field }) => (
+                            <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
+                              <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">Start Date</h2>
+
+                              <CustomDatePicker defaultDate={undefined} selectedDate={field.value} handleDateChange={field.onChange} {...field} />
+
+                              <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">Click & Select or type in a date</h3>
+                              <FormMessage />
+                            </div>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name="end_date"
+                          render={({ field }) => (
+                            <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
+                              <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">End Date</h2>
+                              <CustomDatePicker defaultDate={undefined} selectedDate={field.value} handleDateChange={field.onChange} {...field} />
+
+                              <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">Click & Select or type in a date</h3>
+                              <FormMessage />
+                            </div>
+                          )}
+                        />
+                      </div>
+                    </div>
+                    <div className="flex flex-col gap-[10px]">
+                      <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">Event Tagline</h2>
+                      <InputFieldDark type={InputFieldType.Primary} value={tag_line} onChange={(e) => setTagline((e.target as HTMLInputElement).value)} placeholder={'Coolest Web3 Events'} />
+                      <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">This will be the short tagline below your event title</h3>
+                    </div>
+                    <FormField
+                      control={form.control}
+                      name="description"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <div className="flex flex-col gap-[10px]">
+                              <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">Event Description</h2>
+                              <TextEditor value={field.value} onChange={field.onChange} />
+                            </div>
+                          </FormControl>
+                          <FormMessage>{form.formState.errors.description?.message}</FormMessage>
+                        </FormItem>
+                      )}
+                    />
+
+                    <EventBanner banner={banner} setBanner={setBanner} />
+
+                    <div className="space-y-10">
+                      <FormField
+                        control={form.control}
+                        name="format"
+                        render={({ field }) => (
+                          <FormItem className="space-y-3">
+                            <FormLabel className="text-2xl opacity-80 leading-[1.2]" ref={sectionRefs[1]}>Event Format</FormLabel>
+                            <FormDescription>The format you select will determine what information will be required going forward</FormDescription>
+                            <FormControl>
+                              <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex flex-col md:flex-row justify-between">
+                                <FormItem className="flex items-center space-x-3 space-y-0 cursor-pointer p-3 hover:bg-btnPrimaryGreen/20 rounded-md focus:bg-btnPrimaryGreen/20">
+                                  <FormControl>
+                                    <RadioGroupItem value="in-person" />
+                                  </FormControl>
+                                  <FormLabel className="font-semibold text-white/60 text-base cursor-pointer">
+                                    In-Person
+                                    <span className="text-xs block">This is a physical event</span>
+                                  </FormLabel>
+                                </FormItem>
+                                <FormItem className="flex items-center space-x-3 space-y-0 p-3 hover:bg-btnPrimaryGreen/20 rounded-md">
+                                  <FormControl>
+                                    <RadioGroupItem value="online" />
+                                  </FormControl>
+                                  <FormLabel className="font-semibold text-white/60 text-base cursor-pointer">
+                                    Online
+                                    <span className="text-xs block">Specifically Online Event</span>
+                                  </FormLabel>
+                                </FormItem>
+                                <FormItem className="flex items-center space-x-3 space-y-0 p-3 hover:bg-btnPrimaryGreen/20 rounded-md">
+                                  <FormControl>
+                                    <RadioGroupItem value="hybrid" />
+                                  </FormControl>
+                                  <FormLabel className="font-semibold text-white/60 text-base cursor-pointer">
+                                    Hybrid
+                                    <span className="text-xs block">In-Person & Online</span>
+                                  </FormLabel>
+                                </FormItem>
+                              </RadioGroup>
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    <div className='w-full' ref={sectionRefs[2]}>
+                      {selectedEventFormat !== 'in-person' && (
+                        <EventLinks social_links={socialLinks} setSocialLinks={setSocialLinks} extra_links={extraLinks} setExtraLinks={setExtraLinks} formData={formData} setFormData={setFormData} />
+                      )}
+                    </div>
+                    <div className="flex flex-col gap-[34px]" ref={sectionRefs[3]}>
+                      <div className="flex flex-col gap-2.5">
+                        <h2 className="h-6 opacity-70 font-bold text-xl leading-6" >Manage Event Categories & Labels</h2>
+                        <span className="opacity-70 h-[18px] font-normal text-[13px] leading-[18.2px] tracking-[0.13px] self-stretch">
+                          These will be shared as attributes by subsequent Sub-Events & Schedules you create.
+                        </span>
+                      </div>
+
+                      <div className="flex flex-col gap-6">
+                        <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">Add Event Types</h2>
+                        <div className="flex space-x-3 items-center">
+                          <InputFieldDark type={InputFieldType.Primary} value={eventItem} onChange={(e) => setEventItem((e.target as HTMLInputElement).value)} placeholder={'Meetups, Workshops, etc'} />
+                          <div>
+                            <IconButton
+                              variant="dark"
+                              className="rounded-full"
+                              icon={RxPlus}
+                              onClick={() => {
+                                addEventTypes(eventItem);
+                              }}
+                            ></IconButton>
+                          </div>
+                        </div>
+                        <div className="flex items-start flex-wrap gap-2.5">
+                          {eventType?.map((eventCategory, index) => (
+                            <div key={eventCategory} className="flex gap-2.5 items-center rounded-[8px] px-2 py-1.5 bg-white bg-opacity-10">
+                              <button type="button" className="flex gap-2.5 items-center">
+                                <GoXCircleFill onClick={() => handleRemoveEventType(index)} className="top-0.5 left-0.5 w-4 h-4" />
+                                <span className="text-lg font-semibold leading-[1.2] text-white self-stretch">{eventCategory}</span>
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                      <div className="flex flex-col gap-6">
+                        <span className="text-lg font-semibold leading-[1.2] text-white self-stretch">Experience Levels</span>
+                        <div className="flex space-x-3 items-center">
+                          <InputFieldDark
+                            type={InputFieldType.Primary}
+                            value={experienceItem}
+                            onChange={(e) => setExperienceItem((e.target as HTMLInputElement).value)}
+                            placeholder={'Beginner, Intermediate, Advanced, etc'}
+                          />
+                          <div>
+                            <IconButton
+                              variant="dark"
+                              className="rounded-full"
+                              icon={RxPlus}
+                              onClick={() => {
+                                addExperienceLevels(experienceItem);
+                              }}
+                            ></IconButton>
+                          </div>
+                        </div>
+                        <div className="flex place-content-start items-start flex-wrap gap-2.5">
+                          {experienceLevels?.map((experience, index) => (
+                            <div key={experience} className="flex gap-2.5 items-center rounded-[8px] px-2 py-1.5 bg-white bg-opacity-10">
+                              <button type="button" className="flex gap-2.5 items-center">
+                                <GoXCircleFill onClick={() => handleRemoveExperienceLevels(index)} className="top-0.5 left-0.5 w-4 h-4" />
+                                <span className="text-lg font-semibold leading-[1.2] text-white self-stretch">{experience}</span>
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex justify-center pt-8">
+                      <div className="flex flex-col lg:flex-row gap-[30px] w-full">
+                        <Button className="rounded-full w-full lg:w-1/2 flex justify-center" variant="quiet" size="lg" type="button" leftIcon={CgClose}>
+                          <span>Discard Edit</span>
+                        </Button>
+                        <Button className="rounded-full w-full lg:w-1/2 flex justify-center" variant="blue" size="lg" onClick={() => form.handleSubmit(onSubmit)()} leftIcon={FaCircleArrowUp}>
+                          <span>Save Edit</span>
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </Form>
+            )}
+            <div className='w-full' ref={sectionRefs[4]}>
+              <EventLocation />
+            </div>
+          </div>
+          {/* <EventLocation /> */}
+        </div>
       </div>
-    </>
+    </div>
   );
 };
 export default EventSpaceDetails;
