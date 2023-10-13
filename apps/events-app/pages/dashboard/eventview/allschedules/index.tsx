@@ -10,7 +10,7 @@ import { fetchEventSpaceById } from '@/services/fetchEventSpaceDetails';
 import { DropDownMenuItemType, ScheduleDetailstype } from '@/types';
 import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { BiLeftArrow, BiPlusCircle } from 'react-icons/bi';
 import { QueryClient, dehydrate, useQuery } from 'react-query';
 import { EventSpaceDetailsType } from '@/types';
@@ -38,6 +38,7 @@ export default function EventViewTracksAlleSchedulesPage() {
   const { eventSpace } = useEventDetails();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [schedules, setSchedules] = useState<ScheduleDetailstype[]>();
+  const lastTrackRef = useRef<HTMLDivElement>(null);
 
 
   console.log(isLoading, 'is loading');
@@ -68,6 +69,28 @@ export default function EventViewTracksAlleSchedulesPage() {
     }
   }, [isLoading]);
 
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          // Load more data or trigger an action to fetch more data
+          console.log('Load more data');
+        }
+      },
+      { threshold: 1 } // Trigger when the element is fully in view
+    );
+
+    if (lastTrackRef.current) {
+      observer.observe(lastTrackRef.current);
+    }
+
+    return () => {
+      if (lastTrackRef.current) {
+        observer.unobserve(lastTrackRef.current);
+      }
+    };
+  }, [lastTrackRef]);
+
   return (
     <div className="flex gap-4 lg:flex-row mt-5 lg:mt-0 pb-24 lg:pb-0 sm:flex-col-reverse lg:bg-pagePrimary md:bg-componentPrimary">
       <div className="flex flex-col lg:w-2/3 sm:w-full pb-30 lg:pb-0 gap-5">
@@ -97,7 +120,7 @@ export default function EventViewTracksAlleSchedulesPage() {
               <Loader /> :
               <div className=" p-2.5 gap-[10px] flex flex-col overflow-hidden rounded-[10px] pb-36">
                 {schedules && schedules.map((schedule, id) => (
-                  <UserFacingTrack key={id} onClick={() => handleItemClick(schedule.id, schedule.track_id as string)} scheduleData={schedule} scheduleId={schedule.id} />
+                  <UserFacingTrack key={id} onClick={() => handleItemClick(schedule.id, schedule.track_id as string)} scheduleData={schedule} scheduleId={schedule.id} ref={id === schedules.length - 1 ? lastTrackRef : null} />
                 ))}
               </div>
             }
