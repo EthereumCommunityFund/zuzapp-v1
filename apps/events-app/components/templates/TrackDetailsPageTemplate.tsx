@@ -45,7 +45,7 @@ export default function TrackDetailsPageTemplate(props: any) {
   const [schedules, setSchedules] = useState<ScheduleDetailstype[]>();
   const [organizers, setOrganizers] = useState<OrganizerType[]>([]);
   const [tags, setTags] = useState<string[]>([]);
-
+  console.log("trackItem", trackItem);
 
   // const handlePageChange = (page: number) => {
   //   setCurrentPage(page);

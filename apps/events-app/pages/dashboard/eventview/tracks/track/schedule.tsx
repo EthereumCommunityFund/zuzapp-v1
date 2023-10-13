@@ -30,7 +30,7 @@ interface IEventLink {
 }
 
 export default function EventViewScheduleDetailsPage() {
-  const { eventSpace, isLoading } = useEventDetails();
+  const { eventSpace } = useEventDetails();
   const router = useRouter();
   const { scheduleName, trackId, event_space_id, track_title, scheduleId } =
     router.query;
@@ -65,6 +65,7 @@ export default function EventViewScheduleDetailsPage() {
       month: 'long',
       day: '2-digit',
     });
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const handleBackToTrackClick = (event_space_id: string) => {
     router.push({
@@ -103,6 +104,7 @@ export default function EventViewScheduleDetailsPage() {
   useEffect(() => {
     const fetchCurrentSchedule = async () => {
       try {
+        setIsLoading(true);
         const result = await fetchScheduleByID(scheduleId as string);
         console.log(result, 'result');
         setCurrentSchedule({
@@ -110,6 +112,7 @@ export default function EventViewScheduleDetailsPage() {
           event_type: JSON.parse(result.data.data.event_type)[0],
           experience_level: JSON.parse(result.data.data.experience_level)[0],
         });
+        setIsLoading(false);
       } catch (error) {
         console.log(error);
       }

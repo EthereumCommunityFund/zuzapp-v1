@@ -1,16 +1,17 @@
 import { HiCog, HiLocationMarker, HiMicrophone, HiTag, HiUserGroup } from "react-icons/hi";
 import { Label } from "../ui/label";
 import Speaker from "../ui/Speaker";
-import { EventSpaceDetailsType, OrganizerType } from "@/types";
+import { EventSpaceDetailsType, OrganizerType, ScheduleDetailstype } from "@/types";
 
 interface IEventViewDetailsPanel {
   eventSpace: EventSpaceDetailsType,
   organizers: OrganizerType[],
   tags: string[],
+  schedule?: ScheduleDetailstype,
 }
 
 export default function EventViewDetailsPanel(props: IEventViewDetailsPanel) {
-  const { eventSpace, organizers, tags } = props;
+  const { eventSpace, organizers, tags, schedule } = props;
 
 
   return (
@@ -23,19 +24,19 @@ export default function EventViewDetailsPanel(props: IEventViewDetailsPanel) {
           <div className="flex gap-2 items-center">
             <Label className="opacity-60">Format: </Label>
             <Label className="opacity-70 font-bold text-base">
-              {eventSpace.format.charAt(0).toUpperCase() + eventSpace.format.slice(1)}
+              {schedule ? schedule.format : (eventSpace.format.charAt(0).toUpperCase() + eventSpace.format.slice(1))}
             </Label>
           </div>
           <div className="flex gap-2 items-center">
             <Label className="opacity-60">Type: </Label>
             <Label className="opacity-70 font-bold text-base">
-              {eventSpace?.event_type?.join(", ")}
+              {schedule ? schedule.event_type : (eventSpace?.event_type?.join(", "))}
             </Label>
           </div>
           <div className="flex gap-2 items-center">
             <Label className="opacity-60">Expereicne Level: </Label>
             <Label className="opacity-70 font-bold text-base">
-              {eventSpace?.experience_level?.join(", ")}
+              {schedule ? schedule.event_type : (eventSpace?.experience_level?.join(", "))}
             </Label>
           </div>
         </div>
