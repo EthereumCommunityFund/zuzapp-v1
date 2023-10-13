@@ -1,14 +1,19 @@
 import { HiCog, HiLocationMarker, HiMicrophone, HiTag, HiUserGroup } from "react-icons/hi";
 import { Label } from "../ui/label";
 import Speaker from "../ui/Speaker";
-import { EventSpaceDetailsType } from "@/types";
+import { EventSpaceDetailsType, OrganizerType, ScheduleDetailstype, ScheduleUpdateRequestBody } from "@/types";
 
 interface IEventViewDetailsPanel {
-  eventSpace: EventSpaceDetailsType
+  eventSpace: EventSpaceDetailsType,
+  organizers: OrganizerType[],
+  tags: string[],
+  schedule?: ScheduleUpdateRequestBody,
 }
 
 export default function EventViewDetailsPanel(props: IEventViewDetailsPanel) {
-  const { eventSpace } = props;
+  const { eventSpace, organizers, tags, schedule } = props;
+  console.log("current schedule", schedule);
+
   return (
     <div className="flex flex-col pt-5 pb-10 gap-5 md:min-w-[450px] lg:min-w-[25%] lg:px-0 sm:px-3">
       <div className="pb-10 gap-2.5">
@@ -19,19 +24,19 @@ export default function EventViewDetailsPanel(props: IEventViewDetailsPanel) {
           <div className="flex gap-2 items-center">
             <Label className="opacity-60">Format: </Label>
             <Label className="opacity-70 font-bold text-base">
-              {eventSpace.format.charAt(0).toUpperCase() + eventSpace.format.slice(1)}
+              {schedule ? schedule.format.charAt(0).toUpperCase() + schedule.format.slice(1) : (eventSpace.format.charAt(0).toUpperCase() + eventSpace.format.slice(1))}
             </Label>
           </div>
           <div className="flex gap-2 items-center">
             <Label className="opacity-60">Type: </Label>
             <Label className="opacity-70 font-bold text-base">
-              {eventSpace?.event_type?.join(", ")}
+              {schedule ? schedule.event_type : (eventSpace?.event_type?.join(", "))}
             </Label>
           </div>
           <div className="flex gap-2 items-center">
             <Label className="opacity-60">Expereicne Level: </Label>
             <Label className="opacity-70 font-bold text-base">
-              {eventSpace?.experience_level?.join(", ")}
+              {schedule ? schedule.experience_level : (eventSpace?.experience_level?.join(", "))}
             </Label>
           </div>
         </div>
@@ -42,9 +47,12 @@ export default function EventViewDetailsPanel(props: IEventViewDetailsPanel) {
                 <HiCog className="text-2xl" />
                 <Label>Organizers</Label>
               </div>
-              <div className="flex gap-[6px] md:flex-row sm:flex-col">
-                <Speaker title="QJ" />
-                <Speaker title="Janine Leger" />
+              <div className="flex flex-wrap gap-[6px] md:flex-row sm:flex-col">
+                {organizers &&
+                  organizers.map((organizer: OrganizerType) => (
+                    organizer.role === 'organizer' && <Speaker title={organizer.name} />
+                  ))
+                }
               </div>
             </div>
             <div className="flex flex-col gap-5">
@@ -53,9 +61,12 @@ export default function EventViewDetailsPanel(props: IEventViewDetailsPanel) {
                   <HiMicrophone className="text-2xl" />
                   <h2>Speakers</h2>
                 </div>
-                <div className="flex gap-[6px] md:flex-row sm:flex-col">
-                  <Speaker title="Avery Longname" />
-                  <Speaker title="Janine Leger" />
+                <div className="flex flex-wrap gap-[6px] md:flex-row sm:flex-col">
+                  {organizers &&
+                    organizers.map((organizer: OrganizerType) => (
+                      organizer.role === 'speaker' && <Speaker title={organizer.name} />
+                    ))
+                  }
                 </div>
               </div>
             </div>
@@ -65,19 +76,13 @@ export default function EventViewDetailsPanel(props: IEventViewDetailsPanel) {
                   <HiTag className="text-2xl" />
                   <h2>Tags</h2>
                 </div>
-                <div className="flex gap-2.5">
-                  <Label className="rounded-xl opacity-70 bg-itemBgPrimary p-2 text-lg">
-                    Tag2
-                  </Label>
-                  <Label className="rounded-xl opacity-70 bg-itemBgPrimary p-2 text-lg">
-                    Tag2
-                  </Label>
-                  <Label className="rounded-xl opacity-70 bg-itemBgPrimary p-2 text-lg">
-                    Tag2
-                  </Label>
-                  <Label className="rounded-xl opacity-70 bg-itemBgPrimary p-2 text-lg">
-                    Tag2
-                  </Label>
+                <div className="flex gap-2.5 flex-wrap">
+                  {tags &&
+                    tags.map((tag: string, index: number) => (
+                      <Label key={index} className="rounded-xl opacity-70 bg-itemBgPrimary p-2 text-lg">
+                        {tag}
+                      </Label>
+                    ))}
                 </div>
               </div>
             </div>

@@ -8,13 +8,13 @@ import { fetchEventSpaceById } from '@/services/fetchEventSpaceDetails';
 import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
 import useTrackDetails from '@/hooks/useTrackDetails';
 
-export default function EventViewTrackDetailsPage() {
-  const router = useRouter();
+export default function EventViewTrackDetailsPage(props: any) {
+  const { organizers } = props;
 
 
   const { trackDetails, isLoading: LoadingTrack } = useTrackDetails();
 
-  return trackDetails && <TrackDetailsPageTemplate trackItem={trackDetails} />;
+  return trackDetails && <TrackDetailsPageTemplate trackItem={trackDetails} organizers={organizers} />;
 }
 
 export const getServerSideProps = async (ctx: any) => {

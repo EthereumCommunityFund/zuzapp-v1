@@ -42,10 +42,11 @@ import { ScheduleUpdateRequestBody } from "@/types";
 export default function EventViewScheduleDetailsPage() {
   const router = useRouter();
   const { event_space_id, scheduleId, trackId } = router.query;
-  const { eventSpace, isLoading } = useEventDetails();
+  const { eventSpace } = useEventDetails();
   const [rsvpUpdated, setRsvpUpdated] = useState(false);
   const [currentSchedule, setCurrentSchedule] = useState<ScheduleUpdateRequestBody>()
   const [hasRsvpd, setHasRsvpd] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const trackItem = eventSpace?.tracks.find((trackItem) => trackItem.id === trackId);
 
@@ -111,6 +112,7 @@ export default function EventViewScheduleDetailsPage() {
   useEffect(() => {
     const fetchCurrentSchedule = async () => {
       try {
+        setIsLoading(true);
         const result = await fetchScheduleByID(scheduleId as string);
 
         setCurrentSchedule({
@@ -118,6 +120,7 @@ export default function EventViewScheduleDetailsPage() {
           event_type: JSON.parse(result.data.data.event_type)[0],
           experience_level: JSON.parse(result.data.data.experience_level)[0],
         });
+        setIsLoading(false);
         console.log(result.data.data.date);
       } catch (error) {
         console.log(error);
@@ -203,7 +206,7 @@ export default function EventViewScheduleDetailsPage() {
           </div >
         </div >
       </div >
-      {eventSpace && <EventViewDetailsPanel eventSpace={eventSpace} />}
+      {eventSpace && currentSchedule?.tags && currentSchedule.organizers && <EventViewDetailsPanel eventSpace={eventSpace} organizers={currentSchedule.organizers} tags={currentSchedule.tags} />}
     </div >
   );
 }
