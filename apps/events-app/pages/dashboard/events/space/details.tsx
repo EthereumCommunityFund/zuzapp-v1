@@ -33,7 +33,7 @@ export default function EventSpaceDetailsPage() {
   }
   return (
     <>
-      {eventSpace && <EventSpaceDetails eventSpace={eventSpace} />}
+      {eventSpace && <EventSpaceDetails eventSpace={eventSpace} handleGoBack={goBackToPreviousPage} />}
     </>
   );
 }

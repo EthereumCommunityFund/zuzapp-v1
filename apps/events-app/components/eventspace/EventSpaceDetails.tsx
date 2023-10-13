@@ -33,6 +33,7 @@ import { eventDetailsList } from '@/constant/eventdetails';
 
 interface EventSpaceDetailsProps {
   eventSpace: EventSpaceDetailsType;
+  handleGoBack: () => void;
 }
 
 const formSchema = z.object({
@@ -69,7 +70,7 @@ const formSchema = z.object({
   }),
 });
 
-const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace }) => {
+const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace, handleGoBack }) => {
   const { name, event_space_type, status, start_date, end_date, description, format, event_type, experience_level, eventspacelocation, tagline, social_links, extra_links, image_url } = eventSpace;
 
   const router = useRouter();
@@ -230,7 +231,7 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace }) => 
     <div className="flex flex-col w-full items-center gap-[10px] bg-componentPrimary lg:bg-transparent self-stretch">
       <div className="flex items-start gap-8 self-stretch ">
         <div className="lg:flex hidden flex-col pt-3 rounded-s-xl opacity-70 w-[400px] gap-5 fixed">
-          <div className="flex gap-[10px] pl-3  items-center font-bold">
+          <div className="flex gap-[10px] pl-3 items-center font-bold">
             <HiCalendar className="w-5 h-5" /> Event Space Details
           </div>
           <div className="flex flex-col gap-3">
@@ -248,7 +249,7 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace }) => 
               className="rounded-[40px] py-2.5 px-3.5 bg-bgPrimary border-none hover:bg-[#363636] duration-200 text-textSecondary hover:text-textSecondary"
               size="lg"
               leftIcon={HiArrowLeft}
-              onClick={goBackToPreviousPage}
+              onClick={handleGoBack}
             >
               Back
             </Button>
