@@ -110,7 +110,7 @@ export default function TrackDetailsPageTemplate(props: ITrackDetailsPageTemplat
                     Edit
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="lg:w-3/5 lg:h-3/5 overflow-x-auto sm:w-3/4">
+                <DialogContent className="lg:w-3/5 lg:h-4/5 overflow-x-auto">
                   <DialogHeader>
                     <Label className="text-2xl font-bold">Edit Track</Label>
                   </DialogHeader>
@@ -141,7 +141,7 @@ export default function TrackDetailsPageTemplate(props: ITrackDetailsPageTemplat
                 Add a Schedule
               </Button>
             </DialogTrigger>
-            <DialogContent className='lg:w-3/5 lg:h-3/5 overflow-y-auto'>
+            <DialogContent className='lg:w-3/5 lg:h-4/5 overflow-y-auto'>
               <DialogDescription className="text-white">
                 <ScheduleEditForm
                   title={'Add'}
