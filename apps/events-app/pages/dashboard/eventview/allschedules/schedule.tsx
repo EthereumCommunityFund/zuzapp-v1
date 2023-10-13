@@ -156,7 +156,7 @@ export default function EventViewScheduleDetailsPage() {
                     Edit
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="h-3/5 lg:w-3/5 overflow-y-auto">
+                <DialogContent className="lg:h-4/5 w-full h-screen lg:w-3/5 overflow-y-auto">
                   <ScheduleEditForm
                     title='Update'
                     isFromAllSchedules={true}

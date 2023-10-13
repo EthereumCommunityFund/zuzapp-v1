@@ -3,7 +3,7 @@ import { createPagesServerClient } from "@supabase/auth-helpers-nextjs"; import 
 import { NextApiRequest, NextApiResponse } from "next";
 import { validateUUID } from "@/validators";
 import { permissionConfig } from "@/utils/permissions";
-import UrlPattern from 'url-pattern';
+import UrlPattern from "url-pattern"
 
 
 

@@ -80,7 +80,7 @@ export default function ScheduleItemCard() {
             <div className="flex flex-col items-center justify-between gap-[10px]">
               <div
                 onClick={() => handleEnterSchedule(schedule.id, schedule.track_id as string)}
-                className="flex py-3 px-3.5 md:items-center justify-between rounded-2xl border border-white border-opacity-10 hover:bg-[#3B3F3F] cursor-pointer bg-[#2E3131] w-full"
+                className="flex py-3 px-3.5 items-start md:items-center justify-between rounded-2xl border border-white border-opacity-10 hover:bg-[#3B3F3F] cursor-pointer bg-[#2E3131] w-full"
               >
                 <div className="flex items-start gap-2.5">
                   <BiRadioCircle className="w-10 h-6" />
