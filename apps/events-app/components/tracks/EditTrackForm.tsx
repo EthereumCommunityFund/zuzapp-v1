@@ -135,10 +135,10 @@ export default function EditTrackForm({ onTrackSubmit, trackDetails }: { onTrack
         )}
         <div className="flex justify-center pt-8">
           <div className="flex flex-col lg:flex-row gap-[30px] w-full">
-            <Button onClick={handleDeleteTrack} className="rounded-full w-full md:w-1/2 flex justify-center" variant="quiet" size="lg" type="button" leftIcon={CgClose}>
+            <Button onClick={handleDeleteTrack} className="rounded-full w-full lg:w-1/2 flex justify-center" variant="quiet" size="lg" type="button" leftIcon={CgClose}>
               <span>Discard Track</span>
             </Button>
-            <Button className="rounded-full w-full md:w-1/2 flex justify-center" variant="blue" size="lg" onClick={() => form.handleSubmit(onSubmit)()} leftIcon={FaCircleArrowUp}>
+            <Button className="rounded-full w-full lg:w-1/2 flex justify-center" variant="blue" size="lg" onClick={() => form.handleSubmit(onSubmit)()} leftIcon={FaCircleArrowUp}>
               <span>Update Track</span>
             </Button>
           </div>
