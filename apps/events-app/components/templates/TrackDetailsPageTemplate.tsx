@@ -75,27 +75,34 @@ export default function TrackDetailsPageTemplate(props: any) {
   const fetchSchedules = async () => {
     const response: ScheduleDetailstype[] = await fetchSchedulesByTrackId(trackId as string);
     const allTagsSet: Set<string> = new Set();
+    const allOrganizersSet: Set<OrganizerType> = new Set();
 
     response.forEach((schedule: ScheduleDetailstype) => {
       if (schedule.tags) {
         schedule.tags.forEach(tag => allTagsSet.add(tag));
       }
+      if (schedule.organizers) {
+        schedule.organizers.forEach((organizer: OrganizerType) => allOrganizersSet.add(organizer));
+      }
     });
 
     const allTags: string[] = Array.from(allTagsSet);
+    const allOrganizers: OrganizerType[] = Array.from(allOrganizersSet).filter((organizer, index, self) =>
+      index === self.findIndex((o) => (
+        o.role === organizer.role && o.name === organizer.name
+      ))
+    );
     setTags(allTags);
+    setOrganizers(allOrganizers);
     setSchedules(response);
     setIsLoading(false);
   }
 
-  const fetchOrganizers = async () => {
-    const response = await fetchAllSpeakers();
-    setOrganizers(response.data.data);
-  }
+
 
   useEffect(() => {
     if (isLoading) {
-      fetchOrganizers();
+
       fetchSchedules();
     }
   }, [isLoading]);

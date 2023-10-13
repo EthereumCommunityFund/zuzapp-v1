@@ -1,18 +1,18 @@
 import { HiCog, HiLocationMarker, HiMicrophone, HiTag, HiUserGroup } from "react-icons/hi";
 import { Label } from "../ui/label";
 import Speaker from "../ui/Speaker";
-import { EventSpaceDetailsType, OrganizerType, ScheduleDetailstype } from "@/types";
+import { EventSpaceDetailsType, OrganizerType, ScheduleDetailstype, ScheduleUpdateRequestBody } from "@/types";
 
 interface IEventViewDetailsPanel {
   eventSpace: EventSpaceDetailsType,
   organizers: OrganizerType[],
   tags: string[],
-  schedule?: ScheduleDetailstype,
+  schedule?: ScheduleUpdateRequestBody,
 }
 
 export default function EventViewDetailsPanel(props: IEventViewDetailsPanel) {
   const { eventSpace, organizers, tags, schedule } = props;
-
+  console.log("current schedule", schedule);
 
   return (
     <div className="flex flex-col pt-5 pb-10 gap-5 md:min-w-[450px] lg:min-w-[25%] lg:px-0 sm:px-3">
@@ -24,7 +24,7 @@ export default function EventViewDetailsPanel(props: IEventViewDetailsPanel) {
           <div className="flex gap-2 items-center">
             <Label className="opacity-60">Format: </Label>
             <Label className="opacity-70 font-bold text-base">
-              {schedule ? schedule.format : (eventSpace.format.charAt(0).toUpperCase() + eventSpace.format.slice(1))}
+              {schedule ? schedule.format.charAt(0).toUpperCase() + schedule.format.slice(1) : (eventSpace.format.charAt(0).toUpperCase() + eventSpace.format.slice(1))}
             </Label>
           </div>
           <div className="flex gap-2 items-center">
@@ -36,7 +36,7 @@ export default function EventViewDetailsPanel(props: IEventViewDetailsPanel) {
           <div className="flex gap-2 items-center">
             <Label className="opacity-60">Expereicne Level: </Label>
             <Label className="opacity-70 font-bold text-base">
-              {schedule ? schedule.event_type : (eventSpace?.experience_level?.join(", "))}
+              {schedule ? schedule.experience_level : (eventSpace?.experience_level?.join(", "))}
             </Label>
           </div>
         </div>
@@ -49,8 +49,8 @@ export default function EventViewDetailsPanel(props: IEventViewDetailsPanel) {
               </div>
               <div className="flex flex-wrap gap-[6px] md:flex-row sm:flex-col">
                 {organizers &&
-                  organizers.map((organizer: any) => (
-                    <Speaker title={organizer.name} />
+                  organizers.map((organizer: OrganizerType) => (
+                    organizer.role === 'organizer' && <Speaker title={organizer.name} />
                   ))
                 }
               </div>
@@ -63,8 +63,8 @@ export default function EventViewDetailsPanel(props: IEventViewDetailsPanel) {
                 </div>
                 <div className="flex flex-wrap gap-[6px] md:flex-row sm:flex-col">
                   {organizers &&
-                    organizers.map((organizer: any) => (
-                      <Speaker title={organizer.name} />
+                    organizers.map((organizer: OrganizerType) => (
+                      organizer.role === 'speaker' && <Speaker title={organizer.name} />
                     ))
                   }
                 </div>
