@@ -10,7 +10,7 @@ import { FaCircleArrowUp } from 'react-icons/fa6';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { useForm } from 'react-hook-form';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import FormTitle from '@/components/ui/labels/form-title';
 import InputFieldDark from '@/components/ui/inputFieldDark';
 import { DropDownMenuItemType, EventSpaceDetailsType, InputFieldType, LocationUpdateRequestBody, TrackUpdateRequestBody } from '@/types';
@@ -38,6 +38,8 @@ import Autocomplete from "@mui/material/Autocomplete";
 
 import { Loader } from "@/components/ui/Loader";
 import { toast } from "@/components/ui/use-toast";
+import { BsFillTicketFill } from 'react-icons/bs';
+import { scheduleNavBarDetails } from '@/constant/addschedulenavbar';
 
 type Organizer = {
   name: string;
@@ -114,6 +116,18 @@ export default function AddSchedulePage(props: any) {
   );
 
   const [eventType, setEventType] = useState('');
+
+  const sectionRefs = [useRef(null), useRef(null), useRef(null), useRef(null), useRef(null), useRef(null), useRef(null)];
+
+  const scrollToRef = (ref: React.RefObject<HTMLDivElement>) => {
+    if (ref.current) {
+      window.scrollTo({
+        top: ref.current.offsetTop,
+        behavior: 'smooth'
+      });
+    }
+  };
+
 
   const handleLimitRSVP = () => {
     setIsLimit((prev) => !prev);
@@ -294,8 +308,24 @@ export default function AddSchedulePage(props: any) {
 
   return (
     <div className="flex items-start gap-[60px] self-stretch md:px-10 px-2.5 py-5">
-      <DetailsBar />
-      <div className="flex flex-col items-start gap-[17px] flex-1">
+      <div className="lg:flex hidden flex-col pt-3 rounded-s-xl opacity-70 w-[400px] gap-5 fixed">
+        <div className="flex gap-[10px] pl-3 items-center font-semibold text-2xl">
+          <BsFillTicketFill className="w-5 h-5 text-2xl" /> Schedule
+        </div>
+        <div className="flex flex-col gap-3 text-xl">
+          {
+            scheduleNavBarDetails.map((item, index) => {
+              return (
+                <div key={index} className='rounded-xl flex flex-col py-2 gap-1 hover:cursor-pointer w-[230px] hover:bg-[#292929] duration-200' onClick={() => scrollToRef(sectionRefs[index])}>
+                  <h2 className="px-3.5 hover: cursor-pointer font-semibold">{item.name}</h2>
+                  <h3 className="px-3.5 hover: cursor-pointer text-xs font-light opacity-60">{item.name}</h3>
+                </div>
+              )
+            })
+          }
+        </div>
+      </div>
+      <div className="flex flex-col items-start gap-[17px] flex-1 lg:ml-[300px]">
         <div className="flex items-center gap-[17px] self-stretch">
           <Button
             className="rounded-[40px] text-base md:text-xl py-2.5 px-3.5 bg-bgPrimary border-none hover:bg-[#363636] duration-200 text-textSecondary hover:text-textSecondary"
@@ -334,7 +364,7 @@ export default function AddSchedulePage(props: any) {
                       name="format"
                       render={({ field }) => (
                         <FormItem className="space-y-3">
-                          <FormLabel className="text-2xl opacity-80 leading-[1.2]">Schedule Format</FormLabel>
+                          <FormLabel className="text-2xl opacity-80" ref={sectionRefs[0]}>Schedule Format</FormLabel>
                           <FormDescription>The format has been inherited from the event space.</FormDescription>
                           <FormControl>
                             <RadioGroup onValueChange={field.onChange} defaultValue={eventSpace?.format} className="flex flex-col md:flex-row justify-between">
@@ -410,10 +440,10 @@ export default function AddSchedulePage(props: any) {
                         control={form.control}
                         name="description"
                         render={({ field }) => (
-                          <FormItem>
+                          <FormItem ref={sectionRefs[1]}>
                             <FormControl>
                               <div className="flex flex-col gap-[10px]">
-                                <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">Schedule Description</h2>
+                                <Label className="text-2xl opacity-80" >Schedule Description</Label>
                                 <TextEditor value={field.value} onChange={field.onChange} />
                               </div>
                             </FormControl>
@@ -422,8 +452,8 @@ export default function AddSchedulePage(props: any) {
                         )}
                       />
                     </div>
-                    <div className="w-full">
-                      <h2 className="text-xl opacity-70 self-stretch">Schedule Date & Times</h2>
+                    <div className="w-full" ref={sectionRefs[2]}>
+                      <Label className="text-2xl opacity-80">Schedule Date & Times</Label>
                       <div className="flex flex-col items-start gap-5 self-stretch w-full pt-5">
                         <div className="flex gap-5">
                           <SwitchButton value={isAllDay} onClick={handleChangeSwitch} />
@@ -527,8 +557,8 @@ export default function AddSchedulePage(props: any) {
                         <line></line>
                       </div>
                     </div>
-                    <div className="w-full">
-                      <h2 className="text-xl opacity-70 self-stretch font-semibold">Location</h2>
+                    <div className="w-full" ref={sectionRefs[3]}>
+                      <h2 className="text-2xl opacity-80">Location</h2>
                       <div className="flex flex-col items-start gap-5 self-stretch w-full pt-5">
                         <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
                           <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select Location</Label>
@@ -583,9 +613,9 @@ export default function AddSchedulePage(props: any) {
                       </div>
                     </div>
                     <line></line>
-                    <div className="w-full">
-                      <h2 className="text-xl opacity-70 self-stretch font-semibold pb-5">Roles</h2>
-                      <div className="flex flex-col gap-6 items-start self-stretch">
+                    <div className="w-full" ref={sectionRefs[4]}>
+                      <Label className="text-2xl opacity-80 font-semibold">Roles</Label>
+                      <div className="flex flex-col gap-6 items-start pt-5">
                         <div className="flex flex-col gap-6">
                           <div className="flex items-end gap-6 self-stretch">
                             <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
@@ -645,8 +675,8 @@ export default function AddSchedulePage(props: any) {
                         </div>
                       </div>
                     </div>
-                    <div className="w-full flex flex-col gap-6">
-                      <h2 className="text-lg opacity-70 self-stretch font-bold pb-5">Schedule Labels</h2>
+                    <div className="w-full flex flex-col gap-6" ref={sectionRefs[5]}>
+                      <Label className="text-2xl opacity-80 font-bold">Schedule Labels</Label>
                       <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
                         <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select Event Category</Label>
                         <select
@@ -682,9 +712,9 @@ export default function AddSchedulePage(props: any) {
                           ))}
                         </select>
                       </div>
-                      <div className="flex flex-col items-start gap-6 self-stretch">
-                        <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                          <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
+                      <div className="flex flex-col items-start gap-6">
+                        <div className="flex flex-col gap-[14px] items-start w-full">
+                          <Label className="text-lg font-semibold text-white self-stretch">
                             Add Tags
                           </Label>
                           <div className="flex w-full text-white outline-none rounded-lg pr-3 pl-2.5 bg-inputField gap-2.5 border border-white/10 border-opacity-10 items-center">
@@ -755,9 +785,9 @@ export default function AddSchedulePage(props: any) {
                         <line />
                       </div>
                     </div>
-                    <div className="w-full">
-                      <span className="text-lg opacity-70 self-stretch">Advanced</span>
-                      <div className="flex flex-col items-center gap-5 self-stretch">
+                    <div className="w-full" ref={sectionRefs[6]}>
+                      <Label className="text-2xl opacity-80">Advanced</Label>
+                      <div className="flex flex-col items-center gap-5 pt-5">
                         <div className="flex items-center gap-5 self-stretch">
                           <SwitchButton value={isLimit} onClick={handleLimitRSVP} />
                           <span className="flex-1 text-base font-semibold leading-[1.2]">Limit RSVPs</span>

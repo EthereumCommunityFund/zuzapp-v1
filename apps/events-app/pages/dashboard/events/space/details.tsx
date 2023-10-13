@@ -32,26 +32,9 @@ export default function EventSpaceDetailsPage() {
     return <p>Error loading space details</p>;
   }
   return (
-    <div className="flex flex-col w-full items-center gap-[10px] bg-componentPrimary lg:bg-transparent self-stretch">
-      <div className="flex items-start gap-8 self-stretch ">
-        <EventSpaceDetailsNavBar />
-        <div className="flex flex-col gap-5 items-start lg:ml-[300px] w-full">
-          <div className="mx-5">
-            <Button
-              className="rounded-[40px] py-2.5 px-3.5 bg-bgPrimary border-none hover:bg-[#363636] duration-200 text-textSecondary hover:text-textSecondary"
-              size="lg"
-              leftIcon={HiArrowLeft}
-              onClick={goBackToPreviousPage}
-            >
-              Back
-            </Button>
-          </div>
-
-          {eventSpace && <EventSpaceDetails eventSpace={eventSpace} />}
-          {/* <EventLocation /> */}
-        </div>
-      </div>
-    </div>
+    <>
+      {eventSpace && <EventSpaceDetails eventSpace={eventSpace} handleGoBack={goBackToPreviousPage} />}
+    </>
   );
 }
 
