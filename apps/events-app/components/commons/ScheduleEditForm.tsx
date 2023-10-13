@@ -1,5 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
+import * as DialogPrimitive from '@radix-ui/react-dialog';
 
 import Button from '@/components/ui/buttons/Button';
 import { HiArrowRight } from 'react-icons/hi';
@@ -50,7 +51,6 @@ interface IScheduleEditForm {
   scheduleId?: string,
   trackId: string,
   updateIsLoading?: (newState: boolean) => void,
-  handleModalOpen?: (newState: boolean) => void,
 }
 
 export default function ScheduleEditForm({
@@ -58,9 +58,7 @@ export default function ScheduleEditForm({
   isFromAllSchedules,
   scheduleId,
   trackId,
-  // updateNewScheduleId
   updateIsLoading,
-  handleModalOpen
 }: IScheduleEditForm) {
   const router = useRouter();
   const { event_space_id } = router.query;
@@ -280,8 +278,8 @@ export default function ScheduleEditForm({
       console.log(payload, 'payload');
       try {
         const result = await createSchedule(payload as any, schedule.event_space_id as string);
-        handleModalOpen && handleModalOpen(false);
-        updateIsLoading && updateIsLoading(true);
+        setScheduleUpdated(true);
+
         console.log(result, 'result');
       } catch (error: any) {
         console.log(error);
@@ -395,19 +393,18 @@ export default function ScheduleEditForm({
     }
   }, [form.formState.errors]);
 
-  const handleEnterSchedules = async () => {
-
+  const handleEnterSchedules = () => {
+    updateIsLoading && updateIsLoading(true);
     try {
       router.push({
-        pathname: isFromAllSchedules ? `/dashboard/eventview/tracks/track/schedule` : `/dashboard/eventview/allschedules/schedule`,
+        pathname: isFromAllSchedules ? `/dashboard/eventview/allschedules` : `/dashboard/eventview/tracks/track`,
         query: {
           event_space_id: event_space_id,
           trackId: trackId,
-          scheduleId: scheduleId,
-        },
-      });
+        }
+      })
     } catch (error) {
-      console.error('Error fetching space details', error);
+      console.error('Error redirecting schedulelists', error);
     }
   };
 
@@ -424,10 +421,12 @@ export default function ScheduleEditForm({
           <FormTitle name={`${title} Schedule`} />
           {scheduleUpdated ? (
             <div className="flex flex-col items-center">
-              <h3 className="font-bold text-xl">Your Schedule Has Been Updated</h3>
-              <Button onClick={handleEnterSchedules} variant="primary" size='lg' className="mt-8 bg-[#67DBFF]/20 text-[#67DBFF] rounded-full" leftIcon={HiArrowRight}>
-                Go to Schedules
-              </Button>
+              <h3 className="font-bold text-xl">{title === 'Add' ? `Your schedule has been crated` : `Your schedule has been updated`}</h3>
+              <DialogPrimitive.Close>
+                <Button onClick={handleEnterSchedules} variant="primary" size='lg' className="mt-8 bg-[#67DBFF]/20 text-[#67DBFF] rounded-full" leftIcon={HiArrowRight}>
+                  Go to Schedules
+                </Button>
+              </DialogPrimitive.Close>
             </div>
           ) : (
             <Form {...form}>

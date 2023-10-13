@@ -38,7 +38,7 @@ export default function EventViewTracksAlleSchedulesPage() {
   const { eventSpace } = useEventDetails();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [schedules, setSchedules] = useState<ScheduleDetailstype[]>();
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
 
   console.log(isLoading, 'is loading');
 
@@ -53,9 +53,7 @@ export default function EventViewTracksAlleSchedulesPage() {
     setIsLoading(newState);
   }
 
-  const handleModalOpen = (newState: boolean) => {
-    setIsModalOpen(newState);
-  }
+
 
   const fetchSchedules = async () => {
     const response = await fetchSchedulesByEvenSpaceId(event_space_id as string);
@@ -90,7 +88,6 @@ export default function EventViewTracksAlleSchedulesPage() {
                       isFromAllSchedules={true}
                       trackId={trackId as string}
                       updateIsLoading={updateIsLoading}
-                      handleModalOpen={handleModalOpen}
                     />
                   </DialogContent>
                 }

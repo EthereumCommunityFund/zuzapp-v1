@@ -41,7 +41,7 @@ export default function TrackDetailsPageTemplate(props: ITrackDetailsPageTemplat
   const { event_space_id, trackId, track_title } = router.query;
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [schedules, setSchedules] = useState<ScheduleDetailstype[]>();
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
 
   // const handlePageChange = (page: number) => {
   //   setCurrentPage(page);
@@ -65,9 +65,7 @@ export default function TrackDetailsPageTemplate(props: ITrackDetailsPageTemplat
     });
   };
 
-  const handleModalOpen = (newState: boolean) => {
-    setIsModalOpen(newState);
-  }
+
   // const handleAddSchedule = async () => {
   //   try {
   //     router.push({
@@ -87,7 +85,7 @@ export default function TrackDetailsPageTemplate(props: ITrackDetailsPageTemplat
 
   useEffect(() => {
     if (isLoading) {
-      console.log("isLoading", isLoading);
+
       fetchSchedules();
     }
   }, [isLoading]);
@@ -139,23 +137,20 @@ export default function TrackDetailsPageTemplate(props: ITrackDetailsPageTemplat
         <div className="p-4 w-full">
           <Dialog>
             <DialogTrigger asChild>
-              <Button variant="blue" size="lg" className="rounded-xl flex justify-center w-full" leftIcon={BiPlusCircle} onClick={() => handleModalOpen}>
+              <Button variant="blue" size="lg" className="rounded-xl flex justify-center w-full" leftIcon={BiPlusCircle}>
                 Add a Schedule
               </Button>
             </DialogTrigger>
-            {isModalOpen &&
-              <DialogContent className='lg:w-3/5 lg:h-3/5 overflow-y-auto'>
-                <DialogDescription className="text-white">
-                  <ScheduleEditForm
-                    title={'Add'}
-                    isFromAllSchedules={false}
-                    trackId={trackId as string}
-                    updateIsLoading={updateIsLoading}
-                    handleModalOpen={handleModalOpen}
-                  />
-                </DialogDescription>
-              </DialogContent>
-            }
+            <DialogContent className='lg:w-3/5 lg:h-3/5 overflow-y-auto'>
+              <DialogDescription className="text-white">
+                <ScheduleEditForm
+                  title={'Add'}
+                  isFromAllSchedules={false}
+                  trackId={trackId as string}
+                  updateIsLoading={updateIsLoading}
+                />
+              </DialogDescription>
+            </DialogContent>
           </Dialog>
         </div>
         {isLoading ?

@@ -11,7 +11,7 @@ import useTrackDetails from '@/hooks/useTrackDetails';
 export default function EventViewTrackDetailsPage() {
   const router = useRouter();
 
-  const { eventSpace, isLoading } = useEventDetails();
+
   const { trackDetails, isLoading: LoadingTrack } = useTrackDetails();
 
   return trackDetails && <TrackDetailsPageTemplate trackItem={trackDetails} />;
