@@ -42,7 +42,7 @@ export default function ScheduleItemCard() {
           event_space_id,
           trackId: scheduleTrackId,
           scheduleId: id,
-          track_title: scheduleTrackTitle,
+          track_title: track_title,
         },
       });
     } catch (error) {

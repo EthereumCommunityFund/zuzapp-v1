@@ -308,7 +308,7 @@ export default function AddSchedulePage(props: any) {
 
   return (
     <div className="flex items-start gap-[60px] self-stretch md:px-10 px-2.5 py-5">
-      <div className="lg:flex hidden flex-col pt-3 rounded-s-xl opacity-70 w-[400px] gap-5 fixed">
+      <div className="lg:flex hidden flex-col pt-3 rounded-s-xl opacity-70 w-[300px] gap-5 fixed">
         <div className="flex gap-[10px] pl-3 items-center font-semibold text-2xl">
           <BsFillTicketFill className="w-5 h-5 text-2xl" /> Schedule
         </div>

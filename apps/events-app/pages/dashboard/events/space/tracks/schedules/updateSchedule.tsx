@@ -362,7 +362,7 @@ export default function UpdateSchedulePage() {
   return (
     <div className="flex flex-col w-full items-center gap-[10px] bg-componentPrimary lg:bg-transparent self-stretch">
       <div className="flex items-start gap-8 self-stretch ">
-        <div className="lg:flex hidden flex-col pt-3 rounded-s-xl opacity-70 w-[400px] gap-5 fixed">
+        <div className="lg:flex hidden flex-col pt-3 rounded-s-xl opacity-70 w-[300px] gap-5 fixed">
           <div className="flex gap-[10px] pl-3 items-center font-semibold text-2xl">
             <BsFillTicketFill className="w-5 h-5 text-2xl" /> Schedule
           </div>
