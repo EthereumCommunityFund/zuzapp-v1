@@ -46,23 +46,17 @@ type TagItemProp = {
 };
 
 interface IScheduleEditForm {
-  title: string,
-  isFromAllSchedules: boolean,
-  scheduleId?: string,
-  trackId: string,
-  updateIsLoading?: (newState: boolean) => void,
+  title: string;
+  isFromAllSchedules: boolean;
+  scheduleId?: string;
+  trackId: string;
+  updateIsLoading?: (newState: boolean) => void;
 }
 
-export default function ScheduleEditForm({
-  title,
-  isFromAllSchedules,
-  scheduleId,
-  trackId,
-  updateIsLoading,
-}: IScheduleEditForm) {
+export default function ScheduleEditForm({ title, isFromAllSchedules, scheduleId, trackId, updateIsLoading }: IScheduleEditForm) {
   const router = useRouter();
   const { event_space_id } = router.query;
-  console.log("title,isFromAllSchedules, trackId", title, isFromAllSchedules, trackId);
+  console.log('title,isFromAllSchedules, trackId', title, isFromAllSchedules, trackId);
   const [schedule, setSchedule] = useState<ScheduleUpdateRequestBody>({
     name: '',
     format: 'in-person',
@@ -111,7 +105,6 @@ export default function ScheduleEditForm({
   const [scheduleUpdated, setScheduleUpdated] = useState(false);
   const [isLimit, setIsLimit] = useState(false);
   const [selectedTrackId, setSelectedTrackId] = useState<string>(trackId as string);
-
 
   const formSchema = z.object({
     name: z.string().min(2, {
@@ -243,6 +236,9 @@ export default function ScheduleEditForm({
         const result = await updateSchedule(scheduleId as string, payload, event_space_id as string);
         // setSwitchDialogue(true);
         setScheduleUpdated(true);
+        toast({
+          title: 'Schedule updated successfully',
+        });
         console.log(result, 'result');
       } catch (error) {
         console.log(error);
@@ -250,7 +246,6 @@ export default function ScheduleEditForm({
     }
 
     if (title === 'Add') {
-
       const additionalPayload = {
         event_space_id: event_space_id as string,
         start_time: startTime,
@@ -279,7 +274,9 @@ export default function ScheduleEditForm({
       try {
         const result = await createSchedule(payload as any, schedule.event_space_id as string);
         setScheduleUpdated(true);
-
+        toast({
+          title: 'Schedule created successfully',
+        });
         console.log(result, 'result');
       } catch (error: any) {
         console.log(error);
@@ -289,11 +286,8 @@ export default function ScheduleEditForm({
           variant: 'destructive',
         });
       }
-
     }
   }
-
-
 
   const handleRemoveTag = (index: number) => {
     const updatedItems = [...(schedule.tags as string[]).slice(0, index), ...(schedule.tags as string[]).slice(index + 1)];
@@ -319,7 +313,7 @@ export default function ScheduleEditForm({
       ...schedule,
       schedule_frequency: e.target.value as any,
     });
-  }
+  };
 
   const defaultProps = {
     options: optionTags,
@@ -329,7 +323,7 @@ export default function ScheduleEditForm({
   useEffect(() => {
     const fetchLocationDetails = async () => {
       try {
-        console.log("evnet space id", event_space_id);
+        console.log('evnet space id', event_space_id);
         const result = await fetchLocationsByEventSpace(event_space_id as string);
         console.log(result);
         setSavedLocations(result?.data?.data);
@@ -401,8 +395,8 @@ export default function ScheduleEditForm({
         query: {
           event_space_id: event_space_id,
           trackId: trackId,
-        }
-      })
+        },
+      });
     } catch (error) {
       console.error('Error redirecting schedulelists', error);
     }
@@ -411,7 +405,7 @@ export default function ScheduleEditForm({
   // const formated = formatDate('2023-09-27T23:00:00+00:00');
   // console.log(formated, 'formated');
   if (isLoading) {
-    return <Loader />
+    return <Loader />;
   }
 
   return (
@@ -423,7 +417,7 @@ export default function ScheduleEditForm({
             <div className="flex flex-col items-center">
               <h3 className="font-bold text-xl">{title === 'Add' ? `Your schedule has been crated` : `Your schedule has been updated`}</h3>
               <DialogPrimitive.Close>
-                <Button onClick={handleEnterSchedules} variant="primary" size='lg' className="mt-8 bg-[#67DBFF]/20 text-[#67DBFF] rounded-full" leftIcon={HiArrowRight}>
+                <Button onClick={handleEnterSchedules} variant="primary" size="lg" className="mt-8 bg-[#67DBFF]/20 text-[#67DBFF] rounded-full" leftIcon={HiArrowRight}>
                   Go to Schedules
                 </Button>
               </DialogPrimitive.Close>
@@ -493,9 +487,7 @@ export default function ScheduleEditForm({
                 />
                 {isFromAllSchedules && (
                   <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                    <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                      Select Track
-                    </Label>
+                    <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select Track</Label>
                     <select
                       onChange={handleTrackSelect}
                       title="Track List"
@@ -551,13 +543,14 @@ export default function ScheduleEditForm({
                             <div className="flex justify-between gap-10 text-white">
                               <TimePicker
                                 label="Start Time"
-                                value={title === 'Add' ? dayjs(startTime) as unknown as string : dayjs(schedule.start_time) as unknown as string}
+                                value={title === 'Add' ? (dayjs(startTime) as unknown as string) : (dayjs(schedule.start_time) as unknown as string)}
                                 className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
                                 onChange={(newValue: string | Date | null | undefined) =>
                                   setSchedule({
                                     ...schedule,
                                     start_time: newValue as string,
-                                  })}
+                                  })
+                                }
                                 sx={{
                                   input: {
                                     color: 'white',
@@ -579,13 +572,14 @@ export default function ScheduleEditForm({
                               />
                               <TimePicker
                                 label="End Time"
-                                value={title === 'Add' ? dayjs(endTime) as unknown as string : dayjs(schedule.end_time) as unknown as string}
+                                value={title === 'Add' ? (dayjs(endTime) as unknown as string) : (dayjs(schedule.end_time) as unknown as string)}
                                 className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
                                 onChange={(newValue: string | Date | null | undefined) =>
                                   setSchedule({
                                     ...schedule,
                                     end_time: newValue as string,
-                                  })}
+                                  })
+                                }
                                 sx={{
                                   input: {
                                     color: 'white',
@@ -617,7 +611,9 @@ export default function ScheduleEditForm({
                         className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
                         title="Timezone"
                       >
-                        <option className="bg-componentPrimary origin-top-right rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" value="once">UTC</option>
+                        <option className="bg-componentPrimary origin-top-right rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" value="once">
+                          UTC
+                        </option>
                       </select>
                     </div>
                     <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
@@ -628,12 +624,17 @@ export default function ScheduleEditForm({
                         className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
                         title="frequency"
                       >
-                        <option className="bg-componentPrimary origin-top-right rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" value="once">Once</option>
-                        <option className="bg-componentPrimary origin-top-right rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" value="everyday">Everyday</option>
-                        <option className="bg-componentPrimary origin-top-right rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" value="weekly">Weekly</option>
+                        <option className="bg-componentPrimary origin-top-right rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" value="once">
+                          Once
+                        </option>
+                        <option className="bg-componentPrimary origin-top-right rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" value="everyday">
+                          Everyday
+                        </option>
+                        <option className="bg-componentPrimary origin-top-right rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" value="weekly">
+                          Weekly
+                        </option>
                       </select>
                     </div>
-
                   </div>
                 </div>
                 <div className="w-full">
@@ -718,17 +719,19 @@ export default function ScheduleEditForm({
                         <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
                           <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select Role</h2>
                           <select
-                            onChange={(e) => setEventItem({
-                              ...eventItem,
-                              role: e.target.value
-                            })}
+                            onChange={(e) =>
+                              setEventItem({
+                                ...eventItem,
+                                role: e.target.value,
+                              })
+                            }
                             title="speaker"
                             value={eventItem.role}
                             className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
                           >
-                            <option value='organizer'>Organizer</option>
-                            <option value='speaker'>Speaker</option>
-                            <option value='facilitator'>Facilitator</option>
+                            <option value="organizer">Organizer</option>
+                            <option value="speaker">Speaker</option>
+                            <option value="facilitator">Facilitator</option>
                           </select>
                         </div>
 
@@ -765,9 +768,7 @@ export default function ScheduleEditForm({
                 <div className="w-full flex flex-col gap-6">
                   <h2 className="text-lg opacity-70 self-stretch font-bold pb-5">Schedule Labels</h2>
                   <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                    <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                      Select Event Category
-                    </Label>
+                    <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select Event Category</Label>
                     <select
                       onChange={(e) => {
                         setSchedule({
@@ -779,10 +780,9 @@ export default function ScheduleEditForm({
                       }}
                       value={schedule.event_type}
                       title="category"
-                      className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10">
-                      {eventSpace?.event_type?.length === 0 ||
-                        (eventSpace?.event_type === null && <option value="">No saved categories</option>)
-                      }
+                      className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
+                    >
+                      {eventSpace?.event_type?.length === 0 || (eventSpace?.event_type === null && <option value="">No saved categories</option>)}
                       {eventSpace?.event_type?.map((category, index) => (
                         <option key={index} value={category}>
                           {category}
@@ -815,17 +815,15 @@ export default function ScheduleEditForm({
                   </div>
                   <div className="flex flex-col items-start gap-6 self-stretch">
                     <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                      <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                        Add Tags
-                      </Label>
+                      <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Add Tags</Label>
                       <div className="flex w-full text-white outline-none rounded-lg pr-3 pl-2.5 bg-inputField gap-2.5 border border-white/10 border-opacity-10 items-center">
                         <Autocomplete
                           {...defaultProps}
                           id="controlled-demo"
-                          sx={{ color: "black", width: "100%" }}
+                          sx={{ color: 'black', width: '100%' }}
                           value={tagItem}
                           onChange={(event: any, newValue) => {
-                            console.log("onChange", event, newValue);
+                            console.log('onChange', event, newValue);
                             if (newValue) {
                               setTagItem({ name: newValue.name });
                             }
@@ -836,11 +834,11 @@ export default function ScheduleEditForm({
                           slotProps={{
                             paper: {
                               sx: {
-                                color: "white",
-                                backgroundColor: "#242727",
-                                pointerEvents: "auto",
-                              }
-                            }
+                                color: 'white',
+                                backgroundColor: '#242727',
+                                pointerEvents: 'auto',
+                              },
+                            },
                           }}
                           renderInput={(params) => (
                             <TextField
@@ -862,8 +860,7 @@ export default function ScheduleEditForm({
                         <button
                           type="button"
                           onClick={() => {
-                            if (tagItem.name === '')
-                              return;
+                            if (tagItem.name === '') return;
                             setSchedule({
                               ...schedule,
                               tags: [...(schedule.tags as string[]), tagItem.name],
@@ -877,14 +874,16 @@ export default function ScheduleEditForm({
                         </button>
                       </div>
                       <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5">
-                        {schedule.tags && schedule.tags.length > 0 && schedule.tags.map((tag, index) => (
-                          <div key={index} className="flex w-full items-center rounded-[8px] px-2 py-1.5 bg-white bg-opacity-10">
-                            <button type='button' className="flex gap-2.5 items-center">
-                              <GoXCircle onClick={() => handleRemoveTag(index)} className="top-0.5 left-0.5 w-4 h-4" />
-                              <span className="text-lg font-semibold leading-[1.2] text-white self-stretch">{tag}</span>
-                            </button>
-                          </div>
-                        ))}
+                        {schedule.tags &&
+                          schedule.tags.length > 0 &&
+                          schedule.tags.map((tag, index) => (
+                            <div key={index} className="flex w-full items-center rounded-[8px] px-2 py-1.5 bg-white bg-opacity-10">
+                              <button type="button" className="flex gap-2.5 items-center">
+                                <GoXCircle onClick={() => handleRemoveTag(index)} className="top-0.5 left-0.5 w-4 h-4" />
+                                <span className="text-lg font-semibold leading-[1.2] text-white self-stretch">{tag}</span>
+                              </button>
+                            </div>
+                          ))}
                       </div>
                     </div>
                     <line />
