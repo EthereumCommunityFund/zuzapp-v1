@@ -13,6 +13,7 @@ import { useQueryClient, useQuery } from 'react-query';
 import { fetchTrackById } from '@/services/fetchTrack';
 import { cn } from '@/lib/utils';
 import { Loader } from '../ui/Loader';
+import { toast } from '../ui/use-toast';
 
 interface IUpdate {
   className?: string;
@@ -65,6 +66,9 @@ export default function EventViewTrackUpdate({ className }: IUpdate) {
         event_space_id as string
       );
       setTrackCreated(true);
+      toast({
+        title: 'Track updated successfully',
+      });
       console.log(result);
       queryClient.invalidateQueries({ queryKey: ['trackDetails'] });
     } catch (error) {

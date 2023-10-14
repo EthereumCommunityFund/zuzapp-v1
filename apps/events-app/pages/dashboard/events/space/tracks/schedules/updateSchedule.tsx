@@ -54,7 +54,6 @@ type TagItemProp = {
   name: string;
 };
 
-
 export default function UpdateSchedulePage() {
   const router = useRouter();
   const { event_space_id, trackId, scheduleId, track_title } = router.query;
@@ -115,11 +114,10 @@ export default function UpdateSchedulePage() {
     if (ref.current) {
       window.scrollTo({
         top: ref.current.offsetTop,
-        behavior: 'smooth'
+        behavior: 'smooth',
       });
     }
   };
-
 
   const formSchema = z.object({
     name: z.string().min(2, {
@@ -247,6 +245,9 @@ export default function UpdateSchedulePage() {
       const result = await updateSchedule(scheduleId as string, payload, event_space_id as string);
       // setSwitchDialogue(true);
       setScheduleUpdated(true);
+      toast({
+        title: 'Schedule updated successfully',
+      });
       console.log(result, 'result');
     } catch (error) {
       console.log(error);
@@ -263,8 +264,6 @@ export default function UpdateSchedulePage() {
     console.log(updatedItems);
     setSchedule({ ...schedule, tags: updatedItems });
   };
-
-
 
   const defaultProps = {
     options: optionTags,
@@ -356,7 +355,7 @@ export default function UpdateSchedulePage() {
   // console.log(formated, 'formated');
 
   if (isLoading) {
-    return <Loader />
+    return <Loader />;
   }
 
   return (
@@ -367,16 +366,14 @@ export default function UpdateSchedulePage() {
             <BsFillTicketFill className="w-5 h-5 text-2xl" /> Schedule
           </div>
           <div className="flex flex-col gap-3 text-xl">
-            {
-              scheduleNavBarDetails.map((item, index) => {
-                return (
-                  <div key={index} className='rounded-xl flex flex-col py-2 gap-1 hover:cursor-pointer w-[230px] hover:bg-[#292929] duration-200' onClick={() => scrollToRef(sectionRefs[index])}>
-                    <h2 className="px-3.5 hover: cursor-pointer font-semibold">{item.name}</h2>
-                    <h3 className="px-3.5 hover: cursor-pointer text-xs font-light opacity-60">{item.name}</h3>
-                  </div>
-                )
-              })
-            }
+            {scheduleNavBarDetails.map((item, index) => {
+              return (
+                <div key={index} className="rounded-xl flex flex-col py-2 gap-1 hover:cursor-pointer w-[230px] hover:bg-[#292929] duration-200" onClick={() => scrollToRef(sectionRefs[index])}>
+                  <h2 className="px-3.5 hover: cursor-pointer font-semibold">{item.name}</h2>
+                  <h3 className="px-3.5 hover: cursor-pointer text-xs font-light opacity-60">{item.name}</h3>
+                </div>
+              );
+            })}
           </div>
         </div>
         <div className="flex flex-col items-start gap-[17px] flex-1 lg:ml-[300px]">
@@ -414,7 +411,9 @@ export default function UpdateSchedulePage() {
                       name="format"
                       render={({ field }) => (
                         <FormItem className="space-y-3">
-                          <FormLabel className="text-2xl opacity-80 leading-[1.2]" ref={sectionRefs[0]}>Schedule Format</FormLabel>
+                          <FormLabel className="text-2xl opacity-80 leading-[1.2]" ref={sectionRefs[0]}>
+                            Schedule Format
+                          </FormLabel>
                           <FormDescription>The format you select will determine what information will be required going forward</FormDescription>
                           <FormControl>
                             <RadioGroup
@@ -482,7 +481,9 @@ export default function UpdateSchedulePage() {
                       />
                     </div>
                     <div className="w-full">
-                      <h2 className="text-2xl text-white/80" ref={sectionRefs[2]}>Schedule Date & Times</h2>
+                      <h2 className="text-2xl text-white/80" ref={sectionRefs[2]}>
+                        Schedule Date & Times
+                      </h2>
                       <div className="flex flex-col items-start gap-5 self-stretch w-full pt-5">
                         <div className="flex gap-5">
                           <SwitchButton value={schedule.all_day} onClick={handleChangeSwitch} />
@@ -603,7 +604,9 @@ export default function UpdateSchedulePage() {
                       </div>
                     </div>
                     <div className="w-full">
-                      <h2 className="text-2xl text-white/80" ref={sectionRefs[3]}>Location</h2>
+                      <h2 className="text-2xl text-white/80" ref={sectionRefs[3]}>
+                        Location
+                      </h2>
                       <div className="flex flex-col items-start gap-5 self-stretch w-full pt-5">
                         <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
                           <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select Location</Label>
@@ -766,7 +769,6 @@ export default function UpdateSchedulePage() {
                       </div>
                       <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
                         <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select Experience Level</Label>
-
 
                         <select
                           onChange={(e) =>

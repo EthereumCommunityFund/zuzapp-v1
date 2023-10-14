@@ -14,6 +14,7 @@ import EventDeatilsDescription1 from '../ui/labels/event-details-description-1';
 import Image from 'next/image';
 import TextEditor from '../ui/TextEditor';
 import { toast } from '../ui/use-toast';
+import { Loader } from '../ui/Loader';
 
 const trackSchema = z.object({
   name: z.string().min(2, {
