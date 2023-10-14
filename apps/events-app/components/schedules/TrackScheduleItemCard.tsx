@@ -15,7 +15,7 @@ type IdProp = {
 
 type Joined<T> = ScheduleUpdateRequestBody & T;
 
-export default function ScheduleItemCard() {
+export default function TrackScheduleItemCard() {
   const router = useRouter();
   const { event_space_id, trackId, track_title } = router.query;
   const { eventSpace } = useEventDetails();
@@ -26,7 +26,7 @@ export default function ScheduleItemCard() {
     isError,
   } = useQuery<Joined<IdProp>[], Error>(
     ['schedules', event_space_id],
-    () => fetchSchedulesByEvenSpaceId(event_space_id as string),
+    () => fetchSchedulesByTrackId(trackId as string),
 
     {
       enabled: !!event_space_id,

@@ -1,16 +1,16 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 
-import Button from "@/components/ui/buttons/Button";
-import { HiArrowLeft, HiArrowRight } from "react-icons/hi";
-import DetailsBar from "@/components/detailsbar";
+import Button from '@/components/ui/buttons/Button';
+import { HiArrowLeft, HiArrowRight } from 'react-icons/hi';
+import DetailsBar from '@/components/detailsbar';
 
 import { CgClose } from 'react-icons/cg';
 import { FaCircleArrowUp } from 'react-icons/fa6';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { useForm } from 'react-hook-form';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import FormTitle from '@/components/ui/labels/form-title';
 import InputFieldDark from '@/components/ui/inputFieldDark';
 import { DropDownMenuItemType, EventSpaceDetailsType, InputFieldType, LocationUpdateRequestBody, TrackUpdateRequestBody } from '@/types';
@@ -33,11 +33,13 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 
-import TextField from "@mui/material/TextField";
-import Autocomplete from "@mui/material/Autocomplete";
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
 
-import { Loader } from "@/components/ui/Loader";
-import { toast } from "@/components/ui/use-toast";
+import { Loader } from '@/components/ui/Loader';
+import { toast } from '@/components/ui/use-toast';
+import { BsFillTicketFill } from 'react-icons/bs';
+import { scheduleNavBarDetails } from '@/constant/addschedulenavbar';
 
 type Organizer = {
   name: string;
@@ -114,6 +116,17 @@ export default function AddSchedulePage(props: any) {
   );
 
   const [eventType, setEventType] = useState('');
+
+  const sectionRefs = [useRef(null), useRef(null), useRef(null), useRef(null), useRef(null), useRef(null), useRef(null)];
+
+  const scrollToRef = (ref: React.RefObject<HTMLDivElement>) => {
+    if (ref.current) {
+      window.scrollTo({
+        top: ref.current.offsetTop,
+        behavior: 'smooth',
+      });
+    }
+  };
 
   const handleLimitRSVP = () => {
     setIsLimit((prev) => !prev);
@@ -214,6 +227,9 @@ export default function AddSchedulePage(props: any) {
       const result = await createSchedule(payload as any, event_space_id as string);
       setSwitchDialogue(true);
       setScheduleAdded(true);
+      toast({
+        title: 'Schedule created successfully',
+      });
       console.log(result, 'result');
     } catch (error: any) {
       console.log(error);
@@ -235,11 +251,9 @@ export default function AddSchedulePage(props: any) {
     setOrganizers(updatedItems);
   };
 
-
-
   const handleFrequencySelect = (e: any) => {
     setFrequency(e.target.value);
-  }
+  };
 
   const handleRemoveTag = (index: number) => {
     const updatedItems = [...tags.slice(0, index), ...tags.slice(index + 1)];
@@ -294,8 +308,22 @@ export default function AddSchedulePage(props: any) {
 
   return (
     <div className="flex items-start gap-[60px] self-stretch md:px-10 px-2.5 py-5">
-      <DetailsBar />
-      <div className="flex flex-col items-start gap-[17px] flex-1">
+      <div className="lg:flex hidden flex-col pt-3 rounded-s-xl opacity-70 w-[300px] gap-5 fixed">
+        <div className="flex gap-[10px] pl-3 items-center font-semibold text-2xl">
+          <BsFillTicketFill className="w-5 h-5 text-2xl" /> Schedule
+        </div>
+        <div className="flex flex-col gap-3 text-xl">
+          {scheduleNavBarDetails.map((item, index) => {
+            return (
+              <div key={index} className="rounded-xl flex flex-col py-2 gap-1 hover:cursor-pointer w-[230px] hover:bg-[#292929] duration-200" onClick={() => scrollToRef(sectionRefs[index])}>
+                <h2 className="px-3.5 hover: cursor-pointer font-semibold">{item.name}</h2>
+                <h3 className="px-3.5 hover: cursor-pointer text-xs font-light opacity-60">{item.name}</h3>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+      <div className="flex flex-col items-start gap-[17px] flex-1 lg:ml-[300px]">
         <div className="flex items-center gap-[17px] self-stretch">
           <Button
             className="rounded-[40px] text-base md:text-xl py-2.5 px-3.5 bg-bgPrimary border-none hover:bg-[#363636] duration-200 text-textSecondary hover:text-textSecondary"
@@ -311,7 +339,6 @@ export default function AddSchedulePage(props: any) {
             ) : (
               <span className="text-2xl items-start font-bold">{track_title}</span>
             )}
-
           </div>
         </div>
         <div className="flex py-5 px-4 flex-col items-center gap-8 self-stretch rounded-2xl border border-[#FFFFFF10] bg-[#2E3131]">
@@ -334,7 +361,9 @@ export default function AddSchedulePage(props: any) {
                       name="format"
                       render={({ field }) => (
                         <FormItem className="space-y-3">
-                          <FormLabel className="text-2xl opacity-80 leading-[1.2]">Schedule Format</FormLabel>
+                          <FormLabel className="text-2xl opacity-80" ref={sectionRefs[0]}>
+                            Schedule Format
+                          </FormLabel>
                           <FormDescription>The format has been inherited from the event space.</FormDescription>
                           <FormControl>
                             <RadioGroup onValueChange={field.onChange} defaultValue={eventSpace?.format} className="flex flex-col md:flex-row justify-between">
@@ -386,9 +415,7 @@ export default function AddSchedulePage(props: any) {
                     />
                     {isQuickAccess && (
                       <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                        <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                          Select Track
-                        </Label>
+                        <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select Track</Label>
                         <select
                           onChange={handleTracksSelect}
                           title="Track List"
@@ -410,10 +437,10 @@ export default function AddSchedulePage(props: any) {
                         control={form.control}
                         name="description"
                         render={({ field }) => (
-                          <FormItem>
+                          <FormItem ref={sectionRefs[1]}>
                             <FormControl>
                               <div className="flex flex-col gap-[10px]">
-                                <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">Schedule Description</h2>
+                                <Label className="text-2xl opacity-80">Schedule Description</Label>
                                 <TextEditor value={field.value} onChange={field.onChange} />
                               </div>
                             </FormControl>
@@ -422,8 +449,8 @@ export default function AddSchedulePage(props: any) {
                         )}
                       />
                     </div>
-                    <div className="w-full">
-                      <h2 className="text-xl opacity-70 self-stretch">Schedule Date & Times</h2>
+                    <div className="w-full" ref={sectionRefs[2]}>
+                      <Label className="text-2xl opacity-80">Schedule Date & Times</Label>
                       <div className="flex flex-col items-start gap-5 self-stretch w-full pt-5">
                         <div className="flex gap-5">
                           <SwitchButton value={isAllDay} onClick={handleChangeSwitch} />
@@ -508,7 +535,9 @@ export default function AddSchedulePage(props: any) {
                             className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
                             title="Timezone"
                           >
-                            <option className="bg-componentPrimary origin-top-right rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" value="once">UTC</option>
+                            <option className="bg-componentPrimary origin-top-right rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" value="once">
+                              UTC
+                            </option>
                           </select>
                         </div>
                         <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
@@ -519,16 +548,22 @@ export default function AddSchedulePage(props: any) {
                             className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
                             title="frequency"
                           >
-                            <option className="bg-componentPrimary origin-top-right rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" value="once">Once</option>
-                            <option className="bg-componentPrimary origin-top-right rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" value="everyday">Everyday</option>
-                            <option className="bg-componentPrimary origin-top-right rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" value="weekly">Weekly</option>
+                            <option className="bg-componentPrimary origin-top-right rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" value="once">
+                              Once
+                            </option>
+                            <option className="bg-componentPrimary origin-top-right rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" value="everyday">
+                              Everyday
+                            </option>
+                            <option className="bg-componentPrimary origin-top-right rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" value="weekly">
+                              Weekly
+                            </option>
                           </select>
                         </div>
                         <line></line>
                       </div>
                     </div>
-                    <div className="w-full">
-                      <h2 className="text-xl opacity-70 self-stretch font-semibold">Location</h2>
+                    <div className="w-full" ref={sectionRefs[3]}>
+                      <h2 className="text-2xl opacity-80">Location</h2>
                       <div className="flex flex-col items-start gap-5 self-stretch w-full pt-5">
                         <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
                           <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select Location</Label>
@@ -583,9 +618,9 @@ export default function AddSchedulePage(props: any) {
                       </div>
                     </div>
                     <line></line>
-                    <div className="w-full">
-                      <h2 className="text-xl opacity-70 self-stretch font-semibold pb-5">Roles</h2>
-                      <div className="flex flex-col gap-6 items-start self-stretch">
+                    <div className="w-full" ref={sectionRefs[4]}>
+                      <Label className="text-2xl opacity-80 font-semibold">Roles</Label>
+                      <div className="flex flex-col gap-6 items-start pt-5">
                         <div className="flex flex-col gap-6">
                           <div className="flex items-end gap-6 self-stretch">
                             <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
@@ -605,17 +640,19 @@ export default function AddSchedulePage(props: any) {
                             <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
                               <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select Role</h2>
                               <select
-                                onChange={(e) => setEventItem({
-                                  ...eventItem,
-                                  role: e.target.value
-                                })}
+                                onChange={(e) =>
+                                  setEventItem({
+                                    ...eventItem,
+                                    role: e.target.value,
+                                  })
+                                }
                                 title="location"
                                 value={eventItem.role}
                                 className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
                               >
-                                <option value='organizer'>Organizer</option>
-                                <option value='speaker'>Speaker</option>
-                                <option value='facilitator'>Facilitator</option>
+                                <option value="organizer">Organizer</option>
+                                <option value="speaker">Speaker</option>
+                                <option value="facilitator">Facilitator</option>
                               </select>
                             </div>
 
@@ -645,18 +682,17 @@ export default function AddSchedulePage(props: any) {
                         </div>
                       </div>
                     </div>
-                    <div className="w-full flex flex-col gap-6">
-                      <h2 className="text-lg opacity-70 self-stretch font-bold pb-5">Schedule Labels</h2>
+                    <div className="w-full flex flex-col gap-6" ref={sectionRefs[5]}>
+                      <Label className="text-2xl opacity-80 font-bold">Schedule Labels</Label>
                       <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
                         <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select Event Category</Label>
                         <select
                           onChange={(e) => setEventCategory(e.target.value)}
                           value={eventCategory}
                           title="category"
-                          className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10">
-                          {eventSpace?.event_type?.length === 0 ||
-                            (eventSpace?.event_type === null && <option value="">No saved categories</option>)
-                          }
+                          className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
+                        >
+                          {eventSpace?.event_type?.length === 0 || (eventSpace?.event_type === null && <option value="">No saved categories</option>)}
                           {eventSpace?.event_type?.map((category) => (
                             <option key={category} value={category}>
                               {category}
@@ -682,20 +718,18 @@ export default function AddSchedulePage(props: any) {
                           ))}
                         </select>
                       </div>
-                      <div className="flex flex-col items-start gap-6 self-stretch">
-                        <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                          <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                            Add Tags
-                          </Label>
+                      <div className="flex flex-col items-start gap-6">
+                        <div className="flex flex-col gap-[14px] items-start w-full">
+                          <Label className="text-lg font-semibold text-white self-stretch">Add Tags</Label>
                           <div className="flex w-full text-white outline-none rounded-lg pr-3 pl-2.5 bg-inputField gap-2.5 border border-white/10 border-opacity-10 items-center">
                             <Autocomplete
                               {...defaultProps}
                               id="controlled-demo"
-                              sx={{ color: "black", width: "100%" }}
+                              sx={{ color: 'black', width: '100%' }}
                               color="black"
                               value={tagItem}
                               onChange={(event: any, newValue) => {
-                                console.log("onChange", event, newValue);
+                                console.log('onChange', event, newValue);
                                 if (newValue) {
                                   setTagItem({ name: newValue.name });
                                 }
@@ -706,10 +740,10 @@ export default function AddSchedulePage(props: any) {
                               slotProps={{
                                 paper: {
                                   sx: {
-                                    color: "white",
-                                    backgroundColor: "#242727",
-                                  }
-                                }
+                                    color: 'white',
+                                    backgroundColor: '#242727',
+                                  },
+                                },
                               }}
                               renderInput={(params) => (
                                 <TextField
@@ -721,7 +755,6 @@ export default function AddSchedulePage(props: any) {
                                     label: {
                                       color: 'white',
                                     },
-
                                   }}
                                   {...params}
                                   label="tags"
@@ -744,7 +777,7 @@ export default function AddSchedulePage(props: any) {
                           <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5">
                             {tags?.map((tag, index) => (
                               <div key={index} className="flex w-full items-center rounded-[8px] px-2 py-1.5 bg-white bg-opacity-10">
-                                <button type='button' className="flex gap-2.5 items-center">
+                                <button type="button" className="flex gap-2.5 items-center">
                                   <GoXCircle onClick={() => handleRemoveTag(index)} className="top-0.5 left-0.5 w-4 h-4" />
                                   <span className="text-lg font-semibold leading-[1.2] text-white self-stretch">{tag}</span>
                                 </button>
@@ -755,9 +788,9 @@ export default function AddSchedulePage(props: any) {
                         <line />
                       </div>
                     </div>
-                    <div className="w-full">
-                      <span className="text-lg opacity-70 self-stretch">Advanced</span>
-                      <div className="flex flex-col items-center gap-5 self-stretch">
+                    <div className="w-full" ref={sectionRefs[6]}>
+                      <Label className="text-2xl opacity-80">Advanced</Label>
+                      <div className="flex flex-col items-center gap-5 pt-5">
                         <div className="flex items-center gap-5 self-stretch">
                           <SwitchButton value={isLimit} onClick={handleLimitRSVP} />
                           <span className="flex-1 text-base font-semibold leading-[1.2]">Limit RSVPs</span>
