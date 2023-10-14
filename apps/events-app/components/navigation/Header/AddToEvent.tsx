@@ -107,7 +107,7 @@ const AddToEventButton: React.FC<AddToEventButton> = (props) => {
                       }
                       router.push(path);
                     }}
-                    className="w-full shadow-none rounded-[40px] px-3.5 bg-[#383B3B] border-none hover:bg-[#ffffff10] duration-200 text-textSecondary hover:text-textSecondary"
+                    className="w-full shadow-none rounded-[40px] px-3.5 bg-[#383B3B] border-none hover:bg-[#ffffff10] duration-200 text-textSecondary hover:text-textSecondary flex lg:block items-center justify-center py-2 lg:py-0"
                     leftIcon={item.icon}
                   >
                     {item.label}
