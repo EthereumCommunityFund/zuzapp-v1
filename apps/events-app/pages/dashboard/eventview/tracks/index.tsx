@@ -29,19 +29,8 @@ export default function EventViewTracksPage() {
 
   const { eventSpace, isLoading } = useEventDetails();
 
-  const [currentPage, setCurrentPage] = useState(1);
-
-  const categoryList: DropDownMenuItemType[] = [
-    {
-      name: 'Network States',
-    },
-    {
-      name: 'Character Cities',
-    },
-    {
-      name: 'Coordinations',
-    },
-  ];
+  const ITEMS_PER_PAGE = 7;
+  const [currentPage, setCurrentPage] = useState<number>(1);
 
   const {
     data: tracks,
@@ -62,6 +51,25 @@ export default function EventViewTracksPage() {
       },
     }
   );
+
+  const totalTracks = tracks ? tracks.length : 0;
+  const totalPages = Math.ceil(totalTracks / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, totalTracks);
+  const currentTracks = tracks ? tracks.slice(startIndex, endIndex) : [];
+
+  const categoryList: DropDownMenuItemType[] = [
+    {
+      name: 'Network States',
+    },
+    {
+      name: 'Character Cities',
+    },
+    {
+      name: 'Coordinations',
+    },
+  ];
+
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
@@ -87,13 +95,22 @@ export default function EventViewTracksPage() {
                 {LoadingTracks ? (
                   <Loader />
                 ) : (
-                  <div className="flex flex-col gap-[10px] overflow-hidden md:p-3">
-                    {tracks?.map((item, idx) => (
-                      <TrackItemCard key={idx} trackId={item.id} trackTitle={item.name} trackImage={item.image as string} onClick={() => handleItemClick(item.name, item.id)} />
-                    ))}
-                  </div>
+                  <>
+                    {tracks &&
+                      <div className="flex flex-col gap-[10px] overflow-hidden md:p-3">
+                        {currentTracks?.map((item, idx) => (
+                          <TrackItemCard key={idx} trackId={item.id} trackTitle={item.name} trackImage={item.image as string} onClick={() => handleItemClick(item.name, item.id)} />
+                        ))}
+                        <Pagination
+                          currentPage={currentPage}
+                          totalItems={tracks.length}
+                          itemsPerPage={ITEMS_PER_PAGE}
+                          onPageChange={handlePageChange}
+                        />
+                      </div>
+                    }
+                  </>
                 )}
-                <div>{/* <Pagination totalPages={10} currentPage={1} onPageChange={handlePageChange} /> */}</div>
               </div>
             </div>
           </div>
@@ -109,7 +126,15 @@ export default function EventViewTracksPage() {
                 headerClassName={'rounded-full bg-borderPrimary'}
                 optionsClassName={''}
               />
-              <DropDownMenu data={categoryList} header={'Select Dates'} headerIcon={Calendar} multiple={true} value={''} headerClassName={'rounded-full bg-borderPrimary'} optionsClassName={''} />
+              <DropDownMenu
+                data={categoryList}
+                header={'Select Dates'}
+                headerIcon={Calendar}
+                multiple={true}
+                value={''}
+                headerClassName={'rounded-full bg-borderPrimary'}
+                optionsClassName={''}
+              />
               <DropDownMenu
                 data={categoryList}
                 header={'Select Location'}
