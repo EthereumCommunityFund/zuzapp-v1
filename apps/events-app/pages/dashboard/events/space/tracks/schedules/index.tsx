@@ -14,6 +14,7 @@ import { HiArrowRight } from 'react-icons/hi2';
 import { Loader } from '@/components/ui/Loader';
 import useTrackDetails from '@/hooks/useTrackDetails';
 import ScheduleItemCard from '@/components/schedules/ScheduleItemCard';
+import TrackScheduleItemCard from '@/components/schedules/TrackScheduleItemCard';
 
 type IdProp = {
   id: string;
@@ -149,7 +150,7 @@ export default function SchedulesDashboardPage() {
           </div>
         </div>
 
-        {isLoading ? <Loader /> : <ScheduleItemCard />}
+        {isLoading ? <Loader /> : <TrackScheduleItemCard />}
       </div>
     </div>
   );

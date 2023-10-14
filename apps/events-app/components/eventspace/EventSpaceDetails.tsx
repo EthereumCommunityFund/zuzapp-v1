@@ -30,6 +30,7 @@ import { toast } from '../ui/use-toast';
 import { add } from 'libsodium-wrappers';
 import dayjs, { Dayjs } from 'dayjs';
 import { eventDetailsList } from '@/constant/eventdetails';
+import { Loader } from '../ui/Loader';
 
 interface EventSpaceDetailsProps {
   eventSpace: EventSpaceDetailsType;
@@ -72,7 +73,7 @@ const formSchema = z.object({
 
 const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace, handleGoBack }) => {
   const { name, event_space_type, status, start_date, end_date, description, format, event_type, experience_level, eventspacelocation, tagline, social_links, extra_links, image_url } = eventSpace;
-
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   const queryClient = useQueryClient();
@@ -109,11 +110,10 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace, handl
     if (ref.current) {
       window.scrollTo({
         top: ref.current.offsetTop,
-        behavior: 'smooth'
+        behavior: 'smooth',
       });
     }
   };
-
 
   const handleRemoveEventType = (index: number) => {
     const updatedItems = [...eventType.slice(0, index), ...eventType.slice(index + 1)];
@@ -165,10 +165,14 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace, handl
     console.log(payload);
 
     try {
+      setIsLoading(true);
       const result = await updateEventSpace(event_space_id as string, payload);
       setDetailsUpdated(true);
       queryClient.invalidateQueries({ queryKey: ['currentEventSpace'] });
       console.log(result, 'result');
+      toast({
+        title: 'Details updated successfully',
+      });
     } catch (error: any) {
       console.log(error, 'error');
       toast({
@@ -273,7 +277,9 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace, handl
                 >
                   <div className="flex flex-col gap-[34px] w-full">
                     <h1 className="text-[25px] font-normal leading-[1.2]">Event Space Details</h1>
-                    <h2 className="text-2xl opacity-80 leading-[1.2]" ref={sectionRefs[0]}>Event Basics</h2>
+                    <h2 className="text-2xl opacity-80 leading-[1.2]" ref={sectionRefs[0]}>
+                      Event Basics
+                    </h2>
                     <FormField
                       control={form.control}
                       name="name"
@@ -347,7 +353,9 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace, handl
                         name="format"
                         render={({ field }) => (
                           <FormItem className="space-y-3">
-                            <FormLabel className="text-2xl opacity-80 leading-[1.2]" ref={sectionRefs[1]}>Event Format</FormLabel>
+                            <FormLabel className="text-2xl opacity-80 leading-[1.2]" ref={sectionRefs[1]}>
+                              Event Format
+                            </FormLabel>
                             <FormDescription>The format you select will determine what information will be required going forward</FormDescription>
                             <FormControl>
                               <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex flex-col md:flex-row justify-between">
@@ -385,14 +393,14 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace, handl
                         )}
                       />
                     </div>
-                    <div className='w-full' ref={sectionRefs[2]}>
+                    <div className="w-full" ref={sectionRefs[2]}>
                       {selectedEventFormat !== 'in-person' && (
                         <EventLinks social_links={socialLinks} setSocialLinks={setSocialLinks} extra_links={extraLinks} setExtraLinks={setExtraLinks} formData={formData} setFormData={setFormData} />
                       )}
                     </div>
                     <div className="flex flex-col gap-[34px]" ref={sectionRefs[3]}>
                       <div className="flex flex-col gap-2.5">
-                        <h2 className="h-6 opacity-70 font-bold text-xl leading-6" >Manage Event Categories & Labels</h2>
+                        <h2 className="h-6 opacity-70 font-bold text-xl leading-6">Manage Event Categories & Labels</h2>
                         <span className="opacity-70 h-[18px] font-normal text-[13px] leading-[18.2px] tracking-[0.13px] self-stretch">
                           These will be shared as attributes by subsequent Sub-Events & Schedules you create.
                         </span>
@@ -401,7 +409,12 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace, handl
                       <div className="flex flex-col gap-6">
                         <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">Add Event Types</h2>
                         <div className="flex space-x-3 items-center">
-                          <InputFieldDark type={InputFieldType.Primary} value={eventItem} onChange={(e) => setEventItem((e.target as HTMLInputElement).value)} placeholder={'Meetups, Workshops, etc'} />
+                          <InputFieldDark
+                            type={InputFieldType.Primary}
+                            value={eventItem}
+                            onChange={(e) => setEventItem((e.target as HTMLInputElement).value)}
+                            placeholder={'Meetups, Workshops, etc'}
+                          />
                           <div>
                             <IconButton
                               variant="dark"
@@ -462,6 +475,11 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace, handl
                           <span>Discard Edit</span>
                         </Button>
                         <Button className="rounded-full w-full lg:w-1/2 flex justify-center" variant="blue" size="lg" onClick={() => form.handleSubmit(onSubmit)()} leftIcon={FaCircleArrowUp}>
+                          {isLoading && (
+                            <div className="">
+                              <Loader />
+                            </div>
+                          )}
                           <span>Save Edit</span>
                         </Button>
                       </div>
@@ -470,7 +488,7 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace, handl
                 </form>
               </Form>
             )}
-            <div className='w-full' ref={sectionRefs[4]}>
+            <div className="w-full" ref={sectionRefs[4]}>
               <EventLocation />
             </div>
           </div>
