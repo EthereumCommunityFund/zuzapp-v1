@@ -885,11 +885,11 @@ export default function UpdateSchedulePage() {
                     </div>
 
                     <div className="flex justify-center pt-8">
-                      <div className="flex gap-[30px] w-full">
-                        <Button className="rounded-full w-1/2 flex justify-center" variant="quiet" size="lg" type="button" leftIcon={CgClose}>
+                      <div className="flex flex-col lg:flex-row gap-[30px] w-full">
+                        <Button className="rounded-full w-full lg:w-1/2 flex justify-center" variant="quiet" size="lg" type="button" leftIcon={CgClose}>
                           <span>Discard Schedule</span>
                         </Button>
-                        <Button className="rounded-full w-1/2 flex justify-center" variant="blue" size="lg" type="submit" leftIcon={FaCircleArrowUp}>
+                        <Button className="rounded-full w-full lg:w-1/2 flex justify-center" variant="blue" size="lg" type="submit" leftIcon={FaCircleArrowUp}>
                           <span>Update Schedule</span>
                         </Button>
                       </div>
