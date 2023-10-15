@@ -56,7 +56,9 @@ export default function EventViewTracksPage() {
     () => fetchTracksByEventSpaceId(event_space_id as string),
 
     {
-      enabled: !!event_space_id,
+      // enabled: !!event_space_id,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
       onSuccess: (data) => {
         console.log("tracks", data);
       },
