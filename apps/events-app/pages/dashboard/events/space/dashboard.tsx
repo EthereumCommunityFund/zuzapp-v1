@@ -111,61 +111,51 @@ export default function EventSpaceDashboard(props: IProps) {
       <div className="flex flex-col items-center gap-5 flex-1 w-full">
         {
           <div className="xl:w-4/5 w-full md:w-[90%] px-2.5">
-            {isFirst === SpaceDashboardType.New.toString() ? (
-              <div className="flex flex-col gap-5 self-stretch p-4 mb-8">
-                <Label className="text-3xl font-bold leading-[1.2]">Welcome to your Event Space</Label>
-                <h2 className="opacity-70 font-inter font-bold">First, you'll need to enter the main details of your main event.</h2>
-                <Button
-                  variant="primaryGreen"
-                  className="w-full flex justify-center font-bold rounded-3xl text-xl leading-[1.2] duration-300"
-                  leftIcon={HiCalendar}
-                  onClick={(e) => {
-                    handleButtonClick(SpaceDashboardCardType.EditDetails);
-                  }}
-                >
-                  Enter Event Details
-                </Button>
-              </div>
-            ) : (
+            {isFirst === SpaceDashboardType.New.toString() &&
               <>
-                {spaceDashboardCards.map((item, index) => (
-                  <div className="mb-8">
-                    <EventSpaceDashboardCard
-                      key={index}
-                      name={item.name}
-                      description={item.description}
-                      buttonName={item.buttonName}
-                      cardType={item.cardType}
-                      icon={item.icon}
-                      buttonIcon={item.buttonIcon}
-                      onCardClick={handleButtonClick}
-                    />
-                  </div>
-                ))}
-
-                <Dialog open={isDialogOpen} onOpenChange={(open) => setDialogOpen(open)}>
-                  <DialogContent className="sm:max-w-[425px]">
+                <Dialog open>
+                  <DialogContent className="sm:max-w-[425px] h-1/3 md:max-w-none w-[600px]">
                     <DialogHeader>
-                      <DialogTitle>{dialogContent?.title}</DialogTitle>
-                      <DialogDescription className="text-sm font-bold">{dialogContent?.description}</DialogDescription>
+                      <DialogTitle className='text-2xl'>Welcome to your Event Space</DialogTitle>
+                      <DialogDescription className="text-xl font-bold">First, you'll need to enter the details of your main event.</DialogDescription>
                     </DialogHeader>
-                    <DialogFooter className="pt-5">
-                      <Button className="w-full flex space-x-2 items-center justify-center rounded-3xl px-5 py-2 h-full bg-dark text-sm md:text-base" onClick={dialogContent?.buttonAction}>
-                        {dialogContent?.buttonLabel}
+                    <DialogFooter className="pt-5 items-end">
+                      <Button variant='primaryGreen' className="w-full flex space-x-2 items-center justify-center rounded-3xl px-5 py-2 text-sm md:text-base" leftIcon={HiCalendar} onClick={() => handleButtonClick(SpaceDashboardCardType.EnterEventDetails)}>
+                        Enter Event Details
                       </Button>
                     </DialogFooter>
                   </DialogContent>
                 </Dialog>
               </>
-            )}
-            <EventSpaceDashboardCard
-              name={'Settings'}
-              description={'Open Settings'}
-              buttonName={'Open Settings'}
-              cardType={SpaceDashboardCardType.OpenSettings}
-              icon={RiSettings5Fill}
-              onCardClick={handleButtonClick}
-            />
+            }
+            {spaceDashboardCards.map((item, index) => (
+              <div className="mb-8">
+                <EventSpaceDashboardCard
+                  key={index}
+                  name={item.name}
+                  description={item.description}
+                  buttonName={item.buttonName}
+                  cardType={item.cardType}
+                  icon={item.icon}
+                  buttonIcon={item.buttonIcon}
+                  onCardClick={handleButtonClick}
+                />
+              </div>
+            ))}
+
+            <Dialog open={isDialogOpen} onOpenChange={(open) => setDialogOpen(open)}>
+              <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                  <DialogTitle>{dialogContent?.title}</DialogTitle>
+                  <DialogDescription className="text-sm font-bold">{dialogContent?.description}</DialogDescription>
+                </DialogHeader>
+                <DialogFooter className="pt-5">
+                  <Button className="w-full flex space-x-2 items-center justify-center rounded-3xl px-5 py-2 h-full bg-dark text-sm md:text-base" onClick={dialogContent?.buttonAction}>
+                    {dialogContent?.buttonLabel}
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
           </div>
         }
       </div>
