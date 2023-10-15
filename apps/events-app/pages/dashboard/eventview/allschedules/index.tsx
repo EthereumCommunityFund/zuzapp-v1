@@ -39,7 +39,15 @@ export default function EventViewTracksAlleSchedulesPage() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [schedules, setSchedules] = useState<ScheduleDetailstype[]>();
   const lastTrackRef = useRef<HTMLDivElement>(null);
+  const ITEMS_PER_PAGE = 7;
 
+  const [currentPage, setCurrentPage] = useState<number>(1);
+
+  const totalSchedules = schedules ? schedules.length : 0;
+
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, totalSchedules);
+  const currentSchedules = schedules ? schedules.slice(startIndex, endIndex) : [];
 
   console.log(isLoading, 'is loading');
 
@@ -54,7 +62,9 @@ export default function EventViewTracksAlleSchedulesPage() {
     setIsLoading(newState);
   }
 
-
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
 
   const fetchSchedules = async () => {
     const response = await fetchSchedulesByEvenSpaceId(event_space_id as string);
@@ -119,9 +129,22 @@ export default function EventViewTracksAlleSchedulesPage() {
             {isLoading ?
               <Loader /> :
               <div className=" p-2.5 gap-[10px] flex flex-col overflow-hidden rounded-[10px] pb-36">
-                {schedules && schedules.map((schedule, id) => (
-                  <UserFacingTrack key={id} onClick={() => handleItemClick(schedule.id, schedule.track_id as string)} scheduleData={schedule} scheduleId={schedule.id} ref={id === schedules.length - 1 ? lastTrackRef : null} />
-                ))}
+                {
+                  schedules && eventSpace &&
+                  <>
+                    {
+                      currentSchedules.map(
+                        (schedule, idx) =>
+                          <UserFacingTrack key={idx} scheduleId={schedule.id} scheduleData={schedule} onClick={() => handleItemClick(schedule.id, schedule.track_id as string)} />
+                      )}
+                    <Pagination
+                      currentPage={currentPage}
+                      totalItems={schedules.length}
+                      itemsPerPage={ITEMS_PER_PAGE}
+                      onPageChange={handlePageChange}
+                    />
+                  </>
+                }
               </div>
             }
           </div>

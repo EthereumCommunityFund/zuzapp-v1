@@ -53,7 +53,7 @@ export default function EventViewTracksPage() {
   );
 
   const totalTracks = tracks ? tracks.length : 0;
-  const totalPages = Math.ceil(totalTracks / ITEMS_PER_PAGE);
+
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, totalTracks);
   const currentTracks = tracks ? tracks.slice(startIndex, endIndex) : [];
