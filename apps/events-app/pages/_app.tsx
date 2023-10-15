@@ -8,9 +8,9 @@ import "../styles/quill.css";
 import { DashboardProvider } from "@/components/ui-providers/DashboardLayout";
 import { Hydrate, QueryClient, QueryClientProvider } from "react-query";
 import { EventSpaceProvider } from "@/context/EventSpaceContext";
-import { EventSpacesProvider } from "@/context/EventSpacesContext";
 import { Toaster } from "@/components/ui/toaster";
 import { useRouter } from "next/router";
+import localforage from "localforage";
 
 /**
  * This component wraps all pages in this Next.js application.
@@ -27,6 +27,12 @@ const App = ({ Component, pageProps }: { Component: any; pageProps: any }) => {
   }
 
   useEffect(() => {
+    localforage.config({
+      driver: localforage.INDEXEDDB,
+      name: "zuzalu_city",
+      storeName: "eventspace_store",
+    });
+
     const queryKeys = [
       "eventSpaces",
       "invitedSpaces",
@@ -35,19 +41,19 @@ const App = ({ Component, pageProps }: { Component: any; pageProps: any }) => {
       ["trackDetails", event_space_id],
     ];
 
-    queryKeys.forEach((key) => {
+    queryKeys.forEach(async (key) => {
       if (Array.isArray(key)) {
         let [queryKey, id] = key;
-        console.log(queryKey, id);
-        const cache = localStorage.getItem(
+        if (!id) return;
+        const cache = await localforage.getItem(
           `react-query-cache-${queryKey}-${id}`
         );
         if (cache) {
-          const parsedCache = JSON.parse(cache);
+          const parsedCache = JSON.parse(cache as string);
           queryClient.setQueryData([queryKey, id], parsedCache);
         }
       } else {
-        const cache = localStorage.getItem(`react-query-cache-${key}`);
+        const cache = await localStorage.getItem(`react-query-cache-${key}`);
         if (cache) {
           const parsedCache = JSON.parse(cache);
           queryClient.setQueryData(key, parsedCache);
@@ -57,13 +63,13 @@ const App = ({ Component, pageProps }: { Component: any; pageProps: any }) => {
 
     // Save cache to localStorage on changes or before unloading
     const saveCache = () => {
-      queryKeys.forEach((key) => {
+      queryKeys.forEach(async (key) => {
         if (Array.isArray(key)) {
           let [queryKey, id] = key;
           console.log(queryKey, id);
           const currentCache = queryClient.getQueryData([queryKey, id]); // Use [queryKey, id] here
           if (currentCache) {
-            localStorage.setItem(
+            await localforage.setItem(
               `react-query-cache-${queryKey}-${id}`,
               JSON.stringify(currentCache)
             );
@@ -71,7 +77,7 @@ const App = ({ Component, pageProps }: { Component: any; pageProps: any }) => {
         } else {
           const currentCache = queryClient.getQueryData(key);
           if (currentCache) {
-            localStorage.setItem(
+            await localforage.setItem(
               `react-query-cache-${key}`,
               JSON.stringify(currentCache)
             );
