@@ -19,9 +19,9 @@ const withAuthorization = (handler: NextApiHandler) => {
 
 
         const routeConfigKey = Object.keys(permissionConfig).find((pattern) => {
-            console.log(pattern)
+            // console.log(pattern)
             const regex = new UrlPattern(pattern);
-            console.log("req.url", req.url?.split("?event_space_id")[0])
+            // console.log("req.url", req.url?.split("?event_space_id")[0])
             let url = req.url?.split("?event_space_id")[0]
             return regex.match(url as string)
         });
@@ -37,7 +37,7 @@ const withAuthorization = (handler: NextApiHandler) => {
 
 
         const supabase = createPagesServerClient<Database>({ req, res });
-        console.log(routeConfig, "route config")
+        // console.log(routeConfig, "route config")
         const isAuthorized = await routeConfig.verify(supabase, req, routeConfig.allowedUsers);
 
         if (!isAuthorized) {

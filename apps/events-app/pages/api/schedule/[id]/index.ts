@@ -36,7 +36,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         return res.status(404).send("Schedule not found");
     }
 
-    console.log(data.schedulespeakerrole, "schedule speaker role")
+    // console.log(data.schedulespeakerrole, "schedule speaker role")
     const response = {
         ...data,
         tags: data.scheduletags.map((tagObj: any) => tagObj.tags.name),

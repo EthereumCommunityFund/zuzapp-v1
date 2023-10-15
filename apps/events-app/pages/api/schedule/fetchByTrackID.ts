@@ -38,7 +38,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     let response: any = []
 
     data.map(item => {
-        console.log(item.schedulespeakerrole)
+        // console.log(item.schedulespeakerrole)
         let result = {
             ...item,
             tags: item.scheduletags.map((tagObj: any) => tagObj.tags.name),
