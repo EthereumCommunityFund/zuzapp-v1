@@ -119,8 +119,8 @@ export default function EventSpaceDashboard(props: IProps) {
                       <DialogTitle className='text-2xl'>Welcome to your Event Space</DialogTitle>
                       <DialogDescription className="text-xl font-bold">First, you'll need to enter the details of your main event.</DialogDescription>
                     </DialogHeader>
-                    <DialogFooter className="pt-5 items-end">
-                      <Button variant='primaryGreen' className="w-full flex space-x-2 items-center justify-center rounded-3xl px-5 py-2 text-sm md:text-base" leftIcon={HiCalendar} onClick={() => handleButtonClick(SpaceDashboardCardType.EnterEventDetails)}>
+                    <DialogFooter className="pt-5 self-end text-2xl">
+                      <Button variant='primaryGreen' className="w-full flex space-x-2 items-center justify-center rounded-3xl px-5 py-2 text-2xl md:text-base" leftIcon={HiCalendar} onClick={() => handleButtonClick(SpaceDashboardCardType.EnterEventDetails)}>
                         Enter Event Details
                       </Button>
                     </DialogFooter>
@@ -129,7 +129,7 @@ export default function EventSpaceDashboard(props: IProps) {
               </>
             }
             {spaceDashboardCards.map((item, index) => (
-              <div className="mb-8">
+              <div key={index} className="mb-8">
                 <EventSpaceDashboardCard
                   key={index}
                   name={item.name}
