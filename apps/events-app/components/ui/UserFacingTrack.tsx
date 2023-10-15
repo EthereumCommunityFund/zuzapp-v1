@@ -44,7 +44,7 @@ export default function UserFacingTrack(props: IUserFacingTrack) {
               {scheduleData.schedule_frequency !== 'once' && <EventDataDate startDate={startDate} endDate={endDate} />}
               <EventDataTime startTime={startTime} endTime={endTime} />
             </div>
-            <div className="flex gap-[3px]">
+            <div className="flex gap-[3px] flex-wrap">
               {scheduleData.organizers?.map((organizer) => (
                 <Speaker title={organizer.name} />
               )

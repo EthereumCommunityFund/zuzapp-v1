@@ -35,7 +35,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         .from('eventspace')
         .select('id, event_space_type')
         .eq('creator_id', user.id)
-        .order('start_date', { ascending: true }).limit(limit)
+        .limit(limit)
         .range(offset, offset + limit - 1);
 
     if (eventSpacesResult.error) {

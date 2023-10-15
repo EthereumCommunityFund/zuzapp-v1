@@ -25,8 +25,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         *,
         scheduletags: scheduletags!id (tags: tags!id (*)),
         schedulespeakerrole: schedulespeakerrole!id (role, speaker: speaker!id (name))
-    `).eq("event_space_id", id).order('date', { ascending: true })
-        .order('start_time', { ascending: true });
+    `).eq("event_space_id", id);
 
     if (error) {
         logToFile("server error", error.message, error.code, "Unknown user");
