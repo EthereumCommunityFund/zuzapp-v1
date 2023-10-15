@@ -52,7 +52,7 @@ export default function EventViewTracksPage() {
     isLoading: LoadingTracks,
     isError,
   } = useQuery<TrackUpdateRequestBody[], Error>(
-    ["trackDetails", event_space_id],
+    ["trackDetails"],
     () => fetchTracksByEventSpaceId(event_space_id as string),
 
     {
@@ -156,9 +156,9 @@ export default function EventViewTracksPage() {
 export const getServerSideProps = async (ctx: any) => {
   const queryClient = new QueryClient();
   const { event_space_id } = ctx.query;
-  await queryClient.prefetchQuery("currentEventSpace", () =>
-    fetchEventSpaceById(event_space_id)
-  );
+  // await queryClient.prefetchQuery("currentEventSpace", () =>
+  //   fetchEventSpaceById(event_space_id)
+  // );
   const supabase = createPagesServerClient(ctx);
   let {
     data: { session },
@@ -183,7 +183,7 @@ export const getServerSideProps = async (ctx: any) => {
       initialSession: session,
       user: session?.user,
       profile: profile,
-      dehydratedState: dehydrate(queryClient),
+      // dehydratedState: dehydrate(queryClient),
     },
   };
 };

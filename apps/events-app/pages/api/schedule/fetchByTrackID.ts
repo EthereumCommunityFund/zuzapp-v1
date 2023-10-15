@@ -24,7 +24,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         scheduletags: scheduletags!id (tags: tags!id (*)),
         schedulespeakerrole: schedulespeakerrole!id (role, speaker: speaker!id (name))
     `)
-        .eq("track_id", id)
+        .eq("track_id", id).order('date', { ascending: true })
+        .order('start_time', { ascending: true });
     if (error) {
         logToFile("server error", error.message, error.code, "Unknown user");
         return res.status(404).send("Schedule not found");
