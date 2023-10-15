@@ -26,7 +26,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         `)
         .filter('status', 'eq', 'published')
         .limit(limit)
-        .range(offset, offset + limit - 1);
+        .range(offset, offset + limit - 1)
+        .order('start_date', { ascending: true });;
 
     if (error) {
         logToFile("server error", error.message, error.code, "Unknown user");

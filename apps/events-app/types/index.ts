@@ -101,6 +101,7 @@ export type ScheduleDetailstype = {
   start_time: string | Date | number;
   end_time: string | Date | number;
   all_day?: boolean;
+  current_rsvp_no?: number;
   schedule_frequency: 'once' | 'everyday' | 'weekly';
   images?: string[];
   video_call_link?: string;
@@ -241,8 +242,7 @@ export type DropDownMenuItemType = {
   name: string;
 };
 
-
 export type RouteOptions = {
   page: number;
-  limit: number
-}
+  limit: number;
+};

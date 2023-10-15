@@ -28,9 +28,9 @@ export default function EventViewPage() {
 export const getServerSideProps = async (ctx: any) => {
   const queryClient = new QueryClient();
   const { event_space_id } = ctx.query;
-  await queryClient.prefetchQuery("currentEventSpace", () =>
-    fetchEventSpaceById(event_space_id)
-  );
+  // await queryClient.prefetchQuery("currentEventSpace", () =>
+  //   fetchEventSpaceById(event_space_id)
+  // );
 
   const supabase = createPagesServerClient(ctx);
 
@@ -53,12 +53,14 @@ export const getServerSideProps = async (ctx: any) => {
     .select("*")
     .eq("uuid", session.user.id);
 
+  // console.log("user", profile);
+
   return {
     props: {
       initialSession: session,
       user: session?.user,
       profile: profile,
-      dehydratedState: dehydrate(queryClient),
+      // dehydratedState: dehydrate(queryClient),
     },
   };
 };

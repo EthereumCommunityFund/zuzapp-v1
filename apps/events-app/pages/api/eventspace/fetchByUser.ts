@@ -8,7 +8,7 @@ import { validateUUID } from "../../../validators";
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const supabase = createPagesServerClient<Database>({ req, res });
 
-    console.log(req.query)
+
     const { user } = req.body;
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 10;
@@ -35,7 +35,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         .from('eventspace')
         .select('id, event_space_type')
         .eq('creator_id', user.id)
-        .limit(limit)
+        .order('start_date', { ascending: true }).limit(limit)
         .range(offset, offset + limit - 1);
 
     if (eventSpacesResult.error) {

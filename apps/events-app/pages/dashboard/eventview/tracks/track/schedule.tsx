@@ -32,15 +32,13 @@ interface IEventLink {
 export default function EventViewScheduleDetailsPage() {
   const { eventSpace } = useEventDetails();
   const router = useRouter();
-  const { scheduleName, trackId, event_space_id, track_title, scheduleId } =
-    router.query;
+  const { scheduleName, trackId, event_space_id, track_title, scheduleId } = router.query;
   const [rsvpUpdated, setRsvpUpdated] = useState<boolean>(false);
   const [hasRsvpd, setHasRsvpd] = useState<boolean>(false);
+  const [rsvpFull, setRsvpFull] = useState(false);
   const [currentSchedule, setCurrentSchedule] = useState<ScheduleUpdateRequestBody>();
-  const trackItem = eventSpace?.tracks.find(
-    (trackItem) => trackItem.id === trackId
-  );
-  console.log("Current Schedule", currentSchedule);
+  const trackItem = eventSpace?.tracks.find((trackItem) => trackItem.id === trackId);
+  console.log('Current Schedule', currentSchedule);
   const startTime =
     currentSchedule &&
     new Date(currentSchedule.start_time).toLocaleTimeString('en-US', {
@@ -113,22 +111,25 @@ export default function EventViewScheduleDetailsPage() {
           experience_level: JSON.parse(result.data.data.experience_level)[0],
         });
         setIsLoading(false);
+        if (result.data.data.rsvp_amount === result.data.data.current_rsvp_no) {
+          setRsvpFull(true);
+        }
       } catch (error) {
         console.log(error);
       }
     };
 
     fetchCurrentSchedule();
+    checkIfUserHasRsvpd();
   }, []);
-
-
 
   return (
     <div className="flex gap-4 lg:flex-row sm:flex-col">
       <div className="flex flex-col lg:min-w-[66.67%] lg:max-w-[66.67%] sm:w-full">
         <EventViewHeader imgPath={eventSpace?.image_url as string} name={eventSpace?.name as string} tagline={eventSpace?.tagline as string} />
-        {isLoading ?
-          <Loader /> :
+        {isLoading ? (
+          <Loader />
+        ) : (
           <div className="md:p-5 sm:p-0 gap-[30px]  h-full">
             <div className="flex flex-col gap-[10px] p-2.5 bg-componentPrimary rounded-2xl h-full lg:h-auto">
               <div className="flex justify-between">
@@ -146,12 +147,7 @@ export default function EventViewScheduleDetailsPage() {
                     </Button>
                   </DialogTrigger>
                   <DialogContent className="h-3/5 lg:w-3/5 overflow-y-auto">
-                    <ScheduleEditForm
-                      title='Update'
-                      isFromAllSchedules={false}
-                      scheduleId={scheduleId as string}
-                      trackId={trackId as string}
-                    />
+                    <ScheduleEditForm title="Update" isFromAllSchedules={false} scheduleId={scheduleId as string} trackId={trackId as string} />
                   </DialogContent>
                 </Dialog>
               </div>
@@ -161,24 +157,13 @@ export default function EventViewScheduleDetailsPage() {
                 <div className="flex flex-col gap-2.5 p-5">
                   {startTime && endTime && <EventDataTime startTime={startTime} endTime={endTime} />}
                   <h2 className="text-2xl font-extrabold">{currentSchedule?.name}</h2>
-                  <div className="flex gap-[6px]">
-                    {currentSchedule?.organizers?.map((organizer: OrganizerType) => (
-                      organizer.role === 'speaker' && <Speaker title={organizer.name} />
-                    ))}
-                  </div>
+                  <div className="flex gap-[6px]">{currentSchedule?.organizers?.map((organizer: OrganizerType) => organizer.role === 'speaker' && <Speaker title={organizer.name} />)}</div>
                   <div>
                     <h3 className="float-right">By: drivenfast</h3>
                   </div>
                 </div>
-                <Button
-                  variant="primary"
-                  size="lg"
-                  className={`rounded-2xl justify-center ${rsvpUpdated ? "animate-rsvp" : ""
-                    }`}
-                  leftIcon={BsFillTicketFill}
-                  onClick={handleRsvpAction}
-                >
-                  {hasRsvpd ? "Cancel RSVP" : "RSVP Schedule"}
+                <Button variant="primary" size="lg" className={`rounded-2xl justify-center ${rsvpUpdated ? 'animate-rsvp' : ''}`} leftIcon={BsFillTicketFill} onClick={handleRsvpAction}>
+                  {hasRsvpd ? 'Cancel RSVP' : rsvpFull ? 'RSVP Full' : 'RSVP Schedule'}
                 </Button>
               </div>
               <div className="flex flex-col gap-2.5 px-5 pt-5 pb-[60px]">
@@ -188,7 +173,7 @@ export default function EventViewScheduleDetailsPage() {
               </div>
             </div>
           </div>
-        }
+        )}
       </div>
       <div className="flex flex-col md:px-10 lg:px-0 gap-1 right-0">
         <div className="flex flex-col gap-5 py-5">
@@ -201,7 +186,9 @@ export default function EventViewScheduleDetailsPage() {
             {trackItem?.description && <RenderHTMLString height="" htmlString={trackItem?.description} />}
           </div>
         </div>
-        {eventSpace && currentSchedule?.tags && currentSchedule.organizers && <EventViewDetailsPanel eventSpace={eventSpace} organizers={currentSchedule.organizers} tags={currentSchedule.tags} schedule={currentSchedule} />}
+        {eventSpace && currentSchedule?.tags && currentSchedule.organizers && (
+          <EventViewDetailsPanel eventSpace={eventSpace} organizers={currentSchedule.organizers} tags={currentSchedule.tags} schedule={currentSchedule} />
+        )}
       </div>
     </div>
   );
