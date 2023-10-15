@@ -8,22 +8,16 @@ import { validateUUID } from "@/validators";
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const supabase = createPagesServerClient<Database>({ req, res });
 
-    // Validate the UUID from req.user.body.id
     const errors = validateUUID(req.body.user.id);
     if (errors.length > 0) {
         return res.status(400).json({ errors });
     }
 
-
-
-    // Extract the new username from req.body
     const { username } = req.body;
-
     if (!username) {
         return res.status(400).json({ message: "Username is missing from the request body" });
     }
 
-    // Update the username table where the uuid column matches req.user.body.id
     const { error } = await supabase
         .from('profile')
         .update({ username })
@@ -34,7 +28,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         return res.status(500).send("Internal server error");
     }
 
-    return res.status(200).json({ message: "Username updated successfully" });
+    return res.status(200).json({ message: "Username updated successfully", data: username });
 };
 
 export default withSession(handler);
