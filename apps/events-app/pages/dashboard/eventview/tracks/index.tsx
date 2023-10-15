@@ -52,7 +52,7 @@ export default function EventViewTracksPage() {
     isLoading: LoadingTracks,
     isError,
   } = useQuery<TrackUpdateRequestBody[], Error>(
-    ["trackDetails"],
+    ["trackDetails", event_space_id],
     () => fetchTracksByEventSpaceId(event_space_id as string),
 
     {
