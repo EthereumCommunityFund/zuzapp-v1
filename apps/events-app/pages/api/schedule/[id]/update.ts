@@ -142,10 +142,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (organizers) {
     speakerPromises = organizers.map(async (organizer: OrganizerType) => {
       const { name, role } = organizer;
-      console.log(name, organizer)
+      // console.log(name, organizer)
       let existingOrganizer = await supabase.from('speaker').select('id').eq('name', name.trim()).single();
 
-      console.log(existingOrganizer, "existing speaker")
+      // console.log(existingOrganizer, "existing speaker")
 
       let speakerId;
       if (!existingOrganizer.data) {

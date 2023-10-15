@@ -32,7 +32,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         return res.status(500).send("Internal server error");
     }
 
-    console.log(response.data.eventspace, 'event space');
+    // console.log(response.data.eventspace, 'event space');
 
     // confirm that the person deleting has access
     if (response.data.eventspace.creator_id !== req.body.user.id) {

@@ -46,6 +46,7 @@
     "dayjs": "^1.11.10",
     "dotenv": "^16.3.1",
     "joi": "^17.10.0",
+    "localforage": "^1.10.0",
     "lucide-react": "^0.260.0",
     "next": "^13.1.1",
     "nodemailer": "^6.9.5",
