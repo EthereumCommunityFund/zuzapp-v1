@@ -10,6 +10,7 @@ import { Hydrate, QueryClient, QueryClientProvider } from "react-query";
 import { EventSpaceProvider } from "@/context/EventSpaceContext";
 import { EventSpacesProvider } from "@/context/EventSpacesContext";
 import { Toaster } from "@/components/ui/toaster";
+import { useRouter } from "next/router";
 
 /**
  * This component wraps all pages in this Next.js application.
@@ -17,36 +18,68 @@ import { Toaster } from "@/components/ui/toaster";
 const App = ({ Component, pageProps }: { Component: any; pageProps: any }) => {
   const [supabaseClient] = useState(() => createPagesBrowserClient());
   const queryClient = new QueryClient();
+  const router = useRouter();
+
+  let event_space_id = "";
+
+  if (router.query.event_space_id) {
+    event_space_id = router.query.event_space_id as string;
+  }
 
   useEffect(() => {
     const queryKeys = [
       "eventSpaces",
       "invitedSpaces",
       "publishedEventSpaces",
-      "currentEventSpace",
-      "trackDetails",
+      ["currentEventSpace", event_space_id],
+      ["trackDetails", event_space_id],
     ];
 
     queryKeys.forEach((key) => {
-      const cache = localStorage.getItem(`react-query-cache-${key}`);
-      if (cache) {
-        const parsedCache = JSON.parse(cache);
-        queryClient.setQueryData(key, parsedCache);
+      if (Array.isArray(key)) {
+        let [queryKey, id] = key;
+        console.log(queryKey, id);
+        const cache = localStorage.getItem(
+          `react-query-cache-${queryKey}-${id}`
+        );
+        if (cache) {
+          const parsedCache = JSON.parse(cache);
+          queryClient.setQueryData([queryKey, id], parsedCache);
+        }
+      } else {
+        const cache = localStorage.getItem(`react-query-cache-${key}`);
+        if (cache) {
+          const parsedCache = JSON.parse(cache);
+          queryClient.setQueryData(key, parsedCache);
+        }
       }
     });
 
     // Save cache to localStorage on changes or before unloading
     const saveCache = () => {
       queryKeys.forEach((key) => {
-        const currentCache = queryClient.getQueryData(key);
-        if (currentCache) {
-          localStorage.setItem(
-            `react-query-cache-${key}`,
-            JSON.stringify(currentCache)
-          );
+        if (Array.isArray(key)) {
+          let [queryKey, id] = key;
+          console.log(queryKey, id);
+          const currentCache = queryClient.getQueryData([queryKey, id]); // Use [queryKey, id] here
+          if (currentCache) {
+            localStorage.setItem(
+              `react-query-cache-${queryKey}-${id}`,
+              JSON.stringify(currentCache)
+            );
+          }
+        } else {
+          const currentCache = queryClient.getQueryData(key);
+          if (currentCache) {
+            localStorage.setItem(
+              `react-query-cache-${key}`,
+              JSON.stringify(currentCache)
+            );
+          }
         }
       });
     };
+
     const unsubscribe = queryClient.getQueryCache().subscribe(saveCache);
 
     window.addEventListener("beforeunload", saveCache);
