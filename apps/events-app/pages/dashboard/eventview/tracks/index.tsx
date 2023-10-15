@@ -52,11 +52,13 @@ export default function EventViewTracksPage() {
     isLoading: LoadingTracks,
     isError,
   } = useQuery<TrackUpdateRequestBody[], Error>(
-    ["trackDetails"],
+    ["trackDetails", event_space_id],
     () => fetchTracksByEventSpaceId(event_space_id as string),
 
     {
-      enabled: !!event_space_id,
+      // enabled: !!event_space_id,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
       onSuccess: (data) => {
         console.log("tracks", data);
       },

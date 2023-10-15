@@ -24,6 +24,7 @@ const App = ({ Component, pageProps }: { Component: any; pageProps: any }) => {
       "invitedSpaces",
       "publishedEventSpaces",
       "currentEventSpace",
+      "trackDetails",
     ];
 
     queryKeys.forEach((key) => {
