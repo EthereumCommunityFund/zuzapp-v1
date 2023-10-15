@@ -8,7 +8,7 @@ import { validateUUID } from "../../../validators";
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const supabase = createPagesServerClient<Database>({ req, res });
 
-    console.log(req.query)
+
     const { user } = req.body;
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 10;

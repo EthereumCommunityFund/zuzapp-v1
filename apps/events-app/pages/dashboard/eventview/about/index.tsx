@@ -53,6 +53,8 @@ export const getServerSideProps = async (ctx: any) => {
     .select("*")
     .eq("uuid", session.user.id);
 
+  // console.log("user", profile);
+
   return {
     props: {
       initialSession: session,

@@ -93,14 +93,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
 
 
-    // try {
-    //     const resulter = await mailClient.sendMail(message)
-    //     console.log(resulter, "result");
-    //     return res.status(200).json({ message: "Invitation sent" });
-    // } catch (error) {
-    //     return res.status(500).send("Error sending email");
-    // }
-
 
 
 

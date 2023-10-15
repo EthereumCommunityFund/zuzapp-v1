@@ -12,7 +12,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     const { id } = req.query as QueryWithID
 
-    console.log(req.query)
+    // console.log(req.query)
 
     // validate uuid
     const errors = validateUUID(id);

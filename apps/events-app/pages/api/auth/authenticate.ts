@@ -43,7 +43,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
                 password: PASSWORD
             });
 
-            console.log(data, "signup data");
+            // console.log(data, "signup data");
 
             // // If the user signs up successfully
 
@@ -70,7 +70,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
             // // If there was an error during sign up
             if (signUpError) {
-                console.error("Error during signup:", signUpError.message);
+                // console.error("Error during signup:", signUpError.message);
                 // throw new Error("Failed to sign up after sign-in error.");
                 return res.status(signUpError.status as number).send(signUpError.message)
             }
