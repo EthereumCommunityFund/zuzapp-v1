@@ -15,12 +15,14 @@ const useCurrentEventSpace = () => {
     isLoading,
     isError,
   } = useQuery<EventSpaceDetailsType, Error>(
-    ['currentEventSpace'], // Query key
+    ["currentEventSpace", event_space_id], // Query key
     () => fetchEventSpaceById(event_space_id as string),
 
     {
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
       onSuccess: (data) => {
-        console.log('selectedEventSpace Event Spaces:', data);
+        console.log("selectedEventSpace Event Spaces:", data);
       },
     }
   );
