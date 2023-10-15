@@ -33,15 +33,15 @@ export const permissionConfig: any = {
 
     // Tracks
     '/api/track/create': {
-        allowedUsers: ['creator'],
+        allowedUsers: ['creator', 'collaborator'],
         verify: verifyEventSpaceAccess,
     },
     '/api/track/:id/update': {
-        allowedUsers: ['creator'],
+        allowedUsers: ['creator', 'collaborator'],
         verify: verifyTrackAccess,
     },
     '/api/track/:id/delete': {
-        allowedUsers: ['creator'],
+        allowedUsers: ['creator', 'collaborator'],
         verify: verifyTrackAccess,
     },
 
