@@ -181,10 +181,10 @@ export default function EventViewScheduleDetailsPage() {
             {trackItem?.image && <img src={trackItem?.image as string} className="lg:h-[200px] rounded-2xl" alt="zuzalu" />}
             {startDate && endDate && <EventDataDate startDate={startDate} endDate={endDate} />}
           </div>
-          <div className="flex flex-col p-2.5 gap-2.5 sm:w-[300px] sm:text-sm md:text-base">
+          {/* <div className="flex flex-col p-2.5 gap-2.5 sm:w-[300px] sm:text-sm md:text-base">
             <Label className="text-xl">{trackItem?.name}</Label>
             {trackItem?.description && <RenderHTMLString height="" htmlString={trackItem?.description} />}
-          </div>
+          </div> */}
         </div>
         {eventSpace && currentSchedule?.tags && currentSchedule.organizers && (
           <EventViewDetailsPanel eventSpace={eventSpace} organizers={currentSchedule.organizers} tags={currentSchedule.tags} schedule={currentSchedule} />
