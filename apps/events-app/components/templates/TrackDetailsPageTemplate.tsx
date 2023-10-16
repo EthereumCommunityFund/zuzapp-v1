@@ -44,11 +44,17 @@ export default function TrackDetailsPageTemplate(props: any) {
   const [schedules, setSchedules] = useState<ScheduleDetailstype[]>();
   const [organizers, setOrganizers] = useState<OrganizerType[]>([]);
   const [tags, setTags] = useState<string[]>([]);
-  console.log('trackItem', trackItem);
+  const ITEMS_PER_PAGE = 7;
+  const [currentPage, setCurrentPage] = useState<number>(1);
 
   // const handlePageChange = (page: number) => {
   //   setCurrentPage(page);
   // };
+  const totalSchedules = schedules ? schedules.length : 0;
+
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, totalSchedules);
+  const currentSchedules = schedules ? schedules.slice(startIndex, endIndex) : [];
 
   const updateIsLoading = (newState: boolean) => {
     setIsLoading(newState);
@@ -65,6 +71,10 @@ export default function TrackDetailsPageTemplate(props: any) {
       pathname: '/dashboard/eventview/tracks',
       query: { event_space_id },
     });
+  };
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
   };
 
   console.log('eventSpace', eventSpace);
@@ -160,14 +170,25 @@ export default function TrackDetailsPageTemplate(props: any) {
         ) : (
           <div className="flex flex-col gap-2.5 p-5 w-full">
             <div className="flex flex-col gap-[10px] overflow-hidden rounded-[10px]">
-              {schedules &&
-                eventSpace &&
-                schedules.map(
-                  (schedule, idx) =>
-                    schedule.track_id === trackItem?.id && (
-                      <UserFacingTrack key={idx} scheduleId={schedule.id} scheduleData={schedule} onClick={() => handleItemClick(schedule.name, trackItem?.id, eventSpace.id, schedule.id)} />
+              {
+                schedules && eventSpace &&
+                <>
+                  {
+                    currentSchedules.map(
+                      (schedule, idx) => schedule.track_id === trackItem?.id &&
+                        <UserFacingTrack key={idx} scheduleId={schedule.id} scheduleData={schedule} onClick={() => handleItemClick(schedule.name, trackItem?.id, eventSpace.id, schedule.id)} />
                     )
-                )}
+                  }
+                  {totalSchedules > ITEMS_PER_PAGE &&
+                    <Pagination
+                      currentPage={currentPage}
+                      totalItems={schedules.length}
+                      itemsPerPage={ITEMS_PER_PAGE}
+                      onPageChange={handlePageChange}
+                    />
+                  }
+                </>
+              }
             </div>
           </div>
         )}
