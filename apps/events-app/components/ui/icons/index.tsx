@@ -7,6 +7,8 @@ import UserGroup from './UserGroup';
 import User from './User';
 import SelectCategories from './SelectCategories';
 import SelectLocation from './SelectLocation';
+import ArrowLeft from './ArrowLeft';
+import ArrowRight from './ArrowRight';
 
 export {
   ArrowCircleRight,
@@ -17,5 +19,7 @@ export {
   UserGroup,
   User,
   SelectCategories,
-  SelectLocation
+  SelectLocation,
+  ArrowLeft,
+  ArrowRight,
 };

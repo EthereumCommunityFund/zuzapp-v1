@@ -1,36 +1,24 @@
-import EventViewHeader from "@/components/eventview/EventViewHeader";
-import TrackItemCard from "@/components/tracks/TrackItemCard";
-import MyDropdown from "@/components/ui/DropDown";
-import { DropDownMenu } from "@/components/ui/DropDownMenu";
-import Pagination from "@/components/ui/Pagination";
-import UserFacingTrack from "@/components/ui/UserFacingTrack";
-import Button from "@/components/ui/buttons/Button";
-import {
-  Calendar,
-  SelectCategories,
-  SelectLocation,
-} from "@/components/ui/icons";
-import { fetchEventSpaceById } from "@/services/fetchEventSpaceDetails";
-import { DropDownMenuItemType, ScheduleDetailstype } from "@/types";
-import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import { BiLeftArrow, BiPlusCircle } from "react-icons/bi";
-import { QueryClient, dehydrate, useQuery } from "react-query";
-import { EventSpaceDetailsType } from "@/types";
-import useEventDetails from "@/hooks/useCurrentEventSpace";
-import { Loader } from "@/components/ui/Loader";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import ScheduleEditForm from "@/components/commons/ScheduleEditForm";
-import fetchSchedulesByEvenSpaceId from "@/services/fetchScheduleByEventSpace";
+import EventViewHeader from '@/components/eventview/EventViewHeader';
+import TrackItemCard from '@/components/tracks/TrackItemCard';
+import MyDropdown from '@/components/ui/DropDown';
+import { DropDownMenu } from '@/components/ui/DropDownMenu';
+import Pagination from '@/components/ui/Pagination';
+import UserFacingTrack from '@/components/ui/UserFacingTrack';
+import Button from '@/components/ui/buttons/Button';
+import { Calendar, SelectCategories, SelectLocation } from '@/components/ui/icons';
+import { fetchEventSpaceById } from '@/services/fetchEventSpaceDetails';
+import { DropDownMenuItemType, ScheduleDetailstype } from '@/types';
+import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
+import { useRouter } from 'next/router';
+import { useEffect, useRef, useState } from 'react';
+import { BiLeftArrow, BiPlusCircle } from 'react-icons/bi';
+import { QueryClient, dehydrate, useQuery } from 'react-query';
+import { EventSpaceDetailsType } from '@/types';
+import useEventDetails from '@/hooks/useCurrentEventSpace';
+import { Loader } from '@/components/ui/Loader';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import ScheduleEditForm from '@/components/commons/ScheduleEditForm';
+import fetchSchedulesByEvenSpaceId from '@/services/fetchScheduleByEventSpace';
 
 const categoryList: DropDownMenuItemType[] = [
   {
@@ -50,8 +38,18 @@ export default function EventViewTracksAlleSchedulesPage() {
   const { eventSpace, isLoading: isLoadingSpace } = useEventDetails();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [schedules, setSchedules] = useState<ScheduleDetailstype[]>();
+  const lastTrackRef = useRef<HTMLDivElement>(null);
+  const ITEMS_PER_PAGE = 7;
 
-  console.log(isLoading, "is loading");
+  const [currentPage, setCurrentPage] = useState<number>(1);
+
+  const totalSchedules = schedules ? schedules.length : 0;
+
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, totalSchedules);
+  const currentSchedules = schedules ? schedules.slice(startIndex, endIndex) : [];
+
+  console.log(isLoading, 'is loading');
 
   const handleItemClick = (scheduleId: string, trackId?: string) => {
     router.push({
@@ -62,6 +60,10 @@ export default function EventViewTracksAlleSchedulesPage() {
 
   const updateIsLoading = (newState: boolean) => {
     setIsLoading(newState);
+  }
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
   };
 
   const fetchSchedules = async () => {
@@ -79,67 +81,78 @@ export default function EventViewTracksAlleSchedulesPage() {
     }
   }, [isLoading]);
 
-  return (
-    <>
-      {isLoadingSpace ? (
-        <Loader />
-      ) : (
-        <div className="flex gap-4 lg:flex-row mt-5 lg:mt-0 pb-24 lg:pb-0 sm:flex-col-reverse lg:bg-pagePrimary md:bg-componentPrimary">
-          <div className="flex flex-col lg:w-2/3 sm:w-full pb-30 lg:pb-0 gap-5">
-            <EventViewHeader
-              imgPath={eventSpace?.image_url as string}
-              name={eventSpace?.name as string}
-              tagline={eventSpace?.tagline as string}
-            />
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          // Load more data or trigger an action to fetch more data
+          console.log('Load more data');
+        }
+      },
+      { threshold: 1 } // Trigger when the element is fully in view
+    );
 
-            <div className="flex flex-col gap-2.5 lg:px-9 md:px-5">
-              <div className="bg-componentPrimary rounded-2xl lg:px-5 lg:pt-8">
-                <div>
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <Button
-                        variant="blue"
-                        size="lg"
-                        className="rounded-full sm:w-full lg:w-fit justify-center"
-                        leftIcon={BiPlusCircle}
-                      >
-                        Add a Schedule
-                      </Button>
-                    </DialogTrigger>
-                    {
-                      <DialogContent className="md:w-3/5 md:h-3/5 overflow-x-auto sm:w-3/4">
-                        <ScheduleEditForm
-                          title={"Add"}
-                          isFromAllSchedules={true}
-                          trackId={trackId as string}
-                          updateIsLoading={updateIsLoading}
-                        />
-                      </DialogContent>
-                    }
-                  </Dialog>
-                </div>
-                {isLoading ? (
-                  <Loader />
-                ) : (
-                  <div className=" p-2.5 gap-[10px] flex flex-col overflow-hidden rounded-[10px] pb-36">
-                    {schedules &&
-                      schedules.map((schedule, id) => (
-                        <UserFacingTrack
-                          key={id}
-                          onClick={() =>
-                            handleItemClick(
-                              schedule.id,
-                              schedule.track_id as string
-                            )
-                          }
-                          scheduleData={schedule}
-                          scheduleId={schedule.id}
-                        />
-                      ))}
-                  </div>
-                )}
-              </div>
+    if (lastTrackRef.current) {
+      observer.observe(lastTrackRef.current);
+    }
+
+    return () => {
+      if (lastTrackRef.current) {
+        observer.unobserve(lastTrackRef.current);
+      }
+    };
+  }, [lastTrackRef]);
+
+  return (
+    <div className="flex gap-4 lg:flex-row mt-5 lg:mt-0 pb-24 lg:pb-0 sm:flex-col-reverse lg:bg-pagePrimary md:bg-componentPrimary">
+      <div className="flex flex-col lg:w-2/3 sm:w-full pb-30 lg:pb-0 gap-5">
+        <EventViewHeader imgPath={eventSpace?.image_url as string} name={eventSpace?.name as string} tagline={eventSpace?.tagline as string} />
+        <div className="flex flex-col gap-2.5 lg:px-9 md:px-5">
+          <div className="bg-componentPrimary rounded-2xl lg:px-5 lg:pt-8">
+            <div>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="blue" size="lg" className="rounded-full sm:w-full lg:w-fit justify-center" leftIcon={BiPlusCircle}>
+                    Add a Schedule
+                  </Button>
+                </DialogTrigger>
+                {
+                  <DialogContent className="md:w-3/5 md:h-3/5 overflow-x-auto sm:w-3/4">
+                    <ScheduleEditForm
+                      title={'Add'}
+                      isFromAllSchedules={true}
+                      trackId={trackId as string}
+                      updateIsLoading={updateIsLoading}
+                    />
+                  </DialogContent>
+                }
+              </Dialog>
             </div>
+            {isLoading ?
+              <Loader /> :
+              <div className=" p-2.5 gap-[10px] flex flex-col overflow-hidden rounded-[10px] pb-36">
+                {
+                  schedules && eventSpace &&
+                  <>
+                    {
+                      currentSchedules.map(
+                        (schedule, idx) =>
+                          <UserFacingTrack key={idx} scheduleId={schedule.id} scheduleData={schedule} onClick={() => handleItemClick(schedule.id, schedule.track_id as string)} />
+                      )
+                    }
+                    {
+                      totalSchedules > ITEMS_PER_PAGE &&
+                      <Pagination
+                        currentPage={currentPage}
+                        totalItems={schedules.length}
+                        itemsPerPage={ITEMS_PER_PAGE}
+                        onPageChange={handlePageChange}
+                      />
+                    }
+                  </>
+                }
+              </div>
+            }
           </div>
           <div className="lg:w-1/4 sm:w-full flex lg:flex-col gap-5 lg:fixed lg:right-0 min-w-fit lg:mr-10">
             <h2 className="p-3.5 gap-[10px] font-bold text-xl sm:hidden lg:flex">
@@ -176,8 +189,8 @@ export default function EventViewTracksAlleSchedulesPage() {
             </div>
           </div>
         </div>
-      )}
-    </>
+      </div>
+    </div>
   );
 }
 

@@ -1,43 +1,37 @@
-import { HiCog, HiLocationMarker, HiMicrophone, HiTag, HiUserGroup } from "react-icons/hi";
-import { Label } from "../ui/label";
-import Speaker from "../ui/Speaker";
-import { EventSpaceDetailsType, OrganizerType, ScheduleDetailstype, ScheduleUpdateRequestBody } from "@/types";
+import { HiCog, HiLocationMarker, HiMicrophone, HiTag, HiUserGroup } from 'react-icons/hi';
+import { Label } from '../ui/label';
+import Speaker from '../ui/Speaker';
+import { EventSpaceDetailsType, OrganizerType, ScheduleDetailstype, ScheduleUpdateRequestBody } from '@/types';
 
 interface IEventViewDetailsPanel {
-  eventSpace: EventSpaceDetailsType,
-  organizers: OrganizerType[],
-  tags: string[],
-  schedule?: ScheduleUpdateRequestBody,
+  eventSpace: EventSpaceDetailsType;
+  organizers: OrganizerType[];
+  tags: string[];
+  schedule?: ScheduleUpdateRequestBody;
 }
 
 export default function EventViewDetailsPanel(props: IEventViewDetailsPanel) {
   const { eventSpace, organizers, tags, schedule } = props;
-  console.log("current schedule", schedule);
+  console.log('current schedule', schedule);
 
   return (
     <div className="flex flex-col pt-5 pb-10 gap-5 md:min-w-[450px] lg:min-w-[25%] lg:px-0 sm:px-3">
       <div className="pb-10 gap-2.5">
         <div className="flex flex-col gap-3">
-          <h2 className="font-bold p-3.5 border-b border-b-background text-xl">
-            Details
-          </h2>
+          <h2 className="font-bold p-3.5 border-b border-b-background text-xl">Details</h2>
           <div className="flex gap-2 items-center">
             <Label className="opacity-60">Format: </Label>
             <Label className="opacity-70 font-bold text-base">
-              {schedule ? schedule.format.charAt(0).toUpperCase() + schedule.format.slice(1) : (eventSpace.format.charAt(0).toUpperCase() + eventSpace.format.slice(1))}
+              {schedule ? schedule.format.charAt(0).toUpperCase() + schedule.format.slice(1) : eventSpace.format.charAt(0).toUpperCase() + eventSpace.format.slice(1)}
             </Label>
           </div>
           <div className="flex gap-2 items-center">
             <Label className="opacity-60">Type: </Label>
-            <Label className="opacity-70 font-bold text-base">
-              {schedule ? schedule.event_type : (eventSpace?.event_type?.join(", "))}
-            </Label>
+            <Label className="opacity-70 font-bold text-base">{schedule ? schedule.event_type : eventSpace?.event_type?.join(', ')}</Label>
           </div>
           <div className="flex gap-2 items-center">
-            <Label className="opacity-60">Expereicne Level: </Label>
-            <Label className="opacity-70 font-bold text-base">
-              {schedule ? schedule.experience_level : (eventSpace?.experience_level?.join(", "))}
-            </Label>
+            <Label className="opacity-60">Experience Level: </Label>
+            <Label className="opacity-70 font-bold text-base">{schedule ? schedule.experience_level : eventSpace?.experience_level?.join(', ')}</Label>
           </div>
         </div>
         <div className="pb-10 gap-2.5">
@@ -48,11 +42,7 @@ export default function EventViewDetailsPanel(props: IEventViewDetailsPanel) {
                 <Label>Organizers</Label>
               </div>
               <div className="flex flex-wrap gap-[6px] md:flex-row sm:flex-col">
-                {organizers &&
-                  organizers.map((organizer: OrganizerType) => (
-                    organizer.role === 'organizer' && <Speaker title={organizer.name} />
-                  ))
-                }
+                {organizers && organizers.map((organizer: OrganizerType) => organizer.role === 'organizer' && <Speaker title={organizer.name} />)}
               </div>
             </div>
             <div className="flex flex-col gap-5">
@@ -62,11 +52,7 @@ export default function EventViewDetailsPanel(props: IEventViewDetailsPanel) {
                   <h2>Speakers</h2>
                 </div>
                 <div className="flex flex-wrap gap-[6px] md:flex-row sm:flex-col">
-                  {organizers &&
-                    organizers.map((organizer: OrganizerType) => (
-                      organizer.role === 'speaker' && <Speaker title={organizer.name} />
-                    ))
-                  }
+                  {organizers && organizers.map((organizer: OrganizerType) => organizer.role === 'speaker' && <Speaker title={organizer.name} />)}
                 </div>
               </div>
             </div>
@@ -91,15 +77,15 @@ export default function EventViewDetailsPanel(props: IEventViewDetailsPanel) {
                 <HiLocationMarker className="text-2xl" />
                 <h2>Location</h2>
               </div>
-              <div className="flex gap-2.5">
-                <img src="/images/1.png" width={100} height={50} alt="333" />
-                <div className="flex flex-col gap-[6px]">
-                  <h2 className="font-bold">Soho House Istanbul</h2>
-                  <Label className="opacity-70">
-                    Beyoglu, Istanbul, Turkey
-                  </Label>
+              {eventSpace.eventspacelocation &&
+                <div className="flex gap-2.5">
+                  <img src={eventSpace.image_url} width={100} height={50} alt="333" />
+                  <div className="flex flex-col gap-[6px]">
+                    <h2 className="font-bold">{eventSpace.eventspacelocation[0].name}</h2>
+                    <Label className="opacity-70">{eventSpace.eventspacelocation[0].address}</Label>
+                  </div>
                 </div>
-              </div>
+              }
             </div>
           </div>
           <div className="flex p-2.5 text-xl items-center gap-3">
@@ -109,5 +95,5 @@ export default function EventViewDetailsPanel(props: IEventViewDetailsPanel) {
         </div>
       </div>
     </div>
-  )
+  );
 }
