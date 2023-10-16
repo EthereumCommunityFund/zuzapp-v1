@@ -78,10 +78,11 @@ export default function LinkField({ socialLinks, extraLinks, setSocialLinks, set
         {isLink && (
           <div className="flex flex-col gap-5 justify-between">
             <div className="flex w-full text-white space-x-3 items-center">
+            <div className="flex w-full text-white outline-none rounded-lg pr-3 pl-2.5 bg-inputField gap-2.5 border border-white/10 border-opacity-10 items-center">
               <Autocomplete
                 {...defaultProps}
                 id="controlled-demo"
-                sx={{ color: 'white', width: '100%' }}
+                sx={{ color: 'black', width: '100%' }}
                 value={tagItem}
                 onChange={(event: any, newValue) => {
                   if (newValue) {
@@ -90,6 +91,14 @@ export default function LinkField({ socialLinks, extraLinks, setSocialLinks, set
                 }}
                 onInputChange={(event, newInputValue) => {
                   setTagItem({ ...tagItem, name: newInputValue });
+                }}
+                slotProps={{
+                  paper: {
+                    sx: {
+                      color: "white",
+                      backgroundColor: "#242727",
+                    },
+                  },
                 }}
                 renderInput={(params) => (
                   <TextField
@@ -108,6 +117,7 @@ export default function LinkField({ socialLinks, extraLinks, setSocialLinks, set
                   />
                 )}
               />
+              </div>
               <InputFieldDark
                 type={InputFieldType.Link}
                 placeholder="Type URL"
@@ -165,6 +175,7 @@ export default function LinkField({ socialLinks, extraLinks, setSocialLinks, set
         {otherLinks && (
           <div className="flex flex-col gap-5 justify-between ">
             <div className="flex w-full text-white space-x-3 items-center">
+            <div className="flex w-full text-white outline-none rounded-lg pr-3 pl-2.5 bg-inputField gap-2.5 border border-white/10 border-opacity-10 items-center">
               <Autocomplete
                 {...otherProps}
                 id="controlled-demo"
@@ -177,6 +188,14 @@ export default function LinkField({ socialLinks, extraLinks, setSocialLinks, set
                 }}
                 onInputChange={(event, newInputValue) => {
                   setOtherItem({ ...otherItem, name: newInputValue });
+                }}
+                slotProps={{
+                  paper: {
+                    sx: {
+                      color: "white",
+                      backgroundColor: "#242727",
+                    },
+                  },
                 }}
                 renderInput={(params) => (
                   <TextField
@@ -195,6 +214,7 @@ export default function LinkField({ socialLinks, extraLinks, setSocialLinks, set
                   />
                 )}
               />
+              </div>
               <InputFieldDark
                 type={InputFieldType.Link}
                 placeholder="Type URL"

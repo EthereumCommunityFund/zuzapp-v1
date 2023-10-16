@@ -27,6 +27,7 @@ import {
 import { Switch } from "../ui/switch";
 import { LocationCreateRequestBody } from "@/types";
 import { toast } from "../ui/use-toast";
+import SwitchButton from "../ui/buttons/SwitchButton";
 
 const locationFormSchema = z.object({
   name: z
@@ -123,10 +124,11 @@ export default function EventLocationForm({
           render={({ field }) => (
             <FormItem className="flex flex-row items-center rounded-lg p-3 shadow-sm space-x-3 space-y-0">
               <FormControl>
-                <Switch
+                {/* <Switch
                   checked={field.value}
                   onCheckedChange={field.onChange}
-                />
+                /> */}
+                <SwitchButton value={field.value} onClick={field.onChange} />
               </FormControl>
               <FormLabel className="m-0">Main Location</FormLabel>
             </FormItem>
