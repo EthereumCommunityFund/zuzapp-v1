@@ -104,7 +104,7 @@ const EventSpaceSettings = () => {
 
   return (
     <>
-      <div className="flex flex-col mx-auto py-5 px-4 gap-8 rounded-2xl bg-[#2E3131] w-[600px]">
+      <div className="flex flex-col mx-auto py-5 px-4 gap-8 rounded-2xl bg-[#2E3131] w-full md:w-[600px]">
         <h1 className=" text-2xl">Event Space Members</h1>
         <div className="flex flex-col gap-2.5 self-stretch">
           <h2 className="font-bold text-xl opacity-70">Invite Editors</h2>
@@ -137,8 +137,8 @@ const EventSpaceSettings = () => {
               const id = v4();
               return (
                 <div key={id} className="flex justify-between">
-                  <div className=""></div>
-                  <div className="flex text-sm font-medium opacity-70 gap-10 items-center">
+                  <div className="hidden md:inline-block"></div>
+                  <div className="flex text-sm font-medium opacity-70 justify-between md:justify-normal w-full md:w-auto md:gap-10 items-center">
                     <p className="">{invite.invitee_email}</p>
                     <p className="bg-[#67DBFF]/20 text-[#67DBFF] rounded-full text-xs py-1 px-2 block w-fit font-extrabold">
                       {invite.status}
@@ -192,9 +192,46 @@ const EventSpaceSettings = () => {
             })}
         </div>
       </div>
-      <div className="flex flex-col mx-auto py-5 px-4 gap-8 rounded-2xl bg-[#2E3131] w-[600px] mt-4">
+      <div className="flex flex-col mx-auto py-5 px-4 gap-8 rounded-2xl bg-[#2E3131] md:w-[600px] mt-4">
         <h1>Delete this event space</h1>
-        <Button
+
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button
+              aria-disabled
+              className="rounded-full flex justify-center"
+              variant="red"
+              size="lg"
+              type="button"
+              disabled={isLoading}
+            >
+              {isLoading ? "Deleting..." : "Delete"}
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[425px] h-auto rounded-2xl">
+            <DialogHeader>
+              <DialogTitle>Delete space?</DialogTitle>
+              <DialogDescription className="text-sm font-bold">
+                Are you sure you want to delete this event space?
+              </DialogDescription>
+              <DialogFooter className="pt-5">
+                <div className="flex justify-between items-center">
+                  <button className="py-2.5 px-3.5 flex items-center gap-1 rounded-[20px] bg-white/20">
+                    <span>Cancel</span>
+                  </button>
+                  <button
+                    onClick={handleDeleteEventSpace}
+                    className="py-2.5 px-3.5 flex items-center gap-1 text-[#FF5E5E] rounded-[20px] bg-[#EB5757]/20"
+                  >
+                    <HiXCircle />
+                    <span>Delete</span>
+                  </button>
+                </div>
+              </DialogFooter>
+            </DialogHeader>
+          </DialogContent>
+        </Dialog>
+        {/* <Button
           onClick={handleDeleteEventSpace}
           aria-disabled
           className="rounded-full flex justify-center"
@@ -204,7 +241,7 @@ const EventSpaceSettings = () => {
           disabled={isLoading}
         >
           {isLoading ? "Deleting..." : "Delete"}
-        </Button>
+        </Button> */}
       </div>
     </>
   );

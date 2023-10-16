@@ -1,31 +1,23 @@
-import { BsArrowRightCircleFill } from "react-icons/bs";
-import { FiLock } from "react-icons/fi";
-import Button from "../ui/buttons/Button";
-import { HiCalendar } from "react-icons/hi";
-import { GoLocation } from "react-icons/go";
-import { HiUserGroup } from "react-icons/hi";
-import { Label } from "../ui/label";
+import { BsArrowRightCircleFill } from 'react-icons/bs';
+import { FiLock } from 'react-icons/fi';
+import Button from '../ui/buttons/Button';
+import { HiCalendar } from 'react-icons/hi';
+import { GoLocation } from 'react-icons/go';
+import { HiUserGroup } from 'react-icons/hi';
+import { Label } from '../ui/label';
 
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "../ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
 
-import Carousel from "../ui/Carousel";
-import ResponsiveCarousel from "../ui/Carousel";
-import { LockClosed, LocationMarker, UserGroup } from "../ui/icons";
-import { EventSpaceDetailsType, EventSpaceUpdateRequestBody } from "@/types";
-import { useEventSpace, useEventSpaces } from "@/context/EventSpaceContext";
-import { useEffect, useState } from "react";
-import RenderHTMLString from "../ui/RenderHTMLString";
-import { useQuery } from "react-query";
-import { fetchUserEventSpaces } from "@/services/eventSpaceService";
-import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
+import Carousel from '../ui/Carousel';
+import ResponsiveCarousel from '../ui/Carousel';
+import { LockClosed, LocationMarker, UserGroup } from '../ui/icons';
+import { EventSpaceDetailsType, EventSpaceUpdateRequestBody } from '@/types';
+import { useEventSpace, useEventSpaces } from '@/context/EventSpaceContext';
+import { useEffect, useState } from 'react';
+import RenderHTMLString from '../ui/RenderHTMLString';
+import { useQuery } from 'react-query';
+import { fetchUserEventSpaces } from '@/services/eventSpaceService';
+import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
 
 interface IInPersonEventViewPageTemplateProps {
   eventSpace: EventSpaceDetailsType;
@@ -36,9 +28,7 @@ interface IEventLink {
   link: string;
 }
 
-export default function InPersonEventViewPageTemplate({
-  eventSpace,
-}: IInPersonEventViewPageTemplateProps) {
+export default function InPersonEventViewPageTemplate({ eventSpace }: IInPersonEventViewPageTemplateProps) {
   const {
     // id,
     name,
@@ -57,22 +47,14 @@ export default function InPersonEventViewPageTemplate({
   } = eventSpace;
   const startDate = new Date(start_date);
   const endDate = new Date(end_date);
-  const formattedStartDate = startDate.toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
-  const formattedEndDate = endDate.toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
+  const formattedStartDate = startDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+  const formattedEndDate = endDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
   const [socialLinks, setSocialLinks] = useState<IEventLink[] | undefined>();
   const [extraLinks, setExtraLinks] = useState<IEventLink[] | undefined>();
   const [imgUrls, setImgUrls] = useState<string[]>();
 
   useEffect(() => {
-    console.log("InPersonEventSpace", eventSpace);
+    console.log('InPersonEventSpace', eventSpace);
 
     if (social_links) setSocialLinks(JSON.parse(social_links));
     if (extra_links) setExtraLinks(JSON.parse(extra_links));
@@ -89,34 +71,22 @@ export default function InPersonEventViewPageTemplate({
     <>
       <div className="flex gap-10 md:flex-col sm:flex-col">
         <div className="lg:w-2/3 w-full flex flex-col lg:rounded-2xl bg-componentPrimary lg:min-w-[600px]">
-          {" "}
+          {' '}
           {/* Information */}
           <div className="rounded-xl p-5">
-            <img
-              src={eventSpace.image_url}
-              className="w-full lg:pb-5 rounded-2xl"
-              alt=""
-              height={600}
-            />
+            <img src={eventSpace.image_url} className="w-full lg:pb-5 rounded-2xl" alt="" height={600} />
           </div>
           <div className="flex flex-col gap-2.5 pb-5 border-b-2 border-white/10 w-full md:pt-5 px-5">
             <div className="items-center justify-between w-full pb-5 sm:flex-col sm:gap-3 sm:flex md:flex md:flex-row">
               <div className="flex flex-col gap-3 sm:w-full md:w-auto">
                 <div className="flex items-center gap-3 text-[#D7FFC4]/80">
                   <LockClosed />
-                  <span className="font-bold">
-                    Zuzalu Residents & Invited Guests
-                  </span>
+                  <span className="font-bold">Zuzalu Residents & Invited Guests</span>
                 </div>
                 <h2 className="font-semibold text-[30px]">{name}</h2>
                 <span className="text-white/80 font-bold">{tagline}</span>
               </div>
-              <Button
-                variant="primaryGreen"
-                size="lg"
-                className="rounded-full sm:w-full md:w-auto lg:w-auto justify-center"
-                leftIcon={BsArrowRightCircleFill}
-              >
+              <Button variant="primaryGreen" size="lg" className="rounded-full sm:w-full md:w-auto lg:w-auto justify-center" leftIcon={BsArrowRightCircleFill}>
                 Apply to Event
               </Button>
             </div>
@@ -125,27 +95,18 @@ export default function InPersonEventViewPageTemplate({
                 <HiCalendar /> {formattedStartDate} - {formattedEndDate}
               </span>
               <span className="rounded-2xl flex px-4 py-1 items-center gap-1 opacity-60 bg-[#FFFFFF10] font-bold">
-                <LocationMarker />{" "}
-                {eventspacelocation && eventspacelocation[0].address}
+                <LocationMarker /> {eventspacelocation && eventspacelocation[0].address}
               </span>
             </div>
           </div>
           <div className="flex flex-col gap-4 p-5 border-white/10">
-            {" "}
+            {' '}
             {/* About */}
-            <h3 className="text-lg font-bold text-white/70">
-              ABOUT THIS EVENT
-            </h3>
-            <h2 className="text-2xl font-bold text-white/80">
-              What is ZuConnect?
-            </h2>
+            <h3 className="text-lg font-bold text-white/70">ABOUT THIS EVENT</h3>
+            <h2 className="text-2xl font-bold text-white/80">What is ZuConnect?</h2>
             <Dialog>
               <DialogTrigger asChild>
-                <Button
-                  variant="quiet"
-                  size="lg"
-                  className="rounded-2xl inline-block text-white/70 font-bold hover:text-white"
-                >
+                <Button variant="quiet" size="lg" className="rounded-2xl inline-block text-white/70 font-bold hover:text-white">
                   Read Description
                 </Button>
               </DialogTrigger>
@@ -160,40 +121,24 @@ export default function InPersonEventViewPageTemplate({
             </Dialog>
           </div>
           <div className="flex flex-col gap-3 p-5">
-            {" "}
+            {' '}
             {/*Location */}
             <h2 className="text-xl text-white/70 font-bold">LOCATION</h2>
-            <img
-              src={imgUrls && imgUrls[0]}
-              alt=""
-              className="w-full"
-              width={600}
-              height={600}
-            />
+            <img src={imgUrls && imgUrls[0]} alt="" className="w-full" width={600} height={600} />
             <h2 className="font-extrabold text-lg">Soho House Istanbul</h2>
-            <h3 className="font-bold text-white/70">
-              Beyoğlu, Istanbul, Turkey
-            </h3>
+            <h3 className="font-bold text-white/70">Beyoğlu, Istanbul, Turkey</h3>
             <Dialog>
               <DialogTrigger asChild>
-                <Button
-                  variant="quiet"
-                  size="lg"
-                  className="rounded-2xl inline-block text-white/70 font-bold hover:text-white"
-                >
+                <Button variant="quiet" size="lg" className="rounded-2xl inline-block text-white/70 font-bold hover:text-white">
                   View Location
                 </Button>
               </DialogTrigger>
-              <DialogContent className="lg:w-[500px] lg:h-[500px] md:w-[500px] md:h-[500px] flex justify-center">
-                {imgUrls && <Carousel imgUrls={imgUrls} />}
-              </DialogContent>
+              <DialogContent className="lg:w-[500px] lg:h-[500px] md:w-[500px] md:h-[500px] flex justify-center">{imgUrls && <Carousel imgUrls={imgUrls} />}</DialogContent>
             </Dialog>
           </div>
         </div>
         <div className="lg:w-1/4 md:w-full flex flex-col px-5 lg:px-10 py-5 gap-5 lg:fixed lg:right-0">
-          <h2 className="border-b pb-3 text-2xl font-bold border-white/10">
-            Details
-          </h2>
+          <h2 className="border-b pb-3 text-2xl font-bold border-white/10">Details</h2>
           <div className="flex gap-4 items-center text-lg font-bold">
             <UserGroup />
             <span>14 applied</span>
@@ -201,16 +146,11 @@ export default function InPersonEventViewPageTemplate({
           <div className="flex flex-col gap-2 font-semibold text-sm">
             <div className="flex gap-2 items-center">
               <Label className="opacity-70">Format: </Label>
-              <Label className="opacity-100 font-bold text-base">
-                {eventSpace.format.charAt(0).toUpperCase() +
-                  eventSpace.format.slice(1)}
-              </Label>
+              <Label className="opacity-100 font-bold text-base">{eventSpace.format.charAt(0).toUpperCase() + eventSpace.format.slice(1)}</Label>
             </div>
             <div className="flex gap-2 items-center">
               <Label className="opacity-70">Type: </Label>
-              <Label className="opacity-100 font-bold text-base">
-                {event_type?.join(", ")}
-              </Label>
+              <Label className="opacity-100 font-bold text-base">{event_type?.join(', ')}</Label>
             </div>
           </div>
           <div className="flex flex-col gap-2">
@@ -218,12 +158,8 @@ export default function InPersonEventViewPageTemplate({
             {extraLinks &&
               extraLinks.map((value: IEventLink, idx: number) => (
                 <div className="flex gap-2" key={idx}>
-                  <Label className="opacity-100 font-bold text-base">
-                    {value.name}:
-                  </Label>
-                  <Label className="opacity-100 font-bold text-base">
-                    {value.link}
-                  </Label>
+                  <Label className="opacity-100 font-bold text-base">{value.name}:</Label>
+                  <Label className="opacity-100 font-bold text-base break-all">{value.link}</Label>
                 </div>
               ))}
           </div>
@@ -232,12 +168,8 @@ export default function InPersonEventViewPageTemplate({
             {socialLinks &&
               socialLinks.map((value: IEventLink, idx: number) => (
                 <div className="flex gap-2" key={idx}>
-                  <Label className="opacity-100 font-bold text-base">
-                    {value.name}:
-                  </Label>
-                  <Label className="opacity-100 font-bold text-base">
-                    {value.link}
-                  </Label>
+                  <Label className="opacity-100 font-bold text-base">{value.name}:</Label>
+                  <Label className="opacity-100 font-bold text-base">{value.link}</Label>
                 </div>
               ))}
           </div>
@@ -262,10 +194,7 @@ export const getServerSideProps = async (ctx: any) => {
     };
 
   // get profile from session
-  const { data: profile, error } = await supabase
-    .from("profile")
-    .select("*")
-    .eq("uuid", session.user.id);
+  const { data: profile, error } = await supabase.from('profile').select('*').eq('uuid', session.user.id);
 
   return {
     props: {

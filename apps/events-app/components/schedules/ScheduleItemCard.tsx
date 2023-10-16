@@ -95,7 +95,7 @@ export default function ScheduleItemCard() {
                       </span>
                       <span className="flex items-center p-1 gap-1 rounded-[10px] opacity-60 bg-[#FFFFFF10] white-space-nowrap overflow-hidden text-ellipsis">
                         <BiTimeFive size={30} />
-                        <span className="ml-2 text-xs md:text-sm ">{formatTime(schedule?.start_time)} </span>
+                        <span className="ml-2 text-xs md:text-sm ">{formatTime(schedule?.start_time)} - {formatTime(schedule?.end_time)} </span>
                       </span>
                     </div>
                   </div>
