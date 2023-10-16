@@ -136,13 +136,17 @@ export default function EventViewTracksAlleSchedulesPage() {
                       currentSchedules.map(
                         (schedule, idx) =>
                           <UserFacingTrack key={idx} scheduleId={schedule.id} scheduleData={schedule} onClick={() => handleItemClick(schedule.id, schedule.track_id as string)} />
-                      )}
-                    <Pagination
-                      currentPage={currentPage}
-                      totalItems={schedules.length}
-                      itemsPerPage={ITEMS_PER_PAGE}
-                      onPageChange={handlePageChange}
-                    />
+                      )
+                    }
+                    {
+                      totalSchedules > ITEMS_PER_PAGE &&
+                      <Pagination
+                        currentPage={currentPage}
+                        totalItems={schedules.length}
+                        itemsPerPage={ITEMS_PER_PAGE}
+                        onPageChange={handlePageChange}
+                      />
+                    }
                   </>
                 }
               </div>

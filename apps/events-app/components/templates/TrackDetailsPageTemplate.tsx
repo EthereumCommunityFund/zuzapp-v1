@@ -190,13 +190,16 @@ export default function TrackDetailsPageTemplate(props: any) {
                     currentSchedules.map(
                       (schedule, idx) => schedule.track_id === trackItem?.id &&
                         <UserFacingTrack key={idx} scheduleId={schedule.id} scheduleData={schedule} onClick={() => handleItemClick(schedule.name, trackItem?.id, eventSpace.id, schedule.id)} />
-                    )}
-                  <Pagination
-                    currentPage={currentPage}
-                    totalItems={schedules.length}
-                    itemsPerPage={ITEMS_PER_PAGE}
-                    onPageChange={handlePageChange}
-                  />
+                    )
+                  }
+                  {totalSchedules > ITEMS_PER_PAGE &&
+                    <Pagination
+                      currentPage={currentPage}
+                      totalItems={schedules.length}
+                      itemsPerPage={ITEMS_PER_PAGE}
+                      onPageChange={handlePageChange}
+                    />
+                  }
                 </>
               }
             </div>

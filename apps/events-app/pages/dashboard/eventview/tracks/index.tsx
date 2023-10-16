@@ -100,13 +100,17 @@ export default function EventViewTracksPage() {
                       <div className="flex flex-col gap-[10px] overflow-hidden md:p-3">
                         {currentTracks?.map((item, idx) => (
                           <TrackItemCard key={idx} trackId={item.id} trackTitle={item.name} trackImage={item.image as string} onClick={() => handleItemClick(item.name, item.id)} />
-                        ))}
-                        <Pagination
-                          currentPage={currentPage}
-                          totalItems={tracks.length}
-                          itemsPerPage={ITEMS_PER_PAGE}
-                          onPageChange={handlePageChange}
-                        />
+                        ))
+                        }
+                        {
+                          totalTracks > ITEMS_PER_PAGE &&
+                          <Pagination
+                            currentPage={currentPage}
+                            totalItems={tracks.length}
+                            itemsPerPage={ITEMS_PER_PAGE}
+                            onPageChange={handlePageChange}
+                          />
+                        }
                       </div>
                     }
                   </>
