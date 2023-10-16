@@ -143,15 +143,6 @@ export default function EventViewTracksPage() {
               />
               <DropDownMenu
                 data={categoryList}
-                header={'Select Dates'}
-                headerIcon={Calendar}
-                multiple={true}
-                value={''}
-                headerClassName={'rounded-full bg-borderPrimary'}
-                optionsClassName={''}
-              />
-              <DropDownMenu
-                data={categoryList}
                 header={"Select Dates"}
                 headerIcon={Calendar}
                 multiple={true}
