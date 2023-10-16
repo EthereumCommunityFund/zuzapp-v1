@@ -253,14 +253,14 @@ export default function AddSchedulePage(props: any) {
         eventType.length > 0
           ? [eventType]
           : eventSpace?.event_type?.[0]
-          ? [eventSpace?.event_type[0]]
-          : [eventSpace?.event_type || "Meetup"],
+            ? [eventSpace?.event_type[0]]
+            : [eventSpace?.event_type || "Meetup"],
       experience_level:
         experienceLevel.length > 0
           ? [experienceLevel]
           : eventSpace?.experience_level?.[0]
-          ? [eventSpace?.experience_level[0]]
-          : [eventSpace?.experience_level || "Beginner"],
+            ? [eventSpace?.experience_level[0]]
+            : [eventSpace?.experience_level || "Beginner"],
       tags: tags,
       schedule_frequency: frequency,
       location_id:
@@ -353,12 +353,8 @@ export default function AddSchedulePage(props: any) {
     });
   }
 
-  const handleTracksSelect = (value: any) => {
-    const curTrackId = eventSpace?.tracks.find(
-      (track) => track.name === value.name
-    )?.id;
-    curTrackId && setSelectedTrackId(curTrackId);
-    setSelectedTrackName(value.name);
+  const handleTrackSelect = (e: any) => {
+    setSelectedTrackId(e.target.value);
   };
 
   useEffect(() => {
@@ -530,11 +526,9 @@ export default function AddSchedulePage(props: any) {
                     />
                     {isQuickAccess && (
                       <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                        <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                          Select Track
-                        </Label>
+                        <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select Track</Label>
                         <select
-                          onChange={handleTracksSelect}
+                          onChange={handleTrackSelect}
                           title="Track List"
                           value={selectedTrackId}
                           defaultValue={selectedTrackId}
@@ -820,7 +814,7 @@ export default function AddSchedulePage(props: any) {
                                         name: newValue.name
                                       })
                                     }
-                                   
+
                                   }}
                                   onInputChange={(event, newInputValue) => {
                                     setEventItem({ ...eventItem, name: newInputValue });
