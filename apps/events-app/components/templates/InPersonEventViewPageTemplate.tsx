@@ -107,7 +107,7 @@ export default function InPersonEventViewPageTemplate({ eventSpace }: IInPersonE
             {' '}
             {/* About */}
             <h3 className="text-lg font-bold text-white/70">ABOUT THIS EVENT</h3>
-            <h2 className="text-2xl font-bold text-white/80">What is ZuConnect?</h2>
+            <h2 className="text-2xl font-bold text-white/80">What is {`"${eventSpace.name}"`}?</h2>
             <Dialog>
               <DialogTrigger asChild>
                 <Button variant="quiet" size="lg" className="rounded-2xl inline-block text-white/70 font-bold hover:text-white">

@@ -90,7 +90,7 @@ export default function OnlineEventViewPageTemplate({ eventSpace }: IOnlineEvent
             {' '}
             {/* About */}
             <h3 className="text-lg font-bold text-white/70">About This Event</h3>
-            <h2 className="text-2xl font-bold text-white/80">What is ZuConnect?</h2>
+            <h2 className="text-2xl font-bold text-white/80">What is {`"${eventSpace.name}"`}?</h2>
 
             <Dialog>
               <DialogTrigger asChild>
