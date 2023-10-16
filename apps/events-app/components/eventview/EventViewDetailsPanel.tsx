@@ -77,13 +77,15 @@ export default function EventViewDetailsPanel(props: IEventViewDetailsPanel) {
                 <HiLocationMarker className="text-2xl" />
                 <h2>Location</h2>
               </div>
-              <div className="flex gap-2.5">
-                <img src="/images/1.png" width={100} height={50} alt="333" />
-                <div className="flex flex-col gap-[6px]">
-                  <h2 className="font-bold">Soho House Istanbul</h2>
-                  <Label className="opacity-70">Beyoglu, Istanbul, Turkey</Label>
+              {eventSpace.eventspacelocation &&
+                <div className="flex gap-2.5">
+                  <img src={eventSpace.image_url} width={100} height={50} alt="333" />
+                  <div className="flex flex-col gap-[6px]">
+                    <h2 className="font-bold">{eventSpace.eventspacelocation[0].name}</h2>
+                    <Label className="opacity-70">{eventSpace.eventspacelocation[0].address}</Label>
+                  </div>
                 </div>
-              </div>
+              }
             </div>
           </div>
           <div className="flex p-2.5 text-xl items-center gap-3">

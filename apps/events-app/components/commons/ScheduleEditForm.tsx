@@ -22,7 +22,7 @@ import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
 import { Database } from '@/database.types';
 import CustomDatePicker from '@/components/ui/DatePicker';
 import { useRouter } from 'next/router';
-import { fetchLocationsByEventSpace, fetchAllTags, fetchScheduleByID, updateSchedule, createSchedule } from '@/controllers';
+import { fetchLocationsByEventSpace, fetchAllTags, fetchScheduleByID, updateSchedule, createSchedule, fetchAllSpeakers } from '@/controllers';
 import { useQuery } from 'react-query';
 import { fetchEventSpaceById } from '@/services/fetchEventSpaceDetails';
 import dayjs, { Dayjs } from 'dayjs';
@@ -105,6 +105,8 @@ export default function ScheduleEditForm({ title, isFromAllSchedules, scheduleId
   const [scheduleUpdated, setScheduleUpdated] = useState(false);
   const [isLimit, setIsLimit] = useState(false);
   const [selectedTrackId, setSelectedTrackId] = useState<string>(trackId as string);
+  const [optionalOrganizers, setOptionalOrganizers] = useState<any>([]);
+
 
   const formSchema = z.object({
     name: z.string().min(2, {
@@ -319,6 +321,10 @@ export default function ScheduleEditForm({ title, isFromAllSchedules, scheduleId
     options: optionTags,
     getOptionLabel: (option: { name: string }) => option.name,
   };
+  const defaultSpeakers = {
+    options: optionalOrganizers,
+    getOptionLabel: (option: { name: string }) => option.name,
+  }
 
   useEffect(() => {
     const fetchLocationDetails = async () => {
@@ -342,6 +348,15 @@ export default function ScheduleEditForm({ title, isFromAllSchedules, scheduleId
         console.log(error);
       }
     };
+
+    const fetchSpeakers = async () => {
+      try {
+        const result = await fetchAllSpeakers();
+        setOptionalOrganizers(result.data.data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
 
     const fetchCurrentSchedule = async () => {
       try {
@@ -369,6 +384,7 @@ export default function ScheduleEditForm({ title, isFromAllSchedules, scheduleId
     };
 
     fetchCurrentSchedule();
+    fetchSpeakers();
 
     fetchLocationDetails();
     fetchTags();
@@ -698,26 +714,69 @@ export default function ScheduleEditForm({ title, isFromAllSchedules, scheduleId
                 </div>
                 <line></line>
                 <div className="w-full">
-                  <h2 className="text-xl opacity-70 self-stretch font-semibold pb-5">Roles</h2>
-                  <div className="flex flex-col gap-6 items-start self-stretch">
-                    <div className="flex flex-col gap-6">
+                  <Label className="text-2xl opacity-80 font-semibold">
+                    Roles
+                  </Label>
+                  <div className="flex flex-col gap-6 items-start pt-5">
+                    <div className="flex flex-col gap-6 w-full">
                       <div className="flex items-end gap-6 self-stretch">
                         <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                          <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">Enter Name</h2>
-                          <InputFieldDark
-                            type={InputFieldType.Primary}
-                            value={eventItem.name}
-                            onChange={(e) =>
-                              setEventItem({
-                                ...eventItem,
-                                name: (e.target as HTMLInputElement).value,
-                              })
-                            }
-                            placeholder={'Enter the name'}
-                          />
+                          <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">
+                            Enter Name
+                          </h2>
+
+                          <div className="flex w-full text-white outline-none rounded-lg pr-3 pl-2.5 bg-inputField gap-2.5 border border-white/10 border-opacity-10 items-center">
+                            <Autocomplete
+                              {...defaultSpeakers}
+                              id="controlled-demo"
+                              sx={{ color: "black", width: "100%" }}
+                              color="black"
+                              value={eventItem}
+                              onChange={(event: any, newValue) => {
+                                console.log("onChange", event, newValue);
+                                if (newValue) {
+                                  // setTagItem({ name: newValue.name });
+                                  setEventItem({
+                                    ...eventItem,
+                                    name: newValue.name
+                                  })
+                                }
+
+                              }}
+                              onInputChange={(event, newInputValue) => {
+                                setEventItem({ ...eventItem, name: newInputValue });
+                              }}
+                              slotProps={{
+                                paper: {
+                                  sx: {
+                                    color: "white",
+                                    backgroundColor: "#242727",
+                                  },
+                                },
+                              }}
+                              renderInput={(params) => (
+                                <TextField
+                                  sx={{
+                                    color: "white",
+                                    input: {
+                                      color: "white",
+                                    },
+                                    label: {
+                                      color: "white",
+                                    },
+                                  }}
+                                  {...params}
+                                  label="Enter the name"
+                                  variant="standard"
+                                />
+                              )}
+                            />
+                          </div>
                         </div>
                         <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                          <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select Role</h2>
+                          <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">
+                            Select Role
+                          </h2>
                           <select
                             onChange={(e) =>
                               setEventItem({
@@ -725,7 +784,7 @@ export default function ScheduleEditForm({ title, isFromAllSchedules, scheduleId
                                 role: e.target.value,
                               })
                             }
-                            title="speaker"
+                            title="location"
                             value={eventItem.role}
                             className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
                           >
@@ -738,13 +797,9 @@ export default function ScheduleEditForm({ title, isFromAllSchedules, scheduleId
                         <button
                           type="button"
                           onClick={() => {
-                            if (eventItem.name === '') return;
-                            setSchedule({
-                              ...schedule,
-                              organizers: [...(schedule.organizers as Organizer[]), eventItem],
-                            });
+                            if (eventItem.name === "") return;
                             setOrganizers([...organizers, eventItem]);
-                            setEventItem({ name: '', role: 'speaker' });
+                            setEventItem({ name: "", role: "speaker" });
                           }}
                           className="flex gap-2.5 mb-2 text-lg font-normal leading-[1.2] text-white items-center rounded-[8px] px-2 py-1 bg-white bg-opacity-10"
                         >
@@ -753,14 +808,29 @@ export default function ScheduleEditForm({ title, isFromAllSchedules, scheduleId
                       </div>
 
                       <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5">
-                        {schedule.organizers?.map((organizer: any, index: number) => (
-                          <div key={index} className="flex gap-2.5 items-center rounded-[8px] px-2 py-1.5 bg-white bg-opacity-10">
-                            <button type="button" className="flex gap-2.5 items-center">
-                              <GoXCircle onClick={() => handleRemoveOrganizer(index)} className="top-0.5 left-0.5 w-4 h-4" />
-                              <span className="text-lg font-semibold leading-[1.2] text-white self-stretch">{organizer.name}</span>
-                            </button>
-                          </div>
-                        ))}
+                        {organizers?.map(
+                          (organizer: any, index: number) => (
+                            <div
+                              key={index}
+                              className="flex gap-2.5 items-center rounded-[8px] px-2 py-1.5 bg-white bg-opacity-10"
+                            >
+                              <button
+                                type="button"
+                                className="flex gap-2.5 items-center"
+                              >
+                                <GoXCircle
+                                  onClick={() =>
+                                    handleRemoveOrganizer(index)
+                                  }
+                                  className="top-0.5 left-0.5 w-4 h-4"
+                                />
+                                <span className="text-lg font-semibold leading-[1.2] text-white self-stretch">
+                                  {organizer.name}
+                                </span>
+                              </button>
+                            </div>
+                          )
+                        )}
                       </div>
                     </div>
                   </div>
@@ -813,17 +883,20 @@ export default function ScheduleEditForm({ title, isFromAllSchedules, scheduleId
                       ))}
                     </select>
                   </div>
-                  <div className="flex flex-col items-start gap-6 self-stretch">
-                    <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                      <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Add Tags</Label>
+                  <div className="flex flex-col items-start gap-6">
+                    <div className="flex flex-col gap-[14px] items-start w-full">
+                      <Label className="text-lg font-semibold text-white self-stretch">
+                        Add Tags
+                      </Label>
                       <div className="flex w-full text-white outline-none rounded-lg pr-3 pl-2.5 bg-inputField gap-2.5 border border-white/10 border-opacity-10 items-center">
                         <Autocomplete
                           {...defaultProps}
                           id="controlled-demo"
-                          sx={{ color: 'black', width: '100%' }}
+                          sx={{ color: "black", width: "100%" }}
+                          color="black"
                           value={tagItem}
                           onChange={(event: any, newValue) => {
-                            console.log('onChange', event, newValue);
+                            console.log("onChange", event, newValue);
                             if (newValue) {
                               setTagItem({ name: newValue.name });
                             }
@@ -834,21 +907,20 @@ export default function ScheduleEditForm({ title, isFromAllSchedules, scheduleId
                           slotProps={{
                             paper: {
                               sx: {
-                                color: 'white',
-                                backgroundColor: '#242727',
-                                pointerEvents: 'auto',
+                                color: "white",
+                                backgroundColor: "#242727",
                               },
                             },
                           }}
                           renderInput={(params) => (
                             <TextField
                               sx={{
-                                color: 'white',
+                                color: "white",
                                 input: {
-                                  color: 'white',
+                                  color: "white",
                                 },
                                 label: {
-                                  color: 'white',
+                                  color: "white",
                                 },
                               }}
                               {...params}
@@ -860,13 +932,9 @@ export default function ScheduleEditForm({ title, isFromAllSchedules, scheduleId
                         <button
                           type="button"
                           onClick={() => {
-                            if (tagItem.name === '') return;
-                            setSchedule({
-                              ...schedule,
-                              tags: [...(schedule.tags as string[]), tagItem.name],
-                            });
-                            tags.push(tagItem.name);
-                            setTagItem({ name: '' });
+                            if (tagItem.name === "") return;
+                            setTags([...tags, tagItem.name]);
+                            setTagItem({ name: "" });
                           }}
                           className="flex gap-2.5 text-lg font-normal leading-[1.2] text-white items-center rounded-[8px] px-2 py-1 bg-componentPrimary bg-opacity-10"
                         >
@@ -874,16 +942,25 @@ export default function ScheduleEditForm({ title, isFromAllSchedules, scheduleId
                         </button>
                       </div>
                       <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5">
-                        {schedule.tags &&
-                          schedule.tags.length > 0 &&
-                          schedule.tags.map((tag, index) => (
-                            <div key={index} className="flex w-full items-center rounded-[8px] px-2 py-1.5 bg-white bg-opacity-10">
-                              <button type="button" className="flex gap-2.5 items-center">
-                                <GoXCircle onClick={() => handleRemoveTag(index)} className="top-0.5 left-0.5 w-4 h-4" />
-                                <span className="text-lg font-semibold leading-[1.2] text-white self-stretch">{tag}</span>
-                              </button>
-                            </div>
-                          ))}
+                        {tags?.map((tag, index) => (
+                          <div
+                            key={index}
+                            className="flex w-full items-center rounded-[8px] px-2 py-1.5 bg-white bg-opacity-10"
+                          >
+                            <button
+                              type="button"
+                              className="flex gap-2.5 items-center"
+                            >
+                              <GoXCircle
+                                onClick={() => handleRemoveTag(index)}
+                                className="top-0.5 left-0.5 w-4 h-4"
+                              />
+                              <span className="text-lg font-semibold leading-[1.2] text-white self-stretch">
+                                {tag}
+                              </span>
+                            </button>
+                          </div>
+                        ))}
                       </div>
                     </div>
                     <line />
@@ -957,13 +1034,25 @@ export const getServerSideProps = async (ctx: any) => {
     };
 
   // get profile from session
-  const { data: profile, error } = await supabase.from('profile').select('*').eq('uuid', session.user.id);
+  const { data: profile, error } = await supabase
+    .from("profile")
+    .select("*")
+    .eq("uuid", session.user.id);
+
+  const locationsResult = await fetchLocationsByEventSpace(
+    ctx.query.event_space_id
+  );
+  const tagsResult = await fetchAllTags();
+  const organizersResult = await fetchAllSpeakers();
 
   return {
     props: {
       initialSession: session,
       user: session?.user,
       profile: profile,
+      savedLocations: locationsResult.data.data,
+      tags: tagsResult.data.data,
+      organizers: organizersResult.data.data,
     },
   };
 };

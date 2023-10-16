@@ -28,6 +28,8 @@ export type EventSpaceCreateRequestBody = {
   event_space_type: 'tracks' | 'schedules';
 };
 export type EventSpaceDetailsType = {
+  created_at?: string,
+  creator_id?: string,
   id: string;
   name: string;
   event_space_type: 'tracks' | 'schedules';
