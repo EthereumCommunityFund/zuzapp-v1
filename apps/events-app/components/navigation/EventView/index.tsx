@@ -92,7 +92,7 @@ export default function EventViewNavigation() {
                 </Button>
               </div>
             )}
-            {router.pathname.includes("dashboard/eventview/allschedules") && (
+            {router.pathname.includes("dashboard/eventview/allschedules") && eventSpace?.creator_id === user.id && (
               <div className="flex-col gap-3 rounded-md p-2 bg-black font-bold sm:hidden lg:flex">
                 <h2>Organizer</h2>
                 <Button variant="ghost" className="p-2 w-full gap-3 text-base" onClick={handleEditSchedules}>
