@@ -30,7 +30,7 @@ export default function EventSpaceDashboard(props: IProps) {
   const { type } = props;
   const router = useRouter();
   const { event_space_id, isFirst, eventTitle } = router.query;
-  const { eventSpace, isloading } = useCurrentEventSpace();
+  const { eventSpace, isLoading, isError } = useCurrentEventSpace();
   const [showDialog, setShowDialog] = useState(false);
   const [dialogContent, setDialogContent] = useState<DialogContent | null>(null);
   const [isDialogOpen, setDialogOpen] = useState(false);
@@ -108,7 +108,7 @@ export default function EventSpaceDashboard(props: IProps) {
     }
   };
 
-  if (isloading) {
+  if (isLoading) {
     <Loader />
   }
 
