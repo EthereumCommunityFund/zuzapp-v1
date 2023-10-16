@@ -10,10 +10,12 @@ import { SpaceDashboardCardType } from '@/types';
 import { eventRoutes } from '@/constant/routes';
 import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
 import { Database } from '@/database.types';
-import { useEventSpace } from '@/context/EventSpaceContext';
+
 import { updateEventSpaceStatus } from '@/controllers';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '../../../../components/ui/dialog';
 import { useState } from 'react';
+import useCurrentEventSpace from '@/hooks/useCurrentEventSpace';
+import { Loader } from 'lucide-react';
 
 interface IProps {
   type: SpaceDashboardType;
@@ -28,7 +30,7 @@ export default function EventSpaceDashboard(props: IProps) {
   const { type } = props;
   const router = useRouter();
   const { event_space_id, isFirst, eventTitle } = router.query;
-  const { eventSpace } = useEventSpace();
+  const { eventSpace, isloading } = useCurrentEventSpace();
   const [showDialog, setShowDialog] = useState(false);
   const [dialogContent, setDialogContent] = useState<DialogContent | null>(null);
   const [isDialogOpen, setDialogOpen] = useState(false);
@@ -106,12 +108,16 @@ export default function EventSpaceDashboard(props: IProps) {
     }
   };
 
+  if (isloading) {
+    <Loader />
+  }
+
   return (
     <div className="flex flex-col flex-1 items-center gap-[10px] self-stretch w-full ">
       <div className="flex flex-col items-center gap-5 flex-1 w-full">
         {
           <div className="xl:w-4/5 w-full md:w-[90%] px-2.5">
-            {isFirst === SpaceDashboardType.New.toString() &&
+            {isFirst === SpaceDashboardType.New.toString() && eventSpace?.status === 'draft' &&
               <>
                 <Dialog open>
                   <DialogContent className="sm:max-w-[425px] h-1/3 md:max-w-none w-[600px]">
