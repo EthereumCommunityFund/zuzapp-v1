@@ -40,13 +40,13 @@ export default function EditTrackForm({ onTrackSubmit, trackDetails }: { onTrack
   console.log(trackDetails);
   const [payload, setPayload] = useState({ image_urls: [trackDetails.image] });
 
-  const handleDeleteTrack = async () => {
-    await deleteTrack(trackId as string, event_space_id as string);
-    router.push({
-      pathname: `/dashboard/events/space/tracks`,
-      query: { event_space_id: event_space_id },
-    });
-  };
+  // const handleDiscardTrack = async () => {
+  //   await deleteTrack(trackId as string, event_space_id as string);
+  //   router.push({
+  //     pathname: `/dashboard/events/space/tracks`,
+  //     query: { event_space_id: event_space_id },
+  //   });
+  // };
 
   const handleRemoveImage = (index: number) => {
     const updatedItems = [...payload.image_urls.slice(0, index), ...payload.image_urls.slice(index + 1)];
@@ -97,7 +97,7 @@ export default function EditTrackForm({ onTrackSubmit, trackDetails }: { onTrack
                 placeholder="What is the name of this track?"
                 value={field.value}
                 onChange={field.onChange}
-                // {...field}
+              // {...field}
               />
               <FormMessage />
             </FormItem>
@@ -135,7 +135,7 @@ export default function EditTrackForm({ onTrackSubmit, trackDetails }: { onTrack
         )}
         <div className="flex justify-center pt-8">
           <div className="flex flex-col lg:flex-row gap-[30px] w-full">
-            <Button onClick={handleDeleteTrack} className="rounded-full w-full lg:w-1/2 flex justify-center" variant="quiet" size="lg" type="button" leftIcon={CgClose}>
+            <Button className="rounded-full w-full lg:w-1/2 flex justify-center" variant="quiet" size="lg" type="button" leftIcon={CgClose}>
               <span>Discard Track</span>
             </Button>
             <Button className="rounded-full w-full lg:w-1/2 flex justify-center" variant="blue" size="lg" onClick={() => form.handleSubmit(onSubmit)()} leftIcon={FaCircleArrowUp}>

@@ -751,6 +751,7 @@ export default function ScheduleEditForm({ title, isFromAllSchedules, scheduleId
                                   sx: {
                                     color: "white",
                                     backgroundColor: "#242727",
+                                    pointerEvents: "auto",
                                   },
                                 },
                               }}
@@ -883,9 +884,9 @@ export default function ScheduleEditForm({ title, isFromAllSchedules, scheduleId
                       ))}
                     </select>
                   </div>
-                  <div className="flex flex-col items-start gap-6">
-                    <div className="flex flex-col gap-[14px] items-start w-full">
-                      <Label className="text-lg font-semibold text-white self-stretch">
+                  <div className="flex flex-col items-start gap-6 self-stretch">
+                    <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
+                      <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
                         Add Tags
                       </Label>
                       <div className="flex w-full text-white outline-none rounded-lg pr-3 pl-2.5 bg-inputField gap-2.5 border border-white/10 border-opacity-10 items-center">
@@ -893,7 +894,6 @@ export default function ScheduleEditForm({ title, isFromAllSchedules, scheduleId
                           {...defaultProps}
                           id="controlled-demo"
                           sx={{ color: "black", width: "100%" }}
-                          color="black"
                           value={tagItem}
                           onChange={(event: any, newValue) => {
                             console.log("onChange", event, newValue);
@@ -909,18 +909,19 @@ export default function ScheduleEditForm({ title, isFromAllSchedules, scheduleId
                               sx: {
                                 color: "white",
                                 backgroundColor: "#242727",
-                              },
-                            },
+                                pointerEvents: "auto",
+                              }
+                            }
                           }}
                           renderInput={(params) => (
                             <TextField
                               sx={{
-                                color: "white",
+                                color: 'white',
                                 input: {
-                                  color: "white",
+                                  color: 'white',
                                 },
                                 label: {
-                                  color: "white",
+                                  color: 'white',
                                 },
                               }}
                               {...params}
@@ -932,9 +933,14 @@ export default function ScheduleEditForm({ title, isFromAllSchedules, scheduleId
                         <button
                           type="button"
                           onClick={() => {
-                            if (tagItem.name === "") return;
-                            setTags([...tags, tagItem.name]);
-                            setTagItem({ name: "" });
+                            if (tagItem.name === '')
+                              return;
+                            setSchedule({
+                              ...schedule,
+                              tags: [...(schedule.tags as string[]), tagItem.name],
+                            });
+                            tags.push(tagItem.name);
+                            setTagItem({ name: '' });
                           }}
                           className="flex gap-2.5 text-lg font-normal leading-[1.2] text-white items-center rounded-[8px] px-2 py-1 bg-componentPrimary bg-opacity-10"
                         >
@@ -942,22 +948,11 @@ export default function ScheduleEditForm({ title, isFromAllSchedules, scheduleId
                         </button>
                       </div>
                       <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5">
-                        {tags?.map((tag, index) => (
-                          <div
-                            key={index}
-                            className="flex w-full items-center rounded-[8px] px-2 py-1.5 bg-white bg-opacity-10"
-                          >
-                            <button
-                              type="button"
-                              className="flex gap-2.5 items-center"
-                            >
-                              <GoXCircle
-                                onClick={() => handleRemoveTag(index)}
-                                className="top-0.5 left-0.5 w-4 h-4"
-                              />
-                              <span className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                                {tag}
-                              </span>
+                        {schedule.tags && schedule.tags.length > 0 && schedule.tags.map((tag, index) => (
+                          <div key={index} className="flex w-full items-center rounded-[8px] px-2 py-1.5 bg-white bg-opacity-10">
+                            <button type='button' className="flex gap-2.5 items-center">
+                              <GoXCircle onClick={() => handleRemoveTag(index)} className="top-0.5 left-0.5 w-4 h-4" />
+                              <span className="text-lg font-semibold leading-[1.2] text-white self-stretch">{tag}</span>
                             </button>
                           </div>
                         ))}

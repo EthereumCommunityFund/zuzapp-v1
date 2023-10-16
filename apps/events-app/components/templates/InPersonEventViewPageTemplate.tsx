@@ -18,6 +18,8 @@ import RenderHTMLString from '../ui/RenderHTMLString';
 import { useQuery } from 'react-query';
 import { fetchUserEventSpaces } from '@/services/eventSpaceService';
 import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
+import * as DialogPrimitive from '@radix-ui/react-dialog';
+import { X } from 'lucide-react';
 
 interface IInPersonEventViewPageTemplateProps {
   eventSpace: EventSpaceDetailsType;
@@ -116,11 +118,15 @@ export default function InPersonEventViewPageTemplate({ eventSpace }: IInPersonE
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle>About This Event</DialogTitle>
+                  <DialogTitle className='pb-5'>About This Event</DialogTitle>
+                  <hr className='bg-grayBackground' />
                   <DialogDescription className="text-white">
                     <RenderHTMLString height="500" htmlString={description} />
                   </DialogDescription>
                 </DialogHeader>
+                <DialogPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
+                  <Button size='sm' className='rounded-full w-10 h-10'><X /></Button>
+                </DialogPrimitive.Close>
               </DialogContent>
             </Dialog>
           </div>
@@ -137,7 +143,18 @@ export default function InPersonEventViewPageTemplate({ eventSpace }: IInPersonE
                   View Location
                 </Button>
               </DialogTrigger>
-              <DialogContent className="lg:w-[500px] lg:h-[500px] md:w-[500px] md:h-[500px] flex justify-center">{imgUrls && <Carousel imgUrls={imgUrls} />}</DialogContent>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle className='pb-5'>View Location</DialogTitle>
+                  <hr className='bg-grayBackground' />
+                  <DialogDescription className="lg:w-[500px] lg:h-[500px] md:w-[500px] md:h-[500px] flex justify-center">
+                    {imgUrls && <Carousel imgUrls={imgUrls} />}
+                    <DialogPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
+                      <Button size='sm' className='rounded-full w-10 h-10'><X /></Button>
+                    </DialogPrimitive.Close>
+                  </DialogDescription>
+                </DialogHeader>
+              </DialogContent>
             </Dialog>
           </div>
         </div>
