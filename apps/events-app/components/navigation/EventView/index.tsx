@@ -8,10 +8,13 @@ import { HiArrowLeft, HiOutlineMenuAlt1 } from 'react-icons/hi';
 
 import React, { useEffect, useState } from 'react';
 import { ArrowCircleLeft } from '@/components/ui/icons';
+import useEventDetails from "@/hooks/useCurrentEventSpace";
+import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
 
 export default function EventViewNavigation() {
-  const [isClient, setIsClient] = useState(false);
-
+  const { isAuthenticated, user } = useGlobalContext();
+  const { eventSpace } = useEventDetails();
+  // console.log("EventSpace in Subheader", eventSpace.creator_id, user);
   const router = useRouter();
   const { event_space_id } = router.query;
 
@@ -80,7 +83,7 @@ export default function EventViewNavigation() {
                 ))}
               </ul>
             </div>
-            {router.pathname.includes("dashboard/eventview/tracks") && (
+            {router.pathname.includes("dashboard/eventview/tracks") && eventSpace?.creator_id === user.id && (
               <div className="flex-col gap-3 rounded-md p-2 bg-black font-bold sm:hidden lg:flex">
                 <h2>Organizer</h2>
                 <Button variant="ghost" className="p-2 w-full gap-3 text-base" onClick={handleEditEvent}>
@@ -105,3 +108,29 @@ export default function EventViewNavigation() {
     </>
   );
 }
+
+export const getServerSideProps = async (ctx: any) => {
+  const supabase = createPagesServerClient(ctx);
+  let {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  if (!session)
+    return {
+      props: {
+        initialSession: null,
+        user: null,
+      },
+    };
+
+  // get profile from session
+  const { data: profile, error } = await supabase.from('profile').select('*').eq('uuid', session.user.id);
+
+  return {
+    props: {
+      initialSession: session,
+      user: session?.user,
+      profile: profile,
+    },
+  };
+};

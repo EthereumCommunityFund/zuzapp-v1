@@ -52,6 +52,8 @@ export default function InPersonEventViewPageTemplate({ eventSpace }: IInPersonE
   const [socialLinks, setSocialLinks] = useState<IEventLink[] | undefined>();
   const [extraLinks, setExtraLinks] = useState<IEventLink[] | undefined>();
   const [imgUrls, setImgUrls] = useState<string[]>();
+  const [locationName, setLocationName] = useState<string>();
+  const [locationAddress, setLocationAddress] = useState<string>();
 
   useEffect(() => {
     console.log('InPersonEventSpace', eventSpace);
@@ -64,6 +66,8 @@ export default function InPersonEventViewPageTemplate({ eventSpace }: IInPersonE
         if (location.image_urls) URLs.push(...location.image_urls);
       });
       setImgUrls(URLs);
+      setLocationName(eventSpace.eventspacelocation[0].name);
+      setLocationAddress(eventSpace.eventspacelocation[0].address);
     }
   }, [social_links, extra_links, eventSpace]);
 
@@ -125,8 +129,8 @@ export default function InPersonEventViewPageTemplate({ eventSpace }: IInPersonE
             {/*Location */}
             <h2 className="text-xl text-white/70 font-bold">LOCATION</h2>
             <img src={imgUrls && imgUrls[0]} alt="" className="w-full" width={600} height={600} />
-            <h2 className="font-extrabold text-lg">Soho House Istanbul</h2>
-            <h3 className="font-bold text-white/70">Beyoğlu, Istanbul, Turkey</h3>
+            <h2 className="font-extrabold text-lg">{locationName}</h2>
+            <h3 className="font-bold text-white/70">{locationAddress}</h3>
             <Dialog>
               <DialogTrigger asChild>
                 <Button variant="quiet" size="lg" className="rounded-2xl inline-block text-white/70 font-bold hover:text-white">
@@ -159,7 +163,9 @@ export default function InPersonEventViewPageTemplate({ eventSpace }: IInPersonE
               extraLinks.map((value: IEventLink, idx: number) => (
                 <div className="flex gap-2" key={idx}>
                   <Label className="opacity-100 font-bold text-base">{value.name}:</Label>
-                  <Label className="opacity-100 font-bold text-base break-all">{value.link}</Label>
+                  <Label className="opacity-100 font-bold text-base break-all">
+                    <a href={value.link.includes('https://') ? value.link : `https://${value.link}`} target='_blank'>{value.link}</a>
+                  </Label>
                 </div>
               ))}
           </div>
@@ -169,7 +175,9 @@ export default function InPersonEventViewPageTemplate({ eventSpace }: IInPersonE
               socialLinks.map((value: IEventLink, idx: number) => (
                 <div className="flex gap-2" key={idx}>
                   <Label className="opacity-100 font-bold text-base">{value.name}:</Label>
-                  <Label className="opacity-100 font-bold text-base">{value.link}</Label>
+                  <Label className="opacity-100 font-bold text-base break-all">
+                    <a href={value.link.includes('https://') ? value.link : `https://${value.link}`} target='_blank'>{value.link}</a>
+                  </Label>
                 </div>
               ))}
           </div>
