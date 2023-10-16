@@ -22,20 +22,20 @@ import fetchSchedulesByEvenSpaceId from '@/services/fetchScheduleByEventSpace';
 
 const categoryList: DropDownMenuItemType[] = [
   {
-    name: 'Network States',
+    name: "Network States",
   },
   {
-    name: 'Character Cities',
+    name: "Character Cities",
   },
   {
-    name: 'Coordinations',
+    name: "Coordinations",
   },
 ];
 
 export default function EventViewTracksAlleSchedulesPage() {
   const router = useRouter();
   const { event_space_id, trackId, track_title } = router.query;
-  const { eventSpace } = useEventDetails();
+  const { eventSpace, isLoading: isLoadingSpace } = useEventDetails();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [schedules, setSchedules] = useState<ScheduleDetailstype[]>();
   const lastTrackRef = useRef<HTMLDivElement>(null);
@@ -67,10 +67,12 @@ export default function EventViewTracksAlleSchedulesPage() {
   };
 
   const fetchSchedules = async () => {
-    const response = await fetchSchedulesByEvenSpaceId(event_space_id as string);
+    const response = await fetchSchedulesByEvenSpaceId(
+      event_space_id as string
+    );
     setSchedules(response);
     setIsLoading(false);
-  }
+  };
 
   useEffect(() => {
     if (isLoading) {
@@ -152,22 +154,40 @@ export default function EventViewTracksAlleSchedulesPage() {
               </div>
             }
           </div>
-        </div>
-      </div>
-      <div className="lg:w-1/4 sm:w-full flex lg:flex-col gap-5 lg:fixed lg:right-0 min-w-fit lg:mr-10">
-        <h2 className="p-3.5 gap-[10px] font-bold text-xl sm:hidden lg:flex">Schedules: Sort & Filter</h2>
-        <div className="flex lg:flex-col md:flex-row sm:flex-col w-full p-2.5 md:gap-5 sm:gap-3 text-sm">
-          <DropDownMenu
-            data={categoryList}
-            header={'Select Categories'}
-            headerIcon={SelectCategories}
-            multiple={true}
-            value={''}
-            headerClassName={'rounded-full bg-borderPrimary'}
-            optionsClassName={''}
-          />
-          <DropDownMenu data={categoryList} header={'Select Dates'} headerIcon={Calendar} multiple={true} value={''} headerClassName={'rounded-full bg-borderPrimary'} optionsClassName={''} />
-          <DropDownMenu data={categoryList} header={'Select Location'} headerIcon={SelectLocation} multiple={true} value={''} headerClassName={'rounded-full bg-borderPrimary'} optionsClassName={''} />
+          <div className="lg:w-1/4 sm:w-full flex lg:flex-col gap-5 lg:fixed lg:right-0 min-w-fit lg:mr-10">
+            <h2 className="p-3.5 gap-[10px] font-bold text-xl sm:hidden lg:flex">
+              Schedules: Sort & Filter
+            </h2>
+            <div className="flex lg:flex-col md:flex-row sm:flex-col w-full p-2.5 md:gap-5 sm:gap-3 text-sm">
+              <DropDownMenu
+                data={categoryList}
+                header={"Select Categories"}
+                headerIcon={SelectCategories}
+                multiple={true}
+                value={""}
+                headerClassName={"rounded-full bg-borderPrimary"}
+                optionsClassName={""}
+              />
+              <DropDownMenu
+                data={categoryList}
+                header={"Select Dates"}
+                headerIcon={Calendar}
+                multiple={true}
+                value={""}
+                headerClassName={"rounded-full bg-borderPrimary"}
+                optionsClassName={""}
+              />
+              <DropDownMenu
+                data={categoryList}
+                header={"Select Location"}
+                headerIcon={SelectLocation}
+                multiple={true}
+                value={""}
+                headerClassName={"rounded-full bg-borderPrimary"}
+                optionsClassName={""}
+              />
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -177,7 +197,7 @@ export default function EventViewTracksAlleSchedulesPage() {
 export const getServerSideProps = async (ctx: any) => {
   const queryClient = new QueryClient();
   const { event_space_id } = ctx.query;
-  await queryClient.prefetchQuery('currentEventSpace', () => fetchEventSpaceById(event_space_id));
+  // await queryClient.prefetchQuery('currentEventSpace', () => fetchEventSpaceById(event_space_id));
   const supabase = createPagesServerClient(ctx);
   let {
     data: { session },
@@ -192,14 +212,17 @@ export const getServerSideProps = async (ctx: any) => {
     };
 
   // get profile from session
-  const { data: profile, error } = await supabase.from('profile').select('*').eq('uuid', session.user.id);
+  const { data: profile, error } = await supabase
+    .from("profile")
+    .select("*")
+    .eq("uuid", session.user.id);
 
   return {
     props: {
       initialSession: session,
       user: session?.user,
       profile: profile,
-      dehydratedState: dehydrate(queryClient),
+      // dehydratedState: dehydrate(queryClient),
     },
   };
 };

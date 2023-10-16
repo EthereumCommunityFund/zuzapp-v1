@@ -8,8 +8,9 @@ import "../styles/quill.css";
 import { DashboardProvider } from "@/components/ui-providers/DashboardLayout";
 import { Hydrate, QueryClient, QueryClientProvider } from "react-query";
 import { EventSpaceProvider } from "@/context/EventSpaceContext";
-import { EventSpacesProvider } from "@/context/EventSpacesContext";
 import { Toaster } from "@/components/ui/toaster";
+import { useRouter } from "next/router";
+import localforage from "localforage";
 
 /**
  * This component wraps all pages in this Next.js application.
@@ -17,30 +18,74 @@ import { Toaster } from "@/components/ui/toaster";
 const App = ({ Component, pageProps }: { Component: any; pageProps: any }) => {
   const [supabaseClient] = useState(() => createPagesBrowserClient());
   const queryClient = new QueryClient();
+  const router = useRouter();
+
+  let event_space_id = "";
+
+  if (router.query.event_space_id) {
+    event_space_id = router.query.event_space_id as string;
+  }
 
   useEffect(() => {
-    const queryKeys = ["eventSpaces", "invitedSpaces", "publishedEventSpaces"];
+    localforage.config({
+      driver: localforage.INDEXEDDB,
+      name: "zuzalu_city",
+      storeName: "eventspace_store",
+    });
 
-    queryKeys.forEach((key) => {
-      const cache = localStorage.getItem(`react-query-cache-${key}`);
-      if (cache) {
-        const parsedCache = JSON.parse(cache);
-        queryClient.setQueryData(key, parsedCache);
+    const queryKeys = [
+      "eventSpaces",
+      "invitedSpaces",
+      "publishedEventSpaces",
+      ["currentEventSpace", event_space_id],
+      ["trackDetails", event_space_id],
+    ];
+
+    queryKeys.forEach(async (key) => {
+      if (Array.isArray(key)) {
+        let [queryKey, id] = key;
+        if (!id) return;
+        const cache = await localforage.getItem(
+          `react-query-cache-${queryKey}-${id}`
+        );
+        if (cache) {
+          const parsedCache = JSON.parse(cache as string);
+          queryClient.setQueryData([queryKey, id], parsedCache);
+        }
+      } else {
+        const cache = await localStorage.getItem(`react-query-cache-${key}`);
+        if (cache) {
+          const parsedCache = JSON.parse(cache);
+          queryClient.setQueryData(key, parsedCache);
+        }
       }
     });
 
     // Save cache to localStorage on changes or before unloading
     const saveCache = () => {
-      queryKeys.forEach((key) => {
-        const currentCache = queryClient.getQueryData(key);
-        if (currentCache) {
-          localStorage.setItem(
-            `react-query-cache-${key}`,
-            JSON.stringify(currentCache)
-          );
+      queryKeys.forEach(async (key) => {
+        if (Array.isArray(key)) {
+          let [queryKey, id] = key;
+          console.log(queryKey, id);
+          const currentCache = queryClient.getQueryData([queryKey, id]); // Use [queryKey, id] here
+          if (currentCache) {
+            await localforage.setItem(
+              `react-query-cache-${queryKey}-${id}`,
+              JSON.stringify(currentCache)
+            );
+          }
+        } else {
+          const currentCache = queryClient.getQueryData(key);
+          if (currentCache) {
+            await localforage.setItem(
+              `react-query-cache-${key}`,
+              JSON.stringify(currentCache)
+            );
+          }
         }
       });
     };
+
     const unsubscribe = queryClient.getQueryCache().subscribe(saveCache);
 
     window.addEventListener("beforeunload", saveCache);

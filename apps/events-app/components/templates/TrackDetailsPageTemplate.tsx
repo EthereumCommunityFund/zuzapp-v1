@@ -30,7 +30,6 @@ import fetchSchedulesByTrackId from '@/services/fetchSchedulesByTrackId';
 import React from 'react';
 import { fetchAllSpeakers } from '@/controllers';
 
-
 interface ITrackDetailsPageTemplate {
   trackItem: TrackType;
   organizers: [];
@@ -59,9 +58,8 @@ export default function TrackDetailsPageTemplate(props: any) {
 
   const updateIsLoading = (newState: boolean) => {
     setIsLoading(newState);
-  }
+  };
   const handleItemClick = (scheduleName: string, trackId: string | undefined, event_space_id: string, scheduleId: string) => {
-
     router.push({
       pathname: '/dashboard/eventview/tracks/track/schedule',
       query: { scheduleName, trackId, event_space_id, scheduleId },
@@ -88,7 +86,7 @@ export default function TrackDetailsPageTemplate(props: any) {
 
     response.forEach((schedule: ScheduleDetailstype) => {
       if (schedule.tags) {
-        schedule.tags.forEach(tag => allTagsSet.add(tag));
+        schedule.tags.forEach((tag) => allTagsSet.add(tag));
       }
       if (schedule.organizers) {
         schedule.organizers.forEach((organizer: OrganizerType) => allOrganizersSet.add(organizer));
@@ -96,22 +94,15 @@ export default function TrackDetailsPageTemplate(props: any) {
     });
 
     const allTags: string[] = Array.from(allTagsSet);
-    const allOrganizers: OrganizerType[] = Array.from(allOrganizersSet).filter((organizer, index, self) =>
-      index === self.findIndex((o) => (
-        o.role === organizer.role && o.name === organizer.name
-      ))
-    );
+    const allOrganizers: OrganizerType[] = Array.from(allOrganizersSet).filter((organizer, index, self) => index === self.findIndex((o) => o.role === organizer.role && o.name === organizer.name));
     setTags(allTags);
     setOrganizers(allOrganizers);
     setSchedules(response);
     setIsLoading(false);
-  }
-
-
+  };
 
   useEffect(() => {
     if (isLoading) {
-
       fetchSchedules();
     }
   }, [isLoading]);
@@ -140,7 +131,7 @@ export default function TrackDetailsPageTemplate(props: any) {
                   <DialogHeader>
                     <Label className="text-2xl font-bold">Edit Track</Label>
                   </DialogHeader>
-                  <EventViewTrackUpdate className='text-white' />
+                  <EventViewTrackUpdate className="text-white" />
                 </DialogContent>
               </Dialog>
             </div>
@@ -154,7 +145,7 @@ export default function TrackDetailsPageTemplate(props: any) {
                 <h2 className="font-bold text-2xl">{trackItem.name}</h2>
                 <RenderHTMLString htmlString={trackItem.description as string} />
                 <span className="rounded-xl flex px-4 py-1 items-center gap-1 opacity-60 bg-[#FFFFFF10] font-bold justify-start md:w-[320px] md:text-lg sm:w-fit">
-                  <HiCalendar size={25} /> November 29 - November 11
+                  <HiCalendar size={25} /> October 28 - November 11
                 </span>
               </div>
             </div>
@@ -167,20 +158,16 @@ export default function TrackDetailsPageTemplate(props: any) {
                 Add a Schedule
               </Button>
             </DialogTrigger>
-            <DialogContent className='lg:w-3/5 lg:h-4/5 overflow-y-auto'>
+            <DialogContent className="lg:w-3/5 lg:h-4/5 overflow-y-auto">
               <DialogDescription className="text-white">
-                <ScheduleEditForm
-                  title={'Add'}
-                  isFromAllSchedules={false}
-                  trackId={trackId as string}
-                  updateIsLoading={updateIsLoading}
-                />
+                <ScheduleEditForm title={'Add'} isFromAllSchedules={false} trackId={trackId as string} updateIsLoading={updateIsLoading} />
               </DialogDescription>
             </DialogContent>
           </Dialog>
         </div>
-        {isLoading ?
-          <Loader /> :
+        {isLoading ? (
+          <Loader />
+        ) : (
           <div className="flex flex-col gap-2.5 p-5 w-full">
             <div className="flex flex-col gap-[10px] overflow-hidden rounded-[10px]">
               {
@@ -204,7 +191,7 @@ export default function TrackDetailsPageTemplate(props: any) {
               }
             </div>
           </div>
-        }
+        )}
       </div>
       {eventSpace && <EventViewDetailsPanel eventSpace={eventSpace} organizers={organizers} tags={tags} />}
     </div>

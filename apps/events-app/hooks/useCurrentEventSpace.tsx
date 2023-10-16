@@ -1,10 +1,10 @@
 // create custom hook for fetching event details
 
-import { fetchEventSpaceById } from "@/services/fetchEventSpaceDetails";
-import { EventSpaceDetailsType } from "@/types";
-import { isError } from "joi";
-import { useRouter } from "next/router";
-import { useQuery } from "react-query";
+import { fetchEventSpaceById } from '@/services/fetchEventSpaceDetails';
+import { EventSpaceDetailsType } from '@/types';
+import { isError } from 'joi';
+import { useRouter } from 'next/router';
+import { useQuery } from 'react-query';
 
 const useCurrentEventSpace = () => {
   const router = useRouter();
@@ -15,10 +15,12 @@ const useCurrentEventSpace = () => {
     isLoading,
     isError,
   } = useQuery<EventSpaceDetailsType, Error>(
-    ["currentEventSpace"], // Query key
+    ["currentEventSpace", event_space_id], // Query key
     () => fetchEventSpaceById(event_space_id as string),
 
     {
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
       onSuccess: (data) => {
         console.log("selectedEventSpace Event Spaces:", data);
       },

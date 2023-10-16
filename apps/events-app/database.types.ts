@@ -190,6 +190,7 @@ export interface Database {
           name: string | null
           order_id: string | null
           role: string | null
+          username: string | null
           uuid: string
           visitor_date_ranges: string[] | null
         }
@@ -199,6 +200,7 @@ export interface Database {
           name?: string | null
           order_id?: string | null
           role?: string | null
+          username?: string | null
           uuid: string
           visitor_date_ranges?: string[] | null
         }
@@ -208,6 +210,7 @@ export interface Database {
           name?: string | null
           order_id?: string | null
           role?: string | null
+          username?: string | null
           uuid?: string
           visitor_date_ranges?: string[] | null
         }

@@ -159,7 +159,7 @@ export default function InPersonEventViewPageTemplate({ eventSpace }: IInPersonE
               extraLinks.map((value: IEventLink, idx: number) => (
                 <div className="flex gap-2" key={idx}>
                   <Label className="opacity-100 font-bold text-base">{value.name}:</Label>
-                  <Label className="opacity-100 font-bold text-base">{value.link}</Label>
+                  <Label className="opacity-100 font-bold text-base break-all">{value.link}</Label>
                 </div>
               ))}
           </div>
