@@ -12,6 +12,8 @@ import { useEventSpace } from '@/context/EventSpaceContext';
 import { LocationMarker, LockClosed, UserGroup } from '../ui/icons';
 import RenderHTMLString from '../ui/RenderHTMLString';
 import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
+import * as DialogPrimitive from '@radix-ui/react-dialog';
+import { X } from 'lucide-react';
 
 interface IOnlineEventViewPageTemplateProps {
   eventSpace: EventSpaceDetailsType;
@@ -98,13 +100,17 @@ export default function OnlineEventViewPageTemplate({ eventSpace }: IOnlineEvent
                   Read Description
                 </Button>
               </DialogTrigger>
-              <DialogContent className="lg:w-[700px] md:w-[700px] sm:w-full">
+              <DialogContent>
                 <DialogHeader>
-                  <DialogTitle>About This Event</DialogTitle>
+                  <DialogTitle className='pb-5'>About This Event</DialogTitle>
+                  <hr className='bg-grayBackground' />
                   <DialogDescription className="text-white">
                     <RenderHTMLString height="500" htmlString={description} />
                   </DialogDescription>
                 </DialogHeader>
+                <DialogPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
+                  <Button size='sm' className='rounded-full w-10 h-10'><X /></Button>
+                </DialogPrimitive.Close>
               </DialogContent>
             </Dialog>
           </div>
