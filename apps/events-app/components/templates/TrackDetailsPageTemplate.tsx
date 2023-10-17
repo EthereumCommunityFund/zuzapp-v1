@@ -25,7 +25,7 @@ import { Database } from '@/database.types';
 import { QueryClient, dehydrate } from 'react-query';
 import { fetchEventSpaceById } from '@/services/fetchEventSpaceDetails';
 
-import ScheduleEditForm from '../commons/ScheduleEditForm';
+import AddScheduleForm from '../commons/AddScheduleForm';
 import fetchSchedulesByTrackId from '@/services/fetchSchedulesByTrackId';
 import React from 'react';
 import { fetchAllSpeakers } from '@/controllers';
@@ -160,7 +160,12 @@ export default function TrackDetailsPageTemplate(props: any) {
             </DialogTrigger>
             <DialogContent className="lg:w-3/5 lg:h-4/5 overflow-y-auto">
               <DialogDescription className="text-white">
-                <ScheduleEditForm title={'Add'} isFromAllSchedules={false} trackId={trackId as string} updateIsLoading={updateIsLoading} />
+                <AddScheduleForm
+                  title={'Add'}
+                  isQuickAccess={false}
+                  trackId={trackId as string}
+                  updateIsLoading={updateIsLoading}
+                />
               </DialogDescription>
             </DialogContent>
           </Dialog>
