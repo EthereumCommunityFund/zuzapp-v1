@@ -41,7 +41,7 @@ const formSchema = z.object({
   name: z.string().min(2, {
     message: 'Event Name is required.',
   }),
-  format: z.enum(['in-person', 'online', 'hybrid'], {
+  format: z.enum(['in-person', 'online'], {
     required_error: 'You need to select an event type.',
   }),
   start_date: z
@@ -375,15 +375,6 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace, handl
                                   <FormLabel className="font-semibold text-white/60 text-base cursor-pointer">
                                     Online
                                     <span className="text-xs block">Specifically Online Event</span>
-                                  </FormLabel>
-                                </FormItem>
-                                <FormItem className="flex items-center space-x-3 space-y-0 p-3 hover:bg-btnPrimaryGreen/20 rounded-md">
-                                  <FormControl>
-                                    <RadioGroupItem value="hybrid" />
-                                  </FormControl>
-                                  <FormLabel className="font-semibold text-white/60 text-base cursor-pointer">
-                                    Hybrid
-                                    <span className="text-xs block">In-Person & Online</span>
                                   </FormLabel>
                                 </FormItem>
                               </RadioGroup>

@@ -16,7 +16,7 @@ const eventspace_update_schema = Joi.object({
   name: Joi.string().required(),
   tagline: Joi.string().default(''),
   social_links: Joi.string().when('format', {
-    is: Joi.valid('online', 'hybrid'),
+    is: Joi.valid('online'),
     then: Joi.required(),
     otherwise: Joi.optional(),
   }),
@@ -26,7 +26,7 @@ const eventspace_update_schema = Joi.object({
   start_date: Joi.date().required(),
   end_date: Joi.date().required(),
   description: Joi.string().required(),
-  format: Joi.string().valid('in-person', 'online', 'hybrid').required(),
+  format: Joi.string().valid('in-person', 'online').required(),
   event_type: Joi.array().items(Joi.string()).default(['General']),
   experience_level: Joi.array().items(Joi.string()).default(['Beginner']),
   image_url: Joi.string()

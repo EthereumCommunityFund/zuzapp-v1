@@ -14,7 +14,6 @@ export default function EventViewPageTemplate({ eventSpace }: { eventSpace: Even
   return (
     <>
       {eventSpace?.format === 'in-person' && <InPersonEventViewPageTemplate eventSpace={eventSpace} />}
-      {eventSpace?.format === 'hybrid' && <InPersonEventViewPageTemplate eventSpace={eventSpace} />}
       {eventSpace?.format === 'online' && <OnlineEventViewPageTemplate eventSpace={eventSpace} />}
     </>
   );

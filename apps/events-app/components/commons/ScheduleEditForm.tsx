@@ -112,7 +112,7 @@ export default function ScheduleEditForm({ title, isFromAllSchedules, scheduleId
     name: z.string().min(2, {
       message: 'Schedule name is required.',
     }),
-    format: z.enum(['in-person', 'online', 'hybrid'], {
+    format: z.enum(['in-person', 'online'], {
       required_error: 'You need to select a format.',
     }),
     date: z
@@ -175,13 +175,13 @@ export default function ScheduleEditForm({ title, isFromAllSchedules, scheduleId
   async function onSubmit(values: z.infer<typeof formSchema>) {
     if (values.format !== 'in-person' && (!values.video_call_link || values.video_call_link === '')) {
       form.setError('video_call_link', {
-        message: 'Video call link is required for online or hybrid events',
+        message: 'Video call link is required for online events',
       });
       return;
     }
     if (values.format !== 'in-person' && (!values.live_stream_url || values.live_stream_url === '')) {
       form.setError('live_stream_url', {
-        message: 'Live stream link is required for in-person or hybrid events',
+        message: 'Live stream link is required for in-person events',
       });
       return;
     }
@@ -471,15 +471,6 @@ export default function ScheduleEditForm({ title, isFromAllSchedules, scheduleId
                             <FormLabel className="font-semibold text-white/60 text-base ">
                               Online
                               <span className="text-xs block">Specifically Online Event</span>
-                            </FormLabel>
-                          </FormItem>
-                          <FormItem className="flex items-center space-x-3 space-y-0 p-3 hover:bg-btnPrimaryGreen/20 rounded-md">
-                            <FormControl>
-                              <RadioGroupItem value="hybrid" />
-                            </FormControl>
-                            <FormLabel className="font-semibold text-white/60 text-base">
-                              Hybrid
-                              <span className="text-xs block">In-Person & Online</span>
                             </FormLabel>
                           </FormItem>
                         </RadioGroup>

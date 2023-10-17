@@ -10,7 +10,7 @@ export const eventDetailsList: EventDeatils[] = [
     },
     {
         name: "Event Format",
-        description: "In-Person, Online, Hybrid"
+        description: "In-Person, Online"
     },
     {
         name: "Links",
