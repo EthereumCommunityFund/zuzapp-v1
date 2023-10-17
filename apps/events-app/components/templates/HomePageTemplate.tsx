@@ -23,6 +23,9 @@ import { arrayFromLength } from "@/lib/helper";
 import { EventTemplateSkeleton } from "../commons/EventTemplateSkeleton";
 import { HomePageTemplateSkeleton } from "../commons/HomePageTemplateSkeleton";
 import { useEventSpace, useEventSpaces } from "@/context/EventSpaceContext";
+import { useState } from "react";
+import { Input } from "../ui/input";
+import { ArrowCircleLeft, ArrowCircleRight, ArrowLeft } from "../ui/icons";
 
 export const sampleEvents = [
   {
@@ -39,10 +42,25 @@ export const sampleEvents = [
   },
 ];
 
+interface DialogContent {
+  title: string;
+  description: string;
+  buttonLabel: string;
+  buttonAction?: () => void;
+}
+
 export default function HomePageTemplate() {
   const { signIn } = useUserPassportContext();
   const { isAuthenticated, user } = useGlobalContext();
   const router = useRouter();
+  const [userName, setUsername] = useState<string>('');
+  const { firstLogin } = router.query;
+  const [dialogContent, setDialogContent] = useState<DialogContent>({
+    title: "Welcome to Zuzalu, let's get your name!",
+    description: "Type in a username. Does not have to be your real name. You can also change your username later",
+    buttonLabel: "Continue",
+  });
+  console.log("firstLogin", firstLogin);
 
   const { eventSpaceList, setEventSpaceList } = useEventSpace();
 
@@ -75,6 +93,15 @@ export default function HomePageTemplate() {
       month: "long",
       day: "numeric",
     }).format(date);
+  }
+
+  const handleDialogButton = async () => {
+    console.log('userName', userName);
+    setDialogContent({
+      title: `Welcome ${userName}`,
+      description: 'Now, head to explore Zuzalu & community events!',
+      buttonLabel: 'Complete',
+    })
   }
 
   return (
@@ -232,6 +259,23 @@ export default function HomePageTemplate() {
           ))} */}
         </div>
       </div>
+      {
+        firstLogin &&
+        <Dialog open>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle className="text-2xl">{dialogContent?.title}</DialogTitle>
+              <DialogDescription className="text-lg font-bold">{dialogContent?.description}</DialogDescription>
+            </DialogHeader>
+            <DialogFooter className="pt-5">
+              <Input placeholder="Type your username" className={`bg-black text-white ${userName.length ? `hidden` : `flex`}`} value={userName} onChange={(e) => setUsername(e.target.value)} />
+              <Button variant={`${userName.length ? `strongerGreen` : `primary`}`} className="w-full flex items-center justify-center rounded-3xl py-2 h-full bg-dark text-lg md:text-base" leftIcon={ArrowCircleRight} onClick={handleDialogButton}>
+                {dialogContent?.buttonLabel}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      }
     </div>
   );
 }
