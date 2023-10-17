@@ -452,7 +452,7 @@ export default function ScheduleEditForm({ title, isFromAllSchedules, scheduleId
                         <RadioGroup
                           onValueChange={field.onChange}
                           //  defaultValue={field.value}
-                          className="flex flex-col md:flex-row justify-between"
+                          className="flex flex-col md:flex-row"
                           {...field}
                         >
                           <FormItem className="flex items-center space-x-3 space-y-0 p-3 hover:bg-btnPrimaryGreen/20 rounded-md focus:bg-btnPrimaryGreen/20">
