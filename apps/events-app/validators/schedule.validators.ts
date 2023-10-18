@@ -8,7 +8,7 @@ const organizer_schema = Joi.object({
 
 const schedule_create_schema = Joi.object({
   name: Joi.string().required(),
-  format: Joi.string().valid('in-person', 'online', 'hybrid').required(),
+  format: Joi.string().valid('in-person', 'online').required(),
   description: Joi.string().required(),
   date: Joi.date().required(),
   start_time: Joi.date().required(),
@@ -31,7 +31,7 @@ const schedule_create_schema = Joi.object({
 
 const schedule_update_schema = Joi.object({
   name: Joi.string().required(),
-  format: Joi.string().valid('in-person', 'online', 'hybrid').required(),
+  format: Joi.string().valid('in-person', 'online').required(),
   description: Joi.string().required(),
   date: Joi.date().required(),
   start_time: Joi.date().when('all_day', {
