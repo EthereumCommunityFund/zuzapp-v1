@@ -35,7 +35,7 @@ import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import { toast } from '@/components/ui/use-toast';
 import { Loader } from '../ui/Loader';
-
+import { Dialog } from '@radix-ui/react-dialog';
 
 type Organizer = {
   name: string;
@@ -47,38 +47,42 @@ type TagItemProp = {
 };
 
 interface IAddScheduleForm {
-
+  title: string;
   isQuickAccess: boolean;
   scheduleId?: string;
   trackId: string;
   updateIsLoading?: (newState: boolean) => void;
-  optionTags: any[];
-  optionSpeakers: any[];
-  savedLocations: any[];
 }
 
-export default function AddScheduleForm({ isQuickAccess, trackId, updateIsLoading, optionTags, optionSpeakers, savedLocations }: IAddScheduleForm) {
-
-  const defaultProps = {
-    options: optionTags,
-    getOptionLabel: (option: { name: string }) => option.name,
-  };
-  const defaultSpeakers = {
-    options: optionSpeakers,
-    getOptionLabel: (option: { name: string }) => option.name,
-  }
-
-  const [locationId, setLocationId] = useState(
-    savedLocations.length > 0 ? savedLocations[0].id : ""
-  );
-
+export default function AddScheduleForm({ title, isQuickAccess, scheduleId, trackId, updateIsLoading }: IAddScheduleForm) {
   const router = useRouter();
   const { event_space_id } = router.query;
   const [isAllDay, setIsAllDay] = useState(false);
 
-
+  const [schedule, setSchedule] = useState<ScheduleUpdateRequestBody>({
+    name: '',
+    format: 'in-person',
+    description: '',
+    date: '',
+    start_time: '',
+    end_time: '',
+    all_day: false,
+    schedule_frequency: 'once',
+    images: [''],
+    video_call_link: '',
+    live_stream_url: '',
+    location_id: '',
+    event_type: '',
+    experience_level: '',
+    limit_rsvp: false,
+    rsvp_amount: 1,
+    event_space_id: '',
+    track_id: '',
+    tags: [],
+    organizers: [],
+  });
   const [startDate, setStartDate] = useState<Date | undefined>();
-
+  const [optionTags, setOptionTags] = useState<TagItemProp[]>([]);
 
   const [tags, setTags] = useState<string[]>([]);
   const [tagItem, setTagItem] = useState<TagItemProp>({ name: '' });
@@ -88,7 +92,8 @@ export default function AddScheduleForm({ isQuickAccess, trackId, updateIsLoadin
   });
   const [organizers, setOrganizers] = useState<any>([]);
   const [frequency, setFrequency] = useState<'once' | 'everyday' | 'weekly'>('once');
-
+  const [savedLocations, setSavedLocations] = useState<LocationUpdateRequestBody[]>([]);
+  const [locationId, setLocationId] = useState('');
   const [experienceLevel, setExperienceLevel] = useState('');
   const [eventCategory, setEventCategory] = useState('');
 
@@ -96,8 +101,8 @@ export default function AddScheduleForm({ isQuickAccess, trackId, updateIsLoadin
   const handleChangeSwitch = () => {
     setIsAllDay((prev) => !prev);
   };
-  const [startTime, setStartTime] = useState(dayjs(new Date()));
-  const [endTime, setEndTime] = useState(dayjs(new Date()));
+  const [startTime, setStartTime] = useState(dayjs('2023-11-17T00:00'));
+  const [endTime, setEndTime] = useState(dayjs('2023-11-17T23:59'));
   const [scheduleAdded, setScheduleAdded] = useState(false);
   const [isLimit, setIsLimit] = useState(false);
   const [selectedTrackId, setSelectedTrackId] = useState<string>(trackId as string);
@@ -152,19 +157,19 @@ export default function AddScheduleForm({ isQuickAccess, trackId, updateIsLoadin
   const [eventType, setEventType] = useState('');
 
   const handleLimitRSVP = () => {
-
+    setSchedule({ ...schedule, limit_rsvp: !schedule.limit_rsvp });
     setIsLimit(!isLimit);
   };
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
-      format: eventSpace?.format,
-      date: undefined,
-      description: "",
-      video_call_link: "",
-      live_stream_url: "",
+      name: schedule?.name,
+      format: schedule?.format,
+      date: schedule?.date !== '' ? new Date(schedule?.date) : undefined,
+      description: '',
+      video_call_link: schedule?.video_call_link,
+      live_stream_url: schedule?.live_stream_url,
     },
   });
 
@@ -258,25 +263,103 @@ export default function AddScheduleForm({ isQuickAccess, trackId, updateIsLoadin
   }
 
   const handleRemoveTag = (index: number) => {
-    const updatedItems = [...tags.slice(0, index), ...tags.slice(index + 1)];
-    setTags(updatedItems);
+    const updatedItems = [...(schedule.tags as string[]).slice(0, index), ...(schedule.tags as string[]).slice(index + 1)];
+    console.log(updatedItems);
+    setSchedule({ ...schedule, tags: updatedItems });
   };
 
   const handleRemoveOrganizer = (index: number) => {
-    const updatedItems = [
-      ...organizers.slice(0, index),
-      ...organizers.slice(index + 1),
-    ];
+    const updatedItems = [...organizers.slice(0, index), ...organizers.slice(index + 1)];
+    const updatedScheduleItems = [...(schedule.organizers as Organizer[]).slice(0, index), ...(schedule.organizers as Organizer[]).slice(index + 1)];
     setOrganizers(updatedItems);
+    setSchedule({ ...schedule, organizers: updatedScheduleItems as any });
   };
 
   const handleTrackSelect = (e: any) => {
     setSelectedTrackId(e.target.value);
+    setSchedule({ ...schedule, track_id: e.target.value });
   };
 
   const handleFrequencySelect = (e: any) => {
     setFrequency(e.target.value);
+    setSchedule({
+      ...schedule,
+      schedule_frequency: e.target.value as any,
+    });
   };
+
+  const defaultProps = {
+    options: optionTags,
+    getOptionLabel: (option: { name: string }) => option.name,
+  };
+  const defaultSpeakers = {
+    options: optionalOrganizers,
+    getOptionLabel: (option: { name: string }) => option.name,
+  }
+
+  useEffect(() => {
+    const fetchLocationDetails = async () => {
+      try {
+        console.log('evnet space id', event_space_id);
+        const result = await fetchLocationsByEventSpace(event_space_id as string);
+        console.log(result);
+        setSavedLocations(result?.data?.data);
+        setLocationId(result.data.data[0].id);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    const fetchTags = async () => {
+      try {
+        const result = await fetchAllTags();
+        console.log(result);
+        setOptionTags(result.data.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    const fetchSpeakers = async () => {
+      try {
+        const result = await fetchAllSpeakers();
+        setOptionalOrganizers(result.data.data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    const fetchCurrentSchedule = async () => {
+      try {
+        const result = await fetchScheduleByID(scheduleId as string);
+        console.log("result.data", result.data.data);
+        setSchedule({
+          ...result.data.data,
+          event_type: JSON.parse(result.data.data.event_type)[0],
+          experience_level: JSON.parse(result.data.data.experience_level)[0],
+        });
+        setStartDate(new Date(result.data.data.date));
+
+        form.reset({
+          name: result.data.data.name,
+          format: result.data.data.format,
+          date: new Date(result.data.data.date),
+          description: result.data.data.description,
+          video_call_link: result.data.data.video_call_link,
+          live_stream_url: result.data.data.live_stream_url,
+        });
+        console.log(result.data.data.date);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchCurrentSchedule();
+    fetchSpeakers();
+
+    fetchLocationDetails();
+    fetchTags();
+  }, []);
 
   useEffect(() => {
     console.log(form.formState.errors);
@@ -520,13 +603,6 @@ export default function AddScheduleForm({ isQuickAccess, trackId, updateIsLoadin
                                 // borderWidth: "1px",
                                 border: "1px solid #1A1A1A",
                               }}
-                              slotProps={{
-                                popper: {
-                                  sx: {
-                                    pointerEvents: 'all',
-                                  }
-                                },
-                              }}
                             />
                             <TimePicker
                               label="End Time"
@@ -552,13 +628,6 @@ export default function AddScheduleForm({ isQuickAccess, trackId, updateIsLoadin
                                 // borderColor: "white",
                                 // borderWidth: "1px",
                                 border: "1px solid #1A1A1A",
-                              }}
-                              slotProps={{
-                                popper: {
-                                  sx: {
-                                    pointerEvents: 'auto'
-                                  }
-                                }
                               }}
                             />
                           </div>
@@ -1037,14 +1106,20 @@ export const getServerSideProps = async (ctx: any) => {
     .select("*")
     .eq("uuid", session.user.id);
 
-
+  const locationsResult = await fetchLocationsByEventSpace(
+    ctx.query.event_space_id
+  );
+  const tagsResult = await fetchAllTags();
+  const organizersResult = await fetchAllSpeakers();
 
   return {
     props: {
       initialSession: session,
       user: session?.user,
       profile: profile,
-
+      savedLocations: locationsResult.data.data,
+      tags: tagsResult.data.data,
+      organizers: organizersResult.data.data,
     },
   };
 };
