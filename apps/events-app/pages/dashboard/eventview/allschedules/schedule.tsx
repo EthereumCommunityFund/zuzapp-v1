@@ -25,7 +25,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-import ScheduleEditForm from "@/components/commons/ScheduleEditForm";
+import ScheduleEditForm from "@/components/commons/AddScheduleForm";
 import {
   cancelUserRsvpBySchedule,
   checkUserRsvpBySchedule,
@@ -34,6 +34,7 @@ import {
   rsvpSchedule,
 } from "@/controllers";
 import { ScheduleUpdateRequestBody } from "@/types";
+import EditScheduleForm from "@/components/commons/EditScheduleForm";
 
 export default function EventViewScheduleDetailsPage() {
   const router = useRouter();
@@ -168,9 +169,9 @@ export default function EventViewScheduleDetailsPage() {
                   </Button>
                 </DialogTrigger>
                 <DialogContent className="lg:h-4/5 w-full h-screen lg:w-3/5 overflow-y-auto">
-                  <ScheduleEditForm
+                  <EditScheduleForm
                     title="Update"
-                    isFromAllSchedules={true}
+                    isQuickAccess={true}
                     scheduleId={scheduleId as string}
                     trackId={trackId as string}
                   />
@@ -200,17 +201,16 @@ export default function EventViewScheduleDetailsPage() {
               <Button
                 variant="primary"
                 size="lg"
-                className={`rounded-2xl justify-center ${
-                  rsvpUpdated ? "animate-rsvp" : ""
-                }`}
+                className={`rounded-2xl justify-center ${rsvpUpdated ? "animate-rsvp" : ""
+                  }`}
                 leftIcon={BsFillTicketFill}
                 onClick={handleRsvpAction}
               >
                 {hasRsvpd
                   ? "Cancel RSVP"
                   : rsvpFull
-                  ? "RSVP Full"
-                  : "RSVP Schedule"}
+                    ? "RSVP Full"
+                    : "RSVP Schedule"}
               </Button>
             </div>
             <div className="flex flex-col gap-2.5 px-5 pt-5 pb-[60px]">
