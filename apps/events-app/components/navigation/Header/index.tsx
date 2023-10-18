@@ -14,8 +14,10 @@ import { User } from '@/components/ui/icons';
 import { useState } from 'react';
 import { navBarRoutes } from '@/constant/routes';
 import { FaCog } from 'react-icons/fa';
+import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
+import { Database } from '@/database.types';
 
-export default function DashboardHeader() {
+export default function DashboardHeader({ profile }: any) {
   const { signIn } = useUserPassportContext();
   const { isAuthenticated, user } = useGlobalContext();
   const router = useRouter();
@@ -73,7 +75,7 @@ export default function DashboardHeader() {
           {isAuthenticated ? (
             <Button leftIcon={User} variant="quiet" className="space-x-2 rounded-full">
               {/* {user?.email} */}
-              <span className="hidden lg:inline-flex">My Profile</span>
+              <span className="hidden lg:inline-flex">{profile[0].username ? profile[0].username : `My Profile`}</span>
             </Button>
           ) : (
             <Popover>
@@ -95,3 +97,30 @@ export default function DashboardHeader() {
     </div>
   );
 }
+
+export const getServerSideProps = async (ctx: any) => {
+  const supabase = createPagesServerClient<Database>(ctx);
+
+  let {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  if (!session)
+    return {
+      props: {
+        initialSession: null,
+        user: null,
+      },
+    };
+
+  // get profile from session
+  const { data: profile, error } = await supabase.from('profile').select('*').eq('uuid', session.user.id);
+
+  return {
+    props: {
+      initialSession: session,
+      user: session?.user,
+      profile: profile,
+    },
+  };
+};
