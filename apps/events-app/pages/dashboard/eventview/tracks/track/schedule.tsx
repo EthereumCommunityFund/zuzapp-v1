@@ -22,7 +22,8 @@ import { fetchEventSpaceById } from '@/services/fetchEventSpaceDetails';
 import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
 import { OrganizerType, ScheduleUpdateRequestBody } from '@/types';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import ScheduleEditForm from '@/components/commons/ScheduleEditForm';
+import ScheduleEditForm from '@/components/commons/AddScheduleForm';
+import EditScheduleForm from '@/components/commons/EditScheduleForm';
 
 interface IEventLink {
   name: string;
@@ -147,7 +148,12 @@ export default function EventViewScheduleDetailsPage() {
                     </Button>
                   </DialogTrigger>
                   <DialogContent className="h-3/5 lg:w-3/5 overflow-y-auto">
-                    <ScheduleEditForm title="Update" isFromAllSchedules={false} scheduleId={scheduleId as string} trackId={trackId as string} />
+                    <EditScheduleForm
+                      title="Update"
+                      isQuickAccess={false}
+                      scheduleId={scheduleId as string}
+                      trackId={trackId as string}
+                    />
                   </DialogContent>
                 </Dialog>
               </div>
