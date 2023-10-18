@@ -12,7 +12,7 @@ export type EventSpaceUpdateRequestBody = {
   start_date: Date;
   end_date: Date;
   description: string;
-  format: 'in-person' | 'online' | 'hybrid';
+  format: 'in-person' | 'online';
   event_type?: string[];
   experience_level?: string[];
   eventspacelocation?: LocationType[];
@@ -37,7 +37,7 @@ export type EventSpaceDetailsType = {
   start_date: Date;
   end_date: Date;
   description: string;
-  format: 'in-person' | 'online' | 'hybrid';
+  format: 'in-person' | 'online';
   event_type?: string[];
   experience_level?: string[];
   eventspacelocation?: LocationType[];
@@ -68,7 +68,7 @@ export type TrackType = {
 
 export type ScheduleCreateRequestBody = {
   name: string;
-  format: 'in-person' | 'online' | 'hybrid';
+  format: 'in-person' | 'online';
   description: string;
   date: string | Date;
   start_time: string | Date;
@@ -97,7 +97,7 @@ export type ScheduleCreateRequestBody = {
 export type ScheduleDetailstype = {
   id: string;
   name: string;
-  format: 'in-person' | 'online' | 'hybrid';
+  format: 'in-person' | 'online';
   description: string;
   date: string | Date | number;
   start_time: string | Date | number;
@@ -123,7 +123,7 @@ export type ScheduleDetailstype = {
 };
 export type ScheduleUpdateRequestBody = {
   name: string;
-  format: 'in-person' | 'online' | 'hybrid';
+  format: 'in-person' | 'online';
   description: string;
   date: string | Date | number;
   start_time: string | Date | number;

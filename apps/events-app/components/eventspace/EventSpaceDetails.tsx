@@ -41,7 +41,7 @@ const formSchema = z.object({
   name: z.string().min(2, {
     message: 'Event Name is required.',
   }),
-  format: z.enum(['in-person', 'online', 'hybrid'], {
+  format: z.enum(['in-person', 'online'], {
     required_error: 'You need to select an event type.',
   }),
   start_date: z
@@ -234,7 +234,7 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace, handl
   return (
     <div className="flex flex-col w-full items-center gap-[10px] bg-componentPrimary lg:bg-transparent self-stretch">
       <div className="flex items-start gap-8 self-stretch ">
-        <div className="lg:flex hidden flex-col pt-3 rounded-s-xl opacity-70 w-[400px] gap-5 fixed">
+        <div className="lg:flex hidden flex-col pt-3 rounded-s-xl opacity-70 w-[300px] gap-5 fixed">
           <div className="flex gap-[10px] pl-3 items-center font-bold">
             <HiCalendar className="w-5 h-5" /> Event Space Details
           </div>
@@ -358,7 +358,7 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace, handl
                             </FormLabel>
                             <FormDescription>The format you select will determine what information will be required going forward</FormDescription>
                             <FormControl>
-                              <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex flex-col md:flex-row justify-between">
+                              <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex flex-col md:flex-row">
                                 <FormItem className="flex items-center space-x-3 space-y-0 cursor-pointer p-3 hover:bg-btnPrimaryGreen/20 rounded-md focus:bg-btnPrimaryGreen/20">
                                   <FormControl>
                                     <RadioGroupItem value="in-person" />
@@ -368,22 +368,13 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace, handl
                                     <span className="text-xs block">This is a physical event</span>
                                   </FormLabel>
                                 </FormItem>
-                                <FormItem className="flex items-center space-x-3 space-y-0 p-3 hover:bg-btnPrimaryGreen/20 rounded-md">
+                                <FormItem className="flex items-center space-x-3 space-y-0 cursor-pointer p-3 hover:bg-btnPrimaryGreen/20 rounded-md focus:bg-btnPrimaryGreen/20">
                                   <FormControl>
                                     <RadioGroupItem value="online" />
                                   </FormControl>
                                   <FormLabel className="font-semibold text-white/60 text-base cursor-pointer">
                                     Online
                                     <span className="text-xs block">Specifically Online Event</span>
-                                  </FormLabel>
-                                </FormItem>
-                                <FormItem className="flex items-center space-x-3 space-y-0 p-3 hover:bg-btnPrimaryGreen/20 rounded-md">
-                                  <FormControl>
-                                    <RadioGroupItem value="hybrid" />
-                                  </FormControl>
-                                  <FormLabel className="font-semibold text-white/60 text-base cursor-pointer">
-                                    Hybrid
-                                    <span className="text-xs block">In-Person & Online</span>
                                   </FormLabel>
                                 </FormItem>
                               </RadioGroup>
