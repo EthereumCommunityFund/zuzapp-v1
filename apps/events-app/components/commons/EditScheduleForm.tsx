@@ -575,6 +575,14 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
                                 // borderWidth: "1px",
                                 border: "1px solid #4b4a4a",
                               }}
+                              slotProps={{
+                                popper: {
+                                  autoFocus: true,
+                                  sx: {
+                                    pointerEvents: 'auto',
+                                  }
+                                }
+                              }}
                             />
                             <TimePicker
                               label="End Time"
@@ -608,6 +616,13 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
                                 // borderColor: "white",
                                 // borderWidth: "1px",
                                 border: "1px solid #4b4a4a",
+                              }}
+                              slotProps={{
+                                popper: {
+                                  sx: {
+                                    pointerEvents: 'auto'
+                                  }
+                                }
                               }}
                             />
                           </div>

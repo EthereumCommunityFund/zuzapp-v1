@@ -592,6 +592,13 @@ export default function AddScheduleForm({ title, isQuickAccess, scheduleId, trac
                                 // borderWidth: "1px",
                                 border: "1px solid #1A1A1A",
                               }}
+                              slotProps={{
+                                popper: {
+                                  sx: {
+                                    pointerEvents: 'auto'
+                                  }
+                                }
+                              }}
                             />
                             <TimePicker
                               label="End Time"
@@ -617,6 +624,13 @@ export default function AddScheduleForm({ title, isQuickAccess, scheduleId, trac
                                 // borderColor: "white",
                                 // borderWidth: "1px",
                                 border: "1px solid #1A1A1A",
+                              }}
+                              slotProps={{
+                                popper: {
+                                  sx: {
+                                    pointerEvents: 'auto'
+                                  }
+                                }
                               }}
                             />
                           </div>

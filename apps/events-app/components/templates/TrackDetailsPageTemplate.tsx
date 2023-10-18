@@ -29,6 +29,7 @@ import AddScheduleForm from '../commons/AddScheduleForm';
 import fetchSchedulesByTrackId from '@/services/fetchSchedulesByTrackId';
 import React from 'react';
 import { fetchAllSpeakers } from '@/controllers';
+import { DialogOverlay } from '@radix-ui/react-dialog';
 
 interface ITrackDetailsPageTemplate {
   trackItem: TrackType;
@@ -159,14 +160,12 @@ export default function TrackDetailsPageTemplate(props: any) {
               </Button>
             </DialogTrigger>
             <DialogContent className="lg:w-3/5 lg:h-4/5 overflow-y-auto">
-              <DialogDescription className="text-white">
-                <AddScheduleForm
-                  title={'Add'}
-                  isQuickAccess={false}
-                  trackId={trackId as string}
-                  updateIsLoading={updateIsLoading}
-                />
-              </DialogDescription>
+              <AddScheduleForm
+                title={'Add'}
+                isQuickAccess={false}
+                trackId={trackId as string}
+                updateIsLoading={updateIsLoading}
+              />
             </DialogContent>
           </Dialog>
         </div>
