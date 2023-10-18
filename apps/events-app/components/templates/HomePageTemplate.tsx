@@ -26,6 +26,7 @@ import { useEventSpace, useEventSpaces } from "@/context/EventSpaceContext";
 import { useState } from "react";
 import { Input } from "../ui/input";
 import { ArrowCircleLeft, ArrowCircleRight, ArrowLeft } from "../ui/icons";
+import { updateUsername } from "@/controllers/profile.controllers";
 
 export const sampleEvents = [
   {
@@ -60,6 +61,7 @@ export default function HomePageTemplate() {
     description: "Type in a username. Does not have to be your real name. You can also change your username later",
     buttonLabel: "Continue",
   });
+  const [open, setOpen] = useState(true)
   console.log("firstLogin", firstLogin);
 
   const { eventSpaceList, setEventSpaceList } = useEventSpace();
@@ -97,11 +99,19 @@ export default function HomePageTemplate() {
 
   const handleDialogButton = async () => {
     console.log('userName', userName);
-    setDialogContent({
-      title: `Welcome ${userName}`,
-      description: 'Now, head to explore Zuzalu & community events!',
-      buttonLabel: 'Complete',
-    })
+    try {
+      const res = await updateUsername({username: userName});
+      console.log(res);
+      setDialogContent({
+        title: `Welcome ${userName}`,
+        description: 'Now, head to explore Zuzalu & community events!',
+        buttonLabel: 'Complete',
+        
+      })
+    } catch (error) {
+      console.error("Error updating username", error);
+    }
+   
   }
 
   return (
@@ -261,15 +271,15 @@ export default function HomePageTemplate() {
       </div>
       {
         firstLogin &&
-        <Dialog open>
+        <Dialog open={open}>
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
               <DialogTitle className="text-2xl">{dialogContent?.title}</DialogTitle>
               <DialogDescription className="text-lg font-bold">{dialogContent?.description}</DialogDescription>
             </DialogHeader>
             <DialogFooter className="pt-5">
-              <Input placeholder="Type your username" className={`bg-black text-white ${userName.length ? `hidden` : `flex`}`} value={userName} onChange={(e) => setUsername(e.target.value)} />
-              <Button variant={`${userName.length ? `strongerGreen` : `primary`}`} className="w-full flex items-center justify-center rounded-3xl py-2 h-full bg-dark text-lg md:text-base" leftIcon={ArrowCircleRight} onClick={handleDialogButton}>
+              <Input placeholder="Type your username" className={`bg-black text-white`} value={userName} onChange={(e) => setUsername(e.target.value)} />
+              <Button variant={`${userName.length ? `strongerGreen` : `primary`}`} className="w-full flex items-center justify-center rounded-3xl py-2 h-full bg-dark text-lg md:text-base" leftIcon={ArrowCircleRight} onClick={dialogContent.buttonLabel === "Continue" ? handleDialogButton : () => router.push("/dashboard/home")}>
                 {dialogContent?.buttonLabel}
               </Button>
             </DialogFooter>
