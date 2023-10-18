@@ -17,8 +17,10 @@ import { EventSpaceDetailsType } from '@/types';
 import useEventDetails from '@/hooks/useCurrentEventSpace';
 import { Loader } from '@/components/ui/Loader';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import ScheduleEditForm from '@/components/commons/AddScheduleForm';
+
 import fetchSchedulesByEvenSpaceId from '@/services/fetchScheduleByEventSpace';
+import AddScheduleForm from '@/components/commons/AddScheduleForm';
+import { fetchAllSpeakers, fetchAllTags, fetchLocationsByEventSpace } from '@/controllers';
 
 const categoryList: DropDownMenuItemType[] = [
   {
@@ -38,6 +40,9 @@ export default function EventViewTracksAlleSchedulesPage() {
   const { eventSpace, isLoading: isLoadingSpace } = useEventDetails();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [schedules, setSchedules] = useState<ScheduleDetailstype[]>();
+  const [locationsResult, setLocationResult] = useState<any[]>([]);
+  const [allOrganizers, setAllOrganizers] = useState<any[]>([]);
+  const [allTags, setAllTags] = useState<any[]>([]);
   const lastTrackRef = useRef<HTMLDivElement>(null);
   const ITEMS_PER_PAGE = 7;
 
@@ -70,8 +75,15 @@ export default function EventViewTracksAlleSchedulesPage() {
     const response = await fetchSchedulesByEvenSpaceId(
       event_space_id as string
     );
+    const locationsResult = await fetchLocationsByEventSpace(event_space_id as string);
+    const allTagsResult = await fetchAllTags();
+    const allOrganizersResult = await fetchAllSpeakers();
+
     setSchedules(response);
     setIsLoading(false);
+    setLocationResult(locationsResult.data.data);
+    setAllTags(allTagsResult.data.data);
+    setAllOrganizers(allOrganizersResult.data.data);
   };
 
   useEffect(() => {
@@ -118,11 +130,13 @@ export default function EventViewTracksAlleSchedulesPage() {
                 </DialogTrigger>
                 {
                   <DialogContent className="md:w-3/5 md:h-3/5 overflow-x-auto sm:w-3/4">
-                    <ScheduleEditForm
-                      title={'Add'}
-                      isFromAllSchedules={true}
+                    <AddScheduleForm
+                      isQuickAccess={true}
                       trackId={trackId as string}
                       updateIsLoading={updateIsLoading}
+                      optionTags={allTags}
+                      optionSpeakers={allOrganizers}
+                      savedLocations={locationsResult}
                     />
                   </DialogContent>
                 }

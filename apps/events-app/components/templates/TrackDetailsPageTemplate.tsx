@@ -28,14 +28,14 @@ import { fetchEventSpaceById } from '@/services/fetchEventSpaceDetails';
 import AddScheduleForm from '../commons/AddScheduleForm';
 import fetchSchedulesByTrackId from '@/services/fetchSchedulesByTrackId';
 import React from 'react';
-import { fetchAllSpeakers } from '@/controllers';
+import { fetchAllSpeakers, fetchAllTags, fetchLocationsByEventSpace } from '@/controllers';
 
 interface ITrackDetailsPageTemplate {
   trackItem: TrackType;
-  organizers: [];
+
 }
 
-export default function TrackDetailsPageTemplate(props: any) {
+export default function TrackDetailsPageTemplate(props: ITrackDetailsPageTemplate) {
   const router = useRouter();
   const { trackItem } = props;
   const { eventSpace } = useEventDetails();
@@ -43,6 +43,9 @@ export default function TrackDetailsPageTemplate(props: any) {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [schedules, setSchedules] = useState<ScheduleDetailstype[]>();
   const [organizers, setOrganizers] = useState<OrganizerType[]>([]);
+  const [locationsResult, setLocationResult] = useState<any[]>([]);
+  const [allOrganizers, setAllOrganizers] = useState<any[]>([]);
+  const [allTags, setAllTags] = useState<any[]>([]);
   const [tags, setTags] = useState<string[]>([]);
   const ITEMS_PER_PAGE = 7;
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -83,6 +86,9 @@ export default function TrackDetailsPageTemplate(props: any) {
     const response: ScheduleDetailstype[] = await fetchSchedulesByTrackId(trackId as string);
     const allTagsSet: Set<string> = new Set();
     const allOrganizersSet: Set<OrganizerType> = new Set();
+    const locationsResult = await fetchLocationsByEventSpace(event_space_id as string);
+    const allTagsResult = await fetchAllTags();
+    const allOrganizersResult = await fetchAllSpeakers();
 
     response.forEach((schedule: ScheduleDetailstype) => {
       if (schedule.tags) {
@@ -99,6 +105,9 @@ export default function TrackDetailsPageTemplate(props: any) {
     setOrganizers(allOrganizers);
     setSchedules(response);
     setIsLoading(false);
+    setLocationResult(locationsResult.data.data);
+    setAllTags(allTagsResult.data.data);
+    setAllOrganizers(allOrganizersResult.data.data);
   };
 
   useEffect(() => {
@@ -161,10 +170,12 @@ export default function TrackDetailsPageTemplate(props: any) {
             <DialogContent className="lg:w-3/5 lg:h-4/5 overflow-y-auto">
               <DialogDescription className="text-white">
                 <AddScheduleForm
-                  title={'Add'}
                   isQuickAccess={false}
                   trackId={trackId as string}
                   updateIsLoading={updateIsLoading}
+                  optionTags={allTags}
+                  optionSpeakers={allOrganizers}
+                  savedLocations={locationsResult}
                 />
               </DialogDescription>
             </DialogContent>
