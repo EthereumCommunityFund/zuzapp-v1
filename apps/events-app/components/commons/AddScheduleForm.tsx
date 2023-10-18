@@ -767,8 +767,8 @@ export default function AddScheduleForm({ title, isQuickAccess, scheduleId, trac
                 <div className="flex flex-col gap-6 items-start pt-5">
                   <div className="flex flex-col gap-6 w-full">
                     <div className="flex items-end gap-6 self-stretch">
-                      <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                        <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">
+                      <div className="flex flex-col gap-[14px] items-start w-full">
+                        <h2 className="md:text-lg  font-semibold leading-[1.2] text-white self-stretch sm:text-base">
                           Enter Name
                         </h2>
 
@@ -833,7 +833,7 @@ export default function AddScheduleForm({ title, isQuickAccess, scheduleId, trac
                               /> */}
                       </div>
                       <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                        <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">
+                        <h2 className="md:text-lg font-semibold leading-[1.2] text-white self-stretch sm:text-base">
                           Select Role
                         </h2>
                         <select
