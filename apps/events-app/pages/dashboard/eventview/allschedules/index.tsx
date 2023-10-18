@@ -19,6 +19,8 @@ import { Loader } from '@/components/ui/Loader';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import ScheduleEditForm from '@/components/commons/AddScheduleForm';
 import fetchSchedulesByEvenSpaceId from '@/services/fetchScheduleByEventSpace';
+import EditScheduleForm from '@/components/commons/EditScheduleForm';
+import AddScheduleForm from '@/components/commons/AddScheduleForm';
 
 const categoryList: DropDownMenuItemType[] = [
   {
@@ -118,9 +120,9 @@ export default function EventViewTracksAlleSchedulesPage() {
                 </DialogTrigger>
                 {
                   <DialogContent className="md:w-3/5 md:h-3/5 overflow-x-auto sm:w-3/4">
-                    <ScheduleEditForm
+                    <AddScheduleForm
                       title={'Add'}
-                      isFromAllSchedules={true}
+                      isQuickAccess={true}
                       trackId={trackId as string}
                       updateIsLoading={updateIsLoading}
                     />
