@@ -28,8 +28,8 @@ export type EventSpaceCreateRequestBody = {
   event_space_type: 'tracks' | 'schedules';
 };
 export type EventSpaceDetailsType = {
-  created_at?: string,
-  creator_id?: string,
+  created_at?: string;
+  creator_id?: string;
   id: string;
   name: string;
   event_space_type: 'tracks' | 'schedules';
@@ -122,6 +122,7 @@ export type ScheduleDetailstype = {
   }[];
 };
 export type ScheduleUpdateRequestBody = {
+  current_rsvp_no: number | undefined;
   name: string;
   format: 'in-person' | 'online';
   description: string;

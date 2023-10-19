@@ -2,28 +2,25 @@ import EventViewHeader from '@/components/eventview/EventViewHeader';
 import RenderHTMLString from '@/components/ui/RenderHTMLString';
 import Speaker from '@/components/ui/Speaker';
 import Button from '@/components/ui/buttons/Button';
-import { Label } from '@/components/ui/label';
 import EventDataDate from '@/components/ui/labels/event-data-date';
 import EventDataTime from '@/components/ui/labels/event-data-time';
-
-import { useEventSpace } from '@/context/EventSpaceContext';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-
 import { BiEditAlt, BiLeftArrow } from 'react-icons/bi';
 import { BsFillTicketFill } from 'react-icons/bs';
-import { HiArrowLeft, HiCog, HiLocationMarker, HiMicrophone, HiTag, HiUserGroup } from 'react-icons/hi';
+import { HiArrowLeft } from 'react-icons/hi';
 import useEventDetails from '@/hooks/useCurrentEventSpace';
 import { Loader } from '@/components/ui/Loader';
-import { cancelUserRsvpBySchedule, checkUserRsvpBySchedule, fetchScheduleByID, rsvpSchedule } from '@/controllers';
+import { cancelUserRsvpBySchedule, checkUserRsvpBySchedule, rsvpSchedule } from '@/controllers';
 import EventViewDetailsPanel from '@/components/eventview/EventViewDetailsPanel';
-import { QueryClient, dehydrate } from 'react-query';
+import { QueryClient, dehydrate, useQuery } from 'react-query';
 import { fetchEventSpaceById } from '@/services/fetchEventSpaceDetails';
 import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
 import { OrganizerType, ScheduleUpdateRequestBody } from '@/types';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import ScheduleEditForm from '@/components/commons/AddScheduleForm';
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import EditScheduleForm from '@/components/commons/EditScheduleForm';
+import fetchScheduleById from '@/services/fetchScheduleById';
+import { toast } from '@/components/ui/use-toast';
 
 interface IEventLink {
   name: string;
@@ -39,7 +36,7 @@ export default function EventViewScheduleDetailsPage() {
   const [rsvpFull, setRsvpFull] = useState(false);
   const [currentSchedule, setCurrentSchedule] = useState<ScheduleUpdateRequestBody>();
   const trackItem = eventSpace?.tracks.find((trackItem) => trackItem.id === trackId);
-  console.log('Current Schedule', currentSchedule);
+
   const startTime =
     currentSchedule &&
     new Date(currentSchedule.start_time).toLocaleTimeString('en-US', {
@@ -75,15 +72,30 @@ export default function EventViewScheduleDetailsPage() {
 
   const handleRsvpAction = async () => {
     try {
-      if (hasRsvpd) {
+      if (currentSchedule?.rsvp_amount === 0) {
+        toast({
+          title: 'Error',
+          description: 'No RSVPs available',
+          variant: 'destructive',
+        });
+      } else if (hasRsvpd) {
         const result = await cancelUserRsvpBySchedule(scheduleId as string, event_space_id as string);
-        console.log(result, 'cancelrsvp');
         setHasRsvpd(false);
+      } else if (currentSchedule?.rsvp_amount === currentSchedule?.current_rsvp_no) {
+        toast({
+          title: 'Info',
+          description: 'RSVP is full',
+          variant: 'destructive',
+        });
       } else {
         console.log(scheduleId, 'scheduleId');
         const result = await rsvpSchedule(scheduleId as string, event_space_id as string);
-        console.log(result, 'rsvp updated');
         setHasRsvpd(true);
+        toast({
+          title: 'Info',
+          description: 'RSVPed successfully',
+          variant: 'destructive',
+        });
       }
     } catch (error) {
       console.log(error);
@@ -100,27 +112,32 @@ export default function EventViewScheduleDetailsPage() {
     }
   };
 
-  useEffect(() => {
-    const fetchCurrentSchedule = async () => {
-      try {
-        setIsLoading(true);
-        const result = await fetchScheduleByID(scheduleId as string);
-        console.log(result, 'result');
-        setCurrentSchedule({
-          ...result.data.data,
-          event_type: JSON.parse(result.data.data.event_type)[0],
-          experience_level: JSON.parse(result.data.data.experience_level)[0],
-        });
-        setIsLoading(false);
-        if (result.data.data.rsvp_amount === result.data.data.current_rsvp_no) {
-          setRsvpFull(true);
-        }
-      } catch (error) {
-        console.log(error);
+  const { data, isError } = useQuery<ScheduleUpdateRequestBody, Error>(['scheduleDetails', scheduleId], () => fetchScheduleById(scheduleId as string), {
+    enabled: !!scheduleId,
+    onSuccess: (data) => {
+      console.log('schedule details', data);
+      const modifiedSchedule = {
+        ...data,
+        event_type: JSON.parse(data.event_type as string)[0],
+        experience_level: JSON.parse(data.experience_level as string)[0],
+      };
+      setCurrentSchedule(modifiedSchedule);
+      setIsLoading(false);
+      if (data.rsvp_amount === data.current_rsvp_no) {
+        setRsvpFull(true);
       }
-    };
+    },
+  });
 
-    fetchCurrentSchedule();
+  useEffect(() => {
+    if (currentSchedule) {
+      if (currentSchedule.rsvp_amount === currentSchedule.current_rsvp_no) {
+        setRsvpFull(true);
+      }
+    }
+  }, [currentSchedule]);
+
+  useEffect(() => {
     checkIfUserHasRsvpd();
   }, []);
 
@@ -148,12 +165,7 @@ export default function EventViewScheduleDetailsPage() {
                     </Button>
                   </DialogTrigger>
                   <DialogContent className="h-3/5 lg:w-3/5 overflow-y-auto">
-                    <EditScheduleForm
-                      title="Update"
-                      isQuickAccess={false}
-                      scheduleId={scheduleId as string}
-                      trackId={trackId as string}
-                    />
+                    <EditScheduleForm title="Update" isQuickAccess={false} scheduleId={scheduleId as string} trackId={trackId as string} />
                   </DialogContent>
                 </Dialog>
               </div>
@@ -168,8 +180,15 @@ export default function EventViewScheduleDetailsPage() {
                     <h3 className="float-right">By: drivenfast</h3>
                   </div>
                 </div>
-                <Button variant="primary" size="lg" className={`rounded-2xl justify-center ${rsvpUpdated ? 'animate-rsvp' : ''}`} leftIcon={BsFillTicketFill} onClick={handleRsvpAction}>
-                  {hasRsvpd ? 'Cancel RSVP' : rsvpFull ? 'RSVP Full' : 'RSVP Schedule'}
+                <Button
+                  variant="primary"
+                  size="lg"
+                  className={`rounded-2xl justify-center ${rsvpUpdated ? 'animate-rsvp' : ''}`}
+                  leftIcon={BsFillTicketFill}
+                  onClick={handleRsvpAction}
+                  disabled={rsvpFull && (currentSchedule?.rsvp_amount || 0) > 0}
+                >
+                  {hasRsvpd ? 'Cancel RSVP' : rsvpFull && (currentSchedule?.rsvp_amount || 0) > 0 ? 'RSVP Full' : 'RSVP Schedule'}
                 </Button>
               </div>
               <div className="flex flex-col gap-2.5 px-5 pt-5 pb-[60px]">
