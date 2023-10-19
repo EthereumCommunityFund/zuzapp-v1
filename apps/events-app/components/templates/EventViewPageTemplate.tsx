@@ -171,7 +171,7 @@ export default function EventViewPageTemplate({ eventSpace, profile }: { eventSp
                 <Label className='text-xl'>Location</Label>
               </div>
               <div className='flex flex-col gap-[6px]'>
-                <Label className='text-lg'>Apply to See Address</Label>
+                <Label className='text-lg'>{profile ? locationName : `Apply to See Address`}</Label>
                 <Label className='text-sm opacity-70'>{locationAddress}</Label>
               </div>
               {imgUrls &&
