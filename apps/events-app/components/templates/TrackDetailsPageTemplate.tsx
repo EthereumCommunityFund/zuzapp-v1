@@ -60,10 +60,10 @@ export default function TrackDetailsPageTemplate(props: any) {
   const updateIsLoading = (newState: boolean) => {
     setIsLoading(newState);
   };
-  const handleItemClick = (scheduleName: string, trackId: string | undefined, event_space_id: string) => {
+  const handleItemClick = (scheduleName: string, trackId: string | undefined, event_space_id: string, scheduleId: string) => {
     router.push({
       pathname: '/dashboard/eventview/tracks/track/schedule',
-      query: { scheduleName, trackId, event_space_id },
+      query: { scheduleName, trackId, event_space_id, scheduleId },
     });
   };
 
@@ -160,12 +160,7 @@ export default function TrackDetailsPageTemplate(props: any) {
               </Button>
             </DialogTrigger>
             <DialogContent className="lg:w-3/5 lg:h-4/5 overflow-y-auto">
-              <AddScheduleForm
-                title={'Add'}
-                isQuickAccess={false}
-                trackId={trackId as string}
-                updateIsLoading={updateIsLoading}
-              />
+              <AddScheduleForm title={'Add'} isQuickAccess={false} trackId={trackId as string} updateIsLoading={updateIsLoading} />
             </DialogContent>
           </Dialog>
         </div>
@@ -174,25 +169,17 @@ export default function TrackDetailsPageTemplate(props: any) {
         ) : (
           <div className="flex flex-col gap-2.5 p-5 w-full">
             <div className="flex flex-col gap-[10px] overflow-hidden rounded-[10px]">
-              {
-                schedules && eventSpace &&
+              {schedules && eventSpace && (
                 <>
-                  {
-                    currentSchedules.map(
-                      (schedule, idx) => schedule.track_id === trackItem?.id &&
-                        <UserFacingTrack key={idx} scheduleData={schedule} onClick={() => handleItemClick(schedule.name, trackItem?.id, eventSpace.id)} />
-                    )
-                  }
-                  {totalSchedules > ITEMS_PER_PAGE &&
-                    <Pagination
-                      currentPage={currentPage}
-                      totalItems={schedules.length}
-                      itemsPerPage={ITEMS_PER_PAGE}
-                      onPageChange={handlePageChange}
-                    />
-                  }
+                  {currentSchedules.map(
+                    (schedule, idx) =>
+                      schedule.track_id === trackItem?.id && (
+                        <UserFacingTrack key={idx} scheduleData={schedule} onClick={() => handleItemClick(schedule.name, trackItem?.id, eventSpace.id, schedule.id)} />
+                      )
+                  )}
+                  {totalSchedules > ITEMS_PER_PAGE && <Pagination currentPage={currentPage} totalItems={schedules.length} itemsPerPage={ITEMS_PER_PAGE} onPageChange={handlePageChange} />}
                 </>
-              }
+              )}
             </div>
           </div>
         )}

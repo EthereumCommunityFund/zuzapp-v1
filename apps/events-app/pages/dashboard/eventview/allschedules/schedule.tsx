@@ -30,7 +30,7 @@ export default function EventViewScheduleDetailsPage() {
   const [rsvpUpdated, setRsvpUpdated] = useState(false);
   const [currentSchedule, setCurrentSchedule] = useState<ScheduleUpdateRequestBody>();
   const [hasRsvpd, setHasRsvpd] = useState(false);
-  const [rsvpFull, setRsvpFull] = useState(false);
+  const [isRsvpFullOnLoad, setIsRsvpFullOnLoad] = useState(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const trackItem = eventSpace?.tracks.find((trackItem) => trackItem.id === trackId);
@@ -55,12 +55,6 @@ export default function EventViewScheduleDetailsPage() {
       } else if (hasRsvpd) {
         const result = await cancelUserRsvpBySchedule(scheduleId as string, event_space_id as string);
         setHasRsvpd(false);
-      } else if (currentSchedule?.rsvp_amount === currentSchedule?.current_rsvp_no) {
-        toast({
-          title: 'Info',
-          description: 'RSVP is full',
-          variant: 'destructive',
-        });
       } else {
         console.log(scheduleId, 'scheduleId');
         const result = await rsvpSchedule(scheduleId as string, event_space_id as string);
@@ -97,16 +91,16 @@ export default function EventViewScheduleDetailsPage() {
       };
       setCurrentSchedule(modifiedSchedule);
       setIsLoading(false);
-      if (data.rsvp_amount === data.current_rsvp_no) {
-        setRsvpFull(true);
-      }
     },
   });
 
   useEffect(() => {
     if (currentSchedule) {
       if (currentSchedule.rsvp_amount === currentSchedule.current_rsvp_no) {
-        setRsvpFull(true);
+        setIsRsvpFullOnLoad(true);
+      }
+      if (currentSchedule.rsvp_amount === 0) {
+        setIsRsvpFullOnLoad(false);
       }
     }
   }, [currentSchedule]);
@@ -173,9 +167,9 @@ export default function EventViewScheduleDetailsPage() {
                 className={`rounded-2xl justify-center ${rsvpUpdated ? 'animate-rsvp' : ''}`}
                 leftIcon={BsFillTicketFill}
                 onClick={handleRsvpAction}
-                disabled={rsvpFull && (currentSchedule?.rsvp_amount || 0) > 0}
+                disabled={isRsvpFullOnLoad || currentSchedule?.rsvp_amount === 0 || (isRsvpFullOnLoad && !hasRsvpd)}
               >
-                {hasRsvpd ? 'Cancel RSVP' : rsvpFull && (currentSchedule?.rsvp_amount || 0) > 0 ? 'RSVP Full' : 'RSVP Schedule'}
+                {currentSchedule?.rsvp_amount === 0 ? 'No Rsvp Available' : hasRsvpd ? 'Cancel RSVP' : isRsvpFullOnLoad ? 'RSVP Full' : 'RSVP Schedule'}
               </Button>
             </div>
             <div className="flex flex-col gap-2.5 px-5 pt-5 pb-[60px]">
