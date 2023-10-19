@@ -9,7 +9,7 @@ export const scheduleNavBarDetails: ScheduleNavDetails[] = [
   },
   {
       name: "Schedule Description",
-      description: "In-Person, Online, Hybrid"
+      description: "In-Person, Online"
   },
   {
       name: "Dates & Times",

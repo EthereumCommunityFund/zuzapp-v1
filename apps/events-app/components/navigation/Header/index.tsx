@@ -14,8 +14,11 @@ import { User } from '@/components/ui/icons';
 import { useState } from 'react';
 import { navBarRoutes } from '@/constant/routes';
 import { FaCog } from 'react-icons/fa';
+import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
+import { Database } from '@/database.types';
+import MyProfileButton from './MyProfileButton';
 
-export default function DashboardHeader() {
+export default function DashboardHeader({ profile }: any) {
   const { signIn } = useUserPassportContext();
   const { isAuthenticated, user } = useGlobalContext();
   const router = useRouter();
@@ -38,8 +41,8 @@ export default function DashboardHeader() {
             <Image src="/images/Logo.png" alt="Zuzalu Logo" width={150} height={35} />
           </Link>
         </div>
-        <nav className={`dashboard-menu min-w-[260px] fixed hidden flex-col h-screen border-r border-r-gray-800 bg-[#2F3232] py-10 px-6 transition-transform duration-300 ${dashboardOpen && 'open'}`}>
-          <div className="flex-1 flex flex-col opacity-70">
+        <nav className={`dashboard-menu w-[260px] fixed hidden flex-col h-screen border-r border-r-gray-800 bg-[#2F3232] py-10 px-6 transition-transform duration-300 ${dashboardOpen && 'open'}`}>
+          <div className="lg:flex-1 flex flex-col opacity-70">
             <div className=" mt-14 flex-1">
               <ul className="space-y-2">
                 {routes.map((route, index) => (
@@ -57,8 +60,9 @@ export default function DashboardHeader() {
               <ul className="flex flex-col gap-[31px]">
                 <li onClick={handleClick} className="flex items-center space-x-2">
                   <Link href={'/dashboard/events/myspaces'} className="w-full">
-                    <Button size="base" variant={'primaryGreen'} className="rounded-full w-full text-base" leftIcon={FaCog}>
-                      My Event Spaces
+                    <Button size="lg" variant={'primaryGreen'} className="rounded-full w-full font-bold text-2xl lg:text-base" leftIcon={FaCog}>
+                      <span className="text-sm"> My Event Spaces</span>
+                     
                     </Button>
                   </Link>
                 </li>
@@ -71,10 +75,9 @@ export default function DashboardHeader() {
         </div>
         <div>
           {isAuthenticated ? (
-            <Button leftIcon={User} variant="quiet" className="space-x-2 rounded-full">
-              {/* {user?.email} */}
-              <span className="hidden lg:inline-flex">My Profile</span>
-            </Button>
+            <MyProfileButton className='' userName={profile[0].username ? profile[0].username : `My Profile`} />
+            // <Button leftIcon={User} variant="quiet" className="space-x-2 rounded-full">
+            // </Button>
           ) : (
             <Popover>
               <PopoverTrigger className="flex space-x-2 items-center rounded-3xl px-5 py-2 h-full bg-dark text-sm md:text-base" onClick={signIn}>
@@ -95,3 +98,30 @@ export default function DashboardHeader() {
     </div>
   );
 }
+
+export const getServerSideProps = async (ctx: any) => {
+  const supabase = createPagesServerClient<Database>(ctx);
+
+  let {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  if (!session)
+    return {
+      props: {
+        initialSession: null,
+        user: null,
+      },
+    };
+
+  // get profile from session
+  const { data: profile, error } = await supabase.from('profile').select('*').eq('uuid', session.user.id);
+
+  return {
+    props: {
+      initialSession: session,
+      user: session?.user,
+      profile: profile,
+    },
+  };
+};

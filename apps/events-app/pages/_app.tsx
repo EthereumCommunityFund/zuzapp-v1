@@ -109,7 +109,7 @@ const App = ({ Component, pageProps }: { Component: any; pageProps: any }) => {
             <QueryClientProvider client={queryClient}>
               <Hydrate state={pageProps.dehydratedState}>
                 <EventSpaceProvider>
-                  <DashboardProvider>
+                  <DashboardProvider props={pageProps}>
                     <Component {...pageProps} />
                     <Toaster />
                   </DashboardProvider>

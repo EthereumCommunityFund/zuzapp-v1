@@ -23,6 +23,10 @@ import { arrayFromLength } from "@/lib/helper";
 import { EventTemplateSkeleton } from "../commons/EventTemplateSkeleton";
 import { HomePageTemplateSkeleton } from "../commons/HomePageTemplateSkeleton";
 import { useEventSpace, useEventSpaces } from "@/context/EventSpaceContext";
+import { useState } from "react";
+import { Input } from "../ui/input";
+import { ArrowCircleLeft, ArrowCircleRight, ArrowLeft } from "../ui/icons";
+import { updateUsername } from "@/controllers/profile.controllers";
 
 export const sampleEvents = [
   {
@@ -39,10 +43,26 @@ export const sampleEvents = [
   },
 ];
 
-export default function HomePageTemplate() {
+interface DialogContent {
+  title: string;
+  description: string;
+  buttonLabel: string;
+  buttonAction?: () => void;
+}
+
+export default function HomePageTemplate(props: { profile: any }) {
   const { signIn } = useUserPassportContext();
   const { isAuthenticated, user } = useGlobalContext();
   const router = useRouter();
+  const [userName, setUsername] = useState<string>('');
+  const { firstLogin } = router.query;
+  const [dialogContent, setDialogContent] = useState<DialogContent>({
+    title: "Welcome to Zuzalu, let's get your name!",
+    description: "Type in a username. Does not have to be your real name. You can also change your username later",
+    buttonLabel: "Continue",
+  });
+  const { profile } = props;
+  console.log("profile in homepage", profile);
 
   const { eventSpaceList, setEventSpaceList } = useEventSpace();
 
@@ -75,6 +95,23 @@ export default function HomePageTemplate() {
       month: "long",
       day: "numeric",
     }).format(date);
+  }
+
+  const handleDialogButton = async () => {
+    console.log('userName', userName);
+    try {
+      const res = await updateUsername({ username: userName });
+      console.log(res);
+      setDialogContent({
+        title: `Welcome ${userName}`,
+        description: 'Now, head to explore Zuzalu & community events!',
+        buttonLabel: 'Complete',
+
+      })
+    } catch (error) {
+      console.error("Error updating username", error);
+    }
+
   }
 
   return (
@@ -192,7 +229,6 @@ export default function HomePageTemplate() {
                 <div className="mt-3 md:mt-0">
                   <Button
                     size="lg"
-                    variant={"primaryGreen"}
                     className="rounded-full w-full flex items-center justify-center md:w-auto"
                     onClick={() => event.id && handleButtonClick(event.id)}
                   >
@@ -232,6 +268,23 @@ export default function HomePageTemplate() {
           ))} */}
         </div>
       </div>
+      {
+        firstLogin && !profile[0].username &&
+        <Dialog open={true}>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle className="text-2xl">{dialogContent?.title}</DialogTitle>
+              <DialogDescription className="text-lg font-bold">{dialogContent?.description}</DialogDescription>
+            </DialogHeader>
+            <DialogFooter className="pt-5">
+              <Input placeholder="Type your username" className={`bg-black text-white`} value={userName} onChange={(e) => setUsername(e.target.value)} />
+              <Button variant={`${userName.length ? `strongerGreen` : `primary`}`} className="w-full flex items-center justify-center rounded-3xl py-2 h-full bg-dark text-lg md:text-base" leftIcon={ArrowCircleRight} onClick={dialogContent.buttonLabel === "Continue" ? handleDialogButton : () => router.push("/dashboard/home")}>
+                {dialogContent?.buttonLabel}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      }
     </div>
   );
 }

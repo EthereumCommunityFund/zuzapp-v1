@@ -120,7 +120,10 @@ export function UserPassportContextProvider({
         pcdString: pcdStr,
         ...user,
       });
-      router.push("/dashboard/home");
+      router.push({
+        pathname: "/dashboard/home",
+        query: "firstLogin=true",
+      });
     } catch (error) {
       console.log(error, "new error");
     }

@@ -23,13 +23,13 @@ export default function TrackItem(props: IProps) {
       onClick={onClick}
     >
       <div className="flex items-center gap-2 w-full md:w-auto">
-        <div className="bg-white rounded-lg p-1 lg:h-fit">
+        <div className="bg-white rounded-lg p-1 w-[130px]">
           <img
             src={trackImage}
             alt="track-image"
-            className="rounded-lg"
-            width={130}
-            height={100}
+            className="rounded-lg object-cover"
+            // width={130}
+            // height={100}
           />
         </div>
         <div className="flex flex-col justify-center items-start gap-[14px] w-full md:w-auto self-stretch">

@@ -31,7 +31,7 @@ function generateRandomLocation(): LocationType {
 }
 
 export const generateRandomEventSpaceUpdateData = (id: string, event_space_type: 'tracks' | 'schedules'): EventSpaceUpdateRequestBody => {
-  const formats = ['in-person', 'online', 'hybrid'];
+  const formats = ['in-person', 'online'];
   const statuses = ['draft', 'published', 'archived'];
   const eventTypes = ['General', 'Special', 'Workshop', 'Seminar'];
   const experienceLevels = ['beginner', 'intermediate', 'advanced'];
