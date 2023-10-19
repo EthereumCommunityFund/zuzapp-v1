@@ -1,17 +1,16 @@
 import HomePageTemplate from '@/components/templates/HomePageTemplate';
 import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
 import { Database } from '@/database.types';
-import { useEventSpaces } from '@/context/EventSpaceContext';
-import { useEffect } from 'react';
-import { useQueryClient } from 'react-query';
+
+
 
 export default function DashboardHomePage(props: { profile: any }) {
   const { profile } = props;
   console.log(profile, 'profile');
-  const result = useEventSpaces();
+
   return (
     <>
-      <HomePageTemplate />
+      <HomePageTemplate profile={profile} />
     </>
   );
 }
