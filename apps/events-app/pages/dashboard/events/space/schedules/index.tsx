@@ -1,20 +1,29 @@
-import { BiLeftArrowAlt, BiEditAlt, BiPlus, BiRadioCircle, BiCalendarAlt, BiTimeFive, BiRadioCircleMarked, BiPlusCircle } from 'react-icons/bi';
-import { HiArrowLeft, HiCog, HiSelector } from 'react-icons/hi';
+import {
+  BiLeftArrowAlt,
+  BiEditAlt,
+  BiPlus,
+  BiRadioCircle,
+  BiCalendarAlt,
+  BiTimeFive,
+  BiRadioCircleMarked,
+  BiPlusCircle,
+} from "react-icons/bi";
+import { HiArrowLeft, HiCog, HiSelector } from "react-icons/hi";
 
-import Button from '@/components/ui/buttons/Button';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { BsFillPlusCircleFill } from 'react-icons/bs';
-import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
-import { Database } from '@/database.types';
-import { useQuery } from 'react-query';
-import fetchSchedulesByTrackId from '@/services/fetchScedulesByTrackId';
-import { ScheduleUpdateRequestBody } from '@/types';
-import { HiArrowRight } from 'react-icons/hi2';
-import { Loader } from '@/components/ui/Loader';
-import fetchSchedulesByEvenSpaceId from '@/services/fetchScheduleByEventSpace';
-import { useEffect } from 'react';
-import ScheduleItemCard from '@/components/schedules/ScheduleItemCard';
+import Button from "@/components/ui/buttons/Button";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { BsFillPlusCircleFill } from "react-icons/bs";
+import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
+import { Database } from "@/database.types";
+import { useQuery } from "react-query";
+import fetchSchedulesByTrackId from "@/services/fetchScedulesByTrackId";
+import { ScheduleUpdateRequestBody } from "@/types";
+import { HiArrowRight } from "react-icons/hi2";
+import { Loader } from "@/components/ui/Loader";
+import fetchSchedulesByEvenSpaceId from "@/services/fetchScheduleByEventSpace";
+import { useEffect } from "react";
+import ScheduleItemCard from "@/components/schedules/ScheduleItemCard";
 
 type IdProp = {
   id: string;
@@ -31,7 +40,7 @@ export default function SchedulesDashboardPage() {
     isLoading,
     isError,
   } = useQuery<Joined<IdProp>[], Error>(
-    ['schedules', event_space_id],
+    ["schedules", event_space_id],
     () => fetchSchedulesByEvenSpaceId(event_space_id as string),
 
     {
@@ -56,7 +65,7 @@ export default function SchedulesDashboardPage() {
         },
       });
     } catch (error) {
-      console.error('Error fetching space details', error);
+      console.error("Error fetching space details", error);
     }
   };
 
@@ -74,22 +83,22 @@ export default function SchedulesDashboardPage() {
         },
       });
     } catch (error) {
-      console.error('Error fetching space details', error);
+      console.error("Error fetching space details", error);
     }
   };
   function formatDate(dateString: string | number | Date) {
     const date = new Date(dateString);
-    return new Intl.DateTimeFormat('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
+    return new Intl.DateTimeFormat("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
     }).format(date);
   }
   function formatTime(dateString: string | number | Date) {
     const date = new Date(dateString);
-    return new Intl.DateTimeFormat('en-US', {
-      hour: 'numeric',
-      minute: 'numeric',
+    return new Intl.DateTimeFormat("en-US", {
+      hour: "numeric",
+      minute: "numeric",
       hour12: true,
     }).format(date);
   }
@@ -110,7 +119,10 @@ export default function SchedulesDashboardPage() {
           <div className="flex flex-col gap-[30px] self-stretch">
             <div className="flex items-start gap-[10px] self-stretch">
               <div className="flex flex-col gap-5 self-stretch">
-                <h3 className="text-2xl leading-[1.2] opacity-70 font-bold"> All Schedules</h3>
+                <h3 className="text-2xl leading-[1.2] opacity-70 font-bold">
+                  {" "}
+                  All Schedules
+                </h3>
               </div>
             </div>
             <div className="flex justify-between items-start self-stretch"></div>
@@ -136,14 +148,10 @@ export const getServerSideProps = async (ctx: any) => {
       },
     };
 
-  // get profile from session
-  const { data: profile, error } = await supabase.from('profile').select('*').eq('uuid', session.user.id);
-
   return {
     props: {
       initialSession: session,
       user: session?.user,
-      profile: profile,
     },
   };
 };

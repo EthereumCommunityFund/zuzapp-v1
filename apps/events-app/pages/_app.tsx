@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { UserPassportContextProvider } from "../context/PassportContext";
-import { createPagesBrowserClient } from "@supabase/auth-helpers-nextjs";
+import {
+  createPagesBrowserClient,
+  createPagesServerClient,
+} from "@supabase/auth-helpers-nextjs";
 import { SessionContextProvider, Session } from "@supabase/auth-helpers-react";
 import GlobalProvider from "../context/GlobalContext";
 import "../styles/globals.css";
@@ -11,11 +14,40 @@ import { EventSpaceProvider } from "@/context/EventSpaceContext";
 import { Toaster } from "@/components/ui/toaster";
 import { useRouter } from "next/router";
 import localforage from "localforage";
+import { Database } from "@/database.types";
+import App, { AppInitialProps, AppContext } from "next/app";
 
 /**
  * This component wraps all pages in this Next.js application.
  */
-const App = ({ Component, pageProps }: { Component: any; pageProps: any }) => {
+
+export const fetchUser = async (ctx: any) => {
+  const supabase = createPagesServerClient<Database>(ctx);
+  let {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  if (!session) {
+    return {
+      initialSession: null,
+      user: null,
+      profile: null,
+    };
+  }
+
+  return {
+    initialSession: session,
+    user: session?.user,
+  };
+};
+
+const MyApp = ({
+  Component,
+  pageProps,
+}: {
+  Component: any;
+  pageProps: any;
+}) => {
   const [supabaseClient] = useState(() => createPagesBrowserClient());
   const queryClient = new QueryClient();
   const router = useRouter();
@@ -104,9 +136,9 @@ const App = ({ Component, pageProps }: { Component: any; pageProps: any }) => {
         supabaseClient={supabaseClient}
         initialSession={pageProps.initialSession}
       >
-        <GlobalProvider user={pageProps.user}>
-          <UserPassportContextProvider>
-            <QueryClientProvider client={queryClient}>
+        <QueryClientProvider client={queryClient}>
+          <GlobalProvider user={pageProps.user}>
+            <UserPassportContextProvider>
               <Hydrate state={pageProps.dehydratedState}>
                 <EventSpaceProvider>
                   <DashboardProvider props={pageProps}>
@@ -115,12 +147,12 @@ const App = ({ Component, pageProps }: { Component: any; pageProps: any }) => {
                   </DashboardProvider>
                 </EventSpaceProvider>
               </Hydrate>
-            </QueryClientProvider>
-          </UserPassportContextProvider>
-        </GlobalProvider>
+            </UserPassportContextProvider>
+          </GlobalProvider>
+        </QueryClientProvider>
       </SessionContextProvider>
     </>
   );
 };
 
-export default App;
+export default MyApp;

@@ -81,7 +81,7 @@ export default function AddSchedulePage(props: any) {
   const defaultSpeakers = {
     options: optionSpeakers,
     getOptionLabel: (option: { name: string }) => option.name,
-  }
+  };
 
   const savedLocations = props.savedLocations;
 
@@ -253,14 +253,14 @@ export default function AddSchedulePage(props: any) {
         eventType.length > 0
           ? [eventType]
           : eventSpace?.event_type?.[0]
-            ? [eventSpace?.event_type[0]]
-            : [eventSpace?.event_type || "Meetup"],
+          ? [eventSpace?.event_type[0]]
+          : [eventSpace?.event_type || "Meetup"],
       experience_level:
         experienceLevel.length > 0
           ? [experienceLevel]
           : eventSpace?.experience_level?.[0]
-            ? [eventSpace?.experience_level[0]]
-            : [eventSpace?.experience_level || "Beginner"],
+          ? [eventSpace?.experience_level[0]]
+          : [eventSpace?.experience_level || "Beginner"],
       tags: tags,
       schedule_frequency: frequency,
       location_id:
@@ -515,7 +515,9 @@ export default function AddSchedulePage(props: any) {
                     />
                     {isQuickAccess && (
                       <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                        <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select Track</Label>
+                        <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
+                          Select Track
+                        </Label>
                         <select
                           onChange={handleTrackSelect}
                           title="Track List"
@@ -800,13 +802,15 @@ export default function AddSchedulePage(props: any) {
                                       // setTagItem({ name: newValue.name });
                                       setEventItem({
                                         ...eventItem,
-                                        name: newValue.name
-                                      })
+                                        name: newValue.name,
+                                      });
                                     }
-
                                   }}
                                   onInputChange={(event, newInputValue) => {
-                                    setEventItem({ ...eventItem, name: newInputValue });
+                                    setEventItem({
+                                      ...eventItem,
+                                      name: newInputValue,
+                                    });
                                   }}
                                   slotProps={{
                                     paper: {
@@ -1122,12 +1126,6 @@ export const getServerSideProps = async (ctx: any) => {
       },
     };
 
-  // get profile from session
-  const { data: profile, error } = await supabase
-    .from("profile")
-    .select("*")
-    .eq("uuid", session.user.id);
-
   const locationsResult = await fetchLocationsByEventSpace(
     ctx.query.event_space_id
   );
@@ -1138,7 +1136,6 @@ export const getServerSideProps = async (ctx: any) => {
     props: {
       initialSession: session,
       user: session?.user,
-      profile: profile,
       savedLocations: locationsResult.data.data,
       tags: tagsResult.data.data,
       organizers: organizersResult.data.data,

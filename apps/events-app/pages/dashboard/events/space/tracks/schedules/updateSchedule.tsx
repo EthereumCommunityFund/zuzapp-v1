@@ -493,10 +493,7 @@ export default function UpdateSchedulePage() {
                   <DialogFooter className="pt-5">
                     <div className="flex justify-between items-center">
                       <button
-                        onClick={
-
-                          form.handleSubmit(onSubmit)
-                        }
+                        onClick={form.handleSubmit(onSubmit)}
                         className="py-2.5 px-3.5 flex items-center gap-1 rounded-[20px] bg-emerald-800"
                       >
                         <span>Save edit</span>
@@ -1261,17 +1258,10 @@ export const getServerSideProps = async (ctx: any) => {
       },
     };
 
-  // get profile from session
-  const { data: profile, error } = await supabase
-    .from("profile")
-    .select("*")
-    .eq("uuid", session.user.id);
-
   return {
     props: {
       initialSession: session,
       user: session?.user,
-      profile: profile,
     },
   };
 };

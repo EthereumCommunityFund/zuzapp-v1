@@ -50,22 +50,21 @@ interface DialogContent {
   buttonAction?: () => void;
 }
 
-export default function HomePageTemplate(props: { profile: any }) {
+export default function HomePageTemplate() {
   const { signIn } = useUserPassportContext();
   const { isAuthenticated, user } = useGlobalContext();
   const router = useRouter();
-  const [userName, setUsername] = useState<string>('');
+  const [userName, setUsername] = useState<string>("");
   const { firstLogin } = router.query;
   const [dialogContent, setDialogContent] = useState<DialogContent>({
     title: "Welcome to Zuzalu, let's get your name!",
-    description: "Type in a username. Does not have to be your real name. You can also change your username later",
+    description:
+      "Type in a username. Does not have to be your real name. You can also change your username later",
     buttonLabel: "Continue",
   });
-  const { profile } = props;
-  console.log("profile in homepage", profile);
 
   const { eventSpaceList, setEventSpaceList } = useEventSpace();
-
+  const { profile } = useGlobalContext();
   const handleButtonClick = async (event_space_id: string) => {
     router.push({
       pathname: `/dashboard/eventview/about/`, // Update with your actual route
@@ -98,21 +97,19 @@ export default function HomePageTemplate(props: { profile: any }) {
   }
 
   const handleDialogButton = async () => {
-    console.log('userName', userName);
+    console.log("userName", userName);
     try {
       const res = await updateUsername({ username: userName });
       console.log(res);
       setDialogContent({
         title: `Welcome ${userName}`,
-        description: 'Now, head to explore Zuzalu & community events!',
-        buttonLabel: 'Complete',
-
-      })
+        description: "Now, head to explore Zuzalu & community events!",
+        buttonLabel: "Complete",
+      });
     } catch (error) {
       console.error("Error updating username", error);
     }
-
-  }
+  };
 
   return (
     <div className="md:w-5/6 w-[95%] mx-auto ">
@@ -268,23 +265,40 @@ export default function HomePageTemplate(props: { profile: any }) {
           ))} */}
         </div>
       </div>
-      {
-        firstLogin && !profile[0].username &&
+      {firstLogin && !profile.username && (
         <Dialog open={true}>
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
-              <DialogTitle className="text-2xl">{dialogContent?.title}</DialogTitle>
-              <DialogDescription className="text-lg font-bold">{dialogContent?.description}</DialogDescription>
+              <DialogTitle className="text-2xl">
+                {dialogContent?.title}
+              </DialogTitle>
+              <DialogDescription className="text-lg font-bold">
+                {dialogContent?.description}
+              </DialogDescription>
             </DialogHeader>
             <DialogFooter className="pt-5">
-              <Input placeholder="Type your username" className={`bg-black text-white`} value={userName} onChange={(e) => setUsername(e.target.value)} />
-              <Button variant={`${userName.length ? `strongerGreen` : `primary`}`} className="w-full flex items-center justify-center rounded-3xl py-2 h-full bg-dark text-lg md:text-base" leftIcon={ArrowCircleRight} onClick={dialogContent.buttonLabel === "Continue" ? handleDialogButton : () => router.push("/dashboard/home")}>
+              <Input
+                placeholder="Type your username"
+                className={`bg-black text-white`}
+                value={userName}
+                onChange={(e) => setUsername(e.target.value)}
+              />
+              <Button
+                variant={`${userName.length ? `strongerGreen` : `primary`}`}
+                className="w-full flex items-center justify-center rounded-3xl py-2 h-full bg-dark text-lg md:text-base"
+                leftIcon={ArrowCircleRight}
+                onClick={
+                  dialogContent.buttonLabel === "Continue"
+                    ? handleDialogButton
+                    : () => router.push("/dashboard/home")
+                }
+              >
                 {dialogContent?.buttonLabel}
               </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
-      }
+      )}
     </div>
   );
 }

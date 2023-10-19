@@ -66,13 +66,13 @@ export default function EventViewTracksPage() {
 
   const categoryList: DropDownMenuItemType[] = [
     {
-      name: 'Network States',
+      name: "Network States",
     },
     {
-      name: 'Character Cities',
+      name: "Character Cities",
     },
     {
-      name: 'Coordinations',
+      name: "Coordinations",
     },
   ];
 
@@ -106,22 +106,27 @@ export default function EventViewTracksPage() {
                   <Loader />
                 ) : (
                   <>
-                    {tracks &&
+                    {tracks && (
                       <div className="flex flex-col gap-[10px] overflow-hidden md:p-3">
                         {currentTracks?.map((item, idx) => (
-                          <TrackItemCard key={idx} trackId={item.id} trackTitle={item.name} trackImage={item.image as string} onClick={() => handleItemClick(item.name, item.id)} />
+                          <TrackItemCard
+                            key={idx}
+                            trackId={item.id}
+                            trackTitle={item.name}
+                            trackImage={item.image as string}
+                            onClick={() => handleItemClick(item.name, item.id)}
+                          />
                         ))}
-                        {
-                          totalTracks > ITEMS_PER_PAGE &&
+                        {totalTracks > ITEMS_PER_PAGE && (
                           <Pagination
                             currentPage={currentPage}
                             totalItems={tracks.length}
                             itemsPerPage={ITEMS_PER_PAGE}
                             onPageChange={handlePageChange}
                           />
-                        }
+                        )}
                       </div>
-                    }
+                    )}
                   </>
                 )}
               </div>
@@ -186,18 +191,10 @@ export const getServerSideProps = async (ctx: any) => {
       },
     };
 
-  // get profile from session
-  const { data: profile, error } = await supabase
-    .from("profile")
-    .select("*")
-    .eq("uuid", session.user.id);
-
   return {
     props: {
       initialSession: session,
       user: session?.user,
-      profile: profile,
-      // dehydratedState: dehydrate(queryClient),
     },
   };
 };
