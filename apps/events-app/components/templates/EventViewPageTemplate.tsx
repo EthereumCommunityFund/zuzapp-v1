@@ -13,6 +13,7 @@ import { X } from 'lucide-react';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { BsArrowRightCircleFill } from 'react-icons/bs';
 import { Label } from '../ui/label';
+import Image from 'next/image';
 
 interface IEventLink {
   name: string;
@@ -150,7 +151,7 @@ export default function EventViewPageTemplate({ eventSpace }: { eventSpace: Even
                 </div>
               ))}
           </div>
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-2 border-b pb-5 border-borderPrimary">
             <Label className="opacity-70">Socials </Label>
             {socialLinks &&
               socialLinks.map((value: IEventLink, idx: number) => (
@@ -162,6 +163,22 @@ export default function EventViewPageTemplate({ eventSpace }: { eventSpace: Even
                 </div>
               ))}
           </div>
+          {
+            eventSpace.format === 'in-person' &&
+            <div className='flex flex-col pt-2.5 pb-2.5 gap-5'>
+              <div className='flex gap-2 items-center'>
+                <LocationMarker />
+                <Label className='text-xl'>Location</Label>
+              </div>
+              <div className='flex flex-col gap-[6px]'>
+                <Label className='text-lg'>Apply to See Address</Label>
+                <Label className='text-sm opacity-70'>{locationAddress}</Label>
+              </div>
+              {imgUrls &&
+                <Image width={260} height={148} src={imgUrls[0]} alt={''} className='rounded-xl blur' />
+              }
+            </div>
+          }
         </div>
       </div>
     </>
