@@ -1,4 +1,4 @@
-import InPersonEventViewPageTemplate from "@/components/templates/InPersonEventViewPageTemplate";
+
 import EventViewPageTemplate from "@/components/templates/EventViewPageTemplate";
 
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
@@ -9,9 +9,9 @@ import { EventSpaceDetailsType } from "@/types";
 import { Loader } from "@/components/ui/Loader";
 import useEventDetails from "@/hooks/useCurrentEventSpace";
 
-export default function EventViewPage() {
+export default function EventViewPage(props: any) {
   // Make request to get all event spaces
-  const router = useRouter();
+  const { profile } = props;
   const { eventSpace, isLoading } = useEventDetails();
 
   return (
@@ -19,18 +19,14 @@ export default function EventViewPage() {
       {isLoading ? (
         <Loader />
       ) : (
-        eventSpace && <EventViewPageTemplate eventSpace={eventSpace} />
+        eventSpace && <EventViewPageTemplate eventSpace={eventSpace} profile={profile} />
       )}
     </>
   );
 }
 
 export const getServerSideProps = async (ctx: any) => {
-  const queryClient = new QueryClient();
-  const { event_space_id } = ctx.query;
-  // await queryClient.prefetchQuery("currentEventSpace", () =>
-  //   fetchEventSpaceById(event_space_id)
-  // );
+
 
   const supabase = createPagesServerClient(ctx);
 

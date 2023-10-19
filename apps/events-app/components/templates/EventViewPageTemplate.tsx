@@ -20,7 +20,7 @@ interface IEventLink {
   link: string;
 }
 
-export default function EventViewPageTemplate({ eventSpace }: { eventSpace: EventSpaceDetailsType }) {
+export default function EventViewPageTemplate({ eventSpace, profile }: { eventSpace: EventSpaceDetailsType, profile: any }) {
   const {
     // id,
     name,
@@ -175,7 +175,7 @@ export default function EventViewPageTemplate({ eventSpace }: { eventSpace: Even
                 <Label className='text-sm opacity-70'>{locationAddress}</Label>
               </div>
               {imgUrls &&
-                <Image width={260} height={148} src={imgUrls[0]} alt={''} className='rounded-xl blur' />
+                <Image width={260} height={148} src={imgUrls[0]} alt={''} className={`rounded-xl ${profile ? `blur-none` : `blur`}`} />
               }
             </div>
           }
