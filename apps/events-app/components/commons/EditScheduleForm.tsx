@@ -83,6 +83,7 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
         role: "",
       },
     ],
+    current_rsvp_no: 0,
   });
   const [startDate, setStartDate] = useState<Date | undefined>();
   const [optionTags, setOptionTags] = useState<TagItemProp[]>([]);

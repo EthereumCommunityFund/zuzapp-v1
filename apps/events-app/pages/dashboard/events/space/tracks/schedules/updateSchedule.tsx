@@ -115,6 +115,7 @@ export default function UpdateSchedulePage() {
         role: "",
       },
     ],
+    current_rsvp_no: 0,
   });
   const [dialog, setDialog] = useState(false);
   const [startDate, setStartDate] = useState<Date | undefined>();
@@ -472,7 +473,7 @@ export default function UpdateSchedulePage() {
         <div className="flex flex-col items-start gap-[17px] flex-1 lg:ml-[300px]">
           <div className="flex items-center gap-[17px] self-stretch">
             <Dialog>
-              <DialogTrigger  asChild>
+              <DialogTrigger asChild>
                 <Button
                   className="rounded-[40px] py-2.5 px-3.5 bg-bgPrimary border-none hover:bg-[#363636] duration-200 text-textSecondary hover:text-textSecondary"
                   size="lg"

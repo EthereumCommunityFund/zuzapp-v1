@@ -6,7 +6,7 @@ import UserFacingTrack from '@/components/ui/UserFacingTrack';
 import Button from '@/components/ui/buttons/Button';
 import { Label } from '@/components/ui/label';
 import { useEventSpace } from '@/context/EventSpaceContext';
-import { OrganizerType, ScheduleDetailstype, TrackType, TrackUpdateRequestBody } from '@/types';
+import { OrganizerType, ScheduleCreateRequestBody, ScheduleDetailstype, ScheduleUpdateRequestBody, TrackType, TrackUpdateRequestBody } from '@/types';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { BiEditAlt, BiPlusCircle } from 'react-icons/bi';
@@ -60,10 +60,10 @@ export default function TrackDetailsPageTemplate(props: any) {
   const updateIsLoading = (newState: boolean) => {
     setIsLoading(newState);
   };
-  const handleItemClick = (scheduleName: string, trackId: string | undefined, event_space_id: string, scheduleId: string) => {
+  const handleItemClick = (scheduleName: string, trackId: string | undefined, event_space_id: string) => {
     router.push({
       pathname: '/dashboard/eventview/tracks/track/schedule',
-      query: { scheduleName, trackId, event_space_id, scheduleId },
+      query: { scheduleName, trackId, event_space_id },
     });
   };
 
@@ -180,7 +180,7 @@ export default function TrackDetailsPageTemplate(props: any) {
                   {
                     currentSchedules.map(
                       (schedule, idx) => schedule.track_id === trackItem?.id &&
-                        <UserFacingTrack key={idx} scheduleId={schedule.id} scheduleData={schedule} onClick={() => handleItemClick(schedule.name, trackItem?.id, eventSpace.id, schedule.id)} />
+                        <UserFacingTrack key={idx} scheduleData={schedule} onClick={() => handleItemClick(schedule.name, trackItem?.id, eventSpace.id)} />
                     )
                   }
                   {totalSchedules > ITEMS_PER_PAGE &&
