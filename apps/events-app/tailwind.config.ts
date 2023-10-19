@@ -1,13 +1,13 @@
 /** @type {import('tailwindcss').Config} */
-const defaultTheme = require('tailwindcss/defaultTheme');
+const defaultTheme = require("tailwindcss/defaultTheme");
 
 module.exports = {
   darkMode: ["class"],
   content: [
-    './pages/**/*.{ts,tsx}',
-    './components/**/*.{ts,tsx}',
-    './app/**/*.{ts,tsx}',
-    './src/**/*.{ts,tsx}',
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
   ],
   theme: {
     container: {
@@ -75,7 +75,7 @@ module.exports = {
         btnStrongerGreenHover: "#96B488",
         borderPrimary: "#393939",
         userFacingItem: "#393C3C",
-        borderSecondary: "#575959"
+        borderSecondary: "#575959",
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -97,25 +97,27 @@ module.exports = {
         "accordion-up": "accordion-up 0.2s ease-out",
       },
       fontFamily: {
-        sans: ['Inter var', ...defaultTheme.fontFamily.sans],
-        inter: ['Inter', 'Inter Placeholder', 'sans-serif'],
+        sans: ["Inter var", ...defaultTheme.fontFamily.sans],
+        inter: ["Inter", "Inter Placeholder", "sans-serif"],
       },
       spacing: {
-        '2.5': '10px',
+        "2.5": "10px",
       },
       width: {
-        'inherit': 'inherit',
-        'fill-available': '-webkit-fill-available',
+        inherit: "inherit",
+        "fill-available": "-webkit-fill-available",
+      },
+      boxShadow: {
+        blur: "-webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px);",
       },
     },
     screens: {
-      'sm': '320px',
-      'md': '810px',
-      'lg': '1200px',
-
-    }
+      sm: "320px",
+      md: "810px",
+      lg: "1200px",
+    },
   },
   plugins: [require("tailwindcss-animate")],
-}
+};
 
-export { }
+export {};

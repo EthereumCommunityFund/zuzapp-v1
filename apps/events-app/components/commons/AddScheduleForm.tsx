@@ -80,6 +80,7 @@ export default function AddScheduleForm({ title, isQuickAccess, scheduleId, trac
     track_id: '',
     tags: [],
     organizers: [],
+    current_rsvp_no: 0,
   });
   const [startDate, setStartDate] = useState<Date | undefined>();
   const [optionTags, setOptionTags] = useState<TagItemProp[]>([]);
