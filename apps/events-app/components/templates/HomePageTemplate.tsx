@@ -229,7 +229,6 @@ export default function HomePageTemplate(props: { profile: any }) {
                 <div className="mt-3 md:mt-0">
                   <Button
                     size="lg"
-                    variant={"primaryGreen"}
                     className="rounded-full w-full flex items-center justify-center md:w-auto"
                     onClick={() => event.id && handleButtonClick(event.id)}
                   >

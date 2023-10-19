@@ -28,10 +28,23 @@ export const DashboardProvider = ({ children, props }: { children: React.ReactNo
   };
 
   if (!router.pathname.startsWith('/dashboard')) return <div className="bg-[#222222] text-white relative min-h-screen">{children}</div>;
+  if (router.pathname === '/dashboard/user-profile')
+    return (
+      <div className="bg-[#222222] text-white">
+        <DashboardHeader profile={props.profile} />
+        <div className="mt-16 relative">
+          <div className="h-[90vh] mx-auto relative ">
+            {children}
+          </div>
+        </div>
+      </div>
+    )
   return (
     <>
       <div className="lg:flex relative bg-[#222222] text-white">
-        {!checkIfCurrentRouteIsInEventViewRoutes() ? <DashboardNavigation /> : <EventViewNavigation />}
+        {
+          !checkIfCurrentRouteIsInEventViewRoutes() ? <DashboardNavigation /> : <EventViewNavigation />
+        }
         <DashboardHeader profile={props.profile} />
 
         <div className="mt-16 relative lg:left-[250px] lg:w-[calc(100%-250px)]">

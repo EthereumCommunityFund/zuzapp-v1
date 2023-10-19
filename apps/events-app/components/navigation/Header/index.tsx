@@ -16,6 +16,7 @@ import { navBarRoutes } from '@/constant/routes';
 import { FaCog } from 'react-icons/fa';
 import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
 import { Database } from '@/database.types';
+import MyProfileButton from './MyProfileButton';
 
 export default function DashboardHeader({ profile }: any) {
   const { signIn } = useUserPassportContext();
@@ -73,10 +74,9 @@ export default function DashboardHeader({ profile }: any) {
         </div>
         <div>
           {isAuthenticated ? (
-            <Button leftIcon={User} variant="quiet" className="space-x-2 rounded-full">
-              {/* {user?.email} */}
-              <span className="hidden lg:inline-flex">{profile[0].username ? profile[0].username : `My Profile`}</span>
-            </Button>
+            <MyProfileButton className='' userName={profile[0].username ? profile[0].username : `My Profile`} />
+            // <Button leftIcon={User} variant="quiet" className="space-x-2 rounded-full">
+            // </Button>
           ) : (
             <Popover>
               <PopoverTrigger className="flex space-x-2 items-center rounded-3xl px-5 py-2 h-full bg-dark text-sm md:text-base" onClick={signIn}>
