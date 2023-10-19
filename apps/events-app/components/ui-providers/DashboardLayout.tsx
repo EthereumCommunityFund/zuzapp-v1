@@ -11,7 +11,7 @@ const EventViewNavigation = dynamic(() => import('../navigation/EventView'), {
   loading: () => <p>Loading...</p>,
 });
 
-export const DashboardProvider = ({ children }: { children: React.ReactNode }) => {
+export const DashboardProvider = ({ children, props }: { children: React.ReactNode, props: any }) => {
   const router = useRouter();
   const checkIfCurrentRouteIsInDashboardRoutes = () => {
     const routes = eventRoutes;
@@ -28,11 +28,24 @@ export const DashboardProvider = ({ children }: { children: React.ReactNode }) =
   };
 
   if (!router.pathname.startsWith('/dashboard')) return <div className="bg-[#222222] text-white relative min-h-screen">{children}</div>;
+  if (router.pathname === '/dashboard/user-profile')
+    return (
+      <div className="bg-[#222222] text-white">
+        <DashboardHeader profile={props.profile} />
+        <div className="mt-16 relative">
+          <div className="h-[90vh] mx-auto relative ">
+            {children}
+          </div>
+        </div>
+      </div>
+    )
   return (
     <>
       <div className="lg:flex relative bg-[#222222] text-white">
-        {!checkIfCurrentRouteIsInEventViewRoutes() ? <DashboardNavigation /> : <EventViewNavigation />}
-        <DashboardHeader />
+        {
+          !checkIfCurrentRouteIsInEventViewRoutes() ? <DashboardNavigation /> : <EventViewNavigation />
+        }
+        <DashboardHeader profile={props.profile} />
 
         <div className="mt-16 relative lg:left-[250px] lg:w-[calc(100%-250px)]">
           <div className="h-[90vh] mx-auto relative ">
@@ -50,3 +63,4 @@ export const DashboardProvider = ({ children }: { children: React.ReactNode }) =
     </>
   );
 };
+

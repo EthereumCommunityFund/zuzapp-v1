@@ -50,7 +50,7 @@ interface DialogContent {
   buttonAction?: () => void;
 }
 
-export default function HomePageTemplate() {
+export default function HomePageTemplate(props: { profile: any }) {
   const { signIn } = useUserPassportContext();
   const { isAuthenticated, user } = useGlobalContext();
   const router = useRouter();
@@ -61,8 +61,8 @@ export default function HomePageTemplate() {
     description: "Type in a username. Does not have to be your real name. You can also change your username later",
     buttonLabel: "Continue",
   });
-  const [open, setOpen] = useState(true)
-  console.log("firstLogin", firstLogin);
+  const { profile } = props;
+  console.log("profile in homepage", profile);
 
   const { eventSpaceList, setEventSpaceList } = useEventSpace();
 
@@ -100,18 +100,18 @@ export default function HomePageTemplate() {
   const handleDialogButton = async () => {
     console.log('userName', userName);
     try {
-      const res = await updateUsername({username: userName});
+      const res = await updateUsername({ username: userName });
       console.log(res);
       setDialogContent({
         title: `Welcome ${userName}`,
         description: 'Now, head to explore Zuzalu & community events!',
         buttonLabel: 'Complete',
-        
+
       })
     } catch (error) {
       console.error("Error updating username", error);
     }
-   
+
   }
 
   return (
@@ -229,7 +229,6 @@ export default function HomePageTemplate() {
                 <div className="mt-3 md:mt-0">
                   <Button
                     size="lg"
-                    variant={"primaryGreen"}
                     className="rounded-full w-full flex items-center justify-center md:w-auto"
                     onClick={() => event.id && handleButtonClick(event.id)}
                   >
@@ -270,8 +269,8 @@ export default function HomePageTemplate() {
         </div>
       </div>
       {
-        firstLogin &&
-        <Dialog open={open}>
+        firstLogin && !profile[0].username &&
+        <Dialog open={true}>
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
               <DialogTitle className="text-2xl">{dialogContent?.title}</DialogTitle>
