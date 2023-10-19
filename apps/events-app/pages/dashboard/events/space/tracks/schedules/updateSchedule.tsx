@@ -65,6 +65,16 @@ import fetchSchedulesByTrackId from "@/services/fetchSchedulesByTrackId";
 import { Loader } from "@/components/ui/Loader";
 import { BsFillTicketFill } from "react-icons/bs";
 import { scheduleNavBarDetails } from "@/constant/addschedulenavbar";
+import { HiXCircle } from "react-icons/hi";
+import {
+  DialogHeader,
+  DialogFooter,
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 
 type Organizer = {
   name: string;
@@ -106,6 +116,7 @@ export default function UpdateSchedulePage() {
       },
     ],
   });
+  const [dialog, setDialog] = useState(false);
   const [startDate, setStartDate] = useState<Date | undefined>();
   const [optionTags, setOptionTags] = useState<TagItemProp[]>([]);
   const [optionSpeakers, setOptionSpeakers] = useState<TagItemProp[]>([]);
@@ -460,14 +471,56 @@ export default function UpdateSchedulePage() {
         </div>
         <div className="flex flex-col items-start gap-[17px] flex-1 lg:ml-[300px]">
           <div className="flex items-center gap-[17px] self-stretch">
-            <Button
+            <Dialog>
+              <DialogTrigger  asChild>
+                <Button
+                  className="rounded-[40px] py-2.5 px-3.5 bg-bgPrimary border-none hover:bg-[#363636] duration-200 text-textSecondary hover:text-textSecondary"
+                  size="lg"
+                  leftIcon={HiArrowLeft}
+                  onClick={() => setDialog(true)}
+                >
+                  Back
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[425px] h-auto rounded-2xl">
+                <DialogHeader>
+                  <DialogTitle>Discard edit?</DialogTitle>
+                  <DialogDescription className="text-sm font-bold">
+                    You can choose to save your edit or discard your edit before
+                    going back.
+                  </DialogDescription>
+                  <DialogFooter className="pt-5">
+                    <div className="flex justify-between items-center">
+                      <button
+                        onClick={
+
+                          form.handleSubmit(onSubmit)
+                        }
+                        className="py-2.5 px-3.5 flex items-center gap-1 rounded-[20px] bg-emerald-800"
+                      >
+                        <span>Save edit</span>
+                      </button>
+                      <button
+                        onClick={() => router.back()}
+                        className="py-2.5 px-3.5 flex items-center gap-1 text-[#FF5E5E] rounded-[20px] bg-[#EB5757]/20"
+                      >
+                        <HiXCircle />
+                        <span>Discard edit</span>
+                      </button>
+                    </div>
+                  </DialogFooter>
+                </DialogHeader>
+              </DialogContent>
+            </Dialog>
+
+            {/* <Button
               className="rounded-[40px] py-2.5 px-3.5 bg-bgPrimary border-none hover:bg-[#363636] duration-200 text-textSecondary hover:text-textSecondary"
               size="lg"
               leftIcon={HiArrowLeft}
               onClick={() => router.back()}
             >
               Back
-            </Button>
+            </Button> */}
             <div className="flex flex-col gap-[10px]">
               <span className="text-2xl items-start font-bold">
                 {track_title}

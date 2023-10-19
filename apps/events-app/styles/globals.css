@@ -98,7 +98,7 @@
 
 @media (max-width: 1200px) {
   .dashboard-menu {
-    @apply fixed top-0 left-0 right-0 z-10 flex justify-around;
+    @apply fixed top-0 left-0 right-0 z-10 flex lg:justify-around;
     @apply p-2;
     @apply -translate-x-full;
   }
