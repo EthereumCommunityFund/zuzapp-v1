@@ -20,7 +20,7 @@ interface IEventLink {
   link: string;
 }
 
-export default function EventViewPageTemplate({ eventSpace }: { eventSpace: EventSpaceDetailsType }) {
+export default function EventViewPageTemplate({ eventSpace, profile }: { eventSpace: EventSpaceDetailsType, profile: any }) {
   const {
     // id,
     name,
@@ -99,7 +99,7 @@ export default function EventViewPageTemplate({ eventSpace }: { eventSpace: Even
             {' '}
             {/* About */}
             <h3 className="text-lg font-bold text-white/70">ABOUT THIS EVENT</h3>
-            <h2 className="text-2xl font-bold text-white/80">What is {`"${eventSpace.name}"`}?</h2>
+            <div className={`md:h-auto h-[80vh] overflow-hidden text-white text-lg`} dangerouslySetInnerHTML={{ __html: `${description.slice(0, 300)}...` }} />
             <Dialog>
               <DialogTrigger asChild>
                 <Button variant="quiet" size="lg" className="rounded-2xl inline-block text-white/70 font-bold hover:text-white">
@@ -171,11 +171,11 @@ export default function EventViewPageTemplate({ eventSpace }: { eventSpace: Even
                 <Label className='text-xl'>Location</Label>
               </div>
               <div className='flex flex-col gap-[6px]'>
-                <Label className='text-lg'>Apply to See Address</Label>
+                <Label className='text-lg'>{profile ? locationName : `Apply to See Address`}</Label>
                 <Label className='text-sm opacity-70'>{locationAddress}</Label>
               </div>
               {imgUrls &&
-                <Image width={260} height={148} src={imgUrls[0]} alt={''} className='rounded-xl blur' />
+                <Image width={260} height={148} src={imgUrls[0]} alt={''} className={`rounded-xl ${profile ? `blur-none` : `blur`}`} />
               }
             </div>
           }
