@@ -126,8 +126,8 @@ export default function HomePageTemplate() {
   const slides = [banner1.src, banner2.src];
 
   return (
-    <div className="md:w-5/6 w-[95%] mx-auto ">
-      <div className="mt-10 relative w-full border border-white/10">
+    <div className="md:w-5/6 w-[95%] mx-auto">
+      <div className="mt-10 relative w-full border border-white/10 rounded-lg">
         <div className="">
           <CustomCarousel slides={slides as unknown as string[]} autoSlide={false} curr={currentSlide} setCurr={setCurrentSlide}>
             <div className="absolute top-0 left-0 px-14 py-14 max-w-[650px] ml-4 mt-4">

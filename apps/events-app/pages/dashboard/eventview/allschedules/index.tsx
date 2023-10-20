@@ -148,6 +148,7 @@ export default function EventViewTracksAlleSchedulesPage() {
                       isQuickAccess={true}
                       trackId={trackId as string}
                       updateIsLoading={updateIsLoading}
+                      event_space_id={event_space_id as string}
                     />
                   </DialogContent>
                 }

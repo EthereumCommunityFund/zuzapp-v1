@@ -10,11 +10,18 @@ import React, { useEffect, useState } from 'react';
 import { ArrowCircleLeft } from '@/components/ui/icons';
 import useEventDetails from "@/hooks/useCurrentEventSpace";
 import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
+import { BiPlusCircle } from 'react-icons/bi';
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import AddScheduleForm from '@/components/commons/AddScheduleForm';
 
 export default function EventViewNavigation() {
   const { isAuthenticated, user } = useGlobalContext();
   const { eventSpace } = useEventDetails();
-  // console.log("EventSpace in Subheader", eventSpace.creator_id, user);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const router = useRouter();
   const { event_space_id } = router.query;
 
@@ -40,11 +47,8 @@ export default function EventViewNavigation() {
     router.push('/dashboard/home');
   };
 
-  const handleEventRouteClick = (path: string) => {
-    router.push({
-      pathname: path,
-      query: { event_space_id },
-    });
+  const updateIsLoading = (newState: boolean) => {
+    setIsLoading(newState);
   };
 
   return (
@@ -83,6 +87,30 @@ export default function EventViewNavigation() {
                 ))}
               </ul>
             </div>
+            {router.pathname.includes("dashboard/eventview/about") && eventSpace?.creator_id === user.id && (
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button
+                    variant="blue"
+                    size="lg"
+                    className="rounded-full sm:w-full lg:w-fit justify-center"
+                    leftIcon={BiPlusCircle}
+                  >
+                    Add a Session
+                  </Button>
+                </DialogTrigger>
+                {
+                  <DialogContent className="md:w-3/5 md:h-3/5 overflow-x-auto sm:w-3/4">
+                    <AddScheduleForm
+                      title={"Add"}
+                      isQuickAccess={true}
+                      updateIsLoading={updateIsLoading}
+                      event_space_id={event_space_id as string}
+                    />
+                  </DialogContent>
+                }
+              </Dialog>
+            )}
             {router.pathname.includes("dashboard/eventview/tracks") && eventSpace?.creator_id === user.id && (
               <div className="flex-col gap-3 rounded-md p-2 bg-black font-bold sm:hidden lg:flex">
                 <h2>Organizer</h2>
