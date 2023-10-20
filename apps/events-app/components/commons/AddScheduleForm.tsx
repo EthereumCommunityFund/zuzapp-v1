@@ -397,11 +397,11 @@ export default function AddScheduleForm({ title, isQuickAccess, scheduleId, trac
   return (
     <div className="flex flex-col items-center gap-[34px] self-stretch w-full text-white">
       <div className="flex flex-col py-5 items-center gap-[10px] self-stretch w-full">
-        <FormTitle name="Add a Schedule" />
+        <FormTitle name="Add a Session" />
         {scheduleAdded ? (
           <div className="flex flex-col items-center">
             <h3 className="font-bold text-xl">
-              Your Schedule Has Been Added
+              Your Session Has Been Added
             </h3>
             <DialogPrimitive.Close>
               <Button
@@ -410,7 +410,7 @@ export default function AddScheduleForm({ title, isQuickAccess, scheduleId, trac
                 className="mt-8 bg-[#67DBFF]/20 text-[#67DBFF] rounded-full"
                 leftIcon={HiArrowRight}
               >
-                Go to schedules
+                Go to sessions
               </Button>
             </DialogPrimitive.Close>
 
@@ -427,7 +427,7 @@ export default function AddScheduleForm({ title, isQuickAccess, scheduleId, trac
                 render={({ field }) => (
                   <FormItem className="space-y-3">
                     <FormLabel className="text-2xl opacity-80">
-                      Schedule Format
+                      Session Format
                     </FormLabel>
                     <FormDescription>
                       The format has been inherited from the event space.
@@ -472,7 +472,7 @@ export default function AddScheduleForm({ title, isQuickAccess, scheduleId, trac
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                      Schedule Name{" "}
+                      Session Name{" "}
                     </FormLabel>
                     <FormControl>
                       <InputFieldDark
@@ -513,7 +513,7 @@ export default function AddScheduleForm({ title, isQuickAccess, scheduleId, trac
                       <FormControl>
                         <div className="flex flex-col gap-[10px]">
                           <Label className="text-2xl opacity-80">
-                            Schedule Description
+                            Session Description
                           </Label>
                           <TextEditor
                             value={field.value}
@@ -528,7 +528,7 @@ export default function AddScheduleForm({ title, isQuickAccess, scheduleId, trac
               </div>
               <div className="w-full">
                 <Label className="text-2xl opacity-80">
-                  Schedule Date & Times
+                  Session Date & Times
                 </Label>
                 <div className="flex flex-col items-start gap-5 self-stretch w-full pt-5">
                   <div className="flex gap-5">
@@ -658,7 +658,7 @@ export default function AddScheduleForm({ title, isQuickAccess, scheduleId, trac
                   </div>
                   <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
                     <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                      Select Schedule Frequency
+                      Select Session Frequency
                     </Label>
                     <select
                       onChange={handleFrequencySelect}
@@ -897,7 +897,7 @@ export default function AddScheduleForm({ title, isQuickAccess, scheduleId, trac
               </div>
               <div className="w-full flex flex-col gap-6">
                 <Label className="text-2xl opacity-80 font-bold">
-                  Schedule Labels
+                  Session Labels
                 </Label>
                 <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
                   <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
@@ -1069,7 +1069,7 @@ export default function AddScheduleForm({ title, isQuickAccess, scheduleId, trac
                     type="button"
                     leftIcon={CgClose}
                   >
-                    <span>Discard Schedule</span>
+                    <span>Discard Session</span>
                   </Button>
                   <Button
                     className="rounded-full w-full md:w-1/2 flex justify-center"
@@ -1078,7 +1078,7 @@ export default function AddScheduleForm({ title, isQuickAccess, scheduleId, trac
                     type="submit"
                     leftIcon={FaCircleArrowUp}
                   >
-                    <span>Add Schedule</span>
+                    <span>Add Session</span>
                   </Button>
                 </div>
               </div>

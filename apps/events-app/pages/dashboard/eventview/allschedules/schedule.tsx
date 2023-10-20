@@ -165,7 +165,7 @@ export default function EventViewScheduleDetailsPage() {
                 leftIcon={HiArrowLeft}
                 onClick={handleBackToSchedule}
               >
-                Back to Schedules
+                Back to Sessions
               </Button>
               <Dialog>
                 <DialogTrigger asChild>
@@ -210,9 +210,8 @@ export default function EventViewScheduleDetailsPage() {
               <Button
                 variant="primary"
                 size="lg"
-                className={`rounded-2xl justify-center ${
-                  rsvpUpdated ? "animate-rsvp" : ""
-                }`}
+                className={`rounded-2xl justify-center ${rsvpUpdated ? "animate-rsvp" : ""
+                  }`}
                 leftIcon={BsFillTicketFill}
                 onClick={handleRsvpAction}
                 disabled={
@@ -224,10 +223,10 @@ export default function EventViewScheduleDetailsPage() {
                 {currentSchedule?.rsvp_amount === 0
                   ? "No Rsvp Available"
                   : hasRsvpd
-                  ? "Cancel RSVP"
-                  : isRsvpFullOnLoad
-                  ? "RSVP Full"
-                  : "RSVP Schedule"}
+                    ? "Cancel RSVP"
+                    : isRsvpFullOnLoad
+                      ? "RSVP Full"
+                      : "RSVP Schedule"}
               </Button>
             </div>
             <div className="flex flex-col gap-2.5 px-5 pt-5 pb-[60px]">

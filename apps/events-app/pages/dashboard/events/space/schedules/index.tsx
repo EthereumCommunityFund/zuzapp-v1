@@ -121,7 +121,7 @@ export default function SchedulesDashboardPage() {
               <div className="flex flex-col gap-5 self-stretch">
                 <h3 className="text-2xl leading-[1.2] opacity-70 font-bold">
                   {" "}
-                  All Schedules
+                  All Sessions
                 </h3>
               </div>
             </div>

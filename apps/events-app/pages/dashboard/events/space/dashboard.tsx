@@ -143,7 +143,7 @@ export default function EventSpaceDashboard(props: IProps) {
         {
           <div className="xl:w-4/5 w-full md:w-[90%] px-2.5">
             {isFirst === SpaceDashboardType.New.toString() &&
-              eventSpace?.status === "draft" && (
+              eventSpace?.status === "draft" && eventSpace.tracks.length === 0 && (
                 <>
                   <Dialog open>
                     <DialogContent className="sm:max-w-[425px] h-1/3 md:max-w-none w-[600px]">

@@ -137,7 +137,7 @@ export default function SchedulesDashboardPage() {
               </div>
             </div>
             <h3 className="text-2xl leading-[1.2] opacity-70 font-bold ">
-              Schedules
+              Sessions
             </h3>
             <div className="flex flex-col md:flex-row justify-between items-start self-stretch">
               <Button
@@ -146,7 +146,7 @@ export default function SchedulesDashboardPage() {
                 leftIcon={BsFillPlusCircleFill}
                 onClick={handleAddSchedule}
               >
-                Add a Schedule
+                Add a Session
               </Button>
 
               <div className="flex mt-2 md:mt-0 items-start gap-3">

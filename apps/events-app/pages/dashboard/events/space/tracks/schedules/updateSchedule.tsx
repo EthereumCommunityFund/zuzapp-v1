@@ -64,7 +64,7 @@ import { toast } from "@/components/ui/use-toast";
 import fetchSchedulesByTrackId from "@/services/fetchSchedulesByTrackId";
 import { Loader } from "@/components/ui/Loader";
 import { BsFillTicketFill } from "react-icons/bs";
-import { scheduleNavBarDetails } from "@/constant/addschedulenavbar";
+import { sessionNavBarDetails } from "@/constant/addschedulenavbar";
 import { HiXCircle } from "react-icons/hi";
 import {
   DialogHeader,
@@ -167,16 +167,16 @@ export default function UpdateSchedulePage() {
 
   const formSchema = z.object({
     name: z.string().min(2, {
-      message: "Schedule name is required.",
+      message: "Session name is required.",
     }),
     format: z.enum(["in-person", "online"], {
       required_error: "You need to select a format.",
     }),
     date: z
       .date({
-        required_error: "You need to select a valid date for this schedule.",
+        required_error: "You need to select a valid date for this session.",
         invalid_type_error:
-          "You need to select a valid date for this schedule.",
+          "You need to select a valid date for this session.",
       })
       .refine(
         (date) => {
@@ -189,7 +189,7 @@ export default function UpdateSchedulePage() {
           return false;
         },
         {
-          message: "You need to select a valid date for this schedule.",
+          message: "You need to select a valid date for this session.",
         }
       ),
     description: z.string().min(10, {
@@ -308,7 +308,7 @@ export default function UpdateSchedulePage() {
       // setSwitchDialogue(true);
       setScheduleUpdated(true);
       toast({
-        title: "Schedule updated successfully",
+        title: "Session updated successfully",
       });
       console.log(result, "result");
     } catch (error) {
@@ -449,10 +449,10 @@ export default function UpdateSchedulePage() {
       <div className="flex items-start gap-8 self-stretch ">
         <div className="lg:flex hidden flex-col pt-3 rounded-s-xl opacity-70 w-[300px] gap-5 fixed">
           <div className="flex gap-[10px] pl-3 items-center font-semibold text-2xl">
-            <BsFillTicketFill className="w-5 h-5 text-2xl" /> Schedule
+            <BsFillTicketFill className="w-5 h-5 text-2xl" /> Session
           </div>
           <div className="flex flex-col gap-3 text-xl">
-            {scheduleNavBarDetails.map((item, index) => {
+            {sessionNavBarDetails.map((item, index) => {
               return (
                 <div
                   key={index}
@@ -524,18 +524,18 @@ export default function UpdateSchedulePage() {
                 {track_title}
               </span>
               <span className="text-sm opacity-70">
-                You are editing a schedule for this track
+                You are editing a session for this track
               </span>
             </div>
           </div>
 
           <div className="flex py-5 px-4 flex-col items-center gap-8 self-stretch rounded-2xl border border-[#FFFFFF10] bg-[#2E3131]">
             <div className="flex flex-col items-center gap-[34px] self-stretch w-full">
-              <FormTitle name="Update Schedule" />
+              <FormTitle name="Update Session" />
               {scheduleUpdated ? (
                 <div className="flex flex-col items-center">
                   <h3 className="font-bold text-xl">
-                    Your Schedule Has Been Updated
+                    Your Session Has Been Updated
                   </h3>
 
                   <Button
@@ -544,7 +544,7 @@ export default function UpdateSchedulePage() {
                     className="mt-8 bg-[#67DBFF]/20 text-[#67DBFF] rounded-full"
                     leftIcon={HiArrowRight}
                   >
-                    Go to schedules
+                    Go to sessions
                   </Button>
                 </div>
               ) : (
@@ -562,7 +562,7 @@ export default function UpdateSchedulePage() {
                             className="text-2xl opacity-80 leading-[1.2]"
                             ref={sectionRefs[0]}
                           >
-                            Schedule Format
+                            Session Format
                           </FormLabel>
                           <FormDescription>
                             The format you select will determine what
@@ -609,7 +609,7 @@ export default function UpdateSchedulePage() {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel className="text-lg font-semibold leading-[1.2] text-white">
-                            Schedule Name{" "}
+                            Session Name{" "}
                           </FormLabel>
                           <FormControl>
                             <InputFieldDark
@@ -632,7 +632,7 @@ export default function UpdateSchedulePage() {
                             ref={sectionRefs[1]}
                           >
                             <Label className="text-2xl text-white/80">
-                              Schedule Description
+                              Session Description
                             </Label>
                             <TextEditor
                               value={field.value}
@@ -647,7 +647,7 @@ export default function UpdateSchedulePage() {
                         className="text-2xl text-white/80"
                         ref={sectionRefs[2]}
                       >
-                        Schedule Date & Times
+                        Session Date & Times
                       </h2>
                       <div className="flex flex-col items-start gap-5 self-stretch w-full pt-5">
                         <div className="flex gap-5">
@@ -777,7 +777,7 @@ export default function UpdateSchedulePage() {
                         </div>
                         <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
                           <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                            Select Schedule Frequency
+                            Select Session Frequency
                           </Label>
                           <select
                             value={schedule.schedule_frequency}
@@ -1026,7 +1026,7 @@ export default function UpdateSchedulePage() {
                       ref={sectionRefs[5]}
                     >
                       <Label className="text-2xl text-white/80">
-                        Schedule Labels
+                        Session Labels
                       </Label>
                       <div className="flex flex-col gap-[14px] items-start w-full">
                         <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
@@ -1220,7 +1220,7 @@ export default function UpdateSchedulePage() {
                           type="button"
                           leftIcon={CgClose}
                         >
-                          <span>Discard Schedule</span>
+                          <span>Discard Session</span>
                         </Button>
                         <Button
                           className="rounded-full w-full lg:w-1/2 flex justify-center"
@@ -1229,7 +1229,7 @@ export default function UpdateSchedulePage() {
                           type="submit"
                           leftIcon={FaCircleArrowUp}
                         >
-                          <span>Update Schedule</span>
+                          <span>Update Session</span>
                         </Button>
                       </div>
                     </div>
