@@ -26,8 +26,8 @@ export default function UserProfile() {
     try {
       setIsLoading(true);
       const res = await updateUsername({ username: userName });
-      console.log(res)
-      queryClient.refetchQueries("profile");
+      await queryClient.invalidateQueries("profile");
+      await queryClient.refetchQueries("profile");
       setIsProfileUpdated(true);
       setIsLoading(false);
     } catch (error) {
@@ -49,10 +49,10 @@ export default function UserProfile() {
     return <Loader />;
   }
   return (
-    <div className="lg:px-24 lg:h-full lg:gap-10 sm:px-0 flex lg:min-w-[900px] w-full lg:flex-row sm:flex-col">
+    <div className="lg:px-40 sm:px-0 flex lg:min-w-[900px] w-full lg:flex-row sm:flex-col">
       {isProfileUpdated ? (
         <>
-          <div className=" flex flex-col w-full items-center justify-center">
+          <div className="pt-40 flex flex-col items-center">
             <h3 className="font-bold text-xl">Your Profile Has Been Updated</h3>
             <Button
               onClick={handleEnterHomePage}
@@ -68,10 +68,10 @@ export default function UserProfile() {
         <>
           {profile && (
             <>
-              <div className="pt-5 rounded-[10px] flex lg:flex-col sm:flex-row gap-2.5 lg:items-start items-center">
+              <div className="pt-5 rounded-[10px] flex lg:flex-col sm:flex-row gap-2.5 items-center">
                 <Button
                   variant="quiet-SM"
-                  className="text-xl lg:text-base"
+                  className="text-xl"
                   leftIcon={ArrowLeft}
                 >
                   Back
@@ -84,7 +84,7 @@ export default function UserProfile() {
                   Your Profile
                 </Label>
               </div>
-              <div className="lg:pt-10 sm:pt-3 lg:px-[30px] pb-40 lg:rounded-[10px] flex flex-col gap-5 lg:w-auto w-full">
+              <div className="lg:pt-10 sm:pt-3 lg:px-[30px] pb-40 lg:rounded-[10px] flex flex-col gap-5 w-full">
                 <Label className="text-xl sm:hidden lg:flex">
                   Your Profile
                 </Label>
@@ -153,7 +153,6 @@ export default function UserProfile() {
 
 export const getServerSideProps = async (ctx: any) => {
   const supabase = createPagesServerClient<Database>(ctx);
-
   let {
     data: { session },
   } = await supabase.auth.getSession();

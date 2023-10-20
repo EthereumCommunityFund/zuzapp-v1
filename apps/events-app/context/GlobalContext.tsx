@@ -30,7 +30,7 @@ export const GlobalProvider = ({ children, user }: GlobalProviderProps) => {
   //   const isAuthenticated = user ? true : false;/
   const { data, isLoading, isError } = useQuery("profile", fetchProfile, {
     enabled: isAuthenticated,
-    staleTime: 300000,
+    // staleTime: 300000,
   });
 
   let profile;
