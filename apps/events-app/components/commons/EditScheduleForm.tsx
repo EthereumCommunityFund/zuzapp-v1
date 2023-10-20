@@ -392,11 +392,11 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
   return (
     <div className="flex flex-col items-center gap-[34px] self-stretch w-full text-white">
       <div className="flex flex-col items-center gap-[34px] self-stretch w-full p-5">
-        <FormTitle name="Update Schedule" />
+        <FormTitle name="Update Session" />
         {scheduleUpdated ? (
           <div className="flex flex-col items-center">
             <h3 className="font-bold text-xl">
-              Your Schedule Has Been Updated
+              Your Session Has Been Updated
             </h3>
             <DialogPrimitive.Close>
               <Button
@@ -1084,7 +1084,7 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
                     type="button"
                     leftIcon={CgClose}
                   >
-                    <span>Discard Schedule</span>
+                    <span>Discard Session</span>
                   </Button>
                   <Button
                     className="rounded-full w-full lg:w-1/2 flex justify-center"
@@ -1093,7 +1093,7 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
                     type="submit"
                     leftIcon={FaCircleArrowUp}
                   >
-                    <span>Update Schedule</span>
+                    <span>Update Session</span>
                   </Button>
                 </div>
               </div>

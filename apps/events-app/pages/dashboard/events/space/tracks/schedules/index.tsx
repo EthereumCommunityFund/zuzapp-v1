@@ -146,7 +146,7 @@ export default function SchedulesDashboardPage() {
                 leftIcon={BsFillPlusCircleFill}
                 onClick={handleAddSchedule}
               >
-                Add a Schedule
+                Add a Session
               </Button>
 
               <div className="flex mt-2 md:mt-0 items-start gap-3">

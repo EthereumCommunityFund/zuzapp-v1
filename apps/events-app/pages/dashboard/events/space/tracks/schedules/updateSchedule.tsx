@@ -531,11 +531,11 @@ export default function UpdateSchedulePage() {
 
           <div className="flex py-5 px-4 flex-col items-center gap-8 self-stretch rounded-2xl border border-[#FFFFFF10] bg-[#2E3131]">
             <div className="flex flex-col items-center gap-[34px] self-stretch w-full">
-              <FormTitle name="Update Schedule" />
+              <FormTitle name="Update Session" />
               {scheduleUpdated ? (
                 <div className="flex flex-col items-center">
                   <h3 className="font-bold text-xl">
-                    Your Schedule Has Been Updated
+                    Your Session Has Been Updated
                   </h3>
 
                   <Button
@@ -1220,7 +1220,7 @@ export default function UpdateSchedulePage() {
                           type="button"
                           leftIcon={CgClose}
                         >
-                          <span>Discard Schedule</span>
+                          <span>Discard Session</span>
                         </Button>
                         <Button
                           className="rounded-full w-full lg:w-1/2 flex justify-center"
@@ -1229,7 +1229,7 @@ export default function UpdateSchedulePage() {
                           type="submit"
                           leftIcon={FaCircleArrowUp}
                         >
-                          <span>Update Schedule</span>
+                          <span>Update Session</span>
                         </Button>
                       </div>
                     </div>

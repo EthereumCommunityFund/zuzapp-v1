@@ -156,7 +156,7 @@ export default function TrackDetailsPageTemplate(props: any) {
           <Dialog>
             <DialogTrigger asChild>
               <Button variant="blue" size="lg" className="rounded-xl flex justify-center w-full" leftIcon={BiPlusCircle}>
-                Add a Schedule
+                Add a Session
               </Button>
             </DialogTrigger>
             <DialogContent className="lg:w-3/5 lg:h-4/5 overflow-y-auto">

@@ -138,7 +138,7 @@ export default function EventViewTracksAlleSchedulesPage() {
                     className="rounded-full sm:w-full lg:w-fit justify-center"
                     leftIcon={BiPlusCircle}
                   >
-                    Add a Schedule
+                    Add a Session
                   </Button>
                 </DialogTrigger>
                 {

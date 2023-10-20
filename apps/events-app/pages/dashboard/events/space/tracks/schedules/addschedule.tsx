@@ -253,14 +253,14 @@ export default function AddSchedulePage(props: any) {
         eventType.length > 0
           ? [eventType]
           : eventSpace?.event_type?.[0]
-          ? [eventSpace?.event_type[0]]
-          : [eventSpace?.event_type || "Meetup"],
+            ? [eventSpace?.event_type[0]]
+            : [eventSpace?.event_type || "Meetup"],
       experience_level:
         experienceLevel.length > 0
           ? [experienceLevel]
           : eventSpace?.experience_level?.[0]
-          ? [eventSpace?.experience_level[0]]
-          : [eventSpace?.experience_level || "Beginner"],
+            ? [eventSpace?.experience_level[0]]
+            : [eventSpace?.experience_level || "Beginner"],
       tags: tags,
       schedule_frequency: frequency,
       location_id:
@@ -424,11 +424,11 @@ export default function AddSchedulePage(props: any) {
         <div className="flex py-5 px-4 flex-col items-center gap-8 self-stretch rounded-2xl border border-[#FFFFFF10] bg-[#2E3131]">
           <div className="flex flex-col items-center gap-[34px] self-stretch w-full">
             <div className="flex flex-col py-5 items-center gap-[10px] self-stretch w-full">
-              <FormTitle name="Add a Schedule" />
+              <FormTitle name="Add a Session" />
               {scheduleAdded ? (
                 <div className="flex flex-col items-center">
                   <h3 className="font-bold text-xl">
-                    Your Schedule Has Been Added
+                    Your Session Has Been Added
                   </h3>
 
                   <Button
@@ -1088,7 +1088,7 @@ export default function AddSchedulePage(props: any) {
                           type="button"
                           leftIcon={CgClose}
                         >
-                          <span>Discard Schedule</span>
+                          <span>Discard Session</span>
                         </Button>
                         <Button
                           className="rounded-full w-full md:w-1/2 flex justify-center"
@@ -1097,7 +1097,7 @@ export default function AddSchedulePage(props: any) {
                           type="submit"
                           leftIcon={FaCircleArrowUp}
                         >
-                          <span>Add Schedule</span>
+                          <span>Add Session</span>
                         </Button>
                       </div>
                     </div>

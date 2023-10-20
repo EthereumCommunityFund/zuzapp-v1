@@ -97,7 +97,7 @@ export default function EventViewNavigation() {
                 <h2>Organizer</h2>
                 <Button variant="ghost" className="p-2 w-full gap-3 text-base" onClick={handleEditSchedules}>
                   <MdOutlineModeEdit />
-                  <span>Edit Schedules</span>
+                  <span>Edit Sessions</span>
                 </Button>
               </div>
             )}

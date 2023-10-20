@@ -397,11 +397,11 @@ export default function AddScheduleForm({ title, isQuickAccess, scheduleId, trac
   return (
     <div className="flex flex-col items-center gap-[34px] self-stretch w-full text-white">
       <div className="flex flex-col py-5 items-center gap-[10px] self-stretch w-full">
-        <FormTitle name="Add a Schedule" />
+        <FormTitle name="Add a Session" />
         {scheduleAdded ? (
           <div className="flex flex-col items-center">
             <h3 className="font-bold text-xl">
-              Your Schedule Has Been Added
+              Your Session Has Been Added
             </h3>
             <DialogPrimitive.Close>
               <Button
@@ -1069,7 +1069,7 @@ export default function AddScheduleForm({ title, isQuickAccess, scheduleId, trac
                     type="button"
                     leftIcon={CgClose}
                   >
-                    <span>Discard Schedule</span>
+                    <span>Discard Session</span>
                   </Button>
                   <Button
                     className="rounded-full w-full md:w-1/2 flex justify-center"
@@ -1078,7 +1078,7 @@ export default function AddScheduleForm({ title, isQuickAccess, scheduleId, trac
                     type="submit"
                     leftIcon={FaCircleArrowUp}
                   >
-                    <span>Add Schedule</span>
+                    <span>Add Session</span>
                   </Button>
                 </div>
               </div>
