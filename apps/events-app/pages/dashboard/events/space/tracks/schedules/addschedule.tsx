@@ -437,7 +437,7 @@ export default function AddSchedulePage(props: any) {
                     className="mt-8 bg-[#67DBFF]/20 text-[#67DBFF] rounded-full"
                     leftIcon={HiArrowRight}
                   >
-                    Go to schedules
+                    Go to sessions
                   </Button>
                 </div>
               ) : (

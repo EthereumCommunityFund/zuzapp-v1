@@ -105,9 +105,9 @@ export const eventViewRoutes: Routes[] = [
     icon: HiMap,
   },
   {
-    name: "All Schedules",
+    name: "All Sessions",
     path: "/dashboard/eventview/allschedules",
-    title: "Tracks Dashboard",
+    title: "Sessions Dashboard",
     icon: BsFillTicketFill,
   },
   {

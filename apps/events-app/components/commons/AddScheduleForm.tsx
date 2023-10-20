@@ -410,7 +410,7 @@ export default function AddScheduleForm({ title, isQuickAccess, scheduleId, trac
                 className="mt-8 bg-[#67DBFF]/20 text-[#67DBFF] rounded-full"
                 leftIcon={HiArrowRight}
               >
-                Go to schedules
+                Go to sessions
               </Button>
             </DialogPrimitive.Close>
 

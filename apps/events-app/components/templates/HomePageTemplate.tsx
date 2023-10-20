@@ -206,7 +206,7 @@ export default function HomePageTemplate() {
             ))}
         </div>
       </div>
-      {firstLogin && !profile.username && (
+      {profile && firstLogin && !profile.username && (
         <Dialog open={true}>
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
