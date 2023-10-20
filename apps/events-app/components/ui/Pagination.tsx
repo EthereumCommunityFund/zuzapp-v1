@@ -38,7 +38,7 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage, totalItems, itemsP
 		<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '20px', backgroundColor: '' }}>
 			<Button
 				onClick={() => onPageChange(currentPage - 1)}
-				disabled={currentPage === 1 || totalItems < 3 * itemsPerPage}
+				disabled={currentPage === 1}
 				style={{
 					borderTopLeftRadius: '6px',  // Set border-radius for top left corner
 					borderBottomLeftRadius: '6px',
@@ -50,7 +50,7 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage, totalItems, itemsP
 			{renderPageNumbers()}
 			<Button
 				onClick={() => onPageChange(currentPage + 1)}
-				disabled={currentPage === totalPages || totalItems < 3 * itemsPerPage}
+				disabled={currentPage === totalPages}
 				style={{
 					borderTopRightRadius: '6px',  // Set border-radius for top left corner
 					borderBottomRightRadius: '6px',

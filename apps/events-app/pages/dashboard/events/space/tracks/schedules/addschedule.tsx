@@ -173,7 +173,7 @@ export default function AddSchedulePage(props: any) {
 
   const formSchema = z.object({
     name: z.string().min(2, {
-      message: "Schedule name is required.",
+      message: "Session name is required.",
     }),
     format: z
       .enum(["in-person", "online"], {
@@ -182,9 +182,9 @@ export default function AddSchedulePage(props: any) {
       .default(() => eventSpace?.format ?? "in-person"),
     date: z
       .date({
-        required_error: "You need to select a valid date for this schedule.",
+        required_error: "You need to select a valid date for this session.",
         invalid_type_error:
-          "You need to select a valid date for this schedule.",
+          "You need to select a valid date for this session.",
       })
       .refine(
         (date) => {
@@ -196,7 +196,7 @@ export default function AddSchedulePage(props: any) {
           return false;
         },
         {
-          message: "You cannot create a schedule in the past.",
+          message: "You cannot create a session in the past.",
         }
       ),
     description: z.string().min(10, {
@@ -295,7 +295,7 @@ export default function AddSchedulePage(props: any) {
       setSwitchDialogue(true);
       setScheduleAdded(true);
       toast({
-        title: "Schedule created successfully",
+        title: "Session created successfully",
       });
       console.log(result, "result");
     } catch (error: any) {
@@ -378,7 +378,7 @@ export default function AddSchedulePage(props: any) {
     <div className="flex items-start gap-[60px] self-stretch md:px-10 px-2.5 py-5">
       <div className="lg:flex hidden flex-col pt-3 rounded-s-xl opacity-70 w-[300px] gap-5 fixed">
         <div className="flex gap-[10px] pl-3 items-center font-semibold text-2xl">
-          <BsFillTicketFill className="w-5 h-5 text-2xl" /> Schedule
+          <BsFillTicketFill className="w-5 h-5 text-2xl" /> Session
         </div>
         <div className="flex flex-col gap-3 text-xl">
           {sessionNavBarDetails.map((item, index) => {
@@ -412,7 +412,7 @@ export default function AddSchedulePage(props: any) {
           <div className="flex flex-col gap-[10px]">
             {isQuickAccess ? (
               <span className="text-lg items-start font-semibold opacity-70">
-                You are adding a schedule in quick access
+                You are adding a session in quick access
               </span>
             ) : (
               <span className="text-2xl items-start font-bold">

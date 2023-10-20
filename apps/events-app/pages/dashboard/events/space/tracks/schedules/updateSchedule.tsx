@@ -167,16 +167,16 @@ export default function UpdateSchedulePage() {
 
   const formSchema = z.object({
     name: z.string().min(2, {
-      message: "Schedule name is required.",
+      message: "Session name is required.",
     }),
     format: z.enum(["in-person", "online"], {
       required_error: "You need to select a format.",
     }),
     date: z
       .date({
-        required_error: "You need to select a valid date for this schedule.",
+        required_error: "You need to select a valid date for this session.",
         invalid_type_error:
-          "You need to select a valid date for this schedule.",
+          "You need to select a valid date for this session.",
       })
       .refine(
         (date) => {
@@ -189,7 +189,7 @@ export default function UpdateSchedulePage() {
           return false;
         },
         {
-          message: "You need to select a valid date for this schedule.",
+          message: "You need to select a valid date for this session.",
         }
       ),
     description: z.string().min(10, {
@@ -308,7 +308,7 @@ export default function UpdateSchedulePage() {
       // setSwitchDialogue(true);
       setScheduleUpdated(true);
       toast({
-        title: "Schedule updated successfully",
+        title: "Session updated successfully",
       });
       console.log(result, "result");
     } catch (error) {
@@ -449,7 +449,7 @@ export default function UpdateSchedulePage() {
       <div className="flex items-start gap-8 self-stretch ">
         <div className="lg:flex hidden flex-col pt-3 rounded-s-xl opacity-70 w-[300px] gap-5 fixed">
           <div className="flex gap-[10px] pl-3 items-center font-semibold text-2xl">
-            <BsFillTicketFill className="w-5 h-5 text-2xl" /> Schedule
+            <BsFillTicketFill className="w-5 h-5 text-2xl" /> Session
           </div>
           <div className="flex flex-col gap-3 text-xl">
             {sessionNavBarDetails.map((item, index) => {
@@ -524,7 +524,7 @@ export default function UpdateSchedulePage() {
                 {track_title}
               </span>
               <span className="text-sm opacity-70">
-                You are editing a schedule for this track
+                You are editing a session for this track
               </span>
             </div>
           </div>
@@ -647,7 +647,7 @@ export default function UpdateSchedulePage() {
                         className="text-2xl text-white/80"
                         ref={sectionRefs[2]}
                       >
-                        Schedule Date & Times
+                        Session Date & Times
                       </h2>
                       <div className="flex flex-col items-start gap-5 self-stretch w-full pt-5">
                         <div className="flex gap-5">
