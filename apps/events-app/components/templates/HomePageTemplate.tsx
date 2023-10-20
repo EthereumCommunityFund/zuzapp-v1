@@ -129,7 +129,7 @@ export default function HomePageTemplate() {
     <div className="md:w-5/6 w-[95%] mx-auto ">
       <div className="mt-10 relative w-full border border-white/10">
         <div className="">
-          <CustomCarousel slides={slides as unknown as string[]} autoSlide curr={currentSlide} setCurr={setCurrentSlide}>
+          <CustomCarousel slides={slides as unknown as string[]} autoSlide={false} curr={currentSlide} setCurr={setCurrentSlide}>
             <div className="absolute top-0 left-0 px-14 py-14 max-w-[650px] ml-4 mt-4">
               <h1 className="font-bold font-inter text-3xl md:text-5xl mb-5">{slideData[currentSlide].title}</h1>
               <p className="mb-4 font-inter text-gray-200 text-md">{slideData[currentSlide].description}</p>

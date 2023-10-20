@@ -56,11 +56,11 @@ export default function CustomCarousel({ autoSlide = false, autoSlideInterval = 
     setIsDragging(false);
   };
 
-  useEffect(() => {
-    if (!autoSlide) return;
-    const slideInterval = setInterval(next, autoSlideInterval);
-    return () => clearInterval(slideInterval);
-  }, []);
+  // useEffect(() => {
+  //   if (!autoSlide) return;
+  //   const slideInterval = setInterval(next, autoSlideInterval);
+  //   return () => clearInterval(slideInterval);
+  // }, []);
 
   return (
     <div
