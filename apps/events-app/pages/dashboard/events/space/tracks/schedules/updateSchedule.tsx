@@ -64,7 +64,7 @@ import { toast } from "@/components/ui/use-toast";
 import fetchSchedulesByTrackId from "@/services/fetchSchedulesByTrackId";
 import { Loader } from "@/components/ui/Loader";
 import { BsFillTicketFill } from "react-icons/bs";
-import { scheduleNavBarDetails } from "@/constant/addschedulenavbar";
+import { sessionNavBarDetails } from "@/constant/addschedulenavbar";
 import { HiXCircle } from "react-icons/hi";
 import {
   DialogHeader,
@@ -452,7 +452,7 @@ export default function UpdateSchedulePage() {
             <BsFillTicketFill className="w-5 h-5 text-2xl" /> Schedule
           </div>
           <div className="flex flex-col gap-3 text-xl">
-            {scheduleNavBarDetails.map((item, index) => {
+            {sessionNavBarDetails.map((item, index) => {
               return (
                 <div
                   key={index}
@@ -562,7 +562,7 @@ export default function UpdateSchedulePage() {
                             className="text-2xl opacity-80 leading-[1.2]"
                             ref={sectionRefs[0]}
                           >
-                            Schedule Format
+                            Session Format
                           </FormLabel>
                           <FormDescription>
                             The format you select will determine what
@@ -609,7 +609,7 @@ export default function UpdateSchedulePage() {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel className="text-lg font-semibold leading-[1.2] text-white">
-                            Schedule Name{" "}
+                            Session Name{" "}
                           </FormLabel>
                           <FormControl>
                             <InputFieldDark
@@ -632,7 +632,7 @@ export default function UpdateSchedulePage() {
                             ref={sectionRefs[1]}
                           >
                             <Label className="text-2xl text-white/80">
-                              Schedule Description
+                              Session Description
                             </Label>
                             <TextEditor
                               value={field.value}
@@ -777,7 +777,7 @@ export default function UpdateSchedulePage() {
                         </div>
                         <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
                           <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                            Select Schedule Frequency
+                            Select Session Frequency
                           </Label>
                           <select
                             value={schedule.schedule_frequency}
@@ -1026,7 +1026,7 @@ export default function UpdateSchedulePage() {
                       ref={sectionRefs[5]}
                     >
                       <Label className="text-2xl text-white/80">
-                        Schedule Labels
+                        Session Labels
                       </Label>
                       <div className="flex flex-col gap-[14px] items-start w-full">
                         <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">

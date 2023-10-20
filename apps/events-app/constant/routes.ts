@@ -76,7 +76,7 @@ export const navBarRoutes: Routes[] = [
   },
   {
     path: "/dashboard/schedules",
-    title: "Schedules",
+    title: "Sessions",
     icon: HiViewBoards,
   },
   {

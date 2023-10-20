@@ -58,7 +58,7 @@ import Autocomplete from "@mui/material/Autocomplete";
 import { Loader } from "@/components/ui/Loader";
 import { toast } from "@/components/ui/use-toast";
 import { BsFillTicketFill } from "react-icons/bs";
-import { scheduleNavBarDetails } from "@/constant/addschedulenavbar";
+import { sessionNavBarDetails } from "@/constant/addschedulenavbar";
 
 type Organizer = {
   name: string;
@@ -381,7 +381,7 @@ export default function AddSchedulePage(props: any) {
           <BsFillTicketFill className="w-5 h-5 text-2xl" /> Schedule
         </div>
         <div className="flex flex-col gap-3 text-xl">
-          {scheduleNavBarDetails.map((item, index) => {
+          {sessionNavBarDetails.map((item, index) => {
             return (
               <div
                 key={index}
@@ -455,7 +455,7 @@ export default function AddSchedulePage(props: any) {
                             className="text-2xl opacity-80"
                             ref={sectionRefs[0]}
                           >
-                            Schedule Format
+                            Session Format
                           </FormLabel>
                           <FormDescription>
                             The format has been inherited from the event space.
@@ -500,7 +500,7 @@ export default function AddSchedulePage(props: any) {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                            Schedule Name{" "}
+                            Session Name{" "}
                           </FormLabel>
                           <FormControl>
                             <InputFieldDark
@@ -543,7 +543,7 @@ export default function AddSchedulePage(props: any) {
                             <FormControl>
                               <div className="flex flex-col gap-[10px]">
                                 <Label className="text-2xl opacity-80">
-                                  Schedule Description
+                                  Session Description
                                 </Label>
                                 <TextEditor
                                   value={field.value}
@@ -558,7 +558,7 @@ export default function AddSchedulePage(props: any) {
                     </div>
                     <div className="w-full" ref={sectionRefs[2]}>
                       <Label className="text-2xl opacity-80">
-                        Schedule Date & Times
+                        Session Date & Times
                       </Label>
                       <div className="flex flex-col items-start gap-5 self-stretch w-full pt-5">
                         <div className="flex gap-5">
@@ -674,7 +674,7 @@ export default function AddSchedulePage(props: any) {
                         </div>
                         <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
                           <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                            Select Schedule Frequency
+                            Select Session Frequency
                           </Label>
                           <select
                             onChange={handleFrequencySelect}
@@ -917,7 +917,7 @@ export default function AddSchedulePage(props: any) {
                       ref={sectionRefs[5]}
                     >
                       <Label className="text-2xl opacity-80 font-bold">
-                        Schedule Labels
+                        Session Labels
                       </Label>
                       <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
                         <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
