@@ -27,6 +27,8 @@ import { useState } from "react";
 import { Input } from "../ui/input";
 import { ArrowCircleLeft, ArrowCircleRight, ArrowLeft } from "../ui/icons";
 import { updateUsername } from "@/controllers/profile.controllers";
+import banner from "@/public/images/zuconnectbanner.png";
+import CustomCarousel from "../ui/CustomCarousel";
 
 export const sampleEvents = [
   {
@@ -110,10 +112,13 @@ export default function HomePageTemplate() {
       console.error("Error updating username", error);
     }
   };
+  console.log(banner)
+
+  const slides = [banner.src, banner.src];
 
   return (
     <div className="md:w-5/6 w-[95%] mx-auto ">
-      <div
+      {/* <div
         className="w-full border border-white/10 rounded-2xl mt-5"
         style={{
           backgroundImage: "url('/images/zuconnectbanner.png')",
@@ -173,6 +178,12 @@ export default function HomePageTemplate() {
               </DialogContent>
             </Dialog>
           )}
+        </div>
+      </div> */}
+
+      <div className="mt-10 relative">
+        <div className="">
+          <CustomCarousel slides={slides as unknown as string[]} autoSlide />
         </div>
       </div>
       <div className="mt-10">
