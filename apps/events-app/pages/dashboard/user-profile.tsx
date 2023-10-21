@@ -4,7 +4,10 @@ import { ArrowLeft } from "@/components/ui/icons";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useGlobalContext } from "@/context/GlobalContext";
-import { updateUsername } from "@/controllers/profile.controllers";
+import {
+  fetchProfile,
+  updateUsername,
+} from "@/controllers/profile.controllers";
 import { Database } from "@/database.types";
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/router";
@@ -25,8 +28,7 @@ export default function UserProfile() {
   const handleUpdateUserProfile = async () => {
     try {
       setIsLoading(true);
-      const res = await updateUsername({ username: userName });
-      await queryClient.invalidateQueries("profile");
+      await updateUsername({ username: userName });
       await queryClient.refetchQueries("profile");
       setIsProfileUpdated(true);
       setIsLoading(false);
