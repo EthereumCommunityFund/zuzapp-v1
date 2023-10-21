@@ -174,6 +174,21 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(500).send('Internal server error');
   }
 
+  // Inserting into the EditLogs after updating the schedule
+  const editLogInsertResult = await supabase
+    .from('editlogs')
+    .insert({
+      schedule_id: id,
+      editor_id: req.body.user.id,
+      edit_summary: 'Updated schedule'
+    });
+
+  if (editLogInsertResult.error) {
+    logToFile('server error', editLogInsertResult.error.message, 500, req.body.user.email);
+    return res.status(500).send('Internal server error while logging edit');
+  }
+
+
   return res.status(200).json({
     message: 'Schedule updated',
     data: scheduleId,
