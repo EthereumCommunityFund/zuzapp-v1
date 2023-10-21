@@ -3,6 +3,8 @@ import Button from "@/components/ui/buttons/Button";
 import { ArrowLeft } from "@/components/ui/icons";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+
+import { toast } from "@/components/ui/use-toast";
 import { useGlobalContext } from "@/context/GlobalContext";
 import {
   fetchProfile,
@@ -17,7 +19,7 @@ import { HiArrowRight } from "react-icons/hi";
 import { useQueryClient } from "react-query";
 
 export default function UserProfile() {
-  const { profile, setProfile } = useGlobalContext();
+  const { profile, loadProfile } = useGlobalContext();
 
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -26,16 +28,30 @@ export default function UserProfile() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleUpdateUserProfile = async () => {
+    // this validation is a quick fix, refactor this into something more robust for the form elements
+    if (!userName) {
+      toast({ title: "Username cannot be empty", variant: "destructive" });
+      return;
+    }
+
+    if (userName === profile.username) {
+      toast({
+        title: "Username cannot be the same as previous username",
+        variant: "destructive",
+      });
+      return;
+    }
+
     try {
       setIsLoading(true);
       await updateUsername({ username: userName });
-      await setProfile();
+      await loadProfile();
       setIsProfileUpdated(true);
       setIsLoading(false);
-
-      console.log("handling user profile");
-    } catch (error) {
+    } catch (error: any) {
+      toast({ title: error.response.data.message, variant: "destructive" });
       console.log("error while updating profile", error);
+      setIsLoading(false);
     }
   };
 

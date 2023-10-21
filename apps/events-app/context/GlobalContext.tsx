@@ -1,14 +1,20 @@
 import { fetchAllEventSpaces } from "@/controllers";
 import { fetchProfile } from "@/controllers/profile.controllers";
 import fetchByEventID from "@/pages/api/invite/fetchByEventID";
-import { createContext, useContext, ReactElement, useState } from "react";
+import {
+  createContext,
+  useContext,
+  ReactElement,
+  useState,
+  useEffect,
+} from "react";
 import { QueryClient, useQuery, useQueryClient } from "react-query";
 
 type GlobalContextType = {
   isAuthenticated: boolean;
   user: any;
   profile: any;
-  setProfile: any;
+  loadProfile: any;
 };
 
 const GlobalContext = createContext<GlobalContextType | undefined>(undefined);
@@ -28,30 +34,24 @@ type GlobalProviderProps = {
 
 export const GlobalProvider = ({ children, user }: GlobalProviderProps) => {
   const isAuthenticated = user ? true : false;
-  //   const isAuthenticated = user ? true : false;/
-  const { data, isLoading, isError } = useQuery("profile", fetchProfile, {
-    staleTime: 0,
-  });
-  const [refreshState, setRefreshState] = useState(false);
 
-  const queryClient = useQueryClient();
-
-  const setProfile = async () => {
-    setRefreshState(!refreshState);
-    queryClient.invalidateQueries("profile");
-    await queryClient.refetchQueries("profile");
+  const [profile, setProfile] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  useEffect(() => {
+    loadProfile();
+  }, []);
+  const loadProfile = async () => {
+    fetchProfile().then((res) => {
+      setIsLoading(true);
+      setProfile(res.data.data);
+      setIsLoading(false);
+    });
   };
 
-  console.log("profile", data);
-
-  let profile;
-  if (data?.data) {
-    profile = data.data.data;
-  }
   return (
     <>
       <GlobalContext.Provider
-        value={{ isAuthenticated, user, profile, setProfile }}
+        value={{ isAuthenticated, user, profile, loadProfile }}
       >
         {children}
       </GlobalContext.Provider>

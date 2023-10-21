@@ -18,6 +18,18 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         return res.status(400).json({ message: "Username is missing from the request body" });
     }
 
+    // Check if username already exists
+    const { data: existingUser } = await supabase
+        .from('profile')
+        .select('username')
+        .eq('username', username)
+        .single();
+
+    if (existingUser) {
+        return res.status(400).json({ message: "Username already exists" });
+    }
+
+    // Continue with updating the username
     const { error } = await supabase
         .from('profile')
         .update({ username })
