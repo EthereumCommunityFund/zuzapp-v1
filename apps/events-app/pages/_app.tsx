@@ -15,31 +15,30 @@ import { Toaster } from "@/components/ui/toaster";
 import { useRouter } from "next/router";
 import localforage from "localforage";
 import { Database } from "@/database.types";
-import App, { AppInitialProps, AppContext } from "next/app";
 
 /**
  * This component wraps all pages in this Next.js application.
  */
 
-export const fetchUser = async (ctx: any) => {
-  const supabase = createPagesServerClient<Database>(ctx);
-  let {
-    data: { session },
-  } = await supabase.auth.getSession();
+// export const fetchUser = async (ctx: any) => {
+//   const supabase = createPagesServerClient<Database>(ctx);
+//   let {
+//     data: { session },
+//   } = await supabase.auth.getSession();
 
-  if (!session) {
-    return {
-      initialSession: null,
-      user: null,
-      profile: null,
-    };
-  }
+//   if (!session) {
+//     return {
+//       initialSession: null,
+//       user: null,
+//       profile: null,
+//     };
+//   }
 
-  return {
-    initialSession: session,
-    user: session?.user,
-  };
-};
+//   return {
+//     initialSession: session,
+//     user: session?.user,
+//   };
+// };
 
 const MyApp = ({
   Component,

@@ -18,8 +18,15 @@ const processInvite = async (message: any) => {
             console.error('Error sending email:', error);
         }
     } else {
-        console.log('Dev environment - email not sent:', message);
-        console.log(message.html)
+        const mailClient = new MailClient();
+        try {
+            await mailClient.sendMail(message);
+            console.log('Email sent');
+        } catch (error) {
+            console.error('Error sending email:', error);
+        }
+        // console.log('Dev environment - email not sent:', message);
+        // console.log(message.html)
     }
 };
 

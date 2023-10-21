@@ -17,7 +17,7 @@ import { HiArrowRight } from "react-icons/hi";
 import { useQueryClient } from "react-query";
 
 export default function UserProfile() {
-  const { profile } = useGlobalContext();
+  const { profile, setProfile } = useGlobalContext();
 
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -29,9 +29,11 @@ export default function UserProfile() {
     try {
       setIsLoading(true);
       await updateUsername({ username: userName });
-      await queryClient.refetchQueries("profile");
+      await setProfile();
       setIsProfileUpdated(true);
       setIsLoading(false);
+
+      console.log("handling user profile");
     } catch (error) {
       console.log("error while updating profile", error);
     }
