@@ -50,13 +50,14 @@ interface IAddScheduleForm {
   title: string;
   isQuickAccess: boolean;
   scheduleId?: string;
-  trackId: string;
+  trackId?: string;
+  event_space_id: string;
   updateIsLoading?: (newState: boolean) => void;
 }
 
-export default function AddScheduleForm({ title, isQuickAccess, scheduleId, trackId, updateIsLoading }: IAddScheduleForm) {
+export default function AddScheduleForm({ title, isQuickAccess, scheduleId, trackId, event_space_id, updateIsLoading }: IAddScheduleForm) {
   const router = useRouter();
-  const { event_space_id } = router.query;
+
   const [isAllDay, setIsAllDay] = useState(false);
 
   const [schedule, setSchedule] = useState<ScheduleUpdateRequestBody>({
@@ -379,7 +380,7 @@ export default function AddScheduleForm({ title, isQuickAccess, scheduleId, trac
     updateIsLoading && updateIsLoading(true);
     try {
       router.push({
-        pathname: isQuickAccess ? `/dashboard/eventview/allschedules` : `/dashboard/eventview/tracks/track`,
+        pathname: router.pathname.startsWith(`/dashboard/eventview/about`) ? `/dashboard/eventview/allschedules` : router.pathname,
         query: {
           event_space_id: event_space_id,
           trackId: trackId,
@@ -410,7 +411,7 @@ export default function AddScheduleForm({ title, isQuickAccess, scheduleId, trac
                 className="mt-8 bg-[#67DBFF]/20 text-[#67DBFF] rounded-full"
                 leftIcon={HiArrowRight}
               >
-                Go to sessions
+                Go to Sessions
               </Button>
             </DialogPrimitive.Close>
 

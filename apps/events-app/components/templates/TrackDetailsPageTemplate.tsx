@@ -160,7 +160,13 @@ export default function TrackDetailsPageTemplate(props: any) {
               </Button>
             </DialogTrigger>
             <DialogContent className="lg:w-3/5 lg:h-4/5 overflow-y-auto">
-              <AddScheduleForm title={'Add'} isQuickAccess={false} trackId={trackId as string} updateIsLoading={updateIsLoading} />
+              <AddScheduleForm
+                title={'Add'}
+                isQuickAccess={false}
+                trackId={trackId as string}
+                updateIsLoading={updateIsLoading}
+                event_space_id={event_space_id as string}
+              />
             </DialogContent>
           </Dialog>
         </div>

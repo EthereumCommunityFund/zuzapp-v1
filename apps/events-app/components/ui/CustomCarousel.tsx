@@ -64,7 +64,7 @@ export default function CustomCarousel({ autoSlide = false, autoSlideInterval = 
 
   return (
     <div
-      className="overflow-hidden lg:max-h-[344px] relative"
+      className="overflow-hidden lg:max-h-[344px] relative rounded-md"
       onMouseDown={handleStart}
       onMouseMove={handleMove}
       onMouseUp={handleEnd}
