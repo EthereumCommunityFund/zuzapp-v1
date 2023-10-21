@@ -1,12 +1,15 @@
-'use client';
+"use client";
 
-import { useRef, useState } from 'react';
-import SelectImageButton from './buttons/SelectImageButton';
-import InputFieldLabel from './labels/inputFieldLabel';
-import ImageUploadButtonDescription from './labels/image-upload-button-description';
-import Button from './buttons/Button';
-import { HiUpload } from 'react-icons/hi';
-import { uploadImage } from '@/controllers/image.controller';
+import { useRef, useState } from "react";
+import SelectImageButton from "./buttons/SelectImageButton";
+import InputFieldLabel from "./labels/inputFieldLabel";
+import ImageUploadButtonDescription from "./labels/image-upload-button-description";
+import Button from "./buttons/Button";
+import { HiUpload } from "react-icons/hi";
+import {
+  extractImageMetadata,
+  uploadImage,
+} from "@/controllers/image.controller";
 
 export default function DragAndDrop({ setPayload, payload }: any) {
   const [dragActive, setDragActive] = useState<boolean>(false);
@@ -16,16 +19,17 @@ export default function DragAndDrop({ setPayload, payload }: any) {
 
   const handleChange = async (e: any) => {
     e.preventDefault();
-    console.log(e)
-    console.log('File has been added');
+    console.log(e);
+    console.log("File has been added");
     if (e.target.files && e.target.files[0]) {
-      for (let i = 0; i < e.target.files['length']; i++) {
+      for (let i = 0; i < e.target.files["length"]; i++) {
         console.log(e.target.files[i]);
         setFiles((prevState: any) => [...prevState, e.target.files[i]]);
       }
     }
     try {
-      const result = await uploadImage(e, 'events');
+      const { localImageUrl, file } = await extractImageMetadata(e);
+      // const result = await uploadImage(e, 'events');
       console.log(result);
       setPayload({
         ...payload,
@@ -42,7 +46,7 @@ export default function DragAndDrop({ setPayload, payload }: any) {
     e.stopPropagation();
     setDragActive(false);
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      for (let i = 0; i < e.dataTransfer.files['length']; i++) {
+      for (let i = 0; i < e.dataTransfer.files["length"]; i++) {
         setFiles((prevState: any) => [...prevState, e.dataTransfer.files[i]]);
       }
     }
@@ -52,7 +56,7 @@ export default function DragAndDrop({ setPayload, payload }: any) {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
-    console.log('Files', files);
+    console.log("Files", files);
   };
 
   function handleDragOver(e: any) {
@@ -68,7 +72,7 @@ export default function DragAndDrop({ setPayload, payload }: any) {
   }
 
   function openFileExplorer() {
-    inputRef.current.value = '';
+    inputRef.current.value = "";
     inputRef.current.click();
   }
 
@@ -81,12 +85,27 @@ export default function DragAndDrop({ setPayload, payload }: any) {
       onDragLeave={handleDragLeave}
       onDragOver={handleDragOver}
     >
-      <input placeholder="fileInput" className="hidden" ref={inputRef} type="file" multiple={true} onChange={handleChange} accept="image/*" />
+      <input
+        placeholder="fileInput"
+        className="hidden"
+        ref={inputRef}
+        type="file"
+        multiple={true}
+        onChange={handleChange}
+        accept="image/*"
+      />
       <div className="w-full">
-        <Button className="flex flex-col rounded-[6px] border-dashed text-white border-white border-opacity-10 bg-pagePrimary h-full w-full" onClick={openFileExplorer}>
+        <Button
+          className="flex flex-col rounded-[6px] border-dashed text-white border-white border-opacity-10 bg-pagePrimary h-full w-full"
+          onClick={openFileExplorer}
+        >
           <HiUpload />
-          <span className="text-[13px] text-center opacity-50 font-bold leading-[1.2] self-stretch">Select Header Image</span>
-          <span className=" text-[10px] tracking-[0.2px] font-normal leading-[1.2] opacity-50">DRAG & DROP IMAGE</span>
+          <span className="text-[13px] text-center opacity-50 font-bold leading-[1.2] self-stretch">
+            Select Header Image
+          </span>
+          <span className=" text-[10px] tracking-[0.2px] font-normal leading-[1.2] opacity-50">
+            DRAG & DROP IMAGE
+          </span>
         </Button>
       </div>
     </div>

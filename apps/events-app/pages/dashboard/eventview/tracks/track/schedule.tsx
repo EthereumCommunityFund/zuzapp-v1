@@ -104,7 +104,7 @@ export default function EventViewScheduleDetailsPage() {
         toast({
           title: "Info",
           description: "RSVPed successfully",
-          variant: "destructive",
+          // variant: "destructive",
         });
       }
     } catch (error) {

@@ -1,22 +1,21 @@
 import { useState, useEffect, useRef } from "react";
 import Button from "../ui/buttons/Button";
 import { HiUpload } from "react-icons/hi";
-import { uploadImage } from "@/controllers/image.controller";
+import { extractImageMetadata } from "@/controllers/image.controller";
 
-export const EventBanner = ({ banner, setBanner }: any) => {
+export const EventBanner = ({ banner, setBanner, setBannerMetadata }: any) => {
   const [dragActive, setDragActive] = useState<boolean>(false);
   const inputRef = useRef<any>(null);
   const [files, setFiles] = useState<any>([]);
-  const [imageLink, setImageLink] = useState<any>(banner);
 
   const handleChange = async (e: any) => {
     e.preventDefault();
-    console.log(e)
+    console.log(e);
     try {
-      const result = await uploadImage(e, 'events');
-      console.log(result);
-      setBanner(result)
-      setImageLink(result);
+      // const result = await uploadImage(e, 'events');
+      const { localImageUrl, file } = extractImageMetadata(e);
+      setBanner(localImageUrl);
+      setBannerMetadata(file);
     } catch (error) {
       console.log(error);
     }
@@ -70,7 +69,14 @@ export const EventBanner = ({ banner, setBanner }: any) => {
           onDragLeave={handleDragLeave}
           onDragOver={handleDragOver}
         >
-          <input placeholder="fileInput" className="hidden" ref={inputRef} type="file" onChange={handleChange} accept="image/*" />
+          <input
+            placeholder="fileInput"
+            className="hidden"
+            ref={inputRef}
+            type="file"
+            onChange={handleChange}
+            accept="image/*"
+          />
           <div className="w-full h-[204px]">
             <Button
               className="flex flex-col items-center justify-center rounded-[6px] border-dashed text-white border-white border-opacity-10 bg-pagePrimary h-full w-full"
@@ -86,7 +92,11 @@ export const EventBanner = ({ banner, setBanner }: any) => {
             </Button>
           </div>
         </div>
-        <img src={banner} alt="" className="border rounded-lg h-[100px] w-[130px]" />
+        <img
+          src={banner}
+          alt=""
+          className="border rounded-lg h-[100px] w-[130px]"
+        />
       </div>
     </div>
   );

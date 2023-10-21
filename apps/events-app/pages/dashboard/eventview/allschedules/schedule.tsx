@@ -65,6 +65,10 @@ export default function EventViewScheduleDetailsPage() {
           event_space_id as string
         );
         setHasRsvpd(false);
+        toast({
+          title: "Info",
+          description: "RSVPed cancelled",
+        });
       } else {
         console.log(scheduleId, "scheduleId");
         const result = await rsvpSchedule(
@@ -75,7 +79,6 @@ export default function EventViewScheduleDetailsPage() {
         toast({
           title: "Info",
           description: "RSVPed successfully",
-          variant: "destructive",
         });
       }
     } catch (error) {
@@ -210,8 +213,9 @@ export default function EventViewScheduleDetailsPage() {
               <Button
                 variant="primary"
                 size="lg"
-                className={`rounded-2xl justify-center ${rsvpUpdated ? "animate-rsvp" : ""
-                  }`}
+                className={`rounded-2xl justify-center ${
+                  rsvpUpdated ? "animate-rsvp" : ""
+                }`}
                 leftIcon={BsFillTicketFill}
                 onClick={handleRsvpAction}
                 disabled={
@@ -223,10 +227,10 @@ export default function EventViewScheduleDetailsPage() {
                 {currentSchedule?.rsvp_amount === 0
                   ? "No Rsvp Available"
                   : hasRsvpd
-                    ? "Cancel RSVP"
-                    : isRsvpFullOnLoad
-                      ? "RSVP Full"
-                      : "RSVP Schedule"}
+                  ? "Cancel RSVP"
+                  : isRsvpFullOnLoad
+                  ? "RSVP Full"
+                  : "RSVP Schedule"}
               </Button>
             </div>
             <div className="flex flex-col gap-2.5 px-5 pt-5 pb-[60px]">
