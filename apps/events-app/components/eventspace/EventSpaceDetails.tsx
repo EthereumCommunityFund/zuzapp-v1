@@ -29,8 +29,10 @@ import { RxPlus } from 'react-icons/rx';
 import { toast } from '../ui/use-toast';
 import { add } from 'libsodium-wrappers';
 import dayjs, { Dayjs } from 'dayjs';
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import { eventDetailsList } from '@/constant/eventdetails';
 import { Loader } from '../ui/Loader';
+dayjs.extend(isSameOrAfter);
 
 interface EventSpaceDetailsProps {
   eventSpace: EventSpaceDetailsType;
@@ -54,7 +56,7 @@ const formSchema = z.object({
         if (date) {
           const today = dayjs();
           const selectedDate = dayjs(date);
-          return selectedDate.isAfter(today);
+          return selectedDate.isSameOrAfter(today, 'day');
         }
         return false;
       },

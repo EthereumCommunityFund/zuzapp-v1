@@ -1,26 +1,23 @@
-import Image from "next/image";
+import Image from 'next/image';
 
-import Button from "@/components/ui/buttons/Button";
-import { useGlobalContext } from "@/context/GlobalContext";
-import { useUserPassportContext } from "@/context/PassportContext";
-import Link from "next/link";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { dashboardRoutes } from "@/components/navigation/Dashboard/routes";
-import { useRouter } from "next/router";
-import { RxAvatar } from "react-icons/rx";
-import IconButton from "@/components/ui/buttons/IconButton";
-import { HiMenuAlt1 } from "react-icons/hi";
-import { User } from "@/components/ui/icons";
-import { useState } from "react";
-import { navBarRoutes } from "@/constant/routes";
-import { FaCog } from "react-icons/fa";
-import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
-import { Database } from "@/database.types";
-import MyProfileButton from "./MyProfileButton";
+import Button from '@/components/ui/buttons/Button';
+import { useGlobalContext } from '@/context/GlobalContext';
+import { useUserPassportContext } from '@/context/PassportContext';
+import Link from 'next/link';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { dashboardRoutes } from '@/components/navigation/Dashboard/routes';
+import { useRouter } from 'next/router';
+import { RxAvatar } from 'react-icons/rx';
+import IconButton from '@/components/ui/buttons/IconButton';
+import { HiMenuAlt1 } from 'react-icons/hi';
+import { User } from '@/components/ui/icons';
+import { useState } from 'react';
+import { navBarRoutes } from '@/constant/routes';
+import { FaCog } from 'react-icons/fa';
+import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
+import { Database } from '@/database.types';
+import MyProfileButton from './MyProfileButton';
+import CreateEventSpace from "@/components/navigation/Header/CreateEventSpace";
 
 export default function DashboardHeader() {
   const { signIn } = useUserPassportContext();
@@ -29,7 +26,7 @@ export default function DashboardHeader() {
 
   const routes = navBarRoutes;
 
-  console.log("isAuthenticated", isAuthenticated, profile);
+  console.log('isAuthenticated', isAuthenticated, profile);
 
   const [dashboardOpen, setDashboardOpen] = useState(false);
 
@@ -104,51 +101,30 @@ export default function DashboardHeader() {
           </div>
         </nav>
         <div className="hidden md:block">
-          <input
-            type="text"
-            placeholder="Search"
-            className="w-96 h-10 rounded-3xl px-5 bg-zinc-800"
-          />
+          <input type="text" placeholder="Search" className="w-96 h-10 rounded-3xl px-5 bg-zinc-800" />
         </div>
         <div>
           {isAuthenticated && profile ? (
-            <MyProfileButton
-              className=""
-              userName={profile.username ? profile.username : `My Profile`}
-            />
+              <div className="flex items-center gap-3">
+                <CreateEventSpace />
+                <MyProfileButton
+                    className=""
+                    userName={profile.username ? profile.username : `My Profile`}
+                />
+              </div>
           ) : (
             // <Button leftIcon={User} variant="quiet" className="space-x-2 rounded-full">
             // </Button>
             <Popover>
-              <PopoverTrigger
-                className="flex space-x-2 items-center rounded-3xl px-5 py-2 h-full bg-dark text-sm md:text-base"
-                onClick={signIn}
-              >
-                <Image
-                  src="/images/zaluza blackandwhite.png"
-                  width={20}
-                  height={20}
-                  alt="Passport"
-                  className="mr-2"
-                />
+              <PopoverTrigger className="flex space-x-2 items-center rounded-3xl px-5 py-2 h-full bg-dark text-sm md:text-base" onClick={signIn}>
+                <Image src="/images/zaluza blackandwhite.png" width={20} height={20} alt="Passport" className="mr-2" />
                 Connect <span className="hidden md:inline"> Passport</span>
               </PopoverTrigger>
-              <PopoverContent className="bg-[#2B2D2DE5]">
+              <PopoverContent className="bg-[#2B2D2DE5] mt-5 mr-5 rounded-2xl w-80">
                 <div className="w-full flex flex-col items-center">
-                  <Image
-                    src="/images/small-icon.png"
-                    alt="Avatar"
-                    width={100}
-                    height={25}
-                  />
-                  <p className="text-white/50">Powered by Zero-Knowledge</p>
-                  <div className="my-5">
-                    {!isAuthenticated ? (
-                      <p>Confirming on Zupass...</p>
-                    ) : (
-                      <p className="font-bold text-primary">Connected!</p>
-                    )}
-                  </div>
+                  <Image src="/images/small-icon.png" alt="Avatar" width={100} height={25} />
+                  <p className="text-white/50 font-light text-xs mt-2">POWERED BY OXPARC WITH ZERO-KNOWLEDGE</p>
+                  <div className="my-5 font-semibold text-sm">{!isAuthenticated ? <p>Confirming on Zupass...</p> : <p className="font-bold text-primary">Connected!</p>}</div>
                 </div>
               </PopoverContent>
             </Popover>

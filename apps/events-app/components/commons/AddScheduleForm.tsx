@@ -1049,6 +1049,7 @@ export default function AddScheduleForm({ title, isQuickAccess, scheduleId, trac
                       </Label>
                       <input
                         type="number"
+                        min="1"
                         className="bg-gray-600 w-full outline-none px-4 rounded-md py-2"
                         placeholder={"50"}
                         onChange={(e) =>
