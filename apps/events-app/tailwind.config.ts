@@ -115,6 +115,7 @@ module.exports = {
       sm: "320px",
       md: "810px",
       lg: "1200px",
+      slider_md: "768px",
     },
   },
   plugins: [require("tailwindcss-animate")],

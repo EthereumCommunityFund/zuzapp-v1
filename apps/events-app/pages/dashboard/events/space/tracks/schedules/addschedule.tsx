@@ -48,6 +48,7 @@ import { fetchEventSpaceById } from "@/services/fetchEventSpaceDetails";
 import fetchTracksByEventSpaceId from "@/services/fetchTracksByEventSpace";
 // import timepicker as Timepicker from "react-time-picker";
 import dayjs, { Dayjs } from "dayjs";
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
@@ -59,6 +60,7 @@ import { Loader } from "@/components/ui/Loader";
 import { toast } from "@/components/ui/use-toast";
 import { BsFillTicketFill } from "react-icons/bs";
 import { sessionNavBarDetails } from "@/constant/addschedulenavbar";
+dayjs.extend(isSameOrAfter);
 
 type Organizer = {
   name: string;
@@ -191,7 +193,7 @@ export default function AddSchedulePage(props: any) {
           if (date) {
             const today = dayjs();
             const selectedDate = dayjs(date);
-            return selectedDate.isAfter(today);
+            return selectedDate.isSameOrAfter(today, 'day');
           }
           return false;
         },
@@ -1067,6 +1069,7 @@ export default function AddSchedulePage(props: any) {
                             </Label>
                             <input
                               type="number"
+                              min="1"
                               className="bg-gray-600 w-full outline-none px-4 rounded-md py-2"
                               placeholder={"50"}
                               onChange={(e) =>

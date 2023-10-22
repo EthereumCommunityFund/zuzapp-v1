@@ -23,21 +23,6 @@ import banner1 from '@/public/images/zuconnectbanner.png';
 import banner2 from '@/public/images/playbook.png';
 import CustomCarousel from '../ui/CustomCarousel';
 
-export const sampleEvents = [
-  {
-    type: EventTypes.InPerson,
-    name: 'Zu Connect',
-    description: 'A Popup Village of Innovation in the Heart of Istanbul',
-    date: 'October 8 - October 20',
-  },
-  {
-    type: EventTypes.Online,
-    name: 'Zuzalu Meetings',
-    description: 'Here we post our Town Halls and other events!',
-    date: 'Recuring',
-  },
-];
-
 interface DialogContent {
   title: string;
   description: string;
@@ -93,16 +78,18 @@ export default function HomePageTemplate() {
     {
       title: 'ZuConnect in Istanbul',
       description:
-        ' Join us for a two-week popup village where the leading innovators in crypto, AI, governance, decentralized science, and culture unite in the heart of Istanbul to co-work, break downsiloes, and have fun.',
-      ctaText: 'Create an Event',
-      ctaLink: '/dashboard/events/create',
+        'Join us for a two-week popup village where the leading innovators in crypto, AI, governance, decentralized science, and culture unite in the heart of Istanbul to co-work, break downsiloes, and have fun',
+      ctaText: 'Apply For Waitlist',
+      ctaLink: 'https://app.tripsha.com/trip/64ff3a6eb4b6950008dee4f8/book',
+      action: 'apply',
     },
     {
       title: 'The Zuzalu Playbook',
       description:
         'Looking to start your own Zuzalu-style community event? We have developed a comprehensive playbook that compiles our extensive experience and expertise. A guide for any community looking to organize a successful event quickly and efficiently.',
       ctaText: 'View the Playbook',
-      ctaLink: 'https://zuzalu.notion.site/zuzalu/3e893df2a248496bb30720fc1518c3c6?v=b0bc5b586a574272928d9a1fe0ded088',
+      ctaLink: 'https://zuzalu.notion.site/3e893df2a248496bb30720fc1518c3c6?v=b0bc5b586a574272928d9a1fe0ded088',
+      action: 'view',
     },
   ];
 
@@ -112,7 +99,7 @@ export default function HomePageTemplate() {
       const res = await updateUsername({ username: userName });
       console.log(res);
       setDialogContent({
-        title: `Welcome ${userName}`,
+        title: `Welcome, ${userName}`,
         description: 'Now, head to explore Zuzalu & community events!',
         buttonLabel: 'Complete',
       });
@@ -127,15 +114,19 @@ export default function HomePageTemplate() {
 
   return (
     <div className="md:w-5/6 w-[95%] mx-auto">
-      <div className="mt-10 relative w-full border border-white/10 rounded-lg">
+      <div className="mt-10 relative w-full border border-white/10 rounded-2xl">
         <div className="">
-          <CustomCarousel slides={slides as unknown as string[]} autoSlide={false} curr={currentSlide} setCurr={setCurrentSlide}>
-            <div className="absolute top-0 left-0 px-14 py-14 max-w-[650px] ml-4 mt-4">
-              <h1 className="font-bold font-inter text-3xl md:text-5xl mb-5">{slideData[currentSlide].title}</h1>
-              <p className="mb-4 font-inter text-gray-200 text-md">{slideData[currentSlide].description}</p>
+          <CustomCarousel slides={slides as unknown as string[]} autoSlide curr={currentSlide} setCurr={setCurrentSlide}>
+            <div className="absolute top-0 left-0 px-8 slider_md:px-14 py-14 max-w-[650px] ml-4 mt-4">
+              <h1 className="font-bold font-inter text-left text-3xl md:text-5xl mb-5">{slideData[currentSlide].title}</h1>
+              <p className="text-left mb-4 max-w-[650px]font-inter text-gray-200 text-md">{slideData[currentSlide].description}</p>
               {isAuthenticated ? (
-                <Link href={slideData[currentSlide].ctaLink}>
-                  <Button size="lg" variant="primaryGreen" className="rounded-full text-xl text-white bg-[#769270] hover:bg-[#92B68B] font-inter font-semibold">
+                <Link href={slideData[currentSlide].ctaLink} target="_blank" rel="noopener noreferrer">
+                  <Button
+                    size="lg"
+                    variant="primaryGreen"
+                    className="rounded-full w-full slider_md:w-auto my-2.5 text-xl justify-center text-white bg-[#769270] hover:bg-[#92B68B] font-inter font-semibold"
+                  >
                     {slideData[currentSlide].ctaText}
                   </Button>
                 </Link>
@@ -208,17 +199,18 @@ export default function HomePageTemplate() {
       </div>
       {profile && firstLogin && !profile.username && (
         <Dialog open={true}>
-          <DialogContent className="sm:max-w-[425px]">
+          <DialogContent className="w-96 sm:max-w-xl p-6">
             <DialogHeader>
-              <DialogTitle className="text-2xl">{dialogContent?.title}</DialogTitle>
-              <DialogDescription className="text-lg font-bold">{dialogContent?.description}</DialogDescription>
+              <DialogTitle className="text-2xl font-bold text-white mb-4">{dialogContent?.title}</DialogTitle>
+              <DialogDescription className="text-md font-normal text-gray-400">{dialogContent?.description}</DialogDescription>
             </DialogHeader>
             <DialogFooter className="pt-5">
-              <Input placeholder="Type your username" className={`bg-black text-white`} value={userName} onChange={(e) => setUsername(e.target.value)} />
+              {dialogContent.buttonLabel === 'Continue' && (
+                <Input placeholder="Type your username" className="text-white py-2 px-3 rounded border border-gray-600" value={userName} onChange={(e) => setUsername(e.target.value)} />
+              )}
               <Button
-                variant={`${userName.length ? `strongerGreen` : `primary`}`}
-                className="w-full flex items-center justify-center rounded-3xl py-2 h-full bg-dark text-lg md:text-base"
-                leftIcon={ArrowCircleRight}
+                variant={`${userName.length ? `strongerGreen` : `ghost`}`}
+                className="w-full flex items-center justify-center rounded-3xl py-2 h-full bg-dark text-lg md:text-base text-white"
                 onClick={dialogContent.buttonLabel === 'Continue' ? handleDialogButton : () => router.push('/dashboard/home')}
               >
                 {dialogContent?.buttonLabel}

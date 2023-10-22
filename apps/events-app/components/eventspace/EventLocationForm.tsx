@@ -177,6 +177,7 @@ export default function EventLocationForm({
               <FormControl>
                 <Input
                   type="number"
+                  min="1"
                   className="bg-inputField"
                   placeholder={"Enter a number"}
                   {...field}

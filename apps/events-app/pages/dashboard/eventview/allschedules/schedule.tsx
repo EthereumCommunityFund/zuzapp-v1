@@ -73,9 +73,7 @@ export default function EventViewScheduleDetailsPage() {
         );
         setHasRsvpd(true);
         toast({
-          title: "Info",
-          description: "RSVPed successfully",
-          variant: "destructive",
+          title: "RSVPed successfully",
         });
       }
     } catch (error) {

@@ -102,9 +102,7 @@ export default function EventViewScheduleDetailsPage() {
         setHasRsvpd(true);
         queryClient.invalidateQueries(["scheduleDetails", scheduleId]);
         toast({
-          title: "Info",
-          description: "RSVPed successfully",
-          variant: "destructive",
+          title: "RSVPed successfully",
         });
       }
     } catch (error) {
