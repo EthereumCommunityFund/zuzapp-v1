@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { UserPassportContextProvider } from "../context/PassportContext";
-import { createPagesBrowserClient } from "@supabase/auth-helpers-nextjs";
+import {
+  createPagesBrowserClient,
+  createPagesServerClient,
+} from "@supabase/auth-helpers-nextjs";
 import { SessionContextProvider, Session } from "@supabase/auth-helpers-react";
 import GlobalProvider from "../context/GlobalContext";
 import "../styles/globals.css";
@@ -11,11 +14,16 @@ import { EventSpaceProvider } from "@/context/EventSpaceContext";
 import { Toaster } from "@/components/ui/toaster";
 import { useRouter } from "next/router";
 import localforage from "localforage";
+import Head from "next/head";
+import NProgress from "nprogress";
 
-/**
- * This component wraps all pages in this Next.js application.
- */
-const App = ({ Component, pageProps }: { Component: any; pageProps: any }) => {
+const MyApp = ({
+  Component,
+  pageProps,
+}: {
+  Component: any;
+  pageProps: any;
+}) => {
   const [supabaseClient] = useState(() => createPagesBrowserClient());
   const queryClient = new QueryClient();
   const router = useRouter();
@@ -27,6 +35,21 @@ const App = ({ Component, pageProps }: { Component: any; pageProps: any }) => {
   }
 
   useEffect(() => {
+    const handleRouteChangeStart = () => NProgress.start();
+    const handleRouteChangeComplete = () => NProgress.done();
+    const handleRouteChangeError = () => NProgress.done();
+
+    router.events.on("routeChangeStart", handleRouteChangeStart);
+    router.events.on("routeChangeComplete", handleRouteChangeComplete);
+    router.events.on("routeChangeError", handleRouteChangeError);
+
+    return () => {
+      router.events.off("routeChangeStart", handleRouteChangeStart);
+      router.events.off("routeChangeComplete", handleRouteChangeComplete);
+      router.events.off("routeChangeError", handleRouteChangeError);
+    };
+  }, [router.events]);
+  useEffect(() => {
     localforage.config({
       driver: localforage.INDEXEDDB,
       name: "zuzalu_city",
@@ -36,7 +59,7 @@ const App = ({ Component, pageProps }: { Component: any; pageProps: any }) => {
     const queryKeys = [
       "eventSpaces",
       "invitedSpaces",
-      "publishedEventSpaces",
+      // "publishedEventSpaces",
       ["currentEventSpace", event_space_id],
       ["trackDetails", event_space_id],
     ];
@@ -104,23 +127,30 @@ const App = ({ Component, pageProps }: { Component: any; pageProps: any }) => {
         supabaseClient={supabaseClient}
         initialSession={pageProps.initialSession}
       >
-        <GlobalProvider user={pageProps.user}>
-          <UserPassportContextProvider>
-            <QueryClientProvider client={queryClient}>
+        <QueryClientProvider client={queryClient}>
+          <GlobalProvider user={pageProps.user}>
+            <UserPassportContextProvider>
               <Hydrate state={pageProps.dehydratedState}>
                 <EventSpaceProvider>
                   <DashboardProvider props={pageProps}>
+                    <Head>
+                      <link
+                        rel="stylesheet"
+                        type="text/css"
+                        href="/path_to_your_css_folder/nprogress.css"
+                      />
+                    </Head>
                     <Component {...pageProps} />
                     <Toaster />
                   </DashboardProvider>
                 </EventSpaceProvider>
               </Hydrate>
-            </QueryClientProvider>
-          </UserPassportContextProvider>
-        </GlobalProvider>
+            </UserPassportContextProvider>
+          </GlobalProvider>
+        </QueryClientProvider>
       </SessionContextProvider>
     </>
   );
 };
 
-export default App;
+export default MyApp;

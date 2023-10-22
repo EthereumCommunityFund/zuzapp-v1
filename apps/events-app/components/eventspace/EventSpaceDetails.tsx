@@ -29,8 +29,10 @@ import { RxPlus } from 'react-icons/rx';
 import { toast } from '../ui/use-toast';
 import { add } from 'libsodium-wrappers';
 import dayjs, { Dayjs } from 'dayjs';
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import { eventDetailsList } from '@/constant/eventdetails';
 import { Loader } from '../ui/Loader';
+dayjs.extend(isSameOrAfter);
 
 interface EventSpaceDetailsProps {
   eventSpace: EventSpaceDetailsType;
@@ -54,7 +56,7 @@ const formSchema = z.object({
         if (date) {
           const today = dayjs();
           const selectedDate = dayjs(date);
-          return selectedDate.isAfter(today);
+          return selectedDate.isSameOrAfter(today, 'day');
         }
         return false;
       },
@@ -393,7 +395,7 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace, handl
                       <div className="flex flex-col gap-2.5">
                         <h2 className="h-6 opacity-70 font-bold text-xl leading-6">Manage Event Categories & Labels</h2>
                         <span className="opacity-70 h-[18px] font-normal text-[13px] leading-[18.2px] tracking-[0.13px] self-stretch">
-                          These will be shared as attributes by subsequent Sub-Events & Schedules you create.
+                          These will be shared as attributes by subsequent Tracks & Sessions you create.
                         </span>
                       </div>
 

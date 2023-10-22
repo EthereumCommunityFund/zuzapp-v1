@@ -53,7 +53,9 @@ export default function Tracks() {
     <div className="flex flex-col flex-1 items-center gap-[10px] pt-10 lg:px-20 pb-0 self-stretch">
       <div className="flex flex-col items-center gap-[44px] self-stretch w-[92%] mx-auto lg:w-[82%]">
         <div className="flex flex-col items-start gap-7 self-stretch">
-          <span className="md:text-[50px] text-4xl font-bold leading-[1.2]">Tracks</span>
+          <span className="md:text-[50px] text-4xl font-bold leading-[1.2]">
+            Tracks
+          </span>
           <div className="flex justify-between flex-col gap-y-5 md:flex-row items-start self-stretch">
             <Button
               variant="blue"
@@ -113,17 +115,10 @@ export const getServerSideProps = async (ctx: any) => {
       },
     };
 
-  // get profile from session
-  const { data: profile, error } = await supabase
-    .from("profile")
-    .select("*")
-    .eq("uuid", session.user.id);
-
   return {
     props: {
       initialSession: session,
       user: session?.user,
-      profile: profile,
     },
   };
 };

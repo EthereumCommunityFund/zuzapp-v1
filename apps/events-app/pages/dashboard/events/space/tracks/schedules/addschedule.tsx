@@ -48,6 +48,7 @@ import { fetchEventSpaceById } from "@/services/fetchEventSpaceDetails";
 import fetchTracksByEventSpaceId from "@/services/fetchTracksByEventSpace";
 // import timepicker as Timepicker from "react-time-picker";
 import dayjs, { Dayjs } from "dayjs";
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
@@ -58,7 +59,8 @@ import Autocomplete from "@mui/material/Autocomplete";
 import { Loader } from "@/components/ui/Loader";
 import { toast } from "@/components/ui/use-toast";
 import { BsFillTicketFill } from "react-icons/bs";
-import { scheduleNavBarDetails } from "@/constant/addschedulenavbar";
+import { sessionNavBarDetails } from "@/constant/addschedulenavbar";
+dayjs.extend(isSameOrAfter);
 
 type Organizer = {
   name: string;
@@ -81,7 +83,7 @@ export default function AddSchedulePage(props: any) {
   const defaultSpeakers = {
     options: optionSpeakers,
     getOptionLabel: (option: { name: string }) => option.name,
-  }
+  };
 
   const savedLocations = props.savedLocations;
 
@@ -173,7 +175,7 @@ export default function AddSchedulePage(props: any) {
 
   const formSchema = z.object({
     name: z.string().min(2, {
-      message: "Schedule name is required.",
+      message: "Session name is required.",
     }),
     format: z
       .enum(["in-person", "online"], {
@@ -182,21 +184,21 @@ export default function AddSchedulePage(props: any) {
       .default(() => eventSpace?.format ?? "in-person"),
     date: z
       .date({
-        required_error: "You need to select a valid date for this schedule.",
+        required_error: "You need to select a valid date for this session.",
         invalid_type_error:
-          "You need to select a valid date for this schedule.",
+          "You need to select a valid date for this session.",
       })
       .refine(
         (date) => {
           if (date) {
             const today = dayjs();
             const selectedDate = dayjs(date);
-            return selectedDate.isAfter(today);
+            return selectedDate.isSameOrAfter(today, 'day');
           }
           return false;
         },
         {
-          message: "You cannot create a schedule in the past.",
+          message: "You cannot create a session in the past.",
         }
       ),
     description: z.string().min(10, {
@@ -295,7 +297,7 @@ export default function AddSchedulePage(props: any) {
       setSwitchDialogue(true);
       setScheduleAdded(true);
       toast({
-        title: "Schedule created successfully",
+        title: "Session created successfully",
       });
       console.log(result, "result");
     } catch (error: any) {
@@ -378,10 +380,10 @@ export default function AddSchedulePage(props: any) {
     <div className="flex items-start gap-[60px] self-stretch md:px-10 px-2.5 py-5">
       <div className="lg:flex hidden flex-col pt-3 rounded-s-xl opacity-70 w-[300px] gap-5 fixed">
         <div className="flex gap-[10px] pl-3 items-center font-semibold text-2xl">
-          <BsFillTicketFill className="w-5 h-5 text-2xl" /> Schedule
+          <BsFillTicketFill className="w-5 h-5 text-2xl" /> Session
         </div>
         <div className="flex flex-col gap-3 text-xl">
-          {scheduleNavBarDetails.map((item, index) => {
+          {sessionNavBarDetails.map((item, index) => {
             return (
               <div
                 key={index}
@@ -412,7 +414,7 @@ export default function AddSchedulePage(props: any) {
           <div className="flex flex-col gap-[10px]">
             {isQuickAccess ? (
               <span className="text-lg items-start font-semibold opacity-70">
-                You are adding a schedule in quick access
+                You are adding a session in quick access
               </span>
             ) : (
               <span className="text-2xl items-start font-bold">
@@ -424,11 +426,11 @@ export default function AddSchedulePage(props: any) {
         <div className="flex py-5 px-4 flex-col items-center gap-8 self-stretch rounded-2xl border border-[#FFFFFF10] bg-[#2E3131]">
           <div className="flex flex-col items-center gap-[34px] self-stretch w-full">
             <div className="flex flex-col py-5 items-center gap-[10px] self-stretch w-full">
-              <FormTitle name="Add a Schedule" />
+              <FormTitle name="Add a Session" />
               {scheduleAdded ? (
                 <div className="flex flex-col items-center">
                   <h3 className="font-bold text-xl">
-                    Your Schedule Has Been Added
+                    Your Session Has Been Added
                   </h3>
 
                   <Button
@@ -437,7 +439,7 @@ export default function AddSchedulePage(props: any) {
                     className="mt-8 bg-[#67DBFF]/20 text-[#67DBFF] rounded-full"
                     leftIcon={HiArrowRight}
                   >
-                    Go to schedules
+                    Go to sessions
                   </Button>
                 </div>
               ) : (
@@ -455,7 +457,7 @@ export default function AddSchedulePage(props: any) {
                             className="text-2xl opacity-80"
                             ref={sectionRefs[0]}
                           >
-                            Schedule Format
+                            Session Format
                           </FormLabel>
                           <FormDescription>
                             The format has been inherited from the event space.
@@ -500,7 +502,7 @@ export default function AddSchedulePage(props: any) {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                            Schedule Name{" "}
+                            Session Name{" "}
                           </FormLabel>
                           <FormControl>
                             <InputFieldDark
@@ -515,7 +517,9 @@ export default function AddSchedulePage(props: any) {
                     />
                     {isQuickAccess && (
                       <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                        <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select Track</Label>
+                        <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
+                          Select Track
+                        </Label>
                         <select
                           onChange={handleTrackSelect}
                           title="Track List"
@@ -541,7 +545,7 @@ export default function AddSchedulePage(props: any) {
                             <FormControl>
                               <div className="flex flex-col gap-[10px]">
                                 <Label className="text-2xl opacity-80">
-                                  Schedule Description
+                                  Session Description
                                 </Label>
                                 <TextEditor
                                   value={field.value}
@@ -556,7 +560,7 @@ export default function AddSchedulePage(props: any) {
                     </div>
                     <div className="w-full" ref={sectionRefs[2]}>
                       <Label className="text-2xl opacity-80">
-                        Schedule Date & Times
+                        Session Date & Times
                       </Label>
                       <div className="flex flex-col items-start gap-5 self-stretch w-full pt-5">
                         <div className="flex gap-5">
@@ -672,7 +676,7 @@ export default function AddSchedulePage(props: any) {
                         </div>
                         <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
                           <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                            Select Schedule Frequency
+                            Select Session Frequency
                           </Label>
                           <select
                             onChange={handleFrequencySelect}
@@ -800,13 +804,15 @@ export default function AddSchedulePage(props: any) {
                                       // setTagItem({ name: newValue.name });
                                       setEventItem({
                                         ...eventItem,
-                                        name: newValue.name
-                                      })
+                                        name: newValue.name,
+                                      });
                                     }
-
                                   }}
                                   onInputChange={(event, newInputValue) => {
-                                    setEventItem({ ...eventItem, name: newInputValue });
+                                    setEventItem({
+                                      ...eventItem,
+                                      name: newInputValue,
+                                    });
                                   }}
                                   slotProps={{
                                     paper: {
@@ -913,7 +919,7 @@ export default function AddSchedulePage(props: any) {
                       ref={sectionRefs[5]}
                     >
                       <Label className="text-2xl opacity-80 font-bold">
-                        Schedule Labels
+                        Session Labels
                       </Label>
                       <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
                         <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
@@ -1063,6 +1069,7 @@ export default function AddSchedulePage(props: any) {
                             </Label>
                             <input
                               type="number"
+                              min="1"
                               className="bg-gray-600 w-full outline-none px-4 rounded-md py-2"
                               placeholder={"50"}
                               onChange={(e) =>
@@ -1084,7 +1091,7 @@ export default function AddSchedulePage(props: any) {
                           type="button"
                           leftIcon={CgClose}
                         >
-                          <span>Discard Schedule</span>
+                          <span>Discard Session</span>
                         </Button>
                         <Button
                           className="rounded-full w-full md:w-1/2 flex justify-center"
@@ -1093,7 +1100,7 @@ export default function AddSchedulePage(props: any) {
                           type="submit"
                           leftIcon={FaCircleArrowUp}
                         >
-                          <span>Add Schedule</span>
+                          <span>Add Session</span>
                         </Button>
                       </div>
                     </div>
@@ -1122,12 +1129,6 @@ export const getServerSideProps = async (ctx: any) => {
       },
     };
 
-  // get profile from session
-  const { data: profile, error } = await supabase
-    .from("profile")
-    .select("*")
-    .eq("uuid", session.user.id);
-
   const locationsResult = await fetchLocationsByEventSpace(
     ctx.query.event_space_id
   );
@@ -1138,7 +1139,6 @@ export const getServerSideProps = async (ctx: any) => {
     props: {
       initialSession: session,
       user: session?.user,
-      profile: profile,
       savedLocations: locationsResult.data.data,
       tags: tagsResult.data.data,
       organizers: organizersResult.data.data,

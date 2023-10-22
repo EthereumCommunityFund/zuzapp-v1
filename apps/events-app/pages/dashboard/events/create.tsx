@@ -5,7 +5,7 @@ import Container from "@/components/ui/Container";
 
 export default function CreateEventsPage() {
   return (
-    <div className="mx-auto md:w-[80%] w-[95%] py-10" >
+    <div className="mx-auto md:w-[80%] w-[95%] py-10">
       <CreateEventTemplate />
     </div>
   );
@@ -25,17 +25,10 @@ export const getServerSideProps = async (ctx: any) => {
       },
     };
 
-  // get profile from session
-  const { data: profile, error } = await supabase
-    .from("profile")
-    .select("*")
-    .eq("uuid", session.user.id);
-
   return {
     props: {
       initialSession: session,
       user: session?.user,
-      profile: profile,
     },
   };
 };

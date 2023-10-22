@@ -1,20 +1,29 @@
-import { BiLeftArrowAlt, BiEditAlt, BiPlus, BiRadioCircle, BiCalendarAlt, BiTimeFive, BiRadioCircleMarked, BiPlusCircle } from 'react-icons/bi';
-import { HiArrowLeft, HiCog, HiSelector } from 'react-icons/hi';
+import {
+  BiLeftArrowAlt,
+  BiEditAlt,
+  BiPlus,
+  BiRadioCircle,
+  BiCalendarAlt,
+  BiTimeFive,
+  BiRadioCircleMarked,
+  BiPlusCircle,
+} from "react-icons/bi";
+import { HiArrowLeft, HiCog, HiSelector } from "react-icons/hi";
 
-import Button from '@/components/ui/buttons/Button';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { BsFillPlusCircleFill } from 'react-icons/bs';
-import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
-import { Database } from '@/database.types';
-import { useQuery } from 'react-query';
-import fetchSchedulesByTrackId from '@/services/fetchScedulesByTrackId';
-import { ScheduleUpdateRequestBody } from '@/types';
-import { HiArrowRight } from 'react-icons/hi2';
-import { Loader } from '@/components/ui/Loader';
-import useTrackDetails from '@/hooks/useTrackDetails';
-import ScheduleItemCard from '@/components/schedules/ScheduleItemCard';
-import TrackScheduleItemCard from '@/components/schedules/TrackScheduleItemCard';
+import Button from "@/components/ui/buttons/Button";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { BsFillPlusCircleFill } from "react-icons/bs";
+import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
+import { Database } from "@/database.types";
+import { useQuery } from "react-query";
+import fetchSchedulesByTrackId from "@/services/fetchScedulesByTrackId";
+import { ScheduleUpdateRequestBody } from "@/types";
+import { HiArrowRight } from "react-icons/hi2";
+import { Loader } from "@/components/ui/Loader";
+import useTrackDetails from "@/hooks/useTrackDetails";
+import ScheduleItemCard from "@/components/schedules/ScheduleItemCard";
+import TrackScheduleItemCard from "@/components/schedules/TrackScheduleItemCard";
 
 type IdProp = {
   id: string;
@@ -32,7 +41,7 @@ export default function SchedulesDashboardPage() {
     isLoading,
     isError,
   } = useQuery<Joined<IdProp>[], Error>(
-    ['schedules', event_space_id],
+    ["schedules", event_space_id],
     () => fetchSchedulesByTrackId(trackId as string),
 
     {
@@ -52,7 +61,7 @@ export default function SchedulesDashboardPage() {
         },
       });
     } catch (error) {
-      console.error('Error fetching space details', error);
+      console.error("Error fetching space details", error);
     }
   };
 
@@ -66,22 +75,22 @@ export default function SchedulesDashboardPage() {
         query: { event_space_id, trackId: trackId, track_title: track_title },
       });
     } catch (error) {
-      console.error('Error fetching space details', error);
+      console.error("Error fetching space details", error);
     }
   };
   function formatDate(dateString: string | number | Date) {
     const date = new Date(dateString);
-    return new Intl.DateTimeFormat('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
+    return new Intl.DateTimeFormat("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
     }).format(date);
   }
   function formatTime(dateString: string | number | Date) {
     const date = new Date(dateString);
-    return new Intl.DateTimeFormat('en-US', {
-      hour: 'numeric',
-      minute: 'numeric',
+    return new Intl.DateTimeFormat("en-US", {
+      hour: "numeric",
+      minute: "numeric",
       hour12: true,
     }).format(date);
   }
@@ -114,12 +123,22 @@ export default function SchedulesDashboardPage() {
           </div>
           <div className="flex flex-col gap-[30px] self-stretch">
             <div className="flex items-start gap-[10px] self-stretch">
-              <div className="w-24 h-fit bg-white rounded-lg p-1">{loading ? <Loader /> : <img src={trackDetails?.image as string} alt="track-image" />}</div>
+              <div className="w-24 h-fit bg-white rounded-lg p-1">
+                {loading ? (
+                  <Loader />
+                ) : (
+                  <img src={trackDetails?.image as string} alt="track-image" />
+                )}
+              </div>
               <div className="flex flex-col gap-5 self-stretch">
-                <h2 className="md:text-4xl text-2xl font-semibold">{track_title}</h2>
+                <h2 className="md:text-4xl text-2xl font-semibold">
+                  {track_title}
+                </h2>
               </div>
             </div>
-            <h3 className="text-2xl leading-[1.2] opacity-70 font-bold ">Schedules</h3>
+            <h3 className="text-2xl leading-[1.2] opacity-70 font-bold ">
+              Sessions
+            </h3>
             <div className="flex flex-col md:flex-row justify-between items-start self-stretch">
               <Button
                 variant="blue"
@@ -127,7 +146,7 @@ export default function SchedulesDashboardPage() {
                 leftIcon={BsFillPlusCircleFill}
                 onClick={handleAddSchedule}
               >
-                Add a Schedule
+                Add a Session
               </Button>
 
               <div className="flex mt-2 md:mt-0 items-start gap-3">
@@ -170,14 +189,10 @@ export const getServerSideProps = async (ctx: any) => {
       },
     };
 
-  // get profile from session
-  const { data: profile, error } = await supabase.from('profile').select('*').eq('uuid', session.user.id);
-
   return {
     props: {
       initialSession: session,
       user: session?.user,
-      profile: profile,
     },
   };
 };

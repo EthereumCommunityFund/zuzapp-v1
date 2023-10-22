@@ -1,6 +1,6 @@
-import AddTrackTemplate from '@/components/tracks/AddTrackTemplate';
-import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
-import { Database } from '@/database.types';
+import AddTrackTemplate from "@/components/tracks/AddTrackTemplate";
+import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
+import { Database } from "@/database.types";
 
 export default function AddTrack() {
   return (
@@ -24,14 +24,10 @@ export const getServerSideProps = async (ctx: any) => {
       },
     };
 
-  // get profile from session
-  const { data: profile, error } = await supabase.from('profile').select('*').eq('uuid', session.user.id);
-
   return {
     props: {
       initialSession: session,
       user: session?.user,
-      profile: profile,
     },
   };
 };

@@ -12,7 +12,6 @@ interface IEventViewDetailsPanel {
 
 export default function EventViewDetailsPanel(props: IEventViewDetailsPanel) {
   const { eventSpace, organizers, tags, schedule } = props;
-  console.log('current schedule', schedule);
 
   return (
     <div className="flex flex-col pt-5 pb-10 gap-5 md:min-w-[450px] lg:min-w-[25%] lg:px-0 sm:px-3">
@@ -77,7 +76,7 @@ export default function EventViewDetailsPanel(props: IEventViewDetailsPanel) {
                 <HiLocationMarker className="text-2xl" />
                 <h2>Location</h2>
               </div>
-              {eventSpace.eventspacelocation &&
+              {eventSpace.eventspacelocation && (
                 <div className="flex gap-2.5">
                   <img src={eventSpace.image_url} width={100} height={50} alt="333" />
                   <div className="flex flex-col gap-[6px]">
@@ -85,7 +84,7 @@ export default function EventViewDetailsPanel(props: IEventViewDetailsPanel) {
                     <Label className="opacity-70">{eventSpace.eventspacelocation[0].address}</Label>
                   </div>
                 </div>
-              }
+              )}
             </div>
           </div>
           <div className="flex p-2.5 text-xl items-center gap-3">

@@ -22,7 +22,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         .select(`
         *,
         scheduletags: scheduletags!id (tags: tags!id (*)),
-        schedulespeakerrole: schedulespeakerrole!id (role, speaker: speaker!id (name))
+        schedulespeakerrole: schedulespeakerrole!id (role, speaker: speaker!id (name)),
+        editlogs: editlogs!schedule_id (*, user: profile!uuid (username))
     `)
         .eq("id", id)
         .single();
@@ -44,6 +45,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             name: speakerObj.speaker.name,
             role: speakerObj.role,
         })),
+
     } as any;
     delete response.scheduletags; // cleaning up the extra data
     delete response.schedulespeakerrole; // cleaning up the extra data

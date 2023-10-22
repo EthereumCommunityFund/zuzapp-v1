@@ -15,26 +15,17 @@ import { QueryClient, dehydrate, useQuery } from "react-query";
 import useEventDetails from "@/hooks/useCurrentEventSpace";
 import { Loader } from "@/components/ui/Loader";
 import EventViewDetailsPanel from "@/components/eventview/EventViewDetailsPanel";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 
-import ScheduleEditForm from "@/components/commons/AddScheduleForm";
 import {
   cancelUserRsvpBySchedule,
   checkUserRsvpBySchedule,
-  fetchSchedule,
-  fetchScheduleByID,
   rsvpSchedule,
 } from "@/controllers";
 import { ScheduleUpdateRequestBody } from "@/types";
 import EditScheduleForm from "@/components/commons/EditScheduleForm";
+import fetchScheduleById from "@/services/fetchScheduleById";
+import { toast } from "@/components/ui/use-toast";
 
 export default function EventViewScheduleDetailsPage() {
   const router = useRouter();
@@ -44,25 +35,12 @@ export default function EventViewScheduleDetailsPage() {
   const [currentSchedule, setCurrentSchedule] =
     useState<ScheduleUpdateRequestBody>();
   const [hasRsvpd, setHasRsvpd] = useState(false);
-  const [rsvpFull, setRsvpFull] = useState(false);
+  const [isRsvpFullOnLoad, setIsRsvpFullOnLoad] = useState(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const trackItem = eventSpace?.tracks.find(
     (trackItem) => trackItem.id === trackId
   );
-
-  const startTime =
-    currentSchedule &&
-    new Date(currentSchedule.start_time).toLocaleTimeString("en-US", {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  const endTime =
-    currentSchedule &&
-    new Date(currentSchedule.end_time).toLocaleTimeString("en-US", {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
 
   const handleBackToSchedule = () => {
     router.push({
@@ -75,12 +53,17 @@ export default function EventViewScheduleDetailsPage() {
 
   const handleRsvpAction = async () => {
     try {
-      if (hasRsvpd) {
+      if (currentSchedule?.rsvp_amount === 0) {
+        toast({
+          title: "Error",
+          description: "No RSVPs available",
+          variant: "destructive",
+        });
+      } else if (hasRsvpd) {
         const result = await cancelUserRsvpBySchedule(
           scheduleId as string,
           event_space_id as string
         );
-        // console.log(result, 'cancelrsvp');
         setHasRsvpd(false);
       } else {
         console.log(scheduleId, "scheduleId");
@@ -88,8 +71,10 @@ export default function EventViewScheduleDetailsPage() {
           scheduleId as string,
           event_space_id as string
         );
-        // console.log(result, 'rsvp updated');
         setHasRsvpd(true);
+        toast({
+          title: "RSVPed successfully",
+        });
       }
     } catch (error) {
       console.log(error);
@@ -109,29 +94,51 @@ export default function EventViewScheduleDetailsPage() {
     }
   };
 
-  useEffect(() => {
-    const fetchCurrentSchedule = async () => {
-      try {
-        setIsLoading(true);
-        const result = await fetchScheduleByID(scheduleId as string);
-
-        setCurrentSchedule({
-          ...result.data.data,
-          event_type: JSON.parse(result.data.data.event_type)[0],
-          experience_level: JSON.parse(result.data.data.experience_level)[0],
-        });
+  const { data, isError } = useQuery<ScheduleUpdateRequestBody, Error>(
+    ["scheduleDetails", scheduleId],
+    () => fetchScheduleById(scheduleId as string),
+    {
+      enabled: !!scheduleId,
+      onSuccess: (data) => {
+        console.log("schedule details", data);
+        const modifiedSchedule = {
+          ...data,
+          event_type: JSON.parse(data.event_type as string)[0],
+          experience_level: JSON.parse(data.experience_level as string)[0],
+        };
+        setCurrentSchedule(modifiedSchedule);
         setIsLoading(false);
-        if (result.data.data.rsvp_amount === result.data.data.current_rsvp_no) {
-          setRsvpFull(true);
-        }
-        // console.log(result.data.data.date);
-      } catch (error) {
-        console.log(error);
-      }
-    };
+      },
+    }
+  );
 
-    fetchCurrentSchedule();
+  useEffect(() => {
+    if (currentSchedule) {
+      if (currentSchedule.rsvp_amount === currentSchedule.current_rsvp_no) {
+        setIsRsvpFullOnLoad(true);
+      }
+      if (currentSchedule.rsvp_amount === 0) {
+        setIsRsvpFullOnLoad(false);
+      }
+    }
+  }, [currentSchedule]);
+
+  useEffect(() => {
+    checkIfUserHasRsvpd();
   }, []);
+
+  const startTime =
+    currentSchedule &&
+    new Date(currentSchedule.start_time).toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  const endTime =
+    currentSchedule &&
+    new Date(currentSchedule.end_time).toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
 
   if (isLoading) {
     return <Loader />;
@@ -156,7 +163,7 @@ export default function EventViewScheduleDetailsPage() {
                 leftIcon={HiArrowLeft}
                 onClick={handleBackToSchedule}
               >
-                Back to Schedules
+                Back to Sessions
               </Button>
               <Dialog>
                 <DialogTrigger asChild>
@@ -205,12 +212,19 @@ export default function EventViewScheduleDetailsPage() {
                   }`}
                 leftIcon={BsFillTicketFill}
                 onClick={handleRsvpAction}
+                disabled={
+                  isRsvpFullOnLoad ||
+                  currentSchedule?.rsvp_amount === 0 ||
+                  (isRsvpFullOnLoad && !hasRsvpd)
+                }
               >
-                {hasRsvpd
-                  ? "Cancel RSVP"
-                  : rsvpFull
-                    ? "RSVP Full"
-                    : "RSVP Schedule"}
+                {currentSchedule?.rsvp_amount === 0
+                  ? "No Rsvp Available"
+                  : hasRsvpd
+                    ? "Cancel RSVP"
+                    : isRsvpFullOnLoad
+                      ? "RSVP Full"
+                      : "RSVP Schedule"}
               </Button>
             </div>
             <div className="flex flex-col gap-2.5 px-5 pt-5 pb-[60px]">
@@ -238,11 +252,6 @@ export default function EventViewScheduleDetailsPage() {
 }
 
 export const getServerSideProps = async (ctx: any) => {
-  const queryClient = new QueryClient();
-  const { event_space_id } = ctx.query;
-  await queryClient.prefetchQuery("currentEventSpace", () =>
-    fetchEventSpaceById(event_space_id)
-  );
   const supabase = createPagesServerClient(ctx);
 
   let {
@@ -257,18 +266,10 @@ export const getServerSideProps = async (ctx: any) => {
       },
     };
 
-  // get profile from session
-  const { data: profile, error } = await supabase
-    .from("profile")
-    .select("*")
-    .eq("uuid", session.user.id);
-
   return {
     props: {
       initialSession: session,
       user: session?.user,
-      profile: profile,
-      dehydratedState: dehydrate(queryClient),
     },
   };
 };

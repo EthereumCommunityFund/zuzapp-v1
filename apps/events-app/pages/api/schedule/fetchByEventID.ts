@@ -25,6 +25,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         *,
         scheduletags: scheduletags!id (tags: tags!id (*)),
         schedulespeakerrole: schedulespeakerrole!id (role, speaker: speaker!id (name))
+        editlogs: editlogs!schedule_id (*, user: profile!uuid (username))
     `).eq("event_space_id", id).order('date', { ascending: true })
         .order('start_time', { ascending: true });
 

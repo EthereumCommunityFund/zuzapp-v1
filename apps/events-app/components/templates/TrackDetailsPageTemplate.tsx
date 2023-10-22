@@ -6,7 +6,7 @@ import UserFacingTrack from '@/components/ui/UserFacingTrack';
 import Button from '@/components/ui/buttons/Button';
 import { Label } from '@/components/ui/label';
 import { useEventSpace } from '@/context/EventSpaceContext';
-import { OrganizerType, ScheduleDetailstype, TrackType, TrackUpdateRequestBody } from '@/types';
+import { OrganizerType, ScheduleCreateRequestBody, ScheduleDetailstype, ScheduleUpdateRequestBody, TrackType, TrackUpdateRequestBody } from '@/types';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { BiEditAlt, BiPlusCircle } from 'react-icons/bi';
@@ -156,7 +156,7 @@ export default function TrackDetailsPageTemplate(props: any) {
           <Dialog>
             <DialogTrigger asChild>
               <Button variant="blue" size="lg" className="rounded-xl flex justify-center w-full" leftIcon={BiPlusCircle}>
-                Add a Schedule
+                Add a Session
               </Button>
             </DialogTrigger>
             <DialogContent className="lg:w-3/5 lg:h-4/5 overflow-y-auto">
@@ -165,6 +165,7 @@ export default function TrackDetailsPageTemplate(props: any) {
                 isQuickAccess={false}
                 trackId={trackId as string}
                 updateIsLoading={updateIsLoading}
+                event_space_id={event_space_id as string}
               />
             </DialogContent>
           </Dialog>
@@ -174,25 +175,17 @@ export default function TrackDetailsPageTemplate(props: any) {
         ) : (
           <div className="flex flex-col gap-2.5 p-5 w-full">
             <div className="flex flex-col gap-[10px] overflow-hidden rounded-[10px]">
-              {
-                schedules && eventSpace &&
+              {schedules && eventSpace && (
                 <>
-                  {
-                    currentSchedules.map(
-                      (schedule, idx) => schedule.track_id === trackItem?.id &&
-                        <UserFacingTrack key={idx} scheduleId={schedule.id} scheduleData={schedule} onClick={() => handleItemClick(schedule.name, trackItem?.id, eventSpace.id, schedule.id)} />
-                    )
-                  }
-                  {totalSchedules > ITEMS_PER_PAGE &&
-                    <Pagination
-                      currentPage={currentPage}
-                      totalItems={schedules.length}
-                      itemsPerPage={ITEMS_PER_PAGE}
-                      onPageChange={handlePageChange}
-                    />
-                  }
+                  {currentSchedules.map(
+                    (schedule, idx) =>
+                      schedule.track_id === trackItem?.id && (
+                        <UserFacingTrack key={idx} scheduleData={schedule} onClick={() => handleItemClick(schedule.name, trackItem?.id, eventSpace.id, schedule.id)} />
+                      )
+                  )}
+                  {totalSchedules > ITEMS_PER_PAGE && <Pagination currentPage={currentPage} totalItems={schedules.length} itemsPerPage={ITEMS_PER_PAGE} onPageChange={handlePageChange} />}
                 </>
-              }
+              )}
             </div>
           </div>
         )}

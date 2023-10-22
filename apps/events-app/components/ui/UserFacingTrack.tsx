@@ -1,7 +1,7 @@
 import { TbTicket } from 'react-icons/tb';
 import Speaker from './Speaker';
 import EventDataDate from './labels/event-data-date';
-import { ScheduleUpdateRequestBody } from '@/types';
+import { ScheduleDetailstype } from '@/types';
 import { useEffect, useState } from 'react';
 import EventDataTime from './labels/event-data-time';
 import { ref } from 'joi';
@@ -9,7 +9,7 @@ import React from 'react';
 
 interface IUserFacingTrack {
   scheduleId?: string;
-  scheduleData: ScheduleUpdateRequestBody;
+  scheduleData: ScheduleDetailstype;
   onClick: () => void;
 }
 

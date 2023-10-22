@@ -83,6 +83,7 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
         role: "",
       },
     ],
+    current_rsvp_no: 0,
   });
   const [startDate, setStartDate] = useState<Date | undefined>();
   const [optionTags, setOptionTags] = useState<TagItemProp[]>([]);
@@ -391,11 +392,11 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
   return (
     <div className="flex flex-col items-center gap-[34px] self-stretch w-full text-white">
       <div className="flex flex-col items-center gap-[34px] self-stretch w-full p-5">
-        <FormTitle name="Update Schedule" />
+        <FormTitle name="Update Session" />
         {scheduleUpdated ? (
           <div className="flex flex-col items-center">
             <h3 className="font-bold text-xl">
-              Your Schedule Has Been Updated
+              Your Session Has Been Updated
             </h3>
             <DialogPrimitive.Close>
               <Button
@@ -404,7 +405,7 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
                 className="mt-8 bg-[#67DBFF]/20 text-[#67DBFF] rounded-full"
                 leftIcon={HiArrowRight}
               >
-                Go to schedules
+                Go to sessions
               </Button>
             </DialogPrimitive.Close>
           </div>
@@ -420,7 +421,7 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
                 render={({ field }) => (
                   <FormItem className="space-y-3">
                     <FormLabel className="text-2xl opacity-80 leading-[1.2]">
-                      Schedule Format
+                      Session Format
                     </FormLabel>
                     <FormDescription>
                       The format you select will determine what
@@ -467,7 +468,7 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-lg font-semibold leading-[1.2] text-white">
-                      Schedule Name{" "}
+                      Session Name{" "}
                     </FormLabel>
                     <FormControl>
                       <InputFieldDark
@@ -487,7 +488,7 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
                   render={({ field }) => (
                     <div className="flex flex-col gap-[10px]">
                       <Label className="text-2xl text-white/80">
-                        Schedule Description
+                        Session Description
                       </Label>
                       <TextEditor
                         value={field.value}
@@ -499,7 +500,7 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
               </div>
               <div className="w-full">
                 <h2 className="text-2xl text-white/80">
-                  Schedule Date & Times
+                  Session Date & Times
                 </h2>
                 <div className="flex flex-col items-start gap-5 self-stretch w-full pt-5">
                   <div className="flex gap-5">
@@ -644,7 +645,7 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
                   </div>
                   <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
                     <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                      Select Schedule Frequency
+                      Select Session Frequency
                     </Label>
                     <select
                       value={schedule.schedule_frequency}
@@ -888,7 +889,7 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
               </div>
               <div className="w-full flex flex-col gap-6">
                 <Label className="text-2xl text-white/80">
-                  Schedule Labels
+                  Session Labels
                 </Label>
                 <div className="flex flex-col gap-[14px] items-start w-full">
                   <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
@@ -1058,6 +1059,7 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
                       </Label>
                       <input
                         type="number"
+                        min="1"
                         className="bg-gray-600 w-full outline-none px-4 rounded-md py-2"
                         placeholder={"50"}
                         value={schedule.rsvp_amount}
@@ -1083,7 +1085,7 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
                     type="button"
                     leftIcon={CgClose}
                   >
-                    <span>Discard Schedule</span>
+                    <span>Discard Session</span>
                   </Button>
                   <Button
                     className="rounded-full w-full lg:w-1/2 flex justify-center"
@@ -1092,7 +1094,7 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
                     type="submit"
                     leftIcon={FaCircleArrowUp}
                   >
-                    <span>Update Schedule</span>
+                    <span>Update Session</span>
                   </Button>
                 </div>
               </div>

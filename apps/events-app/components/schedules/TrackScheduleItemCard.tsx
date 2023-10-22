@@ -107,7 +107,7 @@ export default function TrackScheduleItemCard() {
                   leftIcon={HiArrowRight}
                   onClick={() => handleEnterSchedule(schedule.id, schedule.track_id as string)}
                 >
-                  <span className="hidden md:block">Enter Schedule</span>
+                  <span className="hidden md:block">Enter Session</span>
                 </Button>
               </div>
             </div>

@@ -75,7 +75,7 @@ export default function EditionButtons(props: IEditionButtons) {
                 </DialogDescription>
                 <DialogFooter className="pt-5 items-center">
                   <span className="text-base font-bold">
-                    Now go to Tracks and start building your schedules!
+                    Now go to Tracks and start building your sessions!
                   </span>
                   <Link
                     className="w-full"
@@ -90,7 +90,7 @@ export default function EditionButtons(props: IEditionButtons) {
                       leftIcon={BsMap}
                     >
                       {props.type === "track"
-                        ? "Go to schedules"
+                        ? "Go to sessions"
                         : "Go to track"}
                     </Button>
                   </Link>

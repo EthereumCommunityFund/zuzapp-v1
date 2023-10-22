@@ -1,5 +1,5 @@
-import { Database } from '@/database.types';
-import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
+import { Database } from "@/database.types";
+import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
 
 export default function Resources() {
   return <div>Resources Page</div>;
@@ -19,14 +19,10 @@ export const getServerSideProps = async (ctx: any) => {
       },
     };
 
-  // get profile from session
-  const { data: profile, error } = await supabase.from('profile').select('*').eq('uuid', session.user.id);
-
   return {
     props: {
       initialSession: session,
       user: session?.user,
-      profile: profile,
     },
   };
 };
