@@ -806,32 +806,34 @@ export default function UpdateSchedulePage() {
                         Location
                       </h2>
                       <div className="flex flex-col items-start gap-5 self-stretch w-full pt-5">
-                        <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                          <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                            Select Location
-                          </Label>
+                        {form.getValues('format') === 'in-person' &&
+                          <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
+                            <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
+                              Select Location
+                            </Label>
 
-                          <select
-                            onChange={(e) =>
-                              setSchedule({
-                                ...schedule,
-                                location_id: e.target.value,
-                              })
-                            }
-                            title="location"
-                            value={schedule.location_id}
-                            className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
-                          >
-                            {savedLocations?.map((location) => (
-                              <option key={location.id} value={location.id}>
-                                {location.name}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
+                            <select
+                              onChange={(e) =>
+                                setSchedule({
+                                  ...schedule,
+                                  location_id: e.target.value,
+                                })
+                              }
+                              title="location"
+                              value={schedule.location_id}
+                              className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
+                            >
+                              {savedLocations?.map((location) => (
+                                <option key={location.id} value={location.id}>
+                                  {location.name}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                        }
                       </div>
                       <div className="flex flex-col items-start gap-5 self-stretch w-full pt-5">
-                        <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
+                        {/* <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
                           <FormField
                             control={form.control}
                             name="video_call_link"
@@ -851,29 +853,31 @@ export default function UpdateSchedulePage() {
                               </FormItem>
                             )}
                           />
-                        </div>
-
-                        <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                          <FormField
-                            control={form.control}
-                            name="live_stream_url"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                                  Live Stream Link
-                                </FormLabel>
-                                <FormControl>
-                                  <InputFieldDark
-                                    type={InputFieldType.Link}
-                                    placeholder={"Type URL"}
-                                    {...field}
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                        </div>
+                        </div> */}
+                        {
+                          form.getValues('format') === 'online' &&
+                          <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
+                            <FormField
+                              control={form.control}
+                              name="live_stream_url"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel className="text-lg font-semibold leading-[1.2] text-white self-stretch">
+                                    Live Stream Link
+                                  </FormLabel>
+                                  <FormControl>
+                                    <InputFieldDark
+                                      type={InputFieldType.Link}
+                                      placeholder={"Type URL"}
+                                      {...field}
+                                    />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                          </div>
+                        }
                       </div>
                     </div>
                     <line></line>
