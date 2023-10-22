@@ -38,8 +38,10 @@ export const GlobalProvider = ({ children, user }: GlobalProviderProps) => {
   const [profile, setProfile] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
-    loadProfile();
-  }, []);
+    if (isAuthenticated) {
+      loadProfile();
+    }
+  }, [isAuthenticated]);
   const loadProfile = async () => {
     fetchProfile().then((res) => {
       setIsLoading(true);
