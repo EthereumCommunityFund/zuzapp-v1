@@ -14,32 +14,8 @@ import { EventSpaceProvider } from "@/context/EventSpaceContext";
 import { Toaster } from "@/components/ui/toaster";
 import { useRouter } from "next/router";
 import localforage from "localforage";
-import { Database } from "@/database.types";
-import App, { AppInitialProps, AppContext } from "next/app";
-
-/**
- * This component wraps all pages in this Next.js application.
- */
-
-export const fetchUser = async (ctx: any) => {
-  const supabase = createPagesServerClient<Database>(ctx);
-  let {
-    data: { session },
-  } = await supabase.auth.getSession();
-
-  if (!session) {
-    return {
-      initialSession: null,
-      user: null,
-      profile: null,
-    };
-  }
-
-  return {
-    initialSession: session,
-    user: session?.user,
-  };
-};
+import Head from "next/head";
+import NProgress from "nprogress";
 
 const MyApp = ({
   Component,
@@ -59,6 +35,21 @@ const MyApp = ({
   }
 
   useEffect(() => {
+    const handleRouteChangeStart = () => NProgress.start();
+    const handleRouteChangeComplete = () => NProgress.done();
+    const handleRouteChangeError = () => NProgress.done();
+
+    router.events.on("routeChangeStart", handleRouteChangeStart);
+    router.events.on("routeChangeComplete", handleRouteChangeComplete);
+    router.events.on("routeChangeError", handleRouteChangeError);
+
+    return () => {
+      router.events.off("routeChangeStart", handleRouteChangeStart);
+      router.events.off("routeChangeComplete", handleRouteChangeComplete);
+      router.events.off("routeChangeError", handleRouteChangeError);
+    };
+  }, [router.events]);
+  useEffect(() => {
     localforage.config({
       driver: localforage.INDEXEDDB,
       name: "zuzalu_city",
@@ -68,7 +59,7 @@ const MyApp = ({
     const queryKeys = [
       "eventSpaces",
       "invitedSpaces",
-      "publishedEventSpaces",
+      // "publishedEventSpaces",
       ["currentEventSpace", event_space_id],
       ["trackDetails", event_space_id],
     ];
@@ -142,6 +133,13 @@ const MyApp = ({
               <Hydrate state={pageProps.dehydratedState}>
                 <EventSpaceProvider>
                   <DashboardProvider props={pageProps}>
+                    <Head>
+                      <link
+                        rel="stylesheet"
+                        type="text/css"
+                        href="/path_to_your_css_folder/nprogress.css"
+                      />
+                    </Head>
                     <Component {...pageProps} />
                     <Toaster />
                   </DashboardProvider>

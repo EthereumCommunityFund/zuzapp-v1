@@ -45,12 +45,17 @@ const MyProfileButton: React.FC<MyProfileButtonType> = (props: MyProfileButtonTy
     <>
       <DropdownMenu.Root>
         <DropdownMenu.Trigger>
-          <div className='rounded-[60px] flex border border-[#333435] px-3 py-1 bg-white/10 hover:bg-white/20 duration-200'>
-            <User /> {userName}
+          <div className="rounded-[60px] flex border border-[#333435] px-3 py-1 bg-white/10 hover:bg-white/20 duration-200">
+            <User />
+            <span className="hidden md:inline-block">{userName}</span>
           </div>
         </DropdownMenu.Trigger>
+
         <DropdownMenu.Content className="flex top-[10px] flex-col items-center self-stretch bg-[#383B3B] rounded-[10px] border border-white/10 backdrop-blur-[20px] mt-4 mr-4 z-50 w-52">
-          <Button className="flex py-[14px] bg-[#383B3B] hover:bg-[#383B3B] text-textSecondary hover:text-textSecondary self-stretch font-semibold leading-[1.2] border-b-[1px] border-white/10 rounded-tl-[10px] rounded-tr-[10px] border-none" leftIcon={User}>
+          <Button
+            className="flex py-[14px] bg-[#383B3B] hover:bg-[#383B3B] text-textSecondary hover:text-textSecondary self-stretch font-semibold leading-[1.2] border-b-[1px] border-white/10 rounded-tl-[10px] rounded-tr-[10px] border-none"
+            leftIcon={User}
+          >
             {userName}
           </Button>
           <DropdownMenu.Separator className="stroke stroke-white/10" />

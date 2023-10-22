@@ -109,3 +109,11 @@
 }
 
 @import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
+@import '~nprogress/nprogress.css';
+
+
+
+/* Page loader Progress bar */
+#nprogress .bar {
+  height: 4px; 
+}
