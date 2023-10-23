@@ -80,9 +80,6 @@ export const EventBanner = ({ banner, setBanner }: any) => {
               <span className="text-[13px] text-center opacity-50 font-bold leading-[1.2] self-stretch">
                 Select Event Header Image
               </span>
-              <span className=" text-[10px] tracking-[0.2px] font-normal leading-[1.2] opacity-50">
-                DRAG & DROP IMAGE
-              </span>
             </Button>
           </div>
         </div>

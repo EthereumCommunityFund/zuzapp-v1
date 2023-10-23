@@ -11,7 +11,6 @@ export default function SelectImageButton(props: IProps) {
     <Button className="flex flex-col py-[100px] px-3 gap-[10px] self-stretch rounded-[6px] border-dashed text-white border-white border-opacity-10 bg-pagePrimary h-full">
       <HiUpload />
       <span className="text-[13px] text-center opacity-50 font-bold leading-[1.2] self-stretch">{props.title}</span>
-      <span className=" text-[10px] tracking-[0.2px] font-normal leading-[1.2] opacity-50">DRAG & DROP IMAGE</span>
     </Button>
   )
 }

@@ -42,7 +42,7 @@ const categoryList: DropDownMenuItemType[] = [
 export default function EventViewTracksAlleSchedulesPage() {
   const router = useRouter();
   const { trackId } = router.query;
-  const event_space_id = '62bd5541-5983-4b65-bf33-6853a21f82ef';
+  const event_space_id = 'e9675392-02fd-4d63-98cf-50acc268debb';
   const [eventSpace, setEventSpace] = useState<EventSpaceDetailsType>();;
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [schedules, setSchedules] = useState<ScheduleDetailstype[]>();
