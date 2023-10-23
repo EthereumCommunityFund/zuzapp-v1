@@ -41,7 +41,7 @@ import { Loader } from '@/components/ui/Loader';
 import { toast } from '@/components/ui/use-toast';
 import { BsFillTicketFill } from 'react-icons/bs';
 import { sessionNavBarDetails } from '@/constant/addschedulenavbar';
-import {sessionFrequency} from "@/constant/scheduleconstants";
+import { sessionFrequency } from '@/constant/scheduleconstants';
 dayjs.extend(isSameOrAfter);
 
 type Organizer = {
@@ -451,10 +451,10 @@ export default function AddSchedulePage(props: any) {
                         <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
                           <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select Session Frequency</Label>
                           <select
-                              onChange={handleFrequencySelect}
-                              value={frequency}
-                              className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
-                              title="frequency"
+                            onChange={handleFrequencySelect}
+                            value={frequency}
+                            className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
+                            title="frequency"
                           >
                             <option className="bg-componentPrimary origin-top-right rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" value="once">
                               Once
@@ -539,26 +539,24 @@ export default function AddSchedulePage(props: any) {
                             </>
                           )}
                         </div>
-                        {
-                          (frequency === sessionFrequency.WEEKLY || frequency === sessionFrequency.EVERYDAY) && (
-                                <div className="flex flex-col items-center gap-[30px] self-stretch w-full">
-                                  <FormField
-                                      control={form.control}
-                                      name="date"
-                                      render={({ field }) => (
-                                          <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                                            <span className="text-lg opacity-70 self-stretch">End Date</span>
+                        {(frequency === sessionFrequency.WEEKLY || frequency === sessionFrequency.EVERYDAY) && (
+                          <div className="flex flex-col items-center gap-[30px] self-stretch w-full">
+                            <FormField
+                              control={form.control}
+                              name="date"
+                              render={({ field }) => (
+                                <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
+                                  <span className="text-lg opacity-70 self-stretch">End Date</span>
 
-                                            <CustomDatePicker defaultDate={undefined} selectedDate={field.value} handleDateChange={field.onChange} {...field} />
+                                  <CustomDatePicker defaultDate={undefined} selectedDate={field.value} handleDateChange={field.onChange} {...field} />
 
-                                            <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">Click & Select or type in a date</h3>
-                                            <FormMessage />
-                                          </div>
-                                      )}
-                                  />
+                                  <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">Click & Select or type in a date</h3>
+                                  <FormMessage />
                                 </div>
-                            )
-                        }
+                              )}
+                            />
+                          </div>
+                        )}
                         <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
                           <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select a Timezone</Label>
                           <select
@@ -599,7 +597,7 @@ export default function AddSchedulePage(props: any) {
                           </div>
                         </>
                       )}
-                      {selectedEventFormat === 'in-person' &&  (
+                      {selectedEventFormat === 'in-person' && (
                         <>
                           <h2 className="text-2xl opacity-80">Location</h2>
                           <div className="flex flex-col items-start gap-5 self-stretch w-full pt-5">
