@@ -61,13 +61,13 @@ export default function DashboardHeader() {
         >
           <div className="lg:flex-1 flex flex-col opacity-70">
             <div className=" mt-14 flex-1">
-              <ul className="space-y-2">
+              <ul className="flex flex-col gap-4">
                 {routes.map((route, index) => (
                   <li
                     key={route.path}
                     onClick={handleClick}
-                    className={`flex items-center space-x-2 py-1 px-3 hover:bg-white/20 rounded-3xl ${
-                      router.pathname === route.path && "bg-white/20"
+                    className={`flex items-center space-x-2 py-1 px-3 hover:bg-white/20 hover:text-white/40 rounded-3xl ${
+                      router.pathname === route.path ? "bg-white/20 text-white" : "text-white/40"
                     }`}
                   >
                     {route.icon && <route.icon size={30} />}
@@ -80,7 +80,7 @@ export default function DashboardHeader() {
             </div>
             {/* Profile navigation */}
             {isAuthenticated && (
-              <ul className="flex flex-col gap-[31px]">
+              <ul className="flex flex-col mt-4 gap-[31px]">
                 <li
                   onClick={handleClick}
                   className="flex items-center space-x-2"
