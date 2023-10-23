@@ -124,7 +124,7 @@ export default function AddSchedulePage(props: any) {
   const isQuickAccess = query.quickAccess === "true";
   const [selectedTrackId, setSelectedTrackId] = useState<string>("");
   const trackList: DropDownMenuItemType[] = [];
-  const [selectedTrackName, setSelectedTrackName] = useState<string>("");
+
 
   const { data: trackDetails } = useQuery<TrackUpdateRequestBody[], Error>(
     ["trackDetails", event_space_id],
@@ -212,12 +212,12 @@ export default function AddSchedulePage(props: any) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
-      format: eventSpace?.format,
+      name: '',
+      format: 'in-person',
       date: undefined,
-      description: "",
-      video_call_link: "",
-      live_stream_url: "",
+      description: '',
+      video_call_link: '',
+      live_stream_url: '',
     },
   });
   async function onSubmit(values: z.infer<typeof formSchema>) {
@@ -464,7 +464,7 @@ export default function AddSchedulePage(props: any) {
                           </FormDescription>
                           <FormControl>
                             <RadioGroup
-                              onValueChange={field.onChange}
+                              onValueChange={(value) => (field.onChange(value), handleEventFormatChange(value))}
                               defaultValue={eventSpace?.format}
                               className="flex flex-col md:flex-row"
                             >
@@ -709,7 +709,7 @@ export default function AddSchedulePage(props: any) {
                     </div>
                     <div className="w-full" ref={sectionRefs[3]}>
                       {
-                        form.getValues('format') === 'in-person' &&
+                        selectedEventFormat === 'in-person' &&
                         <>
                           <h2 className="text-2xl opacity-80">Location</h2>
                           <div className="flex flex-col items-start gap-5 self-stretch w-full pt-5">
@@ -760,7 +760,7 @@ export default function AddSchedulePage(props: any) {
                           />
                         </div> */}
                         {
-                          form.getValues('format') === 'online' &&
+                          selectedEventFormat === 'online' &&
                           <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
                             <FormField
                               control={form.control}

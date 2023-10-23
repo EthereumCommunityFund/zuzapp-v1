@@ -167,7 +167,7 @@ export default function AddScheduleForm({ title, isQuickAccess, scheduleId, trac
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: schedule?.name,
-      format: schedule?.format,
+      format: eventSpace?.format,
       date: schedule?.date !== '' ? new Date(schedule?.date) : undefined,
       description: '',
       video_call_link: schedule?.video_call_link,

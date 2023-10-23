@@ -430,7 +430,7 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
                     <FormControl>
                       <RadioGroup
                         onValueChange={field.onChange}
-                        //  defaultValue={field.value}
+                        defaultValue={schedule?.format}
                         className="flex flex-col md:flex-row"
                         {...field}
                       >
