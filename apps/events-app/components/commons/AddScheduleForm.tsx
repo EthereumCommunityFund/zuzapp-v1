@@ -109,6 +109,7 @@ export default function AddScheduleForm({ title, isQuickAccess, scheduleId, trac
   const [isLimit, setIsLimit] = useState(false);
   const [selectedTrackId, setSelectedTrackId] = useState<string>(trackId as string);
   const [optionalOrganizers, setOptionalOrganizers] = useState<any>([]);
+  const [selectedEventFormat, setSelectedEventFormat] = useState<string>('new');
 
   const formSchema = z.object({
     name: z.string().min(2, {
@@ -258,6 +259,10 @@ export default function AddScheduleForm({ title, isQuickAccess, scheduleId, trac
     });
   };
 
+  const handleEventFormatChange = (e: string) => {
+    setSelectedEventFormat(e);
+  };
+
   const defaultProps = {
     options: optionTags,
     getOptionLabel: (option: { name: string }) => option.name,
@@ -387,7 +392,7 @@ export default function AddScheduleForm({ title, isQuickAccess, scheduleId, trac
                     <FormLabel className="text-2xl opacity-80">Session Format</FormLabel>
                     <FormDescription>The format has been inherited from the event space.</FormDescription>
                     <FormControl>
-                      <RadioGroup onValueChange={field.onChange} defaultValue={eventSpace?.format} className="flex flex-col md:flex-row">
+                      <RadioGroup onValueChange={(value) => (field.onChange(value), handleEventFormatChange(value))} defaultValue={eventSpace?.format} className="flex flex-col md:flex-row">
                         <FormItem className="flex items-center space-x-3 space-y-0 p-3 hover:bg-btnPrimaryGreen/20 rounded-md focus:bg-btnPrimaryGreen/20">
                           <FormControl>
                             <RadioGroupItem value="in-person" />
@@ -589,15 +594,12 @@ export default function AddScheduleForm({ title, isQuickAccess, scheduleId, trac
                 </div>
               </div>
               <div className="w-full">
-                {
-                  form.getValues('format') === 'in-person' &&
+                {selectedEventFormat === 'new' && eventSpace?.format === 'in-person' && (
                   <>
                     <h2 className="text-2xl opacity-80">Location</h2>
                     <div className="flex flex-col items-start gap-5 self-stretch w-full pt-5">
                       <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                        <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                          Select Location
-                        </Label>
+                        <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select Location</Label>
                         {/* <InputFieldDark type={InputFieldType.Option} placeholder={'The Dome'} /> */}
                         <select
                           onChange={(e) => setLocationId(e.target.value)}
@@ -605,9 +607,7 @@ export default function AddScheduleForm({ title, isQuickAccess, scheduleId, trac
                           value={locationId}
                           className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
                         >
-                          {savedLocations.length === 0 && (
-                            <option value="">No saved locations</option>
-                          )}
+                          {savedLocations.length === 0 && <option value="">No saved locations</option>}
                           {savedLocations?.map((location: any) => (
                             <option key={location.id} value={location.id}>
                               {location.name}
@@ -617,7 +617,31 @@ export default function AddScheduleForm({ title, isQuickAccess, scheduleId, trac
                       </div>
                     </div>
                   </>
-                }
+                )}
+                {selectedEventFormat === 'in-person' && (
+                  <>
+                    <h2 className="text-2xl opacity-80">Location</h2>
+                    <div className="flex flex-col items-start gap-5 self-stretch w-full pt-5">
+                      <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
+                        <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select Location</Label>
+                        {/* <InputFieldDark type={InputFieldType.Option} placeholder={'The Dome'} /> */}
+                        <select
+                          onChange={(e) => setLocationId(e.target.value)}
+                          title="location"
+                          value={locationId}
+                          className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
+                        >
+                          {savedLocations.length === 0 && <option value="">No saved locations</option>}
+                          {savedLocations?.map((location: any) => (
+                            <option key={location.id} value={location.id}>
+                              {location.name}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+                  </>
+                )}
                 <div className="flex flex-col items-start gap-5 self-stretch w-full pt-5">
                   {/* <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
                     <FormField
@@ -634,30 +658,40 @@ export default function AddScheduleForm({ title, isQuickAccess, scheduleId, trac
                       )}
                     />
                   </div> */}
-                  {
-                    form.getValues('format') === 'online' &&
+                  {selectedEventFormat === 'online' && (
                     <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
                       <FormField
                         control={form.control}
                         name="live_stream_url"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                              Live Stream Link
-                            </FormLabel>
+                            <FormLabel className="text-lg font-semibold leading-[1.2] text-white self-stretch">Live Stream Link</FormLabel>
                             <FormControl>
-                              <InputFieldDark
-                                type={InputFieldType.Link}
-                                placeholder={"Type URL"}
-                                {...field}
-                              />
+                              <InputFieldDark type={InputFieldType.Link} placeholder={'Type URL'} {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
                         )}
                       />
                     </div>
-                  }
+                  )}
+                  {selectedEventFormat === 'new' && eventSpace?.format === 'online' && (
+                    <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
+                      <FormField
+                        control={form.control}
+                        name="live_stream_url"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-lg font-semibold leading-[1.2] text-white self-stretch">Live Stream Link</FormLabel>
+                            <FormControl>
+                              <InputFieldDark type={InputFieldType.Link} placeholder={'Type URL'} {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                  )}
                 </div>
               </div>
               <line></line>
