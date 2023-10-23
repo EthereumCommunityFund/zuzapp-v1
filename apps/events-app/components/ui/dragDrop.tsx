@@ -86,7 +86,6 @@ export default function DragAndDrop({ setPayload, payload }: any) {
         <Button className="flex flex-col rounded-[6px] border-dashed text-white border-white border-opacity-10 bg-pagePrimary h-full w-full" onClick={openFileExplorer}>
           <HiUpload />
           <span className="text-[13px] text-center opacity-50 font-bold leading-[1.2] self-stretch">Select Header Image</span>
-          <span className=" text-[10px] tracking-[0.2px] font-normal leading-[1.2] opacity-50">DRAG & DROP IMAGE</span>
         </Button>
       </div>
     </div>
