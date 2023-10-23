@@ -100,9 +100,9 @@ export default function DashboardHeader() {
             )}
           </div>
         </nav>
-        <div className="hidden md:block">
-          <input type="text" placeholder="Search" className="w-96 h-10 rounded-3xl px-5 bg-zinc-800" />
-        </div>
+        {/*<div className="hidden md:block">*/}
+        {/*  <input type="text" placeholder="Search" className="w-96 h-10 rounded-3xl px-5 bg-zinc-800" />*/}
+        {/*</div>*/}
         <div>
           {isAuthenticated && profile ? (
               <div className="flex items-center gap-3">

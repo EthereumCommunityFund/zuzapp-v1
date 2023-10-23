@@ -35,6 +35,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import { toast } from '@/components/ui/use-toast';
 import { Loader } from '../ui/Loader';
 import { v4 as uuidv4 } from 'uuid';
+import {sessionFrequency} from "@/constant/scheduleconstants";
 
 type Organizer = {
   name: string;
@@ -448,6 +449,24 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
                     <SwitchButton value={schedule.all_day} onClick={handleChangeSwitch} />
                     <span className="text-lg opacity-70 self-stretch">All Day</span>
                   </div>
+                  <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
+                    <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select Session Frequency</Label>
+                    <select
+                        value={schedule.schedule_frequency}
+                        onChange={(e) =>
+                            setSchedule({
+                              ...schedule,
+                              schedule_frequency: e.target.value as any,
+                            })
+                        }
+                        className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
+                        title="frequency"
+                    >
+                      <option value="once">Once</option>
+                      <option value="everyday">Everyday</option>
+                      <option value="weekly">Weekly</option>
+                    </select>
+                  </div>
                   <div className="flex flex-col items-center gap-[30px] self-stretch w-full">
                     {schedule.date !== '' && (
                       <FormField
@@ -546,6 +565,26 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
                       </>
                     )}
                   </div>
+                  {
+                      (schedule?.schedule_frequency === sessionFrequency.WEEKLY || schedule?.schedule_frequency === sessionFrequency.EVERYDAY) && (
+                          <div className="flex flex-col items-center gap-[30px] self-stretch w-full">
+                            <FormField
+                                control={form.control}
+                                name="date"
+                                render={({ field }) => (
+                                    <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
+                                      <span className="text-lg opacity-70 self-stretch">End Date</span>
+
+                                      <CustomDatePicker defaultDate={undefined} selectedDate={field.value} handleDateChange={field.onChange} {...field} />
+
+                                      <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">Click & Select or type in a date</h3>
+                                      <FormMessage />
+                                    </div>
+                                )}
+                            />
+                          </div>
+                      )
+                  }
                   <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
                     <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select a Timezone</Label>
                     <select
@@ -554,24 +593,6 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
                       title="frequency"
                     >
                       <option value="once">UTC</option>
-                    </select>
-                  </div>
-                  <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                    <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select Session Frequency</Label>
-                    <select
-                      value={schedule.schedule_frequency}
-                      onChange={(e) =>
-                        setSchedule({
-                          ...schedule,
-                          schedule_frequency: e.target.value as any,
-                        })
-                      }
-                      className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
-                      title="frequency"
-                    >
-                      <option value="once">Once</option>
-                      <option value="everyday">Everyday</option>
-                      <option value="weekly">Weekly</option>
                     </select>
                   </div>
                   <line></line>
