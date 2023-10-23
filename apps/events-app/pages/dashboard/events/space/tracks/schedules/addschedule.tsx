@@ -93,7 +93,7 @@ export default function AddSchedulePage(props: any) {
   const router = useRouter();
   const { query } = useRouter();
   const { event_space_id, trackId, track_title } = router.query;
-  const [selectedEventFormat, setSelectedEventFormat] = useState("");
+  const [selectedEventFormat, setSelectedEventFormat] = useState<string>('new');
   const [switchDialogue, setSwitchDialogue] = useState(false);
   const [isAllDay, setIsAllDay] = useState(false);
   const [rsvpAmount, setRsvpAmount] = useState(1);
@@ -213,7 +213,7 @@ export default function AddSchedulePage(props: any) {
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: '',
-      format: 'in-person',
+      format: eventSpace?.format,
       date: undefined,
       description: '',
       video_call_link: '',
@@ -358,6 +358,7 @@ export default function AddSchedulePage(props: any) {
   const handleTrackSelect = (e: any) => {
     setSelectedTrackId(e.target.value);
   };
+  console.log('eventSpaceFormat: ', eventSpace?.format);
 
   useEffect(() => {
     console.log(form.formState.errors);
@@ -448,54 +449,57 @@ export default function AddSchedulePage(props: any) {
                     onSubmit={form.handleSubmit(onSubmit)}
                     className="space-y-10 w-full"
                   >
-                    <FormField
-                      control={form.control}
-                      name="format"
-                      render={({ field }) => (
-                        <FormItem className="space-y-3">
-                          <FormLabel
-                            className="text-2xl opacity-80"
-                            ref={sectionRefs[0]}
-                          >
-                            Session Format
-                          </FormLabel>
-                          <FormDescription>
-                            The format has been inherited from the event space.
-                          </FormDescription>
-                          <FormControl>
-                            <RadioGroup
-                              onValueChange={(value) => (field.onChange(value), handleEventFormatChange(value))}
-                              defaultValue={eventSpace?.format}
-                              className="flex flex-col md:flex-row"
+                    {
+                      eventSpace?.format &&
+                      <FormField
+                        control={form.control}
+                        name="format"
+                        render={({ field }) => (
+                          <FormItem className="space-y-3">
+                            <FormLabel
+                              className="text-2xl opacity-80"
+                              ref={sectionRefs[0]}
                             >
-                              <FormItem className="flex items-center space-x-3 space-y-0 p-3 hover:bg-btnPrimaryGreen/20 rounded-md focus:bg-btnPrimaryGreen/20">
-                                <FormControl>
-                                  <RadioGroupItem value="in-person" />
-                                </FormControl>
-                                <FormLabel className="font-semibold text-white/60 text-base">
-                                  In-Person
-                                  <span className="text-xs block">
-                                    This is a physical event
-                                  </span>
-                                </FormLabel>
-                              </FormItem>
-                              <FormItem className="flex items-center space-x-3 space-y-0 p-3 hover:bg-btnPrimaryGreen/20 rounded-md">
-                                <FormControl>
-                                  <RadioGroupItem value="online" />
-                                </FormControl>
-                                <FormLabel className="font-semibold text-white/60 text-base ">
-                                  Online
-                                  <span className="text-xs block">
-                                    Specifically Online Event
-                                  </span>
-                                </FormLabel>
-                              </FormItem>
-                            </RadioGroup>
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                              Session Format
+                            </FormLabel>
+                            <FormDescription>
+                              The format has been inherited from the event space.
+                            </FormDescription>
+                            <FormControl>
+                              <RadioGroup
+                                onValueChange={(value) => (field.onChange(value), handleEventFormatChange(value))}
+                                defaultValue={eventSpace?.format}
+                                className="flex flex-col md:flex-row"
+                              >
+                                <FormItem className="flex items-center space-x-3 space-y-0 p-3 hover:bg-btnPrimaryGreen/20 rounded-md focus:bg-btnPrimaryGreen/20">
+                                  <FormControl>
+                                    <RadioGroupItem value="in-person" />
+                                  </FormControl>
+                                  <FormLabel className="font-semibold text-white/60 text-base">
+                                    In-Person
+                                    <span className="text-xs block">
+                                      This is a physical event
+                                    </span>
+                                  </FormLabel>
+                                </FormItem>
+                                <FormItem className="flex items-center space-x-3 space-y-0 p-3 hover:bg-btnPrimaryGreen/20 rounded-md">
+                                  <FormControl>
+                                    <RadioGroupItem value="online" />
+                                  </FormControl>
+                                  <FormLabel className="font-semibold text-white/60 text-base ">
+                                    Online
+                                    <span className="text-xs block">
+                                      Specifically Online Event
+                                    </span>
+                                  </FormLabel>
+                                </FormItem>
+                              </RadioGroup>
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    }
                     <FormField
                       control={form.control}
                       name="name"
@@ -709,6 +713,35 @@ export default function AddSchedulePage(props: any) {
                     </div>
                     <div className="w-full" ref={sectionRefs[3]}>
                       {
+                        selectedEventFormat === 'new' && eventSpace?.format === 'in-person' &&
+                        <>
+                          <h2 className="text-2xl opacity-80">Location</h2>
+                          <div className="flex flex-col items-start gap-5 self-stretch w-full pt-5">
+                            <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
+                              <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
+                                Select Location
+                              </Label>
+                              {/* <InputFieldDark type={InputFieldType.Option} placeholder={'The Dome'} /> */}
+                              <select
+                                onChange={(e) => setLocationId(e.target.value)}
+                                title="location"
+                                value={locationId}
+                                className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
+                              >
+                                {savedLocations.length === 0 && (
+                                  <option value="">No saved locations</option>
+                                )}
+                                {savedLocations?.map((location: any) => (
+                                  <option key={location.id} value={location.id}>
+                                    {location.name}
+                                  </option>
+                                ))}
+                              </select>
+                            </div>
+                          </div>
+                        </>
+                      }
+                      {
                         selectedEventFormat === 'in-person' &&
                         <>
                           <h2 className="text-2xl opacity-80">Location</h2>
@@ -782,6 +815,35 @@ export default function AddSchedulePage(props: any) {
                               )}
                             />
                           </div>
+                        }
+                        {
+                          selectedEventFormat === 'new' && eventSpace?.format === 'online' &&
+                          <>
+                            <h2 className="text-2xl opacity-80">Location</h2>
+                            <div className="flex flex-col items-start gap-5 self-stretch w-full pt-5">
+                              <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
+                                <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
+                                  Select Location
+                                </Label>
+                                {/* <InputFieldDark type={InputFieldType.Option} placeholder={'The Dome'} /> */}
+                                <select
+                                  onChange={(e) => setLocationId(e.target.value)}
+                                  title="location"
+                                  value={locationId}
+                                  className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
+                                >
+                                  {savedLocations.length === 0 && (
+                                    <option value="">No saved locations</option>
+                                  )}
+                                  {savedLocations?.map((location: any) => (
+                                    <option key={location.id} value={location.id}>
+                                      {location.name}
+                                    </option>
+                                  ))}
+                                </select>
+                              </div>
+                            </div>
+                          </>
                         }
                       </div>
                     </div>
