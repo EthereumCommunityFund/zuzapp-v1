@@ -68,6 +68,7 @@ module.exports = {
         itemBgPrimary: "#2D2D2D",
         btnPrimary: "#FFFFFF",
         btnBlue: "#67DAFF",
+        btnBlueLight: "rgba(78, 170, 255, 0.20)",
         btnRed: "#FF5D5D",
         btnYellow: "#F3BE6F",
         btnPrimaryGreen: "#D7FFC4",
@@ -76,6 +77,7 @@ module.exports = {
         borderPrimary: "#393939",
         userFacingItem: "#393C3C",
         borderSecondary: "#575959",
+        iconBg: "#565757",
       },
       borderRadius: {
         lg: "var(--radius)",

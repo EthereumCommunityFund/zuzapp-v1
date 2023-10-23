@@ -17,12 +17,14 @@ import { updateEventSpaceLocation } from "@/controllers";
 import router from "next/router";
 import Button from "../ui/buttons/Button";
 import Image from "next/image";
-import { LocationUpdateRequestBody } from "@/types";
-import { HiArrowRight, HiPencilAlt } from "react-icons/hi";
+import {LocationUpdateRequestBody, SpaceDashboardCardType} from "@/types";
+import {HiArrowRight, HiCalendar, HiPencilAlt} from "react-icons/hi";
 import Link from "next/link";
 import { Form, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import {Dialog, DialogDescription, DialogContent, DialogFooter, DialogHeader, DialogTitle} from "@/components/ui/dialog";
+import CancelIcon from "@/components/ui/icons/CancelIcon";
 
 // const formSchema = z.object({
 //   name: z.string().min(2, {
@@ -42,6 +44,7 @@ import { z } from "zod";
 export default function EventLocationEdit({
   savedLocation,
   setSelectedLocation,
+  mainLocationData = null
 }: {
   savedLocation: LocationUpdateRequestBody;
   setSelectedLocation: React.Dispatch<React.SetStateAction<string | null>>;
@@ -54,6 +57,7 @@ export default function EventLocationEdit({
   const [editorValue, setEditorValue] = useState("");
   const [payload, setPayload] = useState(savedLocation);
   const [locationUpdated, setLocationUpdated] = useState(false);
+  const [showDialog, setShowDialog] = useState(false);
   const handleRemoveImage = (index: number) => {
     const updatedItems = [
       ...payload.image_urls.slice(0, index),
@@ -62,6 +66,7 @@ export default function EventLocationEdit({
     setPayload({ ...payload, image_urls: updatedItems });
   };
 
+  console.log({mainLocationData, savedLocation, key:"main location data"})
   const handleTextEditorChange = (value: string) => {
     setEditorValue(value);
     setPayload({
@@ -70,12 +75,21 @@ export default function EventLocationEdit({
     });
   };
 
-  const handleSwitchChange = () => {
+  const switchMainLocation = () => {
     setIsMainLocation((prev) => !prev);
     setPayload({
       ...payload,
       is_main_location: !payload.is_main_location,
     });
+    setShowDialog(false);
+  }
+
+  const handleSwitchChange = () => {
+    if(mainLocationData.id !== savedLocation.id) {
+      setShowDialog(true);
+      return
+    }
+    switchMainLocation();
   };
   // const form = useForm<z.infer<typeof formSchema>>({
   //   resolver: zodResolver(formSchema),
@@ -239,6 +253,37 @@ export default function EventLocationEdit({
           </form>
         )}
       </div>
+      {/* Dialog  */}
+      {
+        mainLocationData && (
+            <Dialog open = {showDialog}>
+                <DialogContent className="h-1/3 max-w-[500px]">
+                  <DialogHeader>
+                    <DialogTitle className="text-2xl mb-5">
+                      <div onClick={() => setShowDialog(false)} className="flex justify-between items-center gap-5">
+                        <span>You have a main location</span>
+                        <div className="bg-iconBg p-1 rounded-full cursor-pointer">
+                          <CancelIcon/>
+                        </div>
+                      </div>
+                    </DialogTitle>
+                    <DialogDescription className="text-lg text-white opacity-70">
+                      You have associated another location {mainLocationData?.name} as the main location. Are you sure you want to switch to this location?
+                    </DialogDescription>
+                  </DialogHeader>
+                  <DialogFooter className="pt-5 self-end text-2xl">
+                    <Button
+                        className="w-full flex space-x-2 hover:bg-btnBlueLight items-center justify-center rounded-3xl px-5 py-2 text-2xl md:text-base text-btnBlue bg-btnBlueLight"
+                        leftIcon={HiCalendar}
+                        onClick={() => switchMainLocation()}
+                    >
+                      Switch Main Location
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+          )
+      }
     </>
   );
 }

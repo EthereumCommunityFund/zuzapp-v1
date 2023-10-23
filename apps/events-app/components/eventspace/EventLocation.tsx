@@ -40,10 +40,18 @@ export default function EventLocation() {
     LocationUpdateRequestBody[]
   >(data as LocationUpdateRequestBody[]);
   const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
+  const [mainLocation, setMainLocation] = useState(null);
 
   const handleLocationClick = (id: string) => {
     setSelectedLocation(id);
   };
+
+  useEffect(() => {
+    if (data && data.length > 0) {
+      const mainLocationData = data.find(savedLocation => savedLocation.is_main_location);
+      setMainLocation(mainLocationData);
+    }
+  }, [data]);
 
   const handleDeleteLocation = async (id: string, index: number) => {
     try {
@@ -70,6 +78,8 @@ export default function EventLocation() {
     return <p>Error loading space details</p>;
   }
 
+
+  console.log(data, "data for saved locations");
   return (
     <div className="flex py-10 px-4 flex-col items-center gap-8 rounded-2xl border border-white border-opacity-10 bg-componentPrimary w-full">
       <div className="w-full flex justify-between">
@@ -98,7 +108,7 @@ export default function EventLocation() {
                   </span>
                 </div>
                 </div>
-               
+
                 <div className="flex gap-[10px]">
                   <Button
                     className="rounded-full flex justify-center h-10 "
@@ -130,6 +140,7 @@ export default function EventLocation() {
                 <EventLocationEdit
                   setSelectedLocation={setSelectedLocation}
                   savedLocation={savedLocation}
+                  mainLocationData={mainLocation}
                 />
               )}
             </>

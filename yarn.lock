@@ -3388,6 +3388,13 @@
   dependencies:
     "@types/react" "*"
 
+"@types/react-timeago@^4.1.5":
+  version "4.1.5"
+  resolved "https://registry.yarnpkg.com/@types/react-timeago/-/react-timeago-4.1.5.tgz#56453a1e55a1b1cc9b006fa74aaddb0fda5f0083"
+  integrity sha512-Tv9pSndEUtdzJ6wDgvgKLD9X3ef+KdHigDxgFi23G//sSPCXZ/jWmX+fm1gQDDWIObJU7HfTTObdzHfI/yv9Rw==
+  dependencies:
+    "@types/react" "*"
+
 "@types/react-transition-group@^4.4.6":
   version "4.4.6"
   resolved "https://registry.npmjs.org/@types/react-transition-group/-/react-transition-group-4.4.6.tgz"
@@ -3907,6 +3914,13 @@ available-typed-arrays@^1.0.5:
   version "1.0.5"
   resolved "https://registry.npmjs.org/available-typed-arrays/-/available-typed-arrays-1.0.5.tgz"
   integrity sha512-DMD0KiN46eipeziST1LPP/STfDU0sufISXmjSgvVsoU2tqxctQeASejWcfNtxYKqETM1UxQ8sp2OrSBWpHY6sw==
+
+avvvatars-react@^0.4.2:
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/avvvatars-react/-/avvvatars-react-0.4.2.tgz#9569c16ae9a4925f898539ff98c6f734b6a4fe1b"
+  integrity sha512-D/bnSM+P6pQi71dFeFVqQsqmv+ct5XG7uO2lvJoiksALpXLd6kPgpRR1SUQxFZJkJNrkmg0NPgbhIgJgOsDYRQ==
+  dependencies:
+    goober "^2.1.8"
 
 axe-core@^4.6.2:
   version "4.8.1"
@@ -6169,6 +6183,11 @@ globby@^13.1.2:
     merge2 "^1.4.1"
     slash "^4.0.0"
 
+goober@^2.1.8:
+  version "2.1.13"
+  resolved "https://registry.yarnpkg.com/goober/-/goober-2.1.13.tgz#e3c06d5578486212a76c9eba860cbc3232ff6d7c"
+  integrity sha512-jFj3BQeleOoy7t93E9rZ2de+ScC4lQICLwiAQmKMg9F6roKGaLSHoCDYKkWlSafg138jejvq/mTdvmnwDQgqoQ==
+
 gopd@^1.0.1:
   version "1.0.1"
   resolved "https://registry.npmjs.org/gopd/-/gopd-1.0.1.tgz"
@@ -8341,6 +8360,11 @@ react-time-picker@^6.5.0:
     react-clock "^4.5.0"
     react-fit "^1.7.0"
     update-input-width "^1.4.0"
+
+react-timeago@^7.2.0:
+  version "7.2.0"
+  resolved "https://registry.yarnpkg.com/react-timeago/-/react-timeago-7.2.0.tgz#ae929d7423a63cbc3dc228e49d22fbf586d459ca"
+  integrity sha512-2KsBEEs+qRhKx/kekUVNSTIpop3Jwd7SRBm0R4Eiq3mPeswRGSsftY9FpKsE/lXLdURyQFiHeHFrIUxLYskG5g==
 
 react-transition-group@^4.4.5:
   version "4.4.5"
