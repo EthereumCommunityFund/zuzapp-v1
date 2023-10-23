@@ -187,12 +187,12 @@ export default function UpdateSchedulePage() {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    if (values.format !== 'in-person' && (!values.video_call_link || values.video_call_link === '')) {
-      form.setError('video_call_link', {
-        message: 'Video call link is required for online events',
-      });
-      return;
-    }
+    // if (values.format !== 'in-person' && (!values.video_call_link || values.video_call_link === '')) {
+    //   form.setError('video_call_link', {
+    //     message: 'Video call link is required for online events',
+    //   });
+    //   return;
+    // }
     if (values.format !== 'in-person' && (!values.live_stream_url || values.live_stream_url === '')) {
       form.setError('live_stream_url', {
         message: 'Live stream link is required for in-person events',

@@ -112,15 +112,15 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
 
   const formSchema = z.object({
     name: z.string().min(2, {
-      message: 'Schedule name is required.',
+      message: 'Session name is required.',
     }),
     format: z.enum(['in-person', 'online'], {
       required_error: 'You need to select a format.',
     }),
     date: z
       .date({
-        required_error: 'You need to select a valid date for this schedule.',
-        invalid_type_error: 'You need to select a valid date for this schedule.',
+        required_error: 'You need to select a valid date for this Session.',
+        invalid_type_error: 'You need to select a valid date for this Session.',
       })
       .refine(
         (date) => {
@@ -133,13 +133,13 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
           return false;
         },
         {
-          message: 'You need to select a valid date for this schedule.',
+          message: 'You need to select a valid date for this Session.',
         }
       ),
     description: z.string().min(10, {
       message: 'Description is required and must be a minimum of 5',
     }),
-    video_call_link: z.string().optional().or(z.literal('')),
+    // video_call_link: z.string().optional().or(z.literal('')),
     live_stream_url: z.string().optional().or(z.literal('')),
   });
 
@@ -166,18 +166,13 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
       format: schedule?.format,
       date: schedule?.date !== '' ? new Date(schedule?.date) : new Date(),
       description: '',
-      video_call_link: schedule?.video_call_link,
+      // video_call_link: schedule?.video_call_link,
       live_stream_url: schedule?.live_stream_url,
     },
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    if (values.format !== 'in-person' && (!values.video_call_link || values.video_call_link === '')) {
-      form.setError('video_call_link', {
-        message: 'Video call link is required for online',
-      });
-      return;
-    }
+
     if (values.format !== 'in-person' && (!values.live_stream_url || values.live_stream_url === '')) {
       form.setError('live_stream_url', {
         message: 'Live stream link is required for in-person',
@@ -314,7 +309,7 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
           format: result.data.data.format,
           date: new Date(result.data.data.date),
           description: result.data.data.description,
-          video_call_link: result.data.data.video_call_link,
+          // video_call_link: result.data.data.video_call_link,
           live_stream_url: result.data.data.live_stream_url,
         });
         console.log(result.data.data.date);
