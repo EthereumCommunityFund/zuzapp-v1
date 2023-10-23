@@ -74,6 +74,24 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     const scheduleId = schedule_insert_result.data.id;
 
+    // Add the creator to the edit logs
+    const { user } = req.body; // Assuming user info is in the request body
+
+    const editLogInsertResult = await supabase
+        .from('editlogs')
+        .insert({
+            schedule_id: scheduleId,
+            editor_id: user.id,
+            edit_summary: 'Created schedule'
+        })
+
+    console.log(editLogInsertResult, "result")
+
+    if (editLogInsertResult.error) {
+        logToFile("server error", editLogInsertResult.error.message, 500, req.body.user.email);
+        return res.status(500).send("Internal server error when adding to edit logs");
+    }
+
     // Handling tags concurrently
     const tagPromises = tags.map(async (tag: string) => {
         console.log(tag, "tag")
