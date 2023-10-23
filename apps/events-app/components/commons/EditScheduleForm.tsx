@@ -140,7 +140,7 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
     description: z.string().min(10, {
       message: 'Description is required and must be a minimum of 5',
     }),
-    // video_call_link: z.string().optional().or(z.literal('')),
+    video_call_link: z.string().optional().or(z.literal('')),
     live_stream_url: z.string().optional().or(z.literal('')),
   });
 
@@ -167,7 +167,7 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
       format: schedule?.format,
       date: schedule?.date !== '' ? new Date(schedule?.date) : new Date(),
       description: '',
-      // video_call_link: schedule?.video_call_link,
+      video_call_link: '',
       live_stream_url: schedule?.live_stream_url,
     },
   });
