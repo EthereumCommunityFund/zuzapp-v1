@@ -109,18 +109,19 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
   const [scheduleUpdated, setScheduleUpdated] = useState(false);
   const [isLimit, setIsLimit] = useState(false);
   const [selectedTrackId, setSelectedTrackId] = useState<string>('');
+  const [selectedEventFormat, setSelectedEventFormat] = useState<string>('new');
 
   const formSchema = z.object({
     name: z.string().min(2, {
-      message: 'Schedule name is required.',
+      message: 'Session name is required.',
     }),
     format: z.enum(['in-person', 'online'], {
       required_error: 'You need to select a format.',
     }),
     date: z
       .date({
-        required_error: 'You need to select a valid date for this schedule.',
-        invalid_type_error: 'You need to select a valid date for this schedule.',
+        required_error: 'You need to select a valid date for this Session.',
+        invalid_type_error: 'You need to select a valid date for this Session.',
       })
       .refine(
         (date) => {
@@ -133,7 +134,7 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
           return false;
         },
         {
-          message: 'You need to select a valid date for this schedule.',
+          message: 'You need to select a valid date for this Session.',
         }
       ),
     description: z.string().min(10, {
@@ -166,18 +167,13 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
       format: schedule?.format,
       date: schedule?.date !== '' ? new Date(schedule?.date) : new Date(),
       description: '',
-      video_call_link: schedule?.video_call_link,
+      video_call_link: '',
       live_stream_url: schedule?.live_stream_url,
     },
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    if (values.format !== 'in-person' && (!values.video_call_link || values.video_call_link === '')) {
-      form.setError('video_call_link', {
-        message: 'Video call link is required for online',
-      });
-      return;
-    }
+
     if (values.format !== 'in-person' && (!values.live_stream_url || values.live_stream_url === '')) {
       form.setError('live_stream_url', {
         message: 'Live stream link is required for in-person',
@@ -314,7 +310,7 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
           format: result.data.data.format,
           date: new Date(result.data.data.date),
           description: result.data.data.description,
-          video_call_link: result.data.data.video_call_link,
+          // video_call_link: result.data.data.video_call_link,
           live_stream_url: result.data.data.live_stream_url,
         });
         console.log(result.data.data.date);
@@ -358,6 +354,10 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
     }
   };
 
+  const handleEventFormatChange = (e: string) => {
+    setSelectedEventFormat(e);
+  };
+
   if (isLoading) {
     return <Loader />;
   }
@@ -387,8 +387,8 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
                     <FormDescription>The format you select will determine what information will be required going forward</FormDescription>
                     <FormControl>
                       <RadioGroup
-                        onValueChange={field.onChange}
-                        //  defaultValue={field.value}
+                        onValueChange={(value) => (field.onChange(value), handleEventFormatChange(value))}
+                        defaultValue={schedule?.format}
                         className="flex flex-col md:flex-row"
                         {...field}
                       >
@@ -578,32 +578,56 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
                 </div>
               </div>
               <div className="w-full">
-                <h2 className="text-2xl text-white/80">Location</h2>
+                {selectedEventFormat === 'new' && schedule.format === 'in-person' && (
+                  <>
+                    <h2 className="text-2xl opacity-80">Location</h2>
+                    <div className="flex flex-col items-start gap-5 self-stretch w-full pt-5">
+                      <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
+                        <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select Location</Label>
+                        {/* <InputFieldDark type={InputFieldType.Option} placeholder={'The Dome'} /> */}
+                        <select
+                          onChange={(e) => setLocationId(e.target.value)}
+                          title="location"
+                          value={locationId}
+                          className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
+                        >
+                          {savedLocations.length === 0 && <option value="">No saved locations</option>}
+                          {savedLocations?.map((location: any) => (
+                            <option key={location.id} value={location.id}>
+                              {location.name}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+                  </>
+                )}
+                {selectedEventFormat === 'in-person' && (
+                  <>
+                    <h2 className="text-2xl opacity-80">Location</h2>
+                    <div className="flex flex-col items-start gap-5 self-stretch w-full pt-5">
+                      <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
+                        <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select Location</Label>
+                        {/* <InputFieldDark type={InputFieldType.Option} placeholder={'The Dome'} /> */}
+                        <select
+                          onChange={(e) => setLocationId(e.target.value)}
+                          title="location"
+                          value={locationId}
+                          className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
+                        >
+                          {savedLocations.length === 0 && <option value="">No saved locations</option>}
+                          {savedLocations?.map((location: any) => (
+                            <option key={location.id} value={location.id}>
+                              {location.name}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+                  </>
+                )}
                 <div className="flex flex-col items-start gap-5 self-stretch w-full pt-5">
-                  <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                    <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select Location</Label>
-
-                    <select
-                      onChange={(e) =>
-                        setSchedule({
-                          ...schedule,
-                          location_id: e.target.value,
-                        })
-                      }
-                      title="location"
-                      value={schedule.location_id}
-                      className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
-                    >
-                      {savedLocations?.map((location) => (
-                        <option key={location.id} value={location.id}>
-                          {location.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-                <div className="flex flex-col items-start gap-5 self-stretch w-full pt-5">
-                  <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
+                  {/* <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
                     <FormField
                       control={form.control}
                       name="video_call_link"
@@ -617,23 +641,41 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
                         </FormItem>
                       )}
                     />
-                  </div>
-
-                  <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                    <FormField
-                      control={form.control}
-                      name="live_stream_url"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-lg font-semibold leading-[1.2] text-white self-stretch">Live Stream Link</FormLabel>
-                          <FormControl>
-                            <InputFieldDark type={InputFieldType.Link} placeholder={'Type URL'} {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
+                  </div> */}
+                  {selectedEventFormat === 'online' && (
+                    <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
+                      <FormField
+                        control={form.control}
+                        name="live_stream_url"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-lg font-semibold leading-[1.2] text-white self-stretch">Live Stream Link</FormLabel>
+                            <FormControl>
+                              <InputFieldDark type={InputFieldType.Link} placeholder={'Type URL'} {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                  )}
+                  {selectedEventFormat === 'new' && schedule.format === 'online' && (
+                    <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
+                      <FormField
+                        control={form.control}
+                        name="live_stream_url"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-lg font-semibold leading-[1.2] text-white self-stretch">Live Stream Link</FormLabel>
+                            <FormControl>
+                              <InputFieldDark type={InputFieldType.Link} placeholder={'Type URL'} {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                  )}
                 </div>
               </div>
               <line></line>

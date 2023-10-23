@@ -65,7 +65,7 @@ export default function CreateEventsForm({ setEventCreated }: { setEventCreated:
                 <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex flex-col md:flex-row justify-between pt-3 md:pt-5">
                   <FormItem className="flex items-center space-x-3 space-y-0 cursor-pointer">
                     <FormControl>
-                      <RadioGroupItem value="schedules" />
+                      <RadioGroupItem value="schedules" disabled />
                     </FormControl>
                     <FormLabel className="font-semibold text-white/30 text-base">
                       Only Schedules
