@@ -1,5 +1,5 @@
-import { Database } from '@/database.types';
-import { IconType } from 'react-icons';
+import { Database } from "@/database.types";
+import { IconType } from "react-icons";
 
 export type EventSpaceUpdateRequestBody = {
   id: string;
@@ -7,12 +7,12 @@ export type EventSpaceUpdateRequestBody = {
   tagline?: string;
   social_links?: string;
   extra_links?: string;
-  event_space_type: 'tracks' | 'schedules';
-  status: 'draft' | 'published' | 'archived';
+  event_space_type: "tracks" | "schedules";
+  status: "draft" | "published" | "archived";
   start_date: Date;
   end_date: Date;
   description: string;
-  format: 'in-person' | 'online';
+  format: "in-person" | "online";
   event_type?: string[];
   experience_level?: string[];
   eventspacelocation?: LocationType[];
@@ -21,23 +21,23 @@ export type EventSpaceUpdateRequestBody = {
 
 export type EventSpaceStatusUpdateRequestBody = {
   id: string;
-  status: 'draft' | 'published' | 'archived';
+  status: "draft" | "published" | "archived";
 };
 export type EventSpaceCreateRequestBody = {
   name: string;
-  event_space_type: 'tracks' | 'schedules';
+  event_space_type: "tracks" | "schedules";
 };
 export type EventSpaceDetailsType = {
   created_at?: string;
   creator_id?: string;
   id: string;
   name: string;
-  event_space_type: 'tracks' | 'schedules';
-  status: 'draft' | 'published' | 'archived';
+  event_space_type: "tracks" | "schedules";
+  status: "draft" | "published" | "archived";
   start_date: Date;
   end_date: Date;
   description: string;
-  format: 'in-person' | 'online';
+  format: "in-person" | "online";
   event_type?: string[];
   experience_level?: string[];
   eventspacelocation?: LocationType[];
@@ -68,13 +68,13 @@ export type TrackType = {
 
 export type ScheduleCreateRequestBody = {
   name: string;
-  format: 'in-person' | 'online';
+  format: "in-person" | "online";
   description: string;
   date: string | Date;
   start_time: string | Date;
   end_time: string | Date;
   all_day?: boolean;
-  schedule_frequency: 'once' | 'everyday' | 'weekly';
+  schedule_frequency: "once" | "everyday" | "weekly";
   images?: string[];
   video_call_link?: string;
   live_stream_url?: string;
@@ -97,14 +97,14 @@ export type ScheduleCreateRequestBody = {
 export type ScheduleDetailstype = {
   id: string;
   name: string;
-  format: 'in-person' | 'online';
+  format: "in-person" | "online";
   description: string;
   date: string | Date | number;
   start_time: string | Date | number;
   end_time: string | Date | number;
   all_day?: boolean;
   current_rsvp_no?: number;
-  schedule_frequency: 'once' | 'everyday' | 'weekly';
+  schedule_frequency: "once" | "everyday" | "weekly";
   images?: string[];
   video_call_link?: string;
   live_stream_url?: string;
@@ -125,13 +125,13 @@ export type ScheduleUpdateRequestBody = {
   editlogs: any;
   current_rsvp_no: number | undefined;
   name: string;
-  format: 'in-person' | 'online';
+  format: "in-person" | "online";
   description: string;
   date: string | Date | number;
   start_time: string | Date | number;
   end_time: string | Date | number;
   all_day?: boolean;
-  schedule_frequency: 'once' | 'everyday' | 'weekly';
+  schedule_frequency: "once" | "everyday" | "weekly";
   images?: string[];
   video_call_link?: string;
   live_stream_url?: string;
@@ -189,7 +189,7 @@ export type InviteCreateRequestBody = {
   event_space_id: string;
 };
 export type InviteUpdateRequestBody = {
-  status: 'accepted' | 'declined';
+  status: "accepted" | "declined";
 };
 
 export type OrganizerType = { name: string; role: string };
@@ -198,7 +198,7 @@ export type QueryWithID = {
   [key: string]: string;
 };
 
-type Tables = Database['public']['Tables'];
+type Tables = Database["public"]["Tables"];
 
 //@ts-ignore
 // type ExtractInsertUpdateTypes<T> = {
@@ -237,8 +237,8 @@ export enum SubHeaderTabIndex {
 }
 
 export enum EventTypes {
-  Online = 'online',
-  InPerson = 'inPerson',
+  Online = "online",
+  InPerson = "inPerson",
 }
 
 export type DropDownMenuItemType = {
@@ -249,4 +249,12 @@ export type DropDownMenuItemType = {
 export type RouteOptions = {
   page: number;
   limit: number;
+};
+
+export type ZappCardTemplate = {
+  imgURL?: string;
+  appTitle: string;
+  appDescription: string;
+  appContents?: string[];
+  appFullDescription?: string;
 };
