@@ -258,3 +258,9 @@ export type ZappCardTemplate = {
   appContents?: string[];
   appFullDescription?: string;
 };
+
+export type ResourceItemCard = {
+  title: string;
+  tagLine: string;
+  link: string;
+};

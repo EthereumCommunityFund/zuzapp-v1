@@ -1,8 +1,64 @@
+import { ArrowTopRightOnSquare } from "@/components/ui/icons";
+import { Label } from "@/components/ui/label";
+import { useGlobalContext } from "@/context/GlobalContext";
+import { useUserPassportContext } from "@/context/PassportContext";
 import { Database } from "@/database.types";
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
+import { ZuConnectResourceItemCards, ZuzaluResouceItemCards } from "@/constant/resourcecards";
+import ResourcesItemCard from "@/components/resources/resourcesitemcard";
 
 export default function Resources() {
-  return <div>Resources Page</div>;
+  const { signIn } = useUserPassportContext();
+  const { isAuthenticated, user, profile } = useGlobalContext();
+  return (
+    <div className="flex flex-col">
+      {/* Resources Header */}
+      <div className='p-10 flex flex-col gap-5'>
+        <Label className='text-3xl text-white'>Zuzalu Resources</Label>
+        <Label className='text-white/70 text-lg'>A great list of resources by the Zuzalu Community</Label>
+      </div>
+      {/* PlayBook Header */}
+      <div className="pt-5 px-10 pb-10 flex flex-col gap-5">
+        <Label className="text-white/70 text-lg font-semibold">Zuzalu</Label>
+        <div className="flex flex-col gap-2.5">
+          {ZuzaluResouceItemCards.map((resourceItemCard) => (
+            <ResourcesItemCard
+              title={resourceItemCard.title}
+              tagLine={resourceItemCard.tagLine}
+              link={resourceItemCard.link}
+            />
+          ))}
+        </div>
+      </div>
+      {/* ZuConnect Resources */}
+      <div className="pt-5 px-10 pb-10 flex flex-col gap-5">
+        <Label className="text-white/70 text-lg">ZuConnect</Label>
+        {isAuthenticated && profile ? (
+          <div className="flex flex-col gap-2.5">
+            {ZuConnectResourceItemCards.map((resourceItemCard) => (
+              <ResourcesItemCard
+                title={resourceItemCard.title}
+                tagLine={resourceItemCard.tagLine}
+                link={resourceItemCard.link}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="flex flex-col gap-2.5">
+            <div className="p-5 bg-componentPrimary rounded-2xl border Open Source Ops Playbook border-borderPrimary">
+              <div className="flex flex-col gap-2.5 p-5 items-center">
+                <Label className="text-xl text-white/70">To view these resources, please connect your ZuPass.</Label>
+                <div className="flex space-x-2 items-center rounded-3xl px-5 py-2 h-full bg-dark text-sm md:text-base justify-center hover:cursor-pointer" onClick={signIn}>
+                  <img src="/images/zaluza blackandwhite.png" width={20} height={20} alt="Passport" className="mr-2" />
+                  Connect <span className="hidden md:inline"> Passport</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
 }
 
 export const getServerSideProps = async (ctx: any) => {

@@ -9,6 +9,7 @@ import SelectCategories from './SelectCategories';
 import SelectLocation from './SelectLocation';
 import ArrowLeft from './ArrowLeft';
 import ArrowRight from './ArrowRight';
+import ArrowTopRightOnSquare from './ArrowTopRightOnSquare';
 
 export {
   ArrowCircleRight,
@@ -22,4 +23,5 @@ export {
   SelectLocation,
   ArrowLeft,
   ArrowRight,
+  ArrowTopRightOnSquare
 };
