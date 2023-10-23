@@ -254,7 +254,7 @@ export type RouteOptions = {
 export type ZappCardTemplate = {
   imgURL?: string;
   appTitle: string;
-  appDescription: string;
+  appTagLine: string;
   appContents?: string[];
-  appFullDescription?: string;
+  appDescription?: string;
 };
