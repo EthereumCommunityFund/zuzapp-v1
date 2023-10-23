@@ -249,3 +249,10 @@ export type RouteOptions = {
   page: number;
   limit: number;
 };
+
+export type ZappCardTemplate = {
+  imgURL?: string;
+  appTitle: string;
+  appDescription: string;
+  appContents?: string[];
+};
