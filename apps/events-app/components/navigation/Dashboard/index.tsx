@@ -98,7 +98,7 @@ export default function DashboardNavigation() {
               </li>
             </ul>
           )}
-          <div className="py-[15px] px-[13px] gap-3.5 flex flex-col rounded-2xl bg-[#2B2D2D] w-[240px]">
+          <div className="mt-5 py-[15px] px-[13px] gap-3.5 flex flex-col rounded-2xl bg-[#2B2D2D] w-[240px]">
             <Label className="text-white text-xl">Zuzalu</Label>
             <Label className="text-white/70 text-sm">Foster a global network of communities to advance humanity by creating playgrounds at the intersection of free and open technology, science, heath and social innovation</Label>
             <Dialog>
