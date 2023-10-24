@@ -88,11 +88,11 @@ export default function HomePageTemplate() {
         },
         {
           ctaText: 'About ZuConnect',
-          ctaLink: '',
+          ctaLink: 'https://app.skiff.com/docs/686afeda-6dd6-4e45-bd9c-025da5ab7af2#%2FAPhdwcKl0ybzpGeElvYgLL3%2BIXTf%2B8vm5OMl%2Bs%2F1P0%3D',
           action: 'about',
           twClassNames: 'bg-white/20 hover:bg-white/30',
-        }
-      ]
+        },
+      ],
     },
     {
       title: 'The Zuzalu Playbook',
@@ -104,8 +104,8 @@ export default function HomePageTemplate() {
           ctaLink: 'https://zuzalu.notion.site/3e893df2a248496bb30720fc1518c3c6?v=b0bc5b586a574272928d9a1fe0ded088',
           action: 'view',
           twClassNames: 'bg-[#769270] hover:bg-[#92B68B]',
-        }
-      ]
+        },
+      ],
     },
   ];
 
@@ -137,21 +137,15 @@ export default function HomePageTemplate() {
               <h1 className="font-bold font-inter text-left text-3xl md:text-5xl mb-5">{slideData[currentSlide].title}</h1>
               <p className="text-left mb-4 max-w-[650px]font-inter text-gray-200 text-md">{slideData[currentSlide].description}</p>
               {isAuthenticated ? (
-                  <div className="flex gap-2 items-center">
-                    {
-                      slideData[currentSlide].ctas.map((cta, index) => (
-                          <Link href={cta.ctaLink} target="_blank" rel="noopener noreferrer">
-                            <Button
-                                size="lg"
-                                variant="primaryGreen"
-                                className={`${cta.twClassNames} rounded-full w-full slider_md:w-auto my-2.5 text-xl justify-center text-white font-inter font-semibold`}
-                            >
-                              {cta.ctaText}
-                            </Button>
-                          </Link>
-                      ))
-                    }
-                  </div>
+                <div className="flex gap-2 items-center">
+                  {slideData[currentSlide].ctas.map((cta, index) => (
+                    <Link href={cta.ctaLink} target="_blank" rel="noopener noreferrer">
+                      <Button size="lg" variant="primaryGreen" className={`${cta.twClassNames} rounded-full w-full slider_md:w-auto my-2.5 text-xl justify-center text-white font-inter font-semibold`}>
+                        {cta.ctaText}
+                      </Button>
+                    </Link>
+                  ))}
+                </div>
               ) : (
                 <Dialog>
                   <DialogTrigger asChild>
