@@ -71,6 +71,7 @@ export type ScheduleCreateRequestBody = {
   format: "in-person" | "online";
   description: string;
   date: string | Date;
+  end_date: string | Date;
   start_time: string | Date;
   end_time: string | Date;
   all_day?: boolean;
@@ -128,6 +129,7 @@ export type ScheduleUpdateRequestBody = {
   format: "in-person" | "online";
   description: string;
   date: string | Date | number;
+  end_date: string | Date | number
   start_time: string | Date | number;
   end_time: string | Date | number;
   all_day?: boolean;
@@ -257,4 +259,10 @@ export type ZappCardTemplate = {
   appTagLine: string;
   appContents?: string[];
   appDescription?: string;
+};
+
+export type ResourceItemCard = {
+  title: string;
+  tagLine: string;
+  link: string;
 };

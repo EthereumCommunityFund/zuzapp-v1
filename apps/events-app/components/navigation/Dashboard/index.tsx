@@ -2,21 +2,45 @@ import Link from "next/link";
 import { HiOutlineMenuAlt1 } from "react-icons/hi";
 import { FaCog } from "react-icons/fa";
 import { navBarRoutes } from "@/constant/routes";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import { useRouter } from "next/router";
 import { useGlobalContext } from "@/context/GlobalContext";
 import Button from "@/components/ui/buttons/Button";
+import { Label } from "@/components/ui/label";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import * as DialogPrimitive from '@radix-ui/react-dialog';
+import { X } from "lucide-react";
+import ReactMarkdown from 'react-markdown';
+import RenderHTMLString from "@/components/ui/RenderHTMLString";
 
 // Create a navigation side menu for the dashboard.
 export default function DashboardNavigation() {
   const routes = navBarRoutes;
   const [dashboardOpen, setDashboardOpen] = React.useState(false);
   const { isAuthenticated, user } = useGlobalContext();
+  const [markdownContent, setMarkdownContent] = useState<string>('');
+  const url = `/zuzalu/Zuzalu_Mission.md`;
+
   const router = useRouter();
   const handleClick = () => {
     setDashboardOpen(!dashboardOpen);
   };
+  console.log('markdownContent', markdownContent);
+
+  useEffect(() => {
+    const fetchMarkdownContent = async () => {
+      try {
+        const response = await fetch(url);
+        const content = await response.text();
+        setMarkdownContent(content);
+      } catch (error) {
+        console.error('Error fetching Markdown content:', error);
+      }
+    };
+
+    fetchMarkdownContent();
+  }, [url]);
 
   return (
     <>
@@ -74,6 +98,30 @@ export default function DashboardNavigation() {
               </li>
             </ul>
           )}
+          <div className="mt-5 py-[15px] px-[13px] gap-3.5 flex flex-col rounded-2xl bg-[#2B2D2D] w-[240px]">
+            <Label className="text-white text-xl">Zuzalu</Label>
+            <Label className="text-white/70 text-sm">Foster a global network of communities to advance humanity by creating playgrounds at the intersection of free and open technology, science, heath and social innovation</Label>
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button variant='quiet' className="rounded-xl justify-center" >Learn About Zuzalu</Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle className='pb-5'>
+                    About Zuzalu
+                  </DialogTitle>
+                  <hr className='bg-grayBackground' />
+                  <DialogDescription className="text-white">
+                    {/* <RenderHTMLString htmlString={markdownContent} /> */}
+                    <ReactMarkdown className={'overflow-x-auto h-[500px]'}>{markdownContent}</ReactMarkdown>
+                  </DialogDescription>
+                </DialogHeader>
+                <DialogPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
+                  <Button size='sm' className='rounded-full w-10 h-10'><X /></Button>
+                </DialogPrimitive.Close>
+              </DialogContent>
+            </Dialog>
+          </div>
         </div>
       </nav>
     </>

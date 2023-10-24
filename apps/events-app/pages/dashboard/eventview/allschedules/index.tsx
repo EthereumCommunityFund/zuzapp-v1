@@ -33,6 +33,7 @@ import ScheduleEditForm from "@/components/commons/AddScheduleForm";
 import fetchSchedulesByEvenSpaceId from "@/services/fetchScheduleByEventSpace";
 import EditScheduleForm from "@/components/commons/EditScheduleForm";
 import AddScheduleForm from "@/components/commons/AddScheduleForm";
+import { useGlobalContext } from "@/context/GlobalContext";
 
 const categoryList: DropDownMenuItemType[] = [
   {
@@ -64,6 +65,8 @@ export default function EventViewTracksAlleSchedulesPage() {
   const currentSchedules = schedules
     ? schedules.slice(startIndex, endIndex)
     : [];
+
+  const { isAuthenticated, user } = useGlobalContext();
 
   console.log(isLoading, "is loading");
 
@@ -129,31 +132,33 @@ export default function EventViewTracksAlleSchedulesPage() {
         />
         <div className="flex flex-col gap-2.5 lg:px-9 md:px-5">
           <div className="bg-componentPrimary rounded-2xl lg:px-5 lg:pt-8">
-            <div>
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button
-                    variant="blue"
-                    size="lg"
-                    className="rounded-full sm:w-full lg:w-fit justify-center"
-                    leftIcon={BiPlusCircle}
-                  >
-                    Add a Session
-                  </Button>
-                </DialogTrigger>
-                {
-                  <DialogContent className="md:w-3/5 md:h-3/5 overflow-x-auto sm:w-3/4">
-                    <AddScheduleForm
-                      title={"Add"}
-                      isQuickAccess={true}
-                      trackId={trackId as string}
-                      updateIsLoading={updateIsLoading}
-                      event_space_id={event_space_id as string}
-                    />
-                  </DialogContent>
-                }
-              </Dialog>
-            </div>
+            {isAuthenticated &&
+              <div>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button
+                      variant="blue"
+                      size="lg"
+                      className="rounded-full sm:w-full lg:w-fit justify-center"
+                      leftIcon={BiPlusCircle}
+                    >
+                      Add a Session
+                    </Button>
+                  </DialogTrigger>
+                  {
+                    <DialogContent className="md:w-3/5 md:h-3/5 overflow-x-auto sm:w-3/4">
+                      <AddScheduleForm
+                        title={"Add"}
+                        isQuickAccess={true}
+                        trackId={trackId as string}
+                        updateIsLoading={updateIsLoading}
+                        event_space_id={event_space_id as string}
+                      />
+                    </DialogContent>
+                  }
+                </Dialog>
+              </div>
+            }
             {isLoading ? (
               <Loader />
             ) : (
