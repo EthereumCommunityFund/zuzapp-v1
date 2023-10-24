@@ -96,6 +96,7 @@ export default function UpdateSchedulePage() {
     format: "in-person",
     description: "",
     date: "",
+    end_date: "",
     start_time: "",
     end_time: "",
     all_day: undefined,
