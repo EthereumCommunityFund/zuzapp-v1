@@ -57,17 +57,29 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     track_id,
   };
   // console.log(validatedData.start_time, validatedData.end_time, "timre")
+  let insertData: any = {}
   let start_time = formatTimestamp(validatedData.start_time as Date);
   let end_time = formatTimestamp(validatedData.end_time as Date);
   let date = formatTimestamp(validatedData.date as Date);
-  let insertData: any = { start_time, end_time, date };
+  if (validatedData.end_date) {
+    let end_date = formatTimestamp(validatedData.end_date as Date);
+    insertData = { start_time, end_time, date, end_date };
+  } else {
+    insertData = { start_time, end_time, date };
+  }
+
+
+
 
   // Loop through validatedFields and only include defined properties in insertData
   for (let key in validatedFields) {
     if (validatedFields[key] !== undefined) {
       insertData[key] = validatedFields[key];
+
     }
   }
+
+  console.log('insert data', insertData)
 
   const schedule_insert_result = await supabase.from('schedule').insert(insertData).select('id').single();
 
