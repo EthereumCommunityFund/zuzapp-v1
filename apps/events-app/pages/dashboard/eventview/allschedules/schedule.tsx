@@ -5,7 +5,7 @@ import Button from '@/components/ui/buttons/Button';
 import EventDataTime from '@/components/ui/labels/event-data-time';
 import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { JSXElementConstructor, Key, PromiseLikeOfReactNode, ReactElement, ReactNode, ReactPortal, useEffect, useState } from 'react';
 import { BiEditAlt, BiLeftArrow } from 'react-icons/bi';
 import { BsFillTicketFill } from 'react-icons/bs';
 import { HiArrowLeft } from 'react-icons/hi';
@@ -32,6 +32,7 @@ export default function EventViewScheduleDetailsPage() {
   const [hasRsvpd, setHasRsvpd] = useState(false);
   const [isRsvpFullOnLoad, setIsRsvpFullOnLoad] = useState(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [showLogs, setShowLogs] = useState(false);
 
   const trackItem = eventSpace?.tracks.find((trackItem) => trackItem.id === trackId);
 
@@ -126,6 +127,10 @@ export default function EventViewScheduleDetailsPage() {
   if (isLoading) {
     return <Loader />;
   }
+  const toggleLogs = () => {
+    setShowLogs(!showLogs);
+  };
+  console.log(mostRecentEditLog, 'currentSchedule');
 
   return (
     <div className="flex gap-4 lg:flex-row sm:flex-col">
@@ -188,8 +193,23 @@ export default function EventViewScheduleDetailsPage() {
                 <TimeAgo date={mostRecentEditLog?.edited_at} />
               </span>
             </div>
-            <div className="flex px-5 items-center cursor-pointer">
-              <span className="font-medium text-sm text-gray-400">View All Edits</span>
+            <div className="flex flex-col gap-2 px-5 cursor-pointer">
+              <span onClick={toggleLogs} className="font-medium text-sm text-gray-400 cursor-pointer">
+                {showLogs ? 'Hide' : 'View'} All Edits:{' '}
+              </span>
+              <div className={`items-center gap-2 ${showLogs ? 'flex' : 'hidden'}`}>
+                {currentSchedule?.editlogs.slice(1, -1).map((log: { edited_at: string | number | Date; user: { username: any } }) => {
+                  const minutesAgo = <TimeAgo date={log?.edited_at} />;
+                  return (
+                    <div className="">
+                      <span className="font-bold inline-block mr-2">{editorUsername}</span>
+                      <span className="font-medium text-sm text-gray-400">
+                        <TimeAgo date={mostRecentEditLog?.edited_at} />
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           </div>
         </div>
