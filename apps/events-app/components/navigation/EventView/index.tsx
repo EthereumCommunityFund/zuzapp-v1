@@ -19,7 +19,7 @@ import {
 import AddScheduleForm from '@/components/commons/AddScheduleForm';
 
 export default function EventViewNavigation() {
-  const { isAuthenticated, user } = useGlobalContext();
+  const { isAuthenticated, user, profile } = useGlobalContext();
   const { eventSpace } = useEventDetails();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const router = useRouter();
@@ -87,7 +87,7 @@ export default function EventViewNavigation() {
                 ))}
               </ul>
             </div>
-            {router.pathname.includes("dashboard/eventview/about") && eventSpace?.creator_id === user.id && (
+            {isAuthenticated ? (router.pathname.includes("dashboard/eventview/about") && eventSpace?.creator_id === user.id && (
               <Dialog>
                 <DialogTrigger asChild>
                   <Button
@@ -110,7 +110,7 @@ export default function EventViewNavigation() {
                   </DialogContent>
                 }
               </Dialog>
-            )}
+            )) : (<></>)}
             {router.pathname.includes("dashboard/eventview/tracks") && eventSpace?.creator_id === user.id && (
               <div className="flex-col gap-3 rounded-md p-2 bg-black font-bold sm:hidden lg:flex">
                 <h2>Organizer</h2>
