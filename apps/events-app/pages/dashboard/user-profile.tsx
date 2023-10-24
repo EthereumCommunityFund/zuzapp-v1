@@ -17,6 +17,7 @@ import { useState } from "react";
 import { FaCircleArrowDown } from "react-icons/fa6";
 import { HiArrowRight } from "react-icons/hi";
 import { useQueryClient } from "react-query";
+import Avvvatars from "avvvatars-react";
 
 export default function UserProfile() {
   const { profile, loadProfile } = useGlobalContext();
@@ -69,10 +70,10 @@ export default function UserProfile() {
     return <Loader />;
   }
   return (
-    <div className="lg:px-40 sm:px-0 flex lg:min-w-[900px] w-full lg:flex-row sm:flex-col">
+    <div className={`lg:px-40 sm:px-0 flex lg:min-w-[900px] w-full lg:flex-row sm:flex-col ${isProfileUpdated && 'justify-center'}`}>
       {isProfileUpdated ? (
         <>
-          <div className="pt-40 flex flex-col items-center">
+          <div className="mt-40 flex flex-col items-center bg-white/5 p-20 rounded-2xl">
             <h3 className="font-bold text-xl">Your Profile Has Been Updated</h3>
             <Button
               onClick={handleEnterHomePage}
@@ -93,6 +94,7 @@ export default function UserProfile() {
                   variant="quiet-SM"
                   className="text-xl"
                   leftIcon={ArrowLeft}
+                  onClick={() => router.back()}
                 >
                   Back
                 </Button>
@@ -118,7 +120,7 @@ export default function UserProfile() {
                       200 x 200 Min. Upload PNG, GIF or JPEG
                     </Label>
                     <div className="flex gap-5 items-center">
-                      <img src="" width={60} height={60} alt="avatar" />
+                      <Avvvatars value={profile?.username} style="shape" />
                       <Button variant="quiet" className="rounded-2xl h-10">
                         Upload
                       </Button>

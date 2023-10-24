@@ -98,7 +98,7 @@ export default function EventViewPageTemplate({ eventSpace, profile }: { eventSp
             {' '}
             {/* About */}
             <h3 className="text-lg font-bold text-white/70">ABOUT THIS EVENT</h3>
-            <div className={`md:h-auto h-[80vh] overflow-hidden text-white text-lg`} dangerouslySetInnerHTML={{ __html: `${description.slice(0, 300)}...` }} />
+            <div className={`md:h-auto overflow-hidden text-white text-lg`} dangerouslySetInnerHTML={{ __html: `${description.slice(0, 300)}...` }} />
             <Dialog>
               <DialogTrigger asChild>
                 <Button variant="quiet" size="lg" className="rounded-2xl inline-block text-white/70 font-bold hover:text-white">

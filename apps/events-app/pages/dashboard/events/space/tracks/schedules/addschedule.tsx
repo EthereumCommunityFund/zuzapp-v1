@@ -715,23 +715,6 @@ export default function AddSchedulePage(props: any) {
                             />
                           </div>
                         )}
-                        <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                          <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                            Select a Timezone
-                          </Label>
-                          <select
-                            // onChange={(e) => setFrequency(e.target.value as any)}
-                            className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
-                            title="Timezone"
-                          >
-                            <option
-                              className="bg-componentPrimary origin-top-right rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
-                              value="once"
-                            >
-                              UTC
-                            </option>
-                          </select>
-                        </div>
                         <line></line>
                       </div>
                     </div>

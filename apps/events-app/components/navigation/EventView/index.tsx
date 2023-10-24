@@ -94,7 +94,7 @@ export default function EventViewNavigation() {
                     <Button
                       variant="blue"
                       size="lg"
-                      className="rounded-full sm:w-full lg:w-fit justify-center"
+                      className="rounded-full block sm:hidden  sm:w-full lg:w-fit justify-center"
                       leftIcon={BiPlusCircle}
                     >
                       Add a Session
