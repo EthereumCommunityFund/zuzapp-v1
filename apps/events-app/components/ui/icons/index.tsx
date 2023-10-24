@@ -11,6 +11,7 @@ import ArrowLeft from './ArrowLeft';
 import ArrowRight from './ArrowRight';
 import Guilded from './Guilded';
 import GithubLogo from './GithubLogo';
+import ArrowTopRightOnSquare from './ArrowTopRightOnSquare';
 
 export {
   ArrowCircleRight,
@@ -25,5 +26,6 @@ export {
   ArrowLeft,
   ArrowRight,
   Guilded,
-  GithubLogo
+  GithubLogo,
+  ArrowTopRightOnSquare
 };

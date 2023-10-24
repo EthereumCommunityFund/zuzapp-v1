@@ -62,7 +62,7 @@ export const DashboardProvider = ({
         )}
         <DashboardHeader />
 
-        <div className="mt-16 relative lg:left-[250px] lg:w-[calc(100%-250px)]">
+        <div className="mt-16 relative lg:left-[260px] lg:w-[calc(100%-260px)]">
           <div className="h-[90vh] mx-auto relative ">
             {checkIfCurrentRouteIsInDashboardRoutes() ? (
               <>
@@ -73,9 +73,8 @@ export const DashboardProvider = ({
               </>
             ) : (
               <div
-                className={`flex-1 mx-auto lg:px-10 pt-2.5 lg:pt-0 relative lg:top-5 bg-pagePrimary ${
-                  router.pathname !== "/dashboard/home" ? "top-20" : ""
-                }`}
+                className={`flex-1 mx-auto lg:px-10 pt-2.5 lg:pt-0 relative lg:top-5 bg-pagePrimary ${router.pathname !== "/dashboard/home" ? "top-20" : ""
+                  }`}
               >
                 {children}
               </div>
