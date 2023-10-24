@@ -30,6 +30,7 @@ import fetchSchedulesByTrackId from '@/services/fetchSchedulesByTrackId';
 import React from 'react';
 import { fetchAllSpeakers } from '@/controllers';
 import { DialogOverlay } from '@radix-ui/react-dialog';
+import { useGlobalContext } from '@/context/GlobalContext';
 
 interface ITrackDetailsPageTemplate {
   trackItem: TrackType;
@@ -60,6 +61,8 @@ export default function TrackDetailsPageTemplate(props: any) {
   const updateIsLoading = (newState: boolean) => {
     setIsLoading(newState);
   };
+
+  const { isAuthenticated, user } = useGlobalContext();
   const handleItemClick = (scheduleName: string, trackId: string | undefined, event_space_id: string, scheduleId: string) => {
     router.push({
       pathname: '/dashboard/eventview/tracks/track/schedule',
@@ -122,19 +125,21 @@ export default function TrackDetailsPageTemplate(props: any) {
                   Tracks
                 </Button>
               )}
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button variant="quiet" className="rounded-xl text-lg font-bold" leftIcon={BiEditAlt}>
-                    Edit
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="lg:w-3/5 lg:h-4/5 overflow-x-auto">
-                  <DialogHeader>
-                    <Label className="text-2xl font-bold">Edit Track</Label>
-                  </DialogHeader>
-                  <EventViewTrackUpdate className="text-white" />
-                </DialogContent>
-              </Dialog>
+              {isAuthenticated &&
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button variant="quiet" className="rounded-xl text-lg font-bold" leftIcon={BiEditAlt}>
+                      Edit
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="lg:w-3/5 lg:h-4/5 overflow-x-auto">
+                    <DialogHeader>
+                      <Label className="text-2xl font-bold">Edit Track</Label>
+                    </DialogHeader>
+                    <EventViewTrackUpdate className="text-white" />
+                  </DialogContent>
+                </Dialog>
+              }
             </div>
             <div className="flex flex-col gap-[10px] p-5 ">
               {' '}
@@ -153,22 +158,24 @@ export default function TrackDetailsPageTemplate(props: any) {
           </div>
         </div>
         <div className="p-4 w-full">
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button variant="blue" size="lg" className="rounded-xl flex justify-center w-full" leftIcon={BiPlusCircle}>
-                Add a Session
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="lg:w-3/5 lg:h-4/5 overflow-y-auto">
-              <AddScheduleForm
-                title={'Add'}
-                isQuickAccess={false}
-                trackId={trackId as string}
-                updateIsLoading={updateIsLoading}
-                event_space_id={event_space_id as string}
-              />
-            </DialogContent>
-          </Dialog>
+          {isAuthenticated &&
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button variant="blue" size="lg" className="rounded-xl flex justify-center w-full" leftIcon={BiPlusCircle}>
+                  Add a Session
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="lg:w-3/5 lg:h-4/5 overflow-y-auto">
+                <AddScheduleForm
+                  title={'Add'}
+                  isQuickAccess={false}
+                  trackId={trackId as string}
+                  updateIsLoading={updateIsLoading}
+                  event_space_id={event_space_id as string}
+                />
+              </DialogContent>
+            </Dialog>
+          }
         </div>
         {isLoading ? (
           <Loader />
