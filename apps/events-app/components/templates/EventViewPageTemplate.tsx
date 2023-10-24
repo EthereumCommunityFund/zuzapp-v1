@@ -1,4 +1,3 @@
-
 import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
 import { useRouter } from 'next/router';
 import { EventSpaceDetailsType } from '@/types';
@@ -20,7 +19,7 @@ interface IEventLink {
   link: string;
 }
 
-export default function EventViewPageTemplate({ eventSpace, profile }: { eventSpace: EventSpaceDetailsType, profile: any }) {
+export default function EventViewPageTemplate({ eventSpace, profile }: { eventSpace: EventSpaceDetailsType; profile: any }) {
   const {
     // id,
     name,
@@ -88,11 +87,11 @@ export default function EventViewPageTemplate({ eventSpace, profile }: { eventSp
               <span className="rounded-full flex px-4 py-1 items-center gap-1 opacity-60 bg-[#FFFFFF10] font-bold">
                 <HiCalendar /> {formattedStartDate} - {formattedEndDate}
               </span>
-              {eventSpace.format === 'in-person' &&
+              {eventSpace.format === 'in-person' && (
                 <span className="rounded-2xl flex px-4 py-1 items-center gap-1 opacity-60 bg-[#FFFFFF10] font-bold">
                   <LocationMarker /> {eventspacelocation && eventspacelocation[0].address}
                 </span>
-              }
+              )}
             </div>
           </div>
           <div className="flex flex-col gap-4 p-5 border-white/10">
@@ -108,77 +107,79 @@ export default function EventViewPageTemplate({ eventSpace, profile }: { eventSp
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle className='pb-5'>
-                    About This Event
-                  </DialogTitle>
-                  <hr className='bg-grayBackground' />
+                  <DialogTitle className="pb-5">About This Event</DialogTitle>
+                  <hr className="bg-grayBackground" />
                   <DialogDescription className="text-white">
                     <RenderHTMLString height="500" htmlString={description} />
                   </DialogDescription>
                 </DialogHeader>
                 <DialogPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
-                  <Button size='sm' className='rounded-full w-10 h-10'><X /></Button>
+                  <Button size="sm" className="rounded-full w-10 h-10">
+                    <X />
+                  </Button>
                 </DialogPrimitive.Close>
               </DialogContent>
             </Dialog>
           </div>
         </div>
-        <div className="lg:w-1/4 md:w-full flex flex-col px-5 lg:px-10 py-5 gap-5 lg:fixed lg:right-0">
+        <div className="lg:w-1/4 md:w-full flex flex-col px-5 lg:px-10 py-5 gap-8 lg:fixed lg:right-0">
           <h2 className="border-b pb-3 text-2xl font-bold border-white/10">Details</h2>
-          <div className="flex gap-4 items-center text-lg font-bold">
-            <UserGroup />
-            <span>14 applied</span>
+          <div className="flex gap-4 items-center">
+            <span className="text-white/70 text-lg">
+              {' '}
+              <UserGroup />{' '}
+            </span>
+            <span className="text-white text-sm">14 applied</span>
           </div>
-          <div className="flex flex-col gap-2 font-semibold text-sm">
+          <div className="flex flex-col gap-4 font-semibold text-sm">
             <div className="flex gap-2 items-center">
               <Label className="opacity-70">Format: </Label>
-              <Label className="opacity-100 font-bold text-base">{eventSpace.format.charAt(0).toUpperCase() + eventSpace.format.slice(1)}</Label>
+              <Label className="opacity-100 text-sm">{eventSpace.format.charAt(0).toUpperCase() + eventSpace.format.slice(1)}</Label>
             </div>
             <div className="flex gap-2 items-center">
               <Label className="opacity-70">Type: </Label>
-              <Label className="opacity-100 font-bold text-base">{event_type?.join(', ')}</Label>
+              <Label className="opacity-100 text-sm">{event_type?.join(', ')}</Label>
             </div>
           </div>
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-4">
             <Label className="opacity-70">Links </Label>
             {extraLinks &&
               extraLinks.map((value: IEventLink, idx: number) => (
                 <div className="flex gap-2" key={idx}>
-                  <Label className="opacity-100 font-bold text-base">{value.name}:</Label>
-                  <Label className="opacity-100 font-bold text-base break-all">
-                    <a href={value.link.includes('https://') ? value.link : `https://${value.link}`} target='_blank'>{value.link}</a>
+                  <Label className="opacity-100 text-sm cursor-pointer">
+                    <a href={value.link.includes('https://') ? value.link : `https://${value.link}`} target="_blank">
+                      {value.name}
+                    </a>
                   </Label>
                 </div>
               ))}
           </div>
-          <div className="flex flex-col gap-2 border-b pb-5 border-borderPrimary">
+          <div className="flex flex-col gap-4 border-b pb-5 border-borderPrimary">
             <Label className="opacity-70">Socials </Label>
             {socialLinks &&
               socialLinks.map((value: IEventLink, idx: number) => (
                 <div className="flex gap-2" key={idx}>
-                  <Label className="opacity-100 font-bold text-base">{value.name}:</Label>
-                  <Label className="opacity-100 font-bold text-base break-all">
-                    <a href={value.link.includes('https://') ? value.link : `https://${value.link}`} target='_blank'>{value.link}</a>
+                  <Label className="opacity-100 text-sm cursor-pointer">
+                    <a href={value.link.includes('https://') ? value.link : `https://${value.link}`} target="_blank">
+                      {value.name}
+                    </a>
                   </Label>
                 </div>
               ))}
           </div>
-          {
-            eventSpace.format === 'in-person' &&
-            <div className='flex flex-col pt-2.5 pb-2.5 gap-5'>
-              <div className='flex gap-2 items-center'>
+          {eventSpace.format === 'in-person' && (
+            <div className="flex flex-col pt-2.5 pb-2.5 gap-5">
+              <div className="flex gap-2 items-center">
                 <LocationMarker />
-                <Label className='text-xl'>Location</Label>
+                <Label className="text-xl">Location</Label>
               </div>
-              <div className='flex flex-col gap-[6px]'>
-                <Label className='text-lg'>{profile ? locationName : `Apply to See Address`}</Label>
-                <Label className='text-sm opacity-70'>{locationAddress}</Label>
+              <div className="flex flex-col gap-[6px]">
+                <Label className="text-lg">{profile ? locationName : `Apply to See Address`}</Label>
+                <Label className="text-sm opacity-70">{locationAddress}</Label>
               </div>
-              {imgUrls &&
-                <Image width={260} height={148} src={imgUrls[0]} alt={''} className={`rounded-xl ${profile ? `blur-none` : `blur`}`} />
-              }
+              {imgUrls && <Image width={260} height={148} src={imgUrls[0]} alt={''} className={`rounded-xl ${profile ? `blur-none` : `blur`}`} />}
             </div>
-          }
+          )}
         </div>
       </div>
     </>
@@ -205,7 +206,6 @@ export const getServerSideProps = async (ctx: any) => {
     props: {
       initialSession: session,
       user: session?.user,
-
     },
   };
 };

@@ -46,6 +46,8 @@ import { BsFillTicketFill } from 'react-icons/bs';
 import { sessionNavBarDetails } from '@/constant/addschedulenavbar';
 import { HiXCircle } from 'react-icons/hi';
 import { DialogHeader, DialogFooter, Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
+dayjs.extend(isSameOrAfter);
 
 type Organizer = {
   name: string;
@@ -143,7 +145,7 @@ export default function UpdateSchedulePage() {
             console.log(date, `date`);
             const today = dayjs();
             const selectedDate = dayjs(date);
-            return selectedDate.isAfter(today);
+            return selectedDate.isSameOrAfter(today, 'day');
           }
           return false;
         },

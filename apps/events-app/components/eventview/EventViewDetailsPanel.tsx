@@ -94,7 +94,7 @@ export default function EventViewDetailsPanel(props: IEventViewDetailsPanel) {
           </div>
           <div className="flex p-2.5 items-center gap-3">
             <HiUserGroup className="text-xl" />
-            <span className="font-bold">14 going</span>
+            <span className="font-bold">{schedule?.current_rsvp_no} going</span>
           </div>
         </div>
       </div>

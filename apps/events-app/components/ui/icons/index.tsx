@@ -9,6 +9,8 @@ import SelectCategories from './SelectCategories';
 import SelectLocation from './SelectLocation';
 import ArrowLeft from './ArrowLeft';
 import ArrowRight from './ArrowRight';
+import Guilded from './Guilded';
+import GithubLogo from './GithubLogo';
 
 export {
   ArrowCircleRight,
@@ -22,4 +24,6 @@ export {
   SelectLocation,
   ArrowLeft,
   ArrowRight,
+  Guilded,
+  GithubLogo
 };
