@@ -88,7 +88,7 @@ export default function HomePageTemplate() {
         },
         {
           ctaText: 'About ZuConnect',
-          ctaLink: 'https://app.skiff.com/docs/686afeda-6dd6-4e45-bd9c-025da5ab7af2#%2FAPhdwcKl0ybzpGeElvYgLL3%2BIXTf%2B8vm5OMl%2Bs%2F1P0%3D',
+          ctaLink: 'https://app.skiff.com/docs/686afeda-6dd6-4e45-bd9c-025da5ab7af2#/APhdwcKl0ybzpGeElvYgLL3+IXTf+8vm5OMl+s/1P0=',
           action: 'about',
           twClassNames: 'bg-white/20 hover:bg-white/30',
         },
@@ -132,12 +132,12 @@ export default function HomePageTemplate() {
     <div className="md:w-5/6 w-[95%] mx-auto">
       <div className="mt-10 relative w-full border border-white/10 rounded-2xl">
         <div className="">
-          <CustomCarousel slides={slides as unknown as string[]} autoSlide curr={currentSlide} setCurr={setCurrentSlide}>
+          <CustomCarousel slides={slides as unknown as string[]} curr={currentSlide} setCurr={setCurrentSlide}>
             <div className="absolute top-0 left-0 px-8 slider_md:px-14 py-14 max-w-[650px] ml-4 mt-4">
               <h1 className="font-bold font-inter text-left text-3xl md:text-5xl mb-5">{slideData[currentSlide].title}</h1>
               <p className="text-left mb-4 max-w-[650px]font-inter text-gray-200 text-md">{slideData[currentSlide].description}</p>
               {isAuthenticated ? (
-                <div className="flex gap-2 items-center">
+                <div className="md:flex gap-2 items-center">
                   {slideData[currentSlide].ctas.map((cta, index) => (
                     <Link href={cta.ctaLink} target="_blank" rel="noopener noreferrer">
                       <Button size="lg" variant="primaryGreen" className={`${cta.twClassNames} rounded-full w-full slider_md:w-auto my-2.5 text-xl justify-center text-white font-inter font-semibold`}>
