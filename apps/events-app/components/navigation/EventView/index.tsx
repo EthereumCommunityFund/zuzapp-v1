@@ -19,7 +19,7 @@ import {
 import AddScheduleForm from '@/components/commons/AddScheduleForm';
 
 export default function EventViewNavigation() {
-  const { isAuthenticated, user } = useGlobalContext();
+  const { isAuthenticated, user, profile } = useGlobalContext();
   const { eventSpace } = useEventDetails();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const router = useRouter();
@@ -87,31 +87,32 @@ export default function EventViewNavigation() {
                 ))}
               </ul>
             </div>
-            {router.pathname.includes("dashboard/eventview/about") && eventSpace?.creator_id === user.id && (
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button
-                    variant="blue"
-                    size="lg"
-                    className="rounded-full sm:w-full lg:w-fit justify-center"
-                    leftIcon={BiPlusCircle}
-                  >
-                    Add a Session
-                  </Button>
-                </DialogTrigger>
-                {
-                  <DialogContent className="md:w-3/5 md:h-3/5 overflow-x-auto sm:w-3/4">
-                    <AddScheduleForm
-                      title={"Add"}
-                      isQuickAccess={true}
-                      updateIsLoading={updateIsLoading}
-                      event_space_id={event_space_id as string}
-                    />
-                  </DialogContent>
-                }
-              </Dialog>
-            )}
-            {router.pathname.includes("dashboard/eventview/tracks") && eventSpace?.creator_id === user.id && (
+            {isAuthenticated ?
+              (router.pathname.includes("dashboard/eventview/about") && eventSpace?.creator_id === user.id && (
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button
+                      variant="blue"
+                      size="lg"
+                      className="rounded-full block sm:hidden  sm:w-full lg:w-fit justify-center"
+                      leftIcon={BiPlusCircle}
+                    >
+                      Add a Session
+                    </Button>
+                  </DialogTrigger>
+                  {
+                    <DialogContent className="md:w-3/5 md:h-3/5 overflow-x-auto sm:w-3/4">
+                      <AddScheduleForm
+                        title={"Add"}
+                        isQuickAccess={true}
+                        updateIsLoading={updateIsLoading}
+                        event_space_id={event_space_id as string}
+                      />
+                    </DialogContent>
+                  }
+                </Dialog>
+              )) : (<></>)}
+            {isAuthenticated ? (router.pathname.includes("dashboard/eventview/tracks") && eventSpace?.creator_id === user.id && (
               <div className="flex-col gap-3 rounded-md p-2 bg-black font-bold sm:hidden lg:flex">
                 <h2>Organizer</h2>
                 <Button variant="ghost" className="p-2 w-full gap-3 text-base" onClick={handleEditEvent}>
@@ -119,8 +120,8 @@ export default function EventViewNavigation() {
                   <span>Edit Event</span>
                 </Button>
               </div>
-            )}
-            {router.pathname.includes("dashboard/eventview/allschedules") && eventSpace?.creator_id === user.id && (
+            )) : (<></>)}
+            {isAuthenticated ? (router.pathname.includes("dashboard/eventview/allschedules") && eventSpace?.creator_id === user.id && (
               <div className="flex-col gap-3 rounded-md p-2 bg-black font-bold sm:hidden lg:flex">
                 <h2>Organizer</h2>
                 <Button variant="ghost" className="p-2 w-full gap-3 text-base" onClick={handleEditSchedules}>
@@ -128,7 +129,7 @@ export default function EventViewNavigation() {
                   <span>Edit Sessions</span>
                 </Button>
               </div>
-            )}
+            )) : (<></>)}
           </div>
         </div>
       </nav>

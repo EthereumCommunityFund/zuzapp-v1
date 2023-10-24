@@ -67,11 +67,16 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     track_id,
   };
 
-  let start_time = formatTimestamp(validatedData.start_time as Date)
-  let end_time = formatTimestamp(validatedData.end_time as Date)
-  let date = formatTimestamp(validatedData.date as Date)
-
-  let insertData: any = { start_time, end_time, date };
+  let insertData: any = {}
+  let start_time = formatTimestamp(validatedData.start_time as Date);
+  let end_time = formatTimestamp(validatedData.end_time as Date);
+  let date = formatTimestamp(validatedData.date as Date);
+  if (validatedData.end_date) {
+    let end_date = formatTimestamp(validatedData.end_date as Date);
+    insertData = { start_time, end_time, date, end_date };
+  } else {
+    insertData = { start_time, end_time, date };
+  }
 
   for (let key in validatedFields) {
     if (validatedFields[key] !== undefined) {
