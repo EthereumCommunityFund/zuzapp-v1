@@ -46,7 +46,7 @@ export default function SubHeader() {
   }, [router]);
 
   return (
-    <div className="flex flex-col lg:flex-row fixed w-full lg:w-auto right-0 lg:left-[260px] lg:h-20 z-40 bg-bgPrimary border-b border-white/20 lg:px-5 justify-between lg:items-center self-stretch backdrop-blur-20 bg-pagePrimary">
+    <div className="flex flex-col lg:flex-row fixed w-full lg:w-auto right-0 lg:left-[290px] lg:h-20 z-40 bg-bgPrimary border-b border-white/20 lg:px-5 justify-between lg:items-center self-stretch backdrop-blur-20 bg-pagePrimary">
       {router.asPath.includes('/events/create') ? (
         <Button
           className="rounded-[40px] py-2.5 px-3.5 bg-bgPrimary border-none hover:bg-[#363636] duration-200 text-textSecondary hover:text-textSecondary"

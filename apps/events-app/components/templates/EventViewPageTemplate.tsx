@@ -79,16 +79,16 @@ export default function EventViewPageTemplate({ eventSpace, profile }: { eventSp
                 <h2 className="font-semibold text-[30px]">{name}</h2>
                 <span className="text-white/80 font-bold">{tagline}</span>
               </div>
-              <Button variant="primaryGreen" size="lg" className="rounded-full sm:w-full md:w-auto lg:w-auto justify-center" leftIcon={BsArrowRightCircleFill}>
+              {/* <Button variant="primaryGreen" size="lg" className="rounded-full sm:w-full md:w-auto lg:w-auto justify-center" leftIcon={BsArrowRightCircleFill}>
                 Apply to Event
-              </Button>
+              </Button> */}
             </div>
             <div className="flex gap-3 text-lg md:flex-row sm:flex-col sm:text-sm">
-              <span className="rounded-full flex px-4 py-1 items-center gap-1 opacity-60 bg-[#FFFFFF10] font-bold">
+              <span className="rounded-lg w-full flex px-4 py-1 items-center gap-1 opacity-60 bg-[#FFFFFF10] font-bold">
                 <HiCalendar /> {formattedStartDate} - {formattedEndDate}
               </span>
               {eventSpace.format === 'in-person' && (
-                <span className="rounded-2xl flex px-4 py-1 items-center gap-1 opacity-60 bg-[#FFFFFF10] font-bold">
+                <span className="rounded-lg w-full flex px-4 py-1 items-center gap-1 opacity-60 bg-[#FFFFFF10] font-bold">
                   <LocationMarker /> {eventspacelocation && eventspacelocation[0].address}
                 </span>
               )}
