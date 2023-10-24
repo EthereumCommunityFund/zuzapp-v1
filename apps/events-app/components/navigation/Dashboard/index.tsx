@@ -113,7 +113,7 @@ export default function DashboardNavigation() {
                   <hr className='bg-grayBackground' />
                   <DialogDescription className="text-white">
                     {/* <RenderHTMLString htmlString={markdownContent} /> */}
-                    <ReactMarkdown>{markdownContent}</ReactMarkdown>
+                    <ReactMarkdown className={'overflow-x-auto h-[500px]'}>{markdownContent}</ReactMarkdown>
                   </DialogDescription>
                 </DialogHeader>
                 <DialogPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
