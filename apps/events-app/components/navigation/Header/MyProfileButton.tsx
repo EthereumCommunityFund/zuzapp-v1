@@ -2,7 +2,7 @@ import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { IconType } from 'react-icons';
 import { BsArrowRightSquare, BsFillTicketFill } from 'react-icons/bs';
 import Button from '@/components/ui/buttons/Button';
-import { useRouter } from 'next/router';
+import router, { useRouter } from 'next/router';
 import { v4 } from 'uuid';
 import { useState } from 'react';
 import { User } from '@/components/ui/icons';
@@ -14,6 +14,7 @@ interface DropDownMenuItem {
   icon: ReactNode;
   label: string;
   path: string;
+  action?: () => void;
 }
 
 const MyProfileDropDownMenu: DropDownMenuItem[] = [
@@ -23,16 +24,20 @@ const MyProfileDropDownMenu: DropDownMenuItem[] = [
     path: '/dashboard/user-profile',
   },
   {
-    icon: <BsFillTicketFill />,
-    label: 'My RSVPs',
-    path: '/dashboard/events/space/tracks/addtrack',
-  },
-  {
     icon: <BsArrowRightSquare />,
     label: 'Sign Out',
-    path: '/dashboard/events/space/tracks/addtrack',
+    path: '',
+    action: handleSignOut,
   },
 ];
+
+function handleSignOut() {
+  document.cookie.split(';').forEach(function (c) {
+    document.cookie = c.replace(/^ +/, '').replace(/=.*/, '=;expires=' + new Date().toUTCString() + ';path=/');
+  });
+
+  router.push('/');
+}
 
 type MyProfileButtonType = {
   className: string;
@@ -73,11 +78,12 @@ const MyProfileButton: React.FC<MyProfileButtonType> = (props: MyProfileButtonTy
                 <Button
                   key={id}
                   onClick={() => {
-                    let path = item.path;
-                    if (event_space_id) path += `?event_space_id=${event_space_id}`;
-                    if (trackId) path += `${event_space_id ? '&' : '?'}trackId=${trackId}`;
-                    if (item.label === 'Add a Session') path += `${event_space_id || trackId ? '&' : '?'}quickAccess=true`;
-                    router.push(path);
+                    if (item.action) {
+                      item.action();
+                    } else {
+                      let path = item.path;
+                      router.push(path);
+                    }
                   }}
                   className="w-full shadow-none rounded-md px-3.5 bg-[#383B3B] border-none hover:bg-[#ffffff10] duration-200 text-textSecondary hover:text-textSecondary"
                 >
