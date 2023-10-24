@@ -9,103 +9,103 @@ import withAuthorization from "../middlewares/withAuthorization";
 import MailClient from "@/utils/mailClient";
 
 const processInvite = async (message: any) => {
-    if (process.env.NODE_ENV === 'production') {
-        const mailClient = new MailClient();
-        try {
-            await mailClient.sendMail(message);
-            console.log('Email sent');
-        } catch (error) {
-            console.error('Error sending email:', error);
-        }
-    } else {
-        const mailClient = new MailClient();
-        try {
-            await mailClient.sendMail(message);
-            console.log('Email sent');
-        } catch (error) {
-            console.error('Error sending email:', error);
-        }
-        // console.log('Dev environment - email not sent:', message);
-        // console.log(message.html)
-    }
+	if (process.env.NODE_ENV === 'production') {
+		const mailClient = new MailClient();
+		try {
+			await mailClient.sendMail(message);
+			console.log('Email sent');
+		} catch (error) {
+			console.error('Error sending email:', error);
+		}
+	} else {
+		const mailClient = new MailClient();
+		try {
+			await mailClient.sendMail(message);
+			console.log('Email sent');
+		} catch (error) {
+			console.error('Error sending email:', error);
+		}
+		// console.log('Dev environment - email not sent:', message);
+		// console.log(message.html)
+	}
 };
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-    const supabase = createPagesServerClient<Database>({ req, res });
+	const supabase = createPagesServerClient<Database>({ req, res });
 
-    // Validate invitation data
-    const [validation_result, validatedData] = validate_invite_create(req.body);
-    if (validation_result?.error) {
-        // log to file
-        logToFile("user error", validation_result.error.details[0].message, 400, req.body.user.email)
-        return res.status(400).json({ error: validation_result.error.details[0].message });
-    }
+	// Validate invitation data
+	const [validation_result, validatedData] = validate_invite_create(req.body);
+	if (validation_result?.error) {
+		// log to file
+		logToFile("user error", validation_result.error.details[0].message, 400, req.body.user.email)
+		return res.status(400).json({ error: validation_result.error.details[0].message });
+	}
 
-    let { event_space_id, invitee_email
-    } = validatedData;
+	let { event_space_id, invitee_email
+	} = validatedData;
 
-    invitee_email = invitee_email.trim()
-    console.log(event_space_id, invitee_email)
+	invitee_email = invitee_email.trim()
+	console.log(event_space_id, invitee_email)
 
-    // Check for existing invites
-    const { data: existingInvite, error: existingInviteError } = await supabase
-        .from('eventspaceinvites')
-        .select('*')
-        .eq('event_space_id', event_space_id)
-        .eq('invitee_email', invitee_email.trim()).in('status', ['pending', 'accepted'])
+	// Check for existing invites
+	const { data: existingInvite, error: existingInviteError } = await supabase
+		.from('eventspaceinvites')
+		.select('*')
+		.eq('event_space_id', event_space_id)
+		.eq('invitee_email', invitee_email.trim()).in('status', ['pending', 'accepted'])
 
-    if (existingInviteError) {
-        logToFile("server error", existingInviteError.message, existingInviteError.code, req.body.user.email);
-        return res.status(500).send("Internal server error");
-    }
+	if (existingInviteError) {
+		logToFile("server error", existingInviteError.message, existingInviteError.code, req.body.user.email);
+		return res.status(500).send("Internal server error");
+	}
 
-    let { data: event_space, error: event_space_error } = await supabase.from('eventspace').select('name').eq('id', event_space_id).single();
+	let { data: event_space, error: event_space_error } = await supabase.from('eventspace').select('name').eq('id', event_space_id).single();
 
-    if (!event_space) {
-        return;
-    }
+	if (!event_space) {
+		return;
+	}
 
-    if (existingInvite.length > 0) {
-        const status = existingInvite[0].status;
-        if (status === 'pending') {
-            const inviteLink = `http://${req.headers.host}/dashboard/events/accept-invite?invite_id=${existingInvite[0].id}`;
-            const logo_img_link = `http://${req.headers.host}/_next/image?url=%2Fimages%2FLogo.png&w=384&q=75`
+	if (existingInvite.length > 0) {
+		const status = existingInvite[0].status;
+		if (status === 'pending') {
+			const inviteLink = `http://${req.headers.host}/dashboard/events/accept-invite?invite_id=${existingInvite[0].id}`;
+			const logo_img_link = `http://${req.headers.host}/_next/image?url=%2Fimages%2FLogo.png&w=384&q=75`
 
-            const message = {
-                from: "noreply@zuzalu.city",
-                to: existingInvite[0].invitee_email.trim(),
-                subject: "You have been invited to collaborate on Zuzapp",
-                html: getEmailTemplate(event_space.name, inviteLink, logo_img_link)
-            };
-            await processInvite(message);
-            return res.status(200).json({ message: "Invitation re-sent" });
-        }
-        else if (status === 'accepted') {
-            return res.status(409).json({ invite_status: status, message: 'Invite already exists' });
-        }
-    }
+			const message = {
+				from: "noreply@zuzalu.city",
+				to: existingInvite[0].invitee_email.trim(),
+				subject: "You have been invited to collaborate on Zuzapp",
+				html: getEmailTemplate(event_space.name, inviteLink, logo_img_link)
+			};
+			await processInvite(message);
+			return res.status(200).json({ message: "Invitation re-sent" });
+		}
+		else if (status === 'accepted') {
+			return res.status(409).json({ invite_status: status, message: 'Invite already exists' });
+		}
+	}
 
-    // ToDo check if invite has expired
+	// ToDo check if invite has expired
 
 
-    const result = await supabase.from('eventspaceinvites').insert({ event_space_id, invitee_email, status: "pending", inviter_id: req.body.user.id }).select("*").single()
-    if (result.error) {
-        logToFile("server error", result.error.message, result.error.code, req.body.user.email)
-        return res.status(500).send("Internal server error");
-    }
+	const result = await supabase.from('eventspaceinvites').insert({ event_space_id, invitee_email, status: "pending", inviter_id: req.body.user.id }).select("*").single()
+	if (result.error) {
+		logToFile("server error", result.error.message, result.error.code, req.body.user.email)
+		return res.status(500).send("Internal server error");
+	}
 
-    const inviteLink = `http://${req.headers.host}/dashboard/events/accept-invite?invite_id=${result.data.id}`;
-    const logo_img_link = `http://${req.headers.host}/_next/image?url=%2Fimages%2FLogo.png&w=384&q=75`
-    const message = {
-        from: "noreply@zuzalu.city",
-        to: invitee_email.trim(),
-        subject: "You have been invited to collaborate on Zuzapp",
-        text: "",
-        html: getEmailTemplate(event_space.name, inviteLink, logo_img_link),
-    };
+	const inviteLink = `http://${req.headers.host}/dashboard/events/accept-invite?invite_id=${result.data.id}`;
+	const logo_img_link = `http://${req.headers.host}/_next/image?url=%2Fimages%2FLogo.png&w=384&q=75`
+	const message = {
+		from: "noreply@zuzalu.city",
+		to: invitee_email.trim(),
+		subject: "You have been invited to collaborate on Zuzapp",
+		text: "",
+		html: getEmailTemplate(event_space.name, inviteLink, logo_img_link),
+	};
 
-    await processInvite(message);
-    return res.status(200).json({ message: "Invitation sent" });
+	await processInvite(message);
+	return res.status(200).json({ message: "Invitation sent" });
 
 
 
@@ -122,7 +122,7 @@ export default withSession(withAuthorization(handler));
 const getEmailTemplate = (event_space_name: string, invite_link: string, logo_img_link: string) => {
 
 
-    return `
+	return `
     <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office"> 
 <head> 
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
@@ -160,7 +160,7 @@ const getEmailTemplate = (event_space_name: string, invite_link: string, logo_im
 							<tr><td align="center" valign="middle" height="70" style="height: 70px;">
 								<div>
 									<div>
-										<a href="${invite_link}" target="_blank" style="font-family: Arial, sans-serif; font-size: 14px; color: #000000;"><img src="${logo_img_link}" width="200" alt="" border="0" style="display: block; max-width: 200px; width: 100%;" class="w200px"></a>
+										<a href="${invite_link}" target="_blank" style="font-family: Arial, sans-serif; font-size: 14px; color: #000000;"><img src="https://ddsckwslfyjnhcythyko.supabase.co/storage/v1/object/public/image-bucket/events/naicww28vm.png" width="200" alt="" border="0" style="display: block; max-width: 200px; width: 100%;" class="w200px"></a>
 									</div>
 								</div>
 							</td></tr>
@@ -208,6 +208,8 @@ const getEmailTemplate = (event_space_name: string, invite_link: string, logo_im
 												<table border="0" cellspacing="0" cellpadding="0" width="100%">
 												<tr><td align="left" valign="top" width="20" style="width: 20px; padding: 0px 8px 0px 0px;">
 												
+												<img src="https://ddsckwslfyjnhcythyko.supabase.co/storage/v1/object/public/image-bucket/events/ynsp0axoyb.png" width="20" height="20" alt="" border="0" style="display: block;">
+
 												</td> 
 												<td align="center" valign="middle">
 													<div style="line-height: 22px;">
