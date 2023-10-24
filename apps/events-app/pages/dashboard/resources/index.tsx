@@ -1,11 +1,11 @@
-import { ArrowTopRightOnSquare } from "@/components/ui/icons";
+
 import { Label } from "@/components/ui/label";
 import { useGlobalContext } from "@/context/GlobalContext";
 import { useUserPassportContext } from "@/context/PassportContext";
 import { Database } from "@/database.types";
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
 import { ZuConnectResourceItemCards, ZuzaluResouceItemCards } from "@/constant/resourcecards";
-import ResourcesItemCard from "@/components/resources/resourcesitemcard";
+import ResourcesItemCard from "@/components/resources/ResourcesItemCard";
 
 export default function Resources() {
   const { signIn } = useUserPassportContext();
