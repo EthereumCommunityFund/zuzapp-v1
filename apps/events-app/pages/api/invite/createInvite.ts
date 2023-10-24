@@ -41,9 +41,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         return res.status(400).json({ error: validation_result.error.details[0].message });
     }
 
-    const { event_space_id, invitee_email
+    let { event_space_id, invitee_email
     } = validatedData;
 
+    invitee_email = invitee_email.trim()
     console.log(event_space_id, invitee_email)
 
     // Check for existing invites
@@ -51,7 +52,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         .from('eventspaceinvites')
         .select('*')
         .eq('event_space_id', event_space_id)
-        .eq('invitee_email', invitee_email).in('status', ['pending', 'accepted'])
+        .eq('invitee_email', invitee_email.trim()).in('status', ['pending', 'accepted'])
 
     if (existingInviteError) {
         logToFile("server error", existingInviteError.message, existingInviteError.code, req.body.user.email);
@@ -62,10 +63,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     if (existingInvite.length > 0) {
         const status = existingInvite[0].status;
         if (status === 'pending') {
-            const inviteLink = `http://${req.headers.host}test/accept-invite?invite_id=${existingInvite[0].id}`;
+            const inviteLink = `http://${req.headers.host}/dashboard/events/accept-invite?invite_id=${existingInvite[0].id}`;
             const message = {
-                from: "victor@ecf.network",
-                to: existingInvite[0].invitee_email,
+                from: "noreply@zuzalu.city",
+                to: existingInvite[0].invitee_email.trim(),
                 subject: "You have been invited to collaborate on Zuzapp",
                 html: `Follow this link to accept the invite <br/> <p>${inviteLink}</p>`,
             };
@@ -88,8 +89,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     const inviteLink = `http://${req.headers.host}/dashboard/events/accept-invite?invite_id=${result.data.id}`;
     const message = {
-        from: "victor@ecf.network",
-        to: invitee_email,
+        from: "noreply@zuzalu.city",
+        to: invitee_email.trim(),
         subject: "You have been invited to collaborate on Zuzapp",
         text: "",
         html: `Follow this link to accept the invite <br/> <p>${inviteLink}</p>`,

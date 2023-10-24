@@ -79,17 +79,33 @@ export default function HomePageTemplate() {
       title: 'ZuConnect in Istanbul',
       description:
         'Join us for a two-week popup village where the leading innovators in crypto, AI, governance, decentralized science, and culture unite in the heart of Istanbul to co-work, break downsiloes, and have fun',
-      ctaText: 'Apply For Waitlist',
-      ctaLink: 'https://app.tripsha.com/trip/64ff3a6eb4b6950008dee4f8/book',
-      action: 'apply',
+      ctas: [
+        {
+          ctaText: 'Apply For Waitlist',
+          ctaLink: 'https://app.tripsha.com/trip/64ff3a6eb4b6950008dee4f8/book',
+          action: 'apply',
+          twClassNames: 'bg-[#769270] hover:bg-[#92B68B]',
+        },
+        {
+          ctaText: 'About ZuConnect',
+          ctaLink: '',
+          action: 'about',
+          twClassNames: 'bg-white/20 hover:bg-white/30',
+        }
+      ]
     },
     {
       title: 'The Zuzalu Playbook',
       description:
         'Looking to start your own Zuzalu-style community event? We have developed a comprehensive playbook that compiles our extensive experience and expertise. A guide for any community looking to organize a successful event quickly and efficiently.',
-      ctaText: 'View the Playbook',
-      ctaLink: 'https://zuzalu.notion.site/3e893df2a248496bb30720fc1518c3c6?v=b0bc5b586a574272928d9a1fe0ded088',
-      action: 'view',
+      ctas: [
+        {
+          ctaText: 'View the Playbook',
+          ctaLink: 'https://zuzalu.notion.site/3e893df2a248496bb30720fc1518c3c6?v=b0bc5b586a574272928d9a1fe0ded088',
+          action: 'view',
+          twClassNames: 'bg-[#769270] hover:bg-[#92B68B]',
+        }
+      ]
     },
   ];
 
@@ -121,15 +137,21 @@ export default function HomePageTemplate() {
               <h1 className="font-bold font-inter text-left text-3xl md:text-5xl mb-5">{slideData[currentSlide].title}</h1>
               <p className="text-left mb-4 max-w-[650px]font-inter text-gray-200 text-md">{slideData[currentSlide].description}</p>
               {isAuthenticated ? (
-                <Link href={slideData[currentSlide].ctaLink} target="_blank" rel="noopener noreferrer">
-                  <Button
-                    size="lg"
-                    variant="primaryGreen"
-                    className="rounded-full w-full slider_md:w-auto my-2.5 text-xl justify-center text-white bg-[#769270] hover:bg-[#92B68B] font-inter font-semibold"
-                  >
-                    {slideData[currentSlide].ctaText}
-                  </Button>
-                </Link>
+                  <div className="flex gap-2 items-center">
+                    {
+                      slideData[currentSlide].ctas.map((cta, index) => (
+                          <Link href={cta.ctaLink} target="_blank" rel="noopener noreferrer">
+                            <Button
+                                size="lg"
+                                variant="primaryGreen"
+                                className={`${cta.twClassNames} rounded-full w-full slider_md:w-auto my-2.5 text-xl justify-center text-white font-inter font-semibold`}
+                            >
+                              {cta.ctaText}
+                            </Button>
+                          </Link>
+                      ))
+                    }
+                  </div>
               ) : (
                 <Dialog>
                   <DialogTrigger asChild>
