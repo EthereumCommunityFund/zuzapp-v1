@@ -1,242 +1,29 @@
-import EventViewHeader from '@/components/eventview/EventViewHeader';
-import RenderHTMLString from '@/components/ui/RenderHTMLString';
-import Speaker from '@/components/ui/Speaker';
-import Button from '@/components/ui/buttons/Button';
-import EventDataDate from '@/components/ui/labels/event-data-date';
-import EventDataTime from '@/components/ui/labels/event-data-time';
-import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
-import { BiEditAlt, BiLeftArrow } from 'react-icons/bi';
-import { BsFillTicketFill } from 'react-icons/bs';
-import { HiArrowLeft } from 'react-icons/hi';
-import useEventDetails from '@/hooks/useCurrentEventSpace';
-import { Loader } from '@/components/ui/Loader';
-import { cancelUserRsvpBySchedule, checkUserRsvpBySchedule, rsvpSchedule } from '@/controllers';
-import EventViewDetailsPanel from '@/components/eventview/EventViewDetailsPanel';
-import TimeAgo from 'react-timeago';
-import { QueryClient, dehydrate, useQuery, useQueryClient } from 'react-query';
-import { fetchEventSpaceById } from '@/services/fetchEventSpaceDetails';
 import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
-import { OrganizerType, ScheduleUpdateRequestBody } from '@/types';
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
-import EditScheduleForm from '@/components/commons/EditScheduleForm';
-import fetchScheduleById from '@/services/fetchScheduleById';
-import { toast } from '@/components/ui/use-toast';
+import { useRouter } from 'next/router';
 
-interface IEventLink {
-  name: string;
-  link: string;
-}
+import EventViewScheduleViewTemplate from '@/components/eventview/EventViewScheduleView';
+
 
 export default function EventViewScheduleDetailsPage() {
-  const { eventSpace } = useEventDetails();
   const router = useRouter();
-  const { scheduleName, trackId, event_space_id, track_title, scheduleId } = router.query;
-  const [rsvpUpdated, setRsvpUpdated] = useState<boolean>(false);
-  const [hasRsvpd, setHasRsvpd] = useState<boolean>(false);
-  const [isRsvpFullOnLoad, setIsRsvpFullOnLoad] = useState(false);
-  const [currentSchedule, setCurrentSchedule] = useState<ScheduleUpdateRequestBody>();
-  const trackItem = eventSpace?.tracks.find((trackItem) => trackItem.id === trackId);
-  const queryClient = useQueryClient();
-  const startTime =
-    currentSchedule &&
-    new Date(currentSchedule.start_time).toLocaleTimeString('en-US', {
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-  const endTime =
-    currentSchedule &&
-    new Date(currentSchedule.end_time).toLocaleTimeString('en-US', {
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-  const startDate =
-    currentSchedule &&
-    new Date(currentSchedule.start_time).toLocaleDateString('en-US', {
-      month: 'long',
-      day: '2-digit',
-    });
-  const endDate =
-    currentSchedule &&
-    new Date(currentSchedule.end_time).toLocaleDateString('en-US', {
-      month: 'long',
-      day: '2-digit',
-    });
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-
-  const handleBackToTrackClick = (event_space_id: string) => {
-    router.push({
-      pathname: '/dashboard/eventview/tracks/track',
-      query: { trackId, event_space_id },
-    });
-  };
-
-  const mostRecentEditLog = currentSchedule?.editlogs?.[currentSchedule?.editlogs?.length - 1];
-  const editorUsername = mostRecentEditLog?.user?.username;
-  const creatorUsername = currentSchedule?.editlogs[0]?.user?.username;
-
-  const handleRsvpAction = async () => {
-    try {
-      if (currentSchedule?.rsvp_amount === 0) {
-        toast({
-          title: 'Error',
-          description: 'No RSVPs available',
-          variant: 'destructive',
-        });
-      } else if (hasRsvpd) {
-        const result = await cancelUserRsvpBySchedule(scheduleId as string, event_space_id as string);
-        queryClient.invalidateQueries(['scheduleDetails', scheduleId]);
-        setHasRsvpd(false);
-      } else {
-        console.log(scheduleId, 'scheduleId');
-        const result = await rsvpSchedule(scheduleId as string, event_space_id as string);
-        setHasRsvpd(true);
-        queryClient.invalidateQueries(['scheduleDetails', scheduleId]);
-        toast({
-          title: 'RSVPed successfully',
-        });
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const checkIfUserHasRsvpd = async () => {
-    try {
-      const result = await checkUserRsvpBySchedule(scheduleId as string, event_space_id as string);
-      const hasRsvp = result?.data?.hasRSVPed;
-      setHasRsvpd(hasRsvp);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const { data, isError } = useQuery<ScheduleUpdateRequestBody, Error>(['scheduleDetails', scheduleId], () => fetchScheduleById(scheduleId as string), {
-    enabled: !!scheduleId,
-    onSuccess: (data) => {
-      console.log('schedule details', data);
-      const modifiedSchedule = {
-        ...data,
-        event_type: JSON.parse(data.event_type as string)[0],
-        experience_level: JSON.parse(data.experience_level as string)[0],
-      };
-      setCurrentSchedule(modifiedSchedule);
-      setIsLoading(false);
-    },
-  });
-
-  useEffect(() => {
-    if (currentSchedule) {
-      if (currentSchedule.rsvp_amount === currentSchedule.current_rsvp_no) {
-        setIsRsvpFullOnLoad(true);
-      }
-      if (currentSchedule.rsvp_amount === 0) {
-        setIsRsvpFullOnLoad(false);
-      }
-    }
-  }, [currentSchedule]);
-
-  useEffect(() => {
-    console.log(scheduleId, 'scheduleId');
-    checkIfUserHasRsvpd();
-  }, []);
-
+  const { event_space_id, scheduleId, trackId } = router.query;
   return (
-    <div className="flex gap-4 lg:flex-row sm:flex-col">
-      <div className="flex flex-col lg:min-w-[66.67%] lg:max-w-[66.67%] sm:w-full">
-        <EventViewHeader imgPath={eventSpace?.image_url as string} name={eventSpace?.name as string} tagline={eventSpace?.tagline as string} />
-        {isLoading ? (
-          <Loader />
-        ) : (
-          <div className="md:p-5 sm:p-0 gap-[30px]  h-full">
-            <div className="flex flex-col gap-[10px] p-2.5 bg-componentPrimary rounded-2xl h-full lg:h-auto">
-              <div className="flex justify-between">
-                {' '}
-                {/* Tracks and Edit Button */}
-                {eventSpace && (
-                  <Button variant="ghost" className="md:text-lg sm:text-base font-bold" leftIcon={HiArrowLeft} onClick={() => handleBackToTrackClick(eventSpace?.id)}>
-                    Back to Track
-                  </Button>
-                )}
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button variant="quiet" className="rounded-xl" leftIcon={BiEditAlt}>
-                      Edit
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="h-3/5 lg:w-3/5 overflow-y-auto">
-                    <EditScheduleForm title="Update" isQuickAccess={false} scheduleId={scheduleId as string} trackId={trackId as string} />
-                  </DialogContent>
-                </Dialog>
-              </div>
-              <div className="flex flex-col gap-2.5 md:p-2.5 sm:p-0">
-                {' '}
-                {/* Schedule Info */}
-                <div className="flex flex-col gap-2.5 p-5">
-                  {startTime && endTime && <EventDataTime startTime={startTime} endTime={endTime} />}
-                  <h2 className="text-xl font-extrabold">{currentSchedule?.name}</h2>
-                  <div className="flex gap-[6px]">{currentSchedule?.organizers?.map((organizer: OrganizerType) => organizer.role === 'speaker' && <Speaker title={organizer.name} />)}</div>
-                  <div>
-                    <h3 className="float-right font-medium text-sm ">
-                      <span className="text-gray-400">By: </span>
-                      <span className="text-gray-300">{creatorUsername}</span>
-                    </h3>
-                  </div>
-                </div>
-                <Button
-                  variant="primary"
-                  size="lg"
-                  className={`rounded-2xl justify-center ${rsvpUpdated ? 'animate-rsvp' : ''}`}
-                  leftIcon={BsFillTicketFill}
-                  onClick={handleRsvpAction}
-                  disabled={isRsvpFullOnLoad || currentSchedule?.rsvp_amount === 0 || (isRsvpFullOnLoad && !hasRsvpd)}
-                >
-                  {currentSchedule?.rsvp_amount === 0 ? 'No Rsvp Available' : hasRsvpd ? 'Cancel RSVP' : isRsvpFullOnLoad ? 'RSVP Full' : 'RSVP Schedule'}
-                </Button>
-              </div>
-              <div className="flex flex-col gap-2.5 px-5 pt-5 pb-[60px]">
-                {/* Schedule Description */}
-                <h2 className="font-bold">Description</h2>
-                <div className="opacity-90">{currentSchedule?.description && <RenderHTMLString height="" htmlString={currentSchedule?.description} />}</div>
-                <div className="flex gap-2.5 mt-4 items-center">
-                  <span className="font-medium text-sm text-gray-400">Last edited by :</span>
-                  <span className="font-bold">{editorUsername}</span>
-                  <span className="font-medium text-sm text-gray-400">
-                    <TimeAgo date={mostRecentEditLog?.edited_at} />
-                  </span>
-                </div>
-                <div className="flex items-center cursor-pointer">
-                  <span className="font-medium text-sm text-gray-400">View All Edits</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
-      <div className="flex flex-col md:px-10 lg:px-0 gap-1 right-0">
-        <div className="flex flex-col gap-5 py-5">
-          <div className="flex flex-col p-2.5 gap-2.5">
-            {trackItem?.image && <img src={trackItem?.image as string} className="lg:h-[200px] rounded-2xl" alt="zuzalu" />}
-            {startDate && endDate && <EventDataDate startDate={startDate} endDate={endDate} />}
-          </div>
-          {/* <div className="flex flex-col p-2.5 gap-2.5 sm:w-[300px] sm:text-sm md:text-base">
-            <Label className="text-xl">{trackItem?.name}</Label>
-            {trackItem?.description && <RenderHTMLString height="" htmlString={trackItem?.description} />}
-          </div> */}
-        </div>
-        {eventSpace && currentSchedule?.tags && currentSchedule.organizers && (
-          <EventViewDetailsPanel eventSpace={eventSpace} organizers={currentSchedule.organizers} tags={currentSchedule.tags} schedule={currentSchedule} />
-        )}
-      </div>
-    </div>
-  );
+    <>
+      {
+        event_space_id && scheduleId && trackId &&
+        < EventViewScheduleViewTemplate
+          event_space_id={event_space_id as string}
+          scheduleId={scheduleId as string}
+          trackId={trackId as string}
+        />
+      }
+    </>
+  )
 }
 
 export const getServerSideProps = async (ctx: any) => {
-  const queryClient = new QueryClient();
-  const { event_space_id } = ctx.query;
-  await queryClient.prefetchQuery('currentEventSpace', () => fetchEventSpaceById(event_space_id));
   const supabase = createPagesServerClient(ctx);
+
   let {
     data: { session },
   } = await supabase.auth.getSession();
@@ -253,8 +40,6 @@ export const getServerSideProps = async (ctx: any) => {
     props: {
       initialSession: session,
       user: session?.user,
-
-      dehydratedState: dehydrate(queryClient),
     },
   };
 };
