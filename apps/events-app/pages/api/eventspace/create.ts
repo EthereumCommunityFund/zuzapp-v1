@@ -38,9 +38,15 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
 
 
-    console.log(result)
     if (result.error) {
-        return res.status(500).send("Internal server error");
+        // return res.status(500).send("Internal server error");
+        if (result.status >= 400 && result.status < 500) {
+            return res.status(result.status).json({ error: result.error.message });
+        } else {
+            logToFile("user error", result.error.message, 500, req.body.user.email)
+            return res.status(500).json({ error: "Internal server error" });
+        }
+
     }
 
     return res.status(result.status).json({
