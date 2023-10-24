@@ -55,8 +55,10 @@ import Autocomplete from "@mui/material/Autocomplete";
 import { toast } from "@/components/ui/use-toast";
 import { Loader } from "../ui/Loader";
 import { Dialog } from "@radix-ui/react-dialog";
+
 import {X} from "lucide-react";
 import {sessionFrequency} from "@/constant/scheduleconstants";
+
 
 type Organizer = {
   name: string;
@@ -592,6 +594,7 @@ export default function AddScheduleForm({
                     <span className="text-lg opacity-70 self-stretch">
                       All Day
                     </span>
+
                   </div>
                   <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
                     <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
@@ -622,6 +625,7 @@ export default function AddScheduleForm({
                         Weekly
                       </option>
                     </select>
+
                   </div>
                   <div className="flex flex-col items-center gap-[30px] self-stretch w-full">
                     <FormField
@@ -720,6 +724,7 @@ export default function AddScheduleForm({
                       </>
                     )}
                   </div>
+
                   {(schedule?.schedule_frequency === sessionFrequency.WEEKLY ||
                     schedule?.schedule_frequency === sessionFrequency.EVERYDAY) && (
                         <div className="flex flex-col items-center gap-[30px] self-stretch w-full">
@@ -748,6 +753,55 @@ export default function AddScheduleForm({
                       />
                     </div>
                       )}
+
+                  <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
+                    <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
+                      Select a Timezone
+                    </Label>
+                    <select
+                      // onChange={(e) => setFrequency(e.target.value as any)}
+                      className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
+                      title="Timezone"
+                    >
+                      <option
+                        className="bg-componentPrimary origin-top-right rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+                        value="once"
+                      >
+                        UTC
+                      </option>
+                    </select>
+                  </div>
+                  <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
+                    <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
+                      Select Session Frequency
+                    </Label>
+                    <select
+                      onChange={handleFrequencySelect}
+                      value={frequency}
+                      className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
+                      title="frequency"
+                    >
+                      <option
+                        className="bg-componentPrimary origin-top-right rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+                        value="once"
+                      >
+                        Once
+                      </option>
+                      <option
+                        className="bg-componentPrimary origin-top-right rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+                        value="everyday"
+                      >
+                        Everyday
+                      </option>
+                      <option
+                        className="bg-componentPrimary origin-top-right rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+                        value="weekly"
+                      >
+                        Weekly
+                      </option>
+                    </select>
+                  </div>
+
                   <line></line>
                 </div>
               </div>
