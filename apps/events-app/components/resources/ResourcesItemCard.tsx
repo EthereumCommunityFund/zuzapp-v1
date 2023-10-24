@@ -5,7 +5,7 @@ import { ArrowTopRightOnSquare } from "../ui/icons";
 
 export default function ResourcesItemCard({ title, tagLine, link }: ResourceItemCard) {
   return (
-    <div className="p-5 bg-componentPrimary rounded-2xl border border-borderPrimary">
+    <div className="p-5 bg-componentPrimary rounded-2xl border border-borderPrimary w-full">
       <div className="flex flex-col gap-2.5">
         <Label className="text-xl font-bold text-white">{title}</Label>
         <div className="flex flex-col gap-5">
