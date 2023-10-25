@@ -125,7 +125,7 @@ export default function TrackDetailsPageTemplate(props: any) {
                   Tracks
                 </Button>
               )}
-              {isAuthenticated &&
+              {isAuthenticated && (
                 <Dialog>
                   <DialogTrigger asChild>
                     <Button variant="quiet" className="rounded-xl text-lg font-bold" leftIcon={BiEditAlt}>
@@ -139,7 +139,7 @@ export default function TrackDetailsPageTemplate(props: any) {
                     <EventViewTrackUpdate className="text-white" />
                   </DialogContent>
                 </Dialog>
-              }
+              )}
             </div>
             <div className="flex flex-col gap-[10px] p-5 ">
               {' '}
@@ -158,7 +158,7 @@ export default function TrackDetailsPageTemplate(props: any) {
           </div>
         </div>
         <div className="p-4 w-full">
-          {isAuthenticated &&
+          {isAuthenticated && (
             <Dialog>
               <DialogTrigger asChild>
                 <Button variant="blue" size="lg" className="rounded-xl flex justify-center w-full" leftIcon={BiPlusCircle}>
@@ -166,16 +166,10 @@ export default function TrackDetailsPageTemplate(props: any) {
                 </Button>
               </DialogTrigger>
               <DialogContent className="lg:w-3/5 lg:h-4/5 overflow-y-auto">
-                <AddScheduleForm
-                  title={'Add'}
-                  isQuickAccess={false}
-                  trackId={trackId as string}
-                  updateIsLoading={updateIsLoading}
-                  event_space_id={event_space_id as string}
-                />
+                <AddScheduleForm title={'Add'} isQuickAccess={false} trackId={trackId as string} updateIsLoading={updateIsLoading} event_space_id={event_space_id as string} />
               </DialogContent>
             </Dialog>
-          }
+          )}
         </div>
         {isLoading ? (
           <Loader />

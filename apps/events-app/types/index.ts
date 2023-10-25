@@ -103,6 +103,7 @@ export type ScheduleDetailstype = {
   date: string | Date | number;
   start_time: string | Date | number;
   end_time: string | Date | number;
+  end_date: string | Date | number;
   all_day?: boolean;
   current_rsvp_no?: number;
   schedule_frequency: "once" | "everyday" | "weekly";

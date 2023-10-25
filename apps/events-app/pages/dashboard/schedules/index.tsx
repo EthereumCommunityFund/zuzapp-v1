@@ -33,8 +33,8 @@ const categoryList: DropDownMenuItemType[] = [
 
 export default function EventViewTracksAlleSchedulesPage() {
   const router = useRouter();
-  const { trackId } = router.query;
-  const event_space_id = 'f17ae927-b012-41e2-9367-012f6cbb59d5';
+  const { trackId, track_title } = router.query;
+  const event_space_id = '873f2ae3-bcab-4a30-8b99-cb5e011a9db0';
   const [eventSpace, setEventSpace] = useState<EventSpaceDetailsType>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [schedules, setSchedules] = useState<ScheduleDetailstype[]>();
@@ -85,11 +85,10 @@ export default function EventViewTracksAlleSchedulesPage() {
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting) {
-          // Load more data or trigger an action to fetch more data
           console.log('Load more data');
         }
       },
-      { threshold: 1 } // Trigger when the element is fully in view
+      { threshold: 1 }
     );
 
     if (lastTrackRef.current) {
@@ -137,7 +136,7 @@ export default function EventViewTracksAlleSchedulesPage() {
               </div>
             )}
           </div>
-          <div className="lg:w-1/4 sm:w-full flex lg:flex-col gap-5 lg:fixed lg:right-0 min-w-fit lg:mr-10">
+          <div className="lg:w-1/4 sm:w-full flex lg:flex-col gap-5 lg:fixed lg:right-0 min-w-fit lg:mr-10 ">
             <h2 className="p-3.5 gap-[10px] font-bold text-xl sm:hidden lg:flex">Schedules: Sort & Filter</h2>
             <div className="flex lg:flex-col md:flex-row sm:flex-col w-full p-2.5 md:gap-5 sm:gap-3 text-sm">
               <DropDownMenu
