@@ -56,7 +56,7 @@ export default function EventViewPageTemplate({ eventSpace, user }: { eventSpace
       });
       setImgUrls(URLs);
       setLocationName(eventSpace.eventspacelocation[0].name);
-      setLocationAddress(eventSpace.eventspacelocation[0].address);
+      setLocationAddress(user && eventSpace.eventspacelocation[0].address);
     }
   }, [social_links, extra_links, eventSpace]);
 
@@ -175,7 +175,7 @@ export default function EventViewPageTemplate({ eventSpace, user }: { eventSpace
               </div>
               <div className="flex flex-col gap-[6px]">
                 <Label className="text-lg">{user ? locationName : `Apply to See Address`}</Label>
-                <Label className={`rounded-xl text-sm opacity-70  ${user ? `blur-none` : `blur`}`}>{locationAddress}</Label>
+                <Label className={`rounded-xl text-sm opacity-70  ${user ? `blur-none` : `blur`}`}>{user && locationAddress}</Label>
               </div>
               {imgUrls && <Image width={260} height={148} src={imgUrls[0]} alt={''} className={`rounded-xl ${user ? `blur-none` : `blur`}`} />}
             </div>
