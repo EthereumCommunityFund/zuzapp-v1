@@ -1,14 +1,14 @@
-import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
-import { IconType } from 'react-icons';
-import { BsArrowRightSquare, BsFillTicketFill } from 'react-icons/bs';
-import Button from '@/components/ui/buttons/Button';
-import router, { useRouter } from 'next/router';
-import { v4 } from 'uuid';
-import { useState } from 'react';
-import { User } from '@/components/ui/icons';
-import Avvvatars from 'avvvatars-react';
+import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
+import { IconType } from "react-icons";
+import { BsArrowRightSquare, BsFillTicketFill } from "react-icons/bs";
+import Button from "@/components/ui/buttons/Button";
+import router, { useRouter } from "next/router";
+import { v4 } from "uuid";
+import { useState } from "react";
+import { User } from "@/components/ui/icons";
+import Avvvatars from "avvvatars-react";
 
-import { ReactNode } from 'react';
+import { ReactNode } from "react";
 
 interface DropDownMenuItem {
   icon: ReactNode;
@@ -20,23 +20,25 @@ interface DropDownMenuItem {
 const MyProfileDropDownMenu: DropDownMenuItem[] = [
   {
     icon: <User />,
-    label: 'My Profile',
-    path: '/dashboard/user-profile',
+    label: "My Profile",
+    path: "/dashboard/user-profile",
   },
   {
     icon: <BsArrowRightSquare />,
-    label: 'Sign Out',
-    path: '',
+    label: "Sign Out",
+    path: "",
     action: handleSignOut,
   },
 ];
 
 function handleSignOut() {
-  document.cookie.split(';').forEach(function (c) {
-    document.cookie = c.replace(/^ +/, '').replace(/=.*/, '=;expires=' + new Date().toUTCString() + ';path=/');
+  document.cookie.split(";").forEach(function (c) {
+    document.cookie = c
+      .replace(/^ +/, "")
+      .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
   });
 
-  router.push('/');
+  router.push("/");
 }
 
 type MyProfileButtonType = {
@@ -44,7 +46,9 @@ type MyProfileButtonType = {
   userName: string;
 };
 
-const MyProfileButton: React.FC<MyProfileButtonType> = (props: MyProfileButtonType) => {
+const MyProfileButton: React.FC<MyProfileButtonType> = (
+  props: MyProfileButtonType
+) => {
   const router = useRouter();
   const { event_space_id, trackId } = router.query;
   const { userName, className } = props;
@@ -72,33 +76,35 @@ const MyProfileButton: React.FC<MyProfileButtonType> = (props: MyProfileButtonTy
           </div>
           <DropdownMenu.Separator className="border-[0.5px] border-white/20 w-full my-2" />
           <div className="flex pt-1.5 pb-3 px-1.5 flex-col gap-4 self-stretch">
-            {MyProfileDropDownMenu.map((item: DropDownMenuItem, index: number) => {
-              const id = v4();
-              return (
-                <Button
-                  key={id}
-                  onClick={() => {
-                    if (item.action) {
-                      item.action();
-                    } else {
-                      let path = item.path;
-                      router.push(path);
-                    }
-                  }}
-                  className="w-full shadow-none rounded-md px-3.5 bg-[#383B3B] border-none hover:bg-[#ffffff10] duration-200 text-textSecondary hover:text-textSecondary"
-                >
-                  <div className="flex gap-3 items-center font-semibold py-1">
-                    {item.icon}
-                    {item.label}
-                  </div>
-                </Button>
-              );
-            })}
+            {MyProfileDropDownMenu.map(
+              (item: DropDownMenuItem, index: number) => {
+                const id = v4();
+                return (
+                  <Button
+                    key={id}
+                    onClick={() => {
+                      if (item.action) {
+                        item.action();
+                      } else {
+                        let path = item.path;
+                        router.push(path);
+                      }
+                    }}
+                    className="w-full shadow-none rounded-md px-3.5 bg-[#383B3B] border-none hover:bg-[#ffffff10] duration-200 text-textSecondary hover:text-textSecondary"
+                  >
+                    <div className="flex gap-3 items-center font-semibold py-1">
+                      {item.icon}
+                      {item.label}
+                    </div>
+                  </Button>
+                );
+              }
+            )}
           </div>
           <DropdownMenu.Separator className="border-[0.5px] border-white/20 w-full my-2" />
           <footer className="flex flex-col gap-x-4 text-textSecondary hover:text-textSecondary text-xs font-semibold px-5 py-3">
             <div className="flex justify-between gap-3">
-              <span>Privacy </span>
+              <span>Privac </span>
               <span>Terms</span>
               <span>About Zuzalu</span>
             </div>
