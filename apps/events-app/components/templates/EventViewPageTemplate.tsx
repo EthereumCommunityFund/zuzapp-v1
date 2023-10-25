@@ -69,7 +69,7 @@ export default function EventViewPageTemplate({ eventSpace, profile }: { eventSp
           <div className="rounded-xl p-5">
             <img src={eventSpace.image_url} className="w-full lg:pb-5 rounded-2xl" alt="" height={600} />
           </div>
-          <div className="flex flex-col gap-2.5 pb-5 border-b-2 border-white/10 w-full md:pt-5 px-5">
+          <div className="flex flex-col gap-2.5 pb-5 lg:mt-[-30px] border-b-2 border-white/10 w-full md:pt-5 px-5">
             <div className="items-center justify-between w-full pb-5 sm:flex-col sm:gap-3 sm:flex md:flex md:flex-row">
               <div className="flex flex-col gap-3 sm:w-full md:w-auto">
                 <div className="flex items-center gap-3 text-[#D7FFC4]/80">
@@ -77,18 +77,18 @@ export default function EventViewPageTemplate({ eventSpace, profile }: { eventSp
                   <span className="font-bold">Zuzalu Residents & Invited Guests</span>
                 </div>
                 <h2 className="font-semibold text-[30px]">{name}</h2>
-                <span className="text-white/80 font-bold">{tagline}</span>
+                <span className="text-white/80 font-md">{tagline}</span>
               </div>
               {/* <Button variant="primaryGreen" size="lg" className="rounded-full sm:w-full md:w-auto lg:w-auto justify-center" leftIcon={BsArrowRightCircleFill}>
                 Apply to Event
               </Button> */}
             </div>
-            <div className="flex gap-3 text-lg md:flex-row sm:flex-col sm:text-sm">
-              <span className="rounded-lg w-full flex px-4 py-1 items-center gap-1 opacity-60 bg-[#FFFFFF10] font-bold">
+            <div className="flex gap-3 text-lg flex-col sm:text-sm">
+              <span className="rounded-lg flex w-fit px-4 py-1 items-center gap-1 opacity-60 bg-[#FFFFFF10] font-bold break-words">
                 <HiCalendar /> {formattedStartDate} - {formattedEndDate}
               </span>
               {eventSpace.format === 'in-person' && (
-                <span className="rounded-lg w-full flex px-4 py-1 items-center gap-1 opacity-60 bg-[#FFFFFF10] font-bold">
+                <span className="rounded-lg w-fit flex px-4 py-1 items-center gap-1 opacity-60 bg-[#FFFFFF10] font-bold break-words">
                   <LocationMarker /> {eventspacelocation && eventspacelocation[0].address}
                 </span>
               )}
@@ -98,7 +98,7 @@ export default function EventViewPageTemplate({ eventSpace, profile }: { eventSp
             {' '}
             {/* About */}
             <h3 className="text-lg font-bold text-white/70">ABOUT THIS EVENT</h3>
-            <div className={`md:h-auto overflow-hidden text-white text-lg`} dangerouslySetInnerHTML={{ __html: `${description.slice(0, 300)}...` }} />
+            <div className={`md:h-auto overflow-hidden text-gray-300 text-md`} dangerouslySetInnerHTML={{ __html: `${description.slice(0, 350)}...` }} />
             <Dialog>
               <DialogTrigger asChild>
                 <Button variant="quiet" size="lg" className="rounded-2xl inline-block text-white/70 font-bold hover:text-white">
@@ -123,23 +123,23 @@ export default function EventViewPageTemplate({ eventSpace, profile }: { eventSp
           </div>
         </div>
         <div className="lg:w-1/4 md:w-full flex flex-col px-5 lg:px-10 py-5 gap-8 lg:fixed lg:right-0">
-          <h2 className="border-b pb-3 text-2xl font-bold border-white/10">Details</h2>
-          <div className="flex gap-4 items-center">
+          <h2 className="border-b pb-3 text-2xl font-bold border-white/10 mt-[-20px]">Details</h2>
+          {/* <div className="flex gap-4 items-center">
             <span className="text-white/70 text-lg">
               {' '}
               <UserGroup />{' '}
             </span>
             <span className="text-white text-sm">14 applied</span>
-          </div>
+          </div> */}
           <div className="flex flex-col gap-4 font-semibold text-sm">
             <div className="flex gap-2 items-center">
               <Label className="opacity-70">Format: </Label>
               <Label className="opacity-100 text-sm">{eventSpace.format.charAt(0).toUpperCase() + eventSpace.format.slice(1)}</Label>
             </div>
-            <div className="flex gap-2 items-center">
+            {/* <div className="flex gap-2 items-center">
               <Label className="opacity-70">Type: </Label>
               <Label className="opacity-100 text-sm">{event_type?.join(', ')}</Label>
-            </div>
+            </div> */}
           </div>
           <div className="flex flex-col gap-4">
             <Label className="opacity-70">Links </Label>
@@ -168,16 +168,16 @@ export default function EventViewPageTemplate({ eventSpace, profile }: { eventSp
               ))}
           </div>
           {eventSpace.format === 'in-person' && (
-            <div className="flex flex-col pt-2.5 pb-2.5 gap-5">
-              <div className="flex gap-2 items-center">
+            <div className="flex flex-col pt-2.5 pb-2.5 gap-5 mt-[-20px]">
+              <div className="flex gap-2 items-center text-gray-300">
                 <LocationMarker />
                 <Label className="text-xl">Location</Label>
               </div>
               <div className="flex flex-col gap-[6px]">
-                <Label className="text-lg">{profile ? locationName : `Apply to See Address`}</Label>
-                <Label className="text-sm opacity-70">{locationAddress}</Label>
+                <Label className="text-md">{profile ? locationName : `Apply to See Address`}</Label>
+                <Label className="text-sm font-light opacity-70">{locationAddress}</Label>
               </div>
-              {imgUrls && <Image width={260} height={148} src={imgUrls[0]} alt={''} className={`rounded-xl ${profile ? `blur-none` : `blur`}`} />}
+              {imgUrls && <Image width={260} height={148} src={imgUrls[0]} alt={''} className={`rounded-xl ${profile ? `blur-none` : `blur`} h-[148px]`} />}
             </div>
           )}
         </div>
