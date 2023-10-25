@@ -48,8 +48,13 @@ export const generateRandomEventSpaceUpdateData = (id: string, event_space_type:
     event_type: [getRandomElement(eventTypes)],
     experience_level: [getRandomElement(experienceLevels)],
     status: 'draft',
-    image_url: "http:imag"
+    image_url: 'http:imag',
   };
 };
 
+export const truncateString = (string: string, charLength: number, withEllipses: boolean = true): string => {
+  const truncated: string = string?.substring(0, charLength);
+  const ellipses: string = withEllipses ? '...' : '';
+  return `${truncated} ${ellipses}`;
+};
 // eventspacelocation: [generateRandomLocation(), generateRandomLocation(), generateRandomLocation()]
