@@ -165,10 +165,12 @@ export default function AddSchedulePage(props: any) {
           message: 'You cannot create a session in the past.',
         }
       ),
-    end_date: z.date({
-      required_error: 'You need to select a valid date for this event.',
-      invalid_type_error: 'You need to select a valid date for this event.',
-    }),
+    end_date: z
+      .date({
+        required_error: 'You need to select a valid date for this event.',
+        invalid_type_error: 'You need to select a valid date for this event.',
+      })
+      .optional(),
     description: z.string().min(10, {
       message: 'Description is required and should be a minimum of 10 characters',
     }),
@@ -203,14 +205,16 @@ export default function AddSchedulePage(props: any) {
       });
       return;
     }
-    const endDate = dayjs(values.end_date);
-    const startDate = dayjs(values.date);
+    if (frequency === 'everyday' || frequency === 'weekly') {
+      const endDate = dayjs(values.end_date);
+      const startDate = dayjs(values.date);
 
-    if (endDate.isBefore(startDate)) {
-      form.setError('end_date', {
-        message: 'End date cannot be earlier than start date',
-      });
-      return;
+      if (endDate.isBefore(startDate)) {
+        form.setError('end_date', {
+          message: 'End date cannot be earlier than start date',
+        });
+        return;
+      }
     }
     const basePayload = {
       event_space_id: event_space_id as string,
@@ -563,7 +567,7 @@ export default function AddSchedulePage(props: any) {
                                 <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
                                   <span className="text-lg opacity-70 self-stretch">End Date</span>
 
-                                  <CustomDatePicker defaultDate={undefined} selectedDate={field.value} handleDateChange={field.onChange} {...field} />
+                                  <CustomDatePicker defaultDate={undefined} selectedDate={field.value || null} handleDateChange={field.onChange} {...field} />
 
                                   <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">Click & Select or type in a date</h3>
                                   <FormMessage />

@@ -22,6 +22,9 @@ import { updateUsername } from '@/controllers/profile.controllers';
 import banner1 from '@/public/images/zuconnectbanner.png';
 import banner2 from '@/public/images/playbook.png';
 import CustomCarousel from '../ui/CustomCarousel';
+import { truncateString } from '@/utils';
+import { error } from 'console';
+import { toast } from '../ui/use-toast';
 
 interface DialogContent {
   title: string;
@@ -62,6 +65,14 @@ export default function HomePageTemplate() {
       onSuccess: (data) => {
         console.log('HomePageTemplate Event Spaces:', data);
         setEventSpaceList(data);
+      },
+      onError: (error) => {
+        console.log(error, 'error loading events');
+        toast({
+          title: 'Error',
+          description: 'Error loading Published Events',
+          variant: 'destructive',
+        });
       },
     }
   );
@@ -149,9 +160,19 @@ export default function HomePageTemplate() {
               ) : (
                 <Dialog>
                   <DialogTrigger asChild>
-                    <Button variant={'primaryGreen'} size={'lg'} className="rounded-full">
-                      Create Event
-                    </Button>
+                    <div className="md:flex gap-2 items-center">
+                      {slideData[currentSlide].ctas.map((cta, index) => (
+                        <Link href={cta.ctaLink} target="_blank" rel="noopener noreferrer">
+                          <Button
+                            size="lg"
+                            variant="primaryGreen"
+                            className={`${cta.twClassNames} rounded-full w-full slider_md:w-auto my-2.5 text-xl justify-center text-white font-inter font-semibold`}
+                          >
+                            {cta.ctaText}
+                          </Button>
+                        </Link>
+                      ))}
+                    </div>
                   </DialogTrigger>
                   <DialogContent className="sm:max-w-[425px]">
                     <DialogHeader>
@@ -189,11 +210,11 @@ export default function HomePageTemplate() {
               >
                 <div className="flex flex-col md:flex-row md:space-x-3 md:items-center">
                   <div>
-                    <img src={event.image_url ? event.image_url : `/images/black-img.png`} className="rounded-xl w-full md:max-w-[150px] md:max-h-[120px] h-68" alt="Event" width={150} height={120} />
+                    <img src={event.image_url ? event.image_url : `/images/black-img.png`} className="rounded-xl w-full md:max-w-[150px] md:max-h-[120px]" alt="Event" width={150} height={120} />
                   </div>
                   <div className="space-y-2 space-x-0 mt-2 md:mt-0">
                     <h4 className="text-2xl font-bold">{event.name}</h4>
-                    <h2 className="text-base font-semibold opacity-70 font-inter">{event.tagline}</h2>
+                    <h2 className="text-base font-semibold opacity-70 font-inter">{truncateString(event.tagline, 40)}</h2>
                     <div className="flex gap-2 flex-wrap">
                       <p className="flex items-center text-xs md:text-sm text-white/60 bg-white/10 rounded-full py-2 px-3 w-fit font-semibold">
                         <BsCalendar2Fill className="mr-2 text-sm md:text-base" /> {formatDate(event?.start_date)} - {formatDate(event?.end_date)}
