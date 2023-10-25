@@ -20,8 +20,9 @@ const UserFacingTrack: React.ForwardRefRenderFunction<HTMLDivElement, IUserFacin
   const { scheduleData, onClick } = props;
   const { trackDetails, isLoading } = useTrack(scheduleData.track_id as string);
   const date = new Date(scheduleData.date);
+  const enddate = new Date(scheduleData.end_date);
   const startDate = new Date(date).toLocaleDateString('en-US', { month: 'short', day: '2-digit' });
-  const endDate = new Date(scheduleData.end_time).toLocaleDateString('en-US', { month: 'short', day: '2-digit' });
+  const endDate = new Date(enddate).toLocaleDateString('en-US', { month: 'short', day: '2-digit' });
   const startTime = new Date(scheduleData.start_time).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
   const endTime = new Date(scheduleData.end_time).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
 
@@ -43,7 +44,6 @@ const UserFacingTrack: React.ForwardRefRenderFunction<HTMLDivElement, IUserFacin
           <div className="flex flex-col gap-2.5 w-3/4 ml-2">
             <div className="flex gap-2.5 text-sm font-inter font-bold">
               {scheduleData && (scheduleData.schedule_frequency === 'everyday' || scheduleData.schedule_frequency === 'weekly') && <span className="text-[#b29457]">RECURRING</span>}
-              {scheduleData && scheduleData.schedule_frequency === 'once' && <span className="text-[#b29457]">ONCE</span>}
               <span>{isLoading ? <Loader /> : trackDetails?.name || 'TRACK'}</span>
             </div>
 
