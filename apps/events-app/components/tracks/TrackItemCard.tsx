@@ -1,8 +1,8 @@
-import { BsFillTicketFill } from "react-icons/bs";
-import { HiArrowRight, HiCalendar } from "react-icons/hi";
-import Button from "../ui/buttons/Button";
-import router, { useRouter } from "next/router";
-import { TrackCreateRequestBody } from "@/types";
+import { BsFillTicketFill } from 'react-icons/bs';
+import { HiArrowRight, HiCalendar } from 'react-icons/hi';
+import Button from '../ui/buttons/Button';
+import router, { useRouter } from 'next/router';
+import { TrackCreateRequestBody } from '@/types';
 
 interface IProps {
   trackTitle: string;
@@ -23,7 +23,7 @@ export default function TrackItem(props: IProps) {
       onClick={onClick}
     >
       <div className="flex items-center gap-2 w-full md:w-auto">
-        <div className="bg-white rounded-lg p-1 w-[130px]">
+        <div className="bg-gray-300 rounded-lg p-1 w-[130px]">
           <img
             src={trackImage}
             alt="track-image"
@@ -34,19 +34,12 @@ export default function TrackItem(props: IProps) {
         </div>
         <div className="flex flex-col justify-center items-start gap-[14px] w-full md:w-auto self-stretch">
           <div className="flex items-center w-full gap-5 justify-between">
-            <span className="rounded-full flex px-4 py-1 items-center gap-1 bg-[#FFFFFF10] text-white font-bold md:text-lg sm:text-base">
-              {trackTitle}
-            </span>
-            <div className=" md:hidden block">
-         
-              <Button
-                variant="dark"
-                className="bg-white/20  text-black rounded-full text-sm md:text-base mx-2"
-                leftIcon={HiArrowRight}
-              >
+            <span className="rounded-full flex  py-1 items-center gap-1 text-white font-bold md:text-lg sm:text-base">{trackTitle}</span>
+            {/* <div className=" md:hidden block">
+              <Button variant="dark" className="bg-white/20  text-black rounded-full text-sm md:text-base mx-2" leftIcon={HiArrowRight}>
                 <span className="hidden">Enter Track</span>
               </Button>
-            </div>
+            </div> */}
           </div>
 
           <div className="flex flex-col justify-center items-start gap-[14px] self-stretch">
@@ -61,18 +54,14 @@ export default function TrackItem(props: IProps) {
       </div>
 
       <div>
-        <div className="w-full hidden md:block">
-          {/* <Button variant="dark" className="bg-white/20 text-white/70 rounded-full" leftIcon={HiArrowRight}>
+        {/* <div className="w-full hidden md:block">
+          <Button variant="dark" className="bg-white/20 text-white/70 rounded-full" leftIcon={HiArrowRight}>
             Enter Track
-          </Button> */}
-          <Button
-            variant="dark"
-            className="bg-white/20  text-black rounded-full text-sm md:text-base mx-2"
-            leftIcon={HiArrowRight}
-          >
+          </Button>
+          <Button variant="dark" className="bg-white/20  text-black rounded-full text-sm md:text-base mx-2" leftIcon={HiArrowRight}>
             <span className="hidden md:block">Enter Track</span>
           </Button>
-        </div>
+        </div> */}
       </div>
     </div>
   );

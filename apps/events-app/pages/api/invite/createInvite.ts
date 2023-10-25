@@ -125,26 +125,26 @@ const getEmailTemplate = (event_space_name: string, invite_link: string, logo_im
 	return `
     <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office"> 
 <head> 
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
-	<meta name="viewport" content="width=device-width,initial-scale=1"> 
-	<meta http-equiv="X-UA-Compatible" content="IE=Edge"/> 
-	<meta name="x-apple-disable-message-reformatting"> 
-	<title>Invite to Collaborate</title> 
-	<style>html{-webkit-text-size-adjust:none;-ms-text-size-adjust:none}@media only screen and (max-device-width:600px),only screen and (max-width:600px){.mob_100{width:100%!important;max-width:100%!important}.mob_full{width:auto!important;display:block!important;padding:0 10px!important}.mob_center{text-align:center!important}.mob_center_bl{margin-left:auto;margin-right:auto}.mob_hidden{display:none!important}.only_mob{display:block!important}}@media only screen and (max-width:600px){.mob_100{width:100%!important;max-width:100%!important}.mob_100 img,.mob_100 table{max-width:100%!important}.mob_full{width:auto!important;display:block!important;padding:0 10px!important}.mob_center{text-align:center!important}.mob_center_bl{margin-left:auto;margin-right:auto}.mob_hidden{display:none!important}.only_mob{display:block!important}}.creative{width:100%!important;max-width:100%!important}.mail_preheader{display:none!important}form input, form textarea{font-family: Arial, sans-serif;width: 100%;box-sizing: border-box;font-size: 13px;color:#000000;outline:none;padding: 0px 15px;}form textarea{resize:vertical;line-height: normal;padding: 10px 15px;}form button{border: 0px none;cursor:pointer;}</style> 
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
+    <meta name="viewport" content="width=device-width,initial-scale=1"> 
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge"/> 
+    <meta name="x-apple-disable-message-reformatting"> 
+    <title>Invite to Collaborate</title> 
+    <style>html{-webkit-text-size-adjust:none;-ms-text-size-adjust:none}@media only screen and (max-device-width:600px),only screen and (max-width:600px){.mob_100{width:100%!important;max-width:100%!important}.mob_full{width:auto!important;display:block!important;padding:0 10px!important}.mob_center{text-align:center!important}.mob_center_bl{margin-left:auto;margin-right:auto}.mob_hidden{display:none!important}.only_mob{display:block!important}}@media only screen and (max-width:600px){.mob_100{width:100%!important;max-width:100%!important}.mob_100 img,.mob_100 table{max-width:100%!important}.mob_full{width:auto!important;display:block!important;padding:0 10px!important}.mob_center{text-align:center!important}.mob_center_bl{margin-left:auto;margin-right:auto}.mob_hidden{display:none!important}.only_mob{display:block!important}}.creative{width:100%!important;max-width:100%!important}.mail_preheader{display:none!important}form input, form textarea{font-family: Arial, sans-serif;width: 100%;box-sizing: border-box;font-size: 13px;color:#000000;outline:none;padding: 0px 15px;}form textarea{resize:vertical;line-height: normal;padding: 10px 15px;}form button{border: 0px none;cursor:pointer;}</style> 
 
-	</head> 
-	<body class="body" style="padding:0;margin:0"> 
-	<div class="full-wrap"> 
-	<table width="100%" border="0" cellspacing="0" cellpadding="0" class="full-wrap">
-	<tr><td align="center" bgcolor="#e5e5e5" style="line-height: normal; hyphens: none;">
-	<div>
-	<!--[if !mso]>
-	<!-->
-	<div class="mail_preheader" style="font-size: 0px; color: transparent; opacity: 0;">
-		<span style="font-family: Arial, Helvetica, sans-serif; font-size: 0px; color: transparent; line-height: 0px;"></span>
-	</div>
-	<!--
-	<![endif]-->
+    </head> 
+    <body class="body" style="padding:0;margin:0"> 
+    <div class="full-wrap"> 
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="full-wrap">
+    <tr><td align="center" bgcolor="#e5e5e5" style="line-height: normal; hyphens: none;">
+    <div>
+    <!--[if !mso]>
+    <!-->
+    <div class="mail_preheader" style="font-size: 0px; color: transparent; opacity: 0;">
+        <span style="font-family: Arial, Helvetica, sans-serif; font-size: 0px; color: transparent; line-height: 0px;"></span>
+    </div>
+    <!--
+    <![endif]-->
 </div>  
 <div>
 	<table border="0" cellspacing="0" cellpadding="0" width="100%" style="max-width: 640px;">
