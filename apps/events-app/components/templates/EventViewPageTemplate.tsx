@@ -19,7 +19,7 @@ interface IEventLink {
   link: string;
 }
 
-export default function EventViewPageTemplate({ eventSpace, profile }: { eventSpace: EventSpaceDetailsType; profile: any }) {
+export default function EventViewPageTemplate({ eventSpace, user }: { eventSpace: EventSpaceDetailsType; user: any }) {
   const {
     // id,
     name,
@@ -168,16 +168,16 @@ export default function EventViewPageTemplate({ eventSpace, profile }: { eventSp
               ))}
           </div>
           {eventSpace.format === 'in-person' && (
-            <div className="flex flex-col pt-2.5 pb-2.5 gap-5 mt-[-20px]">
-              <div className="flex gap-2 items-center text-gray-300">
+            <div className="flex flex-col pt-2.5 pb-2.5 gap-5">
+              <div className="flex gap-2 items-center">
                 <LocationMarker />
                 <Label className="text-xl">Location</Label>
               </div>
               <div className="flex flex-col gap-[6px]">
-                <Label className="text-md">{profile ? locationName : `Apply to See Address`}</Label>
-                <Label className="text-sm font-light opacity-70">{locationAddress}</Label>
+                <Label className="text-lg">{user ? locationName : `Apply to See Address`}</Label>
+                <Label className={`rounded-xl text-sm opacity-70  ${user ? `blur-none` : `blur`}`}>{locationAddress}</Label>
               </div>
-              {imgUrls && <Image width={260} height={148} src={imgUrls[0]} alt={''} className={`rounded-xl ${profile ? `blur-none` : `blur`} h-[148px]`} />}
+              {imgUrls && <Image width={260} height={148} src={imgUrls[0]} alt={''} className={`rounded-xl ${user ? `blur-none` : `blur`}`} />}
             </div>
           )}
         </div>
