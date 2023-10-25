@@ -56,7 +56,7 @@ export default function EventViewPageTemplate({ eventSpace, user }: { eventSpace
       });
       setImgUrls(URLs);
       setLocationName(eventSpace.eventspacelocation[0].name);
-      setLocationAddress(eventSpace.eventspacelocation[0].address);
+      setLocationAddress(user && eventSpace.eventspacelocation[0].address);
     }
   }, [social_links, extra_links, eventSpace]);
 
@@ -167,7 +167,7 @@ export default function EventViewPageTemplate({ eventSpace, user }: { eventSpace
                 </div>
               ))}
           </div>
-          {eventSpace.format === 'in-person' && (
+          {eventSpace.format === 'in-person' && user && (
             <div className="flex flex-col pt-2.5 pb-2.5 gap-5">
               <div className="flex gap-2 items-center">
                 <LocationMarker />
@@ -175,7 +175,7 @@ export default function EventViewPageTemplate({ eventSpace, user }: { eventSpace
               </div>
               <div className="flex flex-col gap-[6px]">
                 <Label className="text-lg">{user ? locationName : `Apply to See Address`}</Label>
-                <Label className={`rounded-xl text-sm opacity-70  ${user ? `blur-none` : `blur`}`}>{locationAddress}</Label>
+                <Label className={`rounded-xl text-sm opacity-70  ${user ? `blur-none` : `blur`}`}>{user && locationAddress}</Label>
               </div>
               {imgUrls && <Image width={260} height={148} src={imgUrls[0]} alt={''} className={`rounded-xl ${user ? `blur-none` : `blur`}`} />}
             </div>
