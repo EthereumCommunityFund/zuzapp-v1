@@ -25,6 +25,7 @@ import CustomCarousel from '../ui/CustomCarousel';
 import { truncateString } from '@/utils';
 import { error } from 'console';
 import { toast } from '../ui/use-toast';
+import { Label } from '../ui/label';
 
 interface DialogContent {
   title: string;
@@ -193,7 +194,7 @@ export default function HomePageTemplate() {
         </div>
       </div>
       <div className="mt-10">
-        <h3 className="text-xl md:text-4xl">Zuzalu Events</h3>
+        <Label className="text-xl md:text-4xl">Events</Label>
         <div className="mt-3">
           {isLoading && (
             <div>
