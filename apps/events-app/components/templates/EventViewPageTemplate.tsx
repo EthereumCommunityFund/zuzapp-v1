@@ -167,7 +167,7 @@ export default function EventViewPageTemplate({ eventSpace, user }: { eventSpace
                 </div>
               ))}
           </div>
-          {eventSpace.format === 'in-person' && user && (
+          {eventSpace.format === 'in-person' && (
             <div className="flex flex-col pt-2.5 pb-2.5 gap-5">
               <div className="flex gap-2 items-center">
                 <LocationMarker />
@@ -177,7 +177,7 @@ export default function EventViewPageTemplate({ eventSpace, user }: { eventSpace
                 <Label className="text-lg">{user ? locationName : `Apply to See Address`}</Label>
                 <Label className={`rounded-xl text-sm opacity-70  ${user ? `blur-none` : `blur`}`}>{user && locationAddress}</Label>
               </div>
-              {imgUrls && <Image width={260} height={148} src={imgUrls[0]} alt={''} className={`rounded-xl ${user ? `blur-none` : `blur`}`} />}
+              {imgUrls && user && <Image width={260} height={148} src={imgUrls[0]} alt={''} className={`rounded-xl ${user ? `blur-none` : `blur`}`} />}
             </div>
           )}
         </div>
