@@ -36,6 +36,7 @@ import { toast } from '@/components/ui/use-toast';
 import { Loader } from '../ui/Loader';
 import { v4 as uuidv4 } from 'uuid';
 import { sessionFrequency } from '@/constant/scheduleconstants';
+import { X } from 'lucide-react';
 
 type Organizer = {
   name: string;
@@ -381,7 +382,14 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
   return (
     <div className="flex flex-col items-center gap-[34px] self-stretch w-full text-white">
       <div className="flex flex-col items-center gap-[34px] self-stretch w-full p-5">
-        <FormTitle name="Update Session" />
+        <div className="flex justify-between self-stretch">
+          <FormTitle name="Update Session" />
+          <DialogPrimitive.Close>
+            <Button size="sm" className="rounded-full w-10 h-10">
+              <X />
+            </Button>
+          </DialogPrimitive.Close>
+        </div>
         {scheduleUpdated ? (
           <div className="flex flex-col items-center">
             <h3 className="font-bold text-xl">Your Session Has Been Updated</h3>

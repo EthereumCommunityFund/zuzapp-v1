@@ -21,11 +21,12 @@ import { ScheduleUpdateRequestBody } from '@/types';
 import EditScheduleForm from '@/components/commons/EditScheduleForm';
 import fetchScheduleById from '@/services/fetchScheduleById';
 import { toast } from '@/components/ui/use-toast';
+import { deleteScheduleById } from '@/services/deleteSchedule';
 
 interface IEventViewScheduleViewTemplate {
-  event_space_id: string,
-  scheduleId: string,
-  trackId: string,
+  event_space_id: string;
+  scheduleId: string;
+  trackId: string;
 }
 
 export default function EventViewScheduleViewTemplate({ event_space_id, scheduleId, trackId }: IEventViewScheduleViewTemplate) {
@@ -111,6 +112,27 @@ export default function EventViewScheduleViewTemplate({ event_space_id, schedule
     }
   }, [currentSchedule]);
 
+  const handleDeleteSchedule = async () => {
+    if (!scheduleId) return;
+
+    setIsLoading(true);
+    try {
+      await deleteScheduleById(scheduleId as string, event_space_id as string);
+      toast({
+        title: 'session deleted successfully',
+      });
+      router.push({
+        pathname: `/dashboard/eventview/allschedules`,
+        query: {
+          event_space_id,
+        },
+      });
+    } catch (error) {
+      console.error('Error deleting the schedule', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
   useEffect(() => {
     checkIfUserHasRsvpd();
   }, []);
@@ -141,7 +163,7 @@ export default function EventViewScheduleViewTemplate({ event_space_id, schedule
       <div className="flex flex-col lg:w-[1000px] sm:w-full">
         <EventViewHeader imgPath={eventSpace?.image_url as string} name={eventSpace?.name as string} tagline={eventSpace?.tagline as string} />
         <div className="md:p-5 sm:p-0 gap-[30px] max-w-[1200px] h-full">
-          <div className="flex flex-col gap-[10px] p-2.5 bg-componentPrimary rounded-2xl">
+          <div className="flex flex-col gap-[10px] p-2.5 bg-componentPrimary rounded-2xl w-[750px] overflow-auto">
             <div className="flex justify-between">
               {' '}
               {/* Tracks and Edit Button */}
@@ -186,6 +208,9 @@ export default function EventViewScheduleViewTemplate({ event_space_id, schedule
                 {currentSchedule?.rsvp_amount === 0 ? 'No Rsvp Available' : hasRsvpd ? 'Cancel RSVP' : isRsvpFullOnLoad ? 'RSVP Full' : 'RSVP Session'}
               </Button>
             </div>
+            {/* <Button variant="red" className="rounded-xl w-fit" onClick={handleDeleteSchedule}>
+              Delete
+            </Button> */}
             <div className="flex flex-col gap-2.5 px-5 pt-5 pb-[60px]">
               <h2 className="font-bold">Location</h2>
             </div>
@@ -218,6 +243,7 @@ export default function EventViewScheduleViewTemplate({ event_space_id, schedule
           </div>
         </div>
       </div>
+
       {eventSpace && currentSchedule?.tags && currentSchedule.organizers && (
         <EventViewDetailsPanel eventSpace={eventSpace} organizers={currentSchedule.organizers} tags={currentSchedule.tags} schedule={currentSchedule} />
       )}

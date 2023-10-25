@@ -28,11 +28,31 @@ const UserFacingTrack: React.ForwardRefRenderFunction<HTMLDivElement, IUserFacin
 
   console.log(scheduleData, 'schedule data');
 
-  return (
+  return scheduleData && scheduleData.repeating ? (
     <div ref={ref} onClick={onClick} className="flex flex-col gap-3">
-      <div className="text-center border-b-2 p-3 border-borderPrimary">
-        <span className="text-lg font-bold w-full">{new Date(scheduleData.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+      <div className="flex flex-col rounded-2xl">
+        <div className="flex gap-1 justify-between border-2 border-[#444646] md:p-2 sm:p-2 rounded-2xl bg-userFacingItem hover:bg-[#434646] duration-200">
+          <div className="flex flex-col gap-2.5 w-3/4 ml-2">
+            <div className="flex gap-2.5 text-sm font-inter font-bold">
+              {scheduleData && (scheduleData.schedule_frequency === 'everyday' || scheduleData.schedule_frequency === 'weekly') && <span className="text-[#b29457]">RECURRING</span>}
+              <span>{isLoading ? <Loader /> : trackDetails?.name || 'TRACK'}</span>
+            </div>
+            <span className="font-bold md:text-xl">{scheduleData.name}</span>
+            <div className="flex gap-2.5 md:flex-row sm:flex-col w-fit">
+              <EventDataTime startTime={startTime} endTime={endTime} />
+            </div>
+            <div className="flex gap-[3px] flex-wrap">{scheduleData.organizers?.map((organizer) => <Speaker title={organizer.name} />)}</div>
+          </div>
+          <div>
+            <div className="bg-trackDateColor p-1 md:rounded-xl sm:rounded-sm">
+              <TbTicket className="md:text-[40px] sm:text-[25px] opacity-70" />
+            </div>
+          </div>
+        </div>
       </div>
+    </div>
+  ) : (
+    <div ref={ref} onClick={onClick} className="flex flex-col gap-3">
       <div className="flex flex-col rounded-2xl">
         <div className="flex gap-1 justify-between border-2 border-[#444646] md:p-5 sm:p-3 rounded-2xl bg-userFacingItem hover:bg-[#434646] duration-200">
           <div>
