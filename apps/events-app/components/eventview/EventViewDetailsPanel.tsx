@@ -64,20 +64,26 @@ export default function EventViewDetailsPanel(props: IEventViewDetailsPanel) {
       <div className="pb-10 gap-2.5">
         <div className="flex flex-col gap-3">
           <h2 className="font-bold p-3.5 border-b border-b-background text-xl">Details</h2>
-          <div className="flex gap-2 items-center">
-            <Label className="opacity-60">Format: </Label>
-            <Label className="opacity-70 font-medium text-base">
-              {schedule ? schedule.format.charAt(0).toUpperCase() + schedule.format.slice(1) : eventSpace.format.charAt(0).toUpperCase() + eventSpace.format.slice(1)}
-            </Label>
-          </div>
-          <div className="flex gap-2 items-center">
-            <Label className="opacity-60">Type: </Label>
-            <Label className="opacity-70 font-bold text-base">{schedule ? schedule.event_type : eventSpace?.event_type?.join(', ')}</Label>
-          </div>
-          <div className="flex gap-2 items-center">
-            <Label className="opacity-60">Experience Level: </Label>
-            <Label className="opacity-70 font-bold text-base">{schedule ? schedule?.experience_level : eventSpace?.experience_level?.join(', ')}</Label>
-          </div>
+          {schedule && (
+            <div className="flex gap-2 items-center">
+              <Label className="opacity-60">Format: </Label>
+              <Label className="opacity-70 font-medium text-base">
+                {schedule ? schedule.format.charAt(0).toUpperCase() + schedule.format.slice(1) : eventSpace.format.charAt(0).toUpperCase() + eventSpace.format.slice(1)}
+              </Label>
+            </div>
+          )}
+          {schedule && (
+            <div className="flex gap-2 items-center">
+              <Label className="opacity-60">Type: </Label>
+              <Label className="opacity-70 font-bold text-base">{schedule ? schedule.event_type : ''}</Label>
+            </div>
+          )}
+          {schedule && (
+            <div className="flex gap-2 items-center">
+              <Label className="opacity-60">Experience Level: </Label>
+              <Label className="opacity-70 font-bold text-base">{schedule ? schedule?.experience_level : ''}</Label>
+            </div>
+          )}
         </div>
         <div className="pb-10 gap-2.5 mt-5">
           <div className="flex flex-col gap-5  rounded-[10px]">
@@ -122,7 +128,7 @@ export default function EventViewDetailsPanel(props: IEventViewDetailsPanel) {
                 </div>
               </div>
             )}
-            {eventSpace.eventspacelocation && (
+            {schedule && (
               <div className="flex flex-col pt-2.5 pb-2.5 gap-5 mt-[20px]">
                 <div className="flex gap-2 items-center text-gray-300">
                   <LocationMarker />
@@ -137,10 +143,12 @@ export default function EventViewDetailsPanel(props: IEventViewDetailsPanel) {
               </div>
             )}
           </div>
-          <div className="flex p-2.5 items-center gap-3">
-            <HiUserGroup className="text-xl" />
-            <span className="font-bold">{schedule?.current_rsvp_no} going</span>
-          </div>
+          {schedule && (
+            <div className="flex p-2.5 items-center gap-3">
+              <HiUserGroup className="text-xl" />
+              <span className="font-bold">{schedule?.current_rsvp_no || 0} going</span>
+            </div>
+          )}
         </div>
       </div>
     </div>
