@@ -33,9 +33,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(500).send('Internal server error');
   }
 
-  if (event_space_response.data.creator_id !== req.body.user.id) {
-    return res.status(403).send('You are not authorized to edit this event space');
-  }
 
   // update event space
   const event_space_update_result = await supabase
