@@ -265,5 +265,6 @@ export type ZappCardTemplate = {
 export type ResourceItemCard = {
   title: string;
   tagLine: string;
-  link: string;
+  prevLink: string;
+  fullLink: string;
 };
