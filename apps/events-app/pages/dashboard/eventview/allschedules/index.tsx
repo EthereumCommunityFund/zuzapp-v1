@@ -10,7 +10,7 @@ import { fetchEventSpaceById } from '@/services/fetchEventSpaceDetails';
 import { DropDownMenuItemType, ScheduleDetailstype } from '@/types';
 import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
 import { useRouter } from 'next/router';
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { BiLeftArrow, BiPlusCircle } from 'react-icons/bi';
 import { QueryClient, dehydrate, useQuery } from 'react-query';
 import { EventSpaceDetailsType } from '@/types';
@@ -52,11 +52,9 @@ export default function EventViewTracksAlleSchedulesPage() {
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, totalSchedules);
   const currentSchedules = schedules ? schedules.slice(startIndex, endIndex) : [];
+  const groupedEvents = currentSchedules?.forEach((schedule) => {});
   const { trackDetails, isLoading: trackLoader } = useTrackDetails();
-
   const { isAuthenticated, user } = useGlobalContext();
-  console.log(isLoading, 'is loading');
-
   const handleItemClick = (scheduleId: string, trackId?: string) => {
     router.push({
       pathname: `/dashboard/eventview/allschedules/schedule`,
@@ -106,7 +104,41 @@ export default function EventViewTracksAlleSchedulesPage() {
     };
   }, [lastTrackRef]);
 
-  console.log(schedules, 'schedules-from-allschedules');
+  console.log(currentSchedules, 'schedules-from-all-schedules');
+
+  const groupedSchedules: Record<string, ScheduleDetailstype[]> = {};
+  let isFirstEvent = true;
+  currentSchedules.forEach((schedule) => {
+    const date = new Date(schedule.date);
+    const end_date = new Date(schedule.end_date);
+    const frequency = schedule.schedule_frequency;
+
+    if (frequency === 'everyday' || frequency === 'weekly') {
+      isFirstEvent = false;
+    }
+
+    do {
+      const formattedDate = date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
+      if (!groupedSchedules[formattedDate]) {
+        groupedSchedules[formattedDate] = [];
+      }
+
+      const newSchedule = { ...schedule, repeating: !isFirstEvent && (frequency === 'everyday' || frequency === 'weekly') } as ScheduleDetailstype & { repeating: boolean };
+
+      groupedSchedules[formattedDate].push(newSchedule);
+
+      if (frequency === 'everyday') {
+        date.setDate(date.getDate() + 1);
+      } else if (frequency === 'weekly') {
+        date.setDate(date.getDate() + 7);
+      } else {
+        break;
+      }
+    } while (date <= end_date);
+  });
+
+  console.log('Grouped Schedules:', groupedSchedules);
   return (
     <div className="flex gap-4 lg:flex-row mt-5 lg:mt-0 pb-24 lg:pb-0 sm:flex-col-reverse lg:bg-pagePrimary md:bg-componentPrimary">
       <div className="flex flex-col lg:w-2/3 sm:w-full pb-30 lg:pb-0 gap-5">
@@ -135,9 +167,18 @@ export default function EventViewTracksAlleSchedulesPage() {
               <div className=" p-2.5 gap-[10px] flex flex-col overflow-hidden rounded-[10px] pb-36">
                 {schedules && eventSpace && (
                   <>
-                    {currentSchedules.map((schedule, idx) => (
-                      <UserFacingTrack key={idx} scheduleId={schedule.id} scheduleData={schedule} onClick={() => handleItemClick(schedule.id, schedule.track_id as string)} />
-                    ))}
+                    {Object.keys(groupedSchedules).map((date, idx) => {
+                      return (
+                        <>
+                          <div className="text-center border-b-2 p-3 border-borderPrimary">
+                            <span className="text-lg font-bold w-full">{new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                          </div>
+                          {groupedSchedules[date].map((schedule, idx) => {
+                            return <UserFacingTrack key={idx} scheduleId={schedule.id} scheduleData={schedule} onClick={() => handleItemClick(schedule.id, schedule.track_id as string)} />;
+                          })}
+                        </>
+                      );
+                    })}
                     {totalSchedules > ITEMS_PER_PAGE && <Pagination currentPage={currentPage} totalItems={schedules.length} itemsPerPage={ITEMS_PER_PAGE} onPageChange={handlePageChange} />}
                   </>
                 )}
