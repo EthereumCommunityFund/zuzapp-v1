@@ -47,7 +47,7 @@ export const permissionConfig: any = {
 
     // Invites
     '/api/invite/createInvite': {
-        allowedUsers: ['creator'],
+        allowedUsers: ['creator', 'collaborator'],
         verify: verifyEventSpaceAccess,
     },
     '/api/invite/:id/update': {
