@@ -174,12 +174,12 @@ export default function HomePageTemplate() {
                       ))}
                     </div>
                   </DialogTrigger>
-                  <DialogContent className="sm:max-w-[425px]">
+                  <DialogContent className="sm:max-w-[425px] rounded-2xl">
                     <DialogHeader>
-                      <DialogTitle>Need to Sign In!</DialogTitle>
-                      <DialogDescription className="text-sm font-bold">You need to be signed to do that</DialogDescription>
+                      <DialogTitle className="text-gray-300 font-inter font-bold">Need to Sign in!</DialogTitle>
+                      <DialogDescription className="text-sm font-bold pt-5 text-white">Sign in to Create Events and Access more Features</DialogDescription>
                       <DialogFooter className="pt-5">
-                        <Button variant="ghost" className="w-full flex space-x-2 items-center justify-center rounded-3xl px-5 py-2 h-full bg-dark text-sm md:text-base" onClick={signIn}>
+                        <Button variant="ghost" className="w-full flex space-x-2 items-center justify-center rounded-3xl px-5 py-3 h-full bg-dark text-sm md:text-base" onClick={signIn}>
                           <Image src="/images/zaluza blackandwhite.png" width={20} height={20} alt="Passport" className="mr-2" />
                           Connect Passport
                         </Button>
