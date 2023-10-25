@@ -28,7 +28,8 @@ export default function Resources() {
                   <ResourcesItemCard
                     title={resourceItemCard.title}
                     tagLine={resourceItemCard.tagLine}
-                    link={resourceItemCard.link}
+                    prevLink={resourceItemCard.prevLink}
+                    fullLink={resourceItemCard.fullLink}
                   />
                 ))}
               </div>
@@ -45,7 +46,8 @@ export default function Resources() {
                   <ResourcesItemCard
                     title={resourceItemCard.title}
                     tagLine={resourceItemCard.tagLine}
-                    link={resourceItemCard.link}
+                    prevLink={resourceItemCard.prevLink}
+                    fullLink={resourceItemCard.fullLink}
                   />
                 ))}
               </div>
