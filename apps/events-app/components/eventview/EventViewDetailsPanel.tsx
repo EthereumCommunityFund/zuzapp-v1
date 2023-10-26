@@ -50,11 +50,18 @@ export default function EventViewDetailsPanel(props: IEventViewDetailsPanel) {
       eventSpace.eventspacelocation.forEach((location) => {
         if (location.image_urls) URLs.push(...location.image_urls);
       });
-      setImgUrls(URLs);
-      setLocationName(eventSpace.eventspacelocation[0].name);
-      setLocationAddress(eventSpace.eventspacelocation[0].address);
+
+      eventSpace.eventspacelocation.forEach((spaceLocation) => {
+        if (spaceLocation.id === schedule?.location_id) {
+          setLocationName(spaceLocation.name);
+          setLocationAddress(spaceLocation.address);
+          setImgUrls(spaceLocation.image_urls);
+        }
+      })
+      // setLocationName(eventSpace.eventspacelocation[);
+      // setLocationAddress(eventSpace.eventspacelocation[0]);
     }
-  }, [social_links, extra_links, eventSpace]);
+  }, [social_links, extra_links, eventSpace, imgUrls]);
   useEffect(() => {
     console.log(schedule, 'schedule');
   });
@@ -139,7 +146,7 @@ export default function EventViewDetailsPanel(props: IEventViewDetailsPanel) {
                   <Label className="text-sm font-light opacity-70">{locationAddress}</Label>
                 </div>
                 {/* {imgUrls && <Image width={260} height={148} src={imgUrls[0]} alt={''} className={`rounded-xl ${profile ? `blur-none` : `blur`} h-[148px]`} />} */}
-                <img src={eventSpace.image_url} width={100} height={50} alt="333" />
+                {imgUrls && <img src={imgUrls[0]} width={150} height={50} alt="No Images" />}
               </div>
             )}
           </div>
