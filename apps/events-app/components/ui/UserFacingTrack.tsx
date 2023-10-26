@@ -109,15 +109,14 @@ const UserFacingTrack: React.ForwardRefRenderFunction<HTMLDivElement, IUserFacin
       <div className="flex flex-col rounded-2xl">
         <div className="flex gap-1 justify-between border-2 border-[#444646] md:p-2 sm:p-2 rounded-2xl bg-userFacingItem hover:bg-[#434646] duration-200">
           <div className="flex flex-col gap-2.5 w-3/4 ml-2">
-            <div className="flex gap-2.5 text-sm font-inter font-bold">
+            <div className="flex gap-2.5 text-xs font-inter font-normal uppercase">
               {scheduleData && (scheduleData.schedule_frequency === 'everyday' || scheduleData.schedule_frequency === 'weekly') && <span className="text-[#b29457]">RECURRING</span>}
               <span>{isLoading ? <Loader /> : trackDetails?.name || 'TRACK'}</span>
             </div>
-            <span className="font-bold md:text-xl">{scheduleData.name}</span>
+            <span className="font-semibold md:text-lg">{scheduleData.name}</span>
             <div className="flex gap-2.5 md:flex-row sm:flex-col w-fit">
               <EventDataTime startTime={startTime} endTime={endTime} />
             </div>
-            <div className="flex gap-[3px] flex-wrap">{scheduleData.organizers?.map((organizer) => <Speaker title={organizer.name} />)}</div>
           </div>
           <div>
             <Tooltip.Provider delayDuration={500} skipDelayDuration={200}>
@@ -148,20 +147,20 @@ const UserFacingTrack: React.ForwardRefRenderFunction<HTMLDivElement, IUserFacin
   ) : (
     <div ref={ref} onClick={onClick} className="flex flex-col gap-3">
       <div className="flex flex-col rounded-2xl">
-        <div className="flex gap-1 justify-between border-2 border-[#444646] md:p-5 sm:p-3 rounded-2xl bg-userFacingItem hover:bg-[#434646] duration-200">
+        <div className="flex md:gap-3 gap-1 justify-between border-2 border-[#444646] md:p-3 sm:p-3 rounded-2xl bg-userFacingItem hover:bg-[#434646] duration-200">
           <div>
-            <div className="md:rounded-[10px] sm:rounded-lg md:p-2.5 text-center border-2 bg-trackDateColor border-[#5F6262] md:text-xl sm:text-sm p-2 ">
+            <div className="md:rounded-[10px] sm:rounded-lg text-center border bg-trackDateColor border-[#5F6262] md:text-xl sm:text-sm px-4 py-2">
               <h2 className="font-bold">{date.getDate()}</h2>
-              <b className="font-bold">{date.toLocaleDateString('en-US', { month: 'short' })}</b>
+              <b className="font-medium">{date.toLocaleDateString('en-US', { month: 'short' })}.</b>
             </div>
           </div>
-          <div className="flex flex-col gap-2.5 w-3/4 ml-2">
-            <div className="flex gap-2.5 text-sm font-inter font-bold">
+          <div className="flex flex-col gap-1.5 flex-1 ml-2">
+            <div className="flex gap-2.5 text-xs font-inter font-light uppercase">
               {scheduleData && (scheduleData.schedule_frequency === 'everyday' || scheduleData.schedule_frequency === 'weekly') && <span className="text-[#b29457]">RECURRING</span>}
               <span>{isLoading ? <Loader /> : trackDetails?.name || 'TRACK'}</span>
             </div>
 
-            <span className="font-bold md:text-xl">{scheduleData.name}</span>
+            <span className="font-semibold md:text-lg">{scheduleData.name}</span>
             <div className="flex gap-2.5 md:flex-row sm:flex-col w-fit">
               {scheduleData.schedule_frequency !== 'once' && <EventDataDate startDate={startDate} endDate={endDate} />}
               <EventDataTime startTime={startTime} endTime={endTime} />
@@ -198,3 +197,4 @@ const UserFacingTrack: React.ForwardRefRenderFunction<HTMLDivElement, IUserFacin
 };
 
 export default React.forwardRef(UserFacingTrack);
+
