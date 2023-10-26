@@ -12,6 +12,10 @@ import IconButton from "@/components/ui/buttons/IconButton";
 import { BiHome, BiLogoGithub } from "react-icons/bi";
 
 export default function Zapps() {
+  const handleItemClick = (path: string) => {
+    window.open(path, '_blank');
+  }
+
   return (
     <div className="flex flex-col lg:p-0 sm:p-5 h-auto">
       {/* Zapps Header */}
@@ -70,9 +74,9 @@ export default function Zapps() {
                   </DialogDescription>
                 </DialogHeader>
                 <DialogFooter className='flex flex-row justify-end'>
-                  <IconButton variant='dark' className="rounded-full" icon={BiLogoGithub} />
-                  <IconButton variant='dark' className="rounded-full" icon={BiHome} />
-                  <Button className='rounded-xl' leftIcon={ArrowCircleRight}>Open App</Button>
+                  {zAppCard.githubLink && <IconButton variant='dark' className="rounded-full" icon={BiLogoGithub} onClick={() => handleItemClick(zAppCard?.githubLink as string)} />}
+                  {zAppCard.websiteLink && <IconButton variant='dark' className="rounded-full" icon={BiHome} onClick={() => handleItemClick(zAppCard?.websiteLink as string)} />}
+                  <Button className='rounded-xl' leftIcon={ArrowCircleRight} onClick={() => handleItemClick(zAppCard.cardItemLink as string)}>Open App</Button>
                 </DialogFooter>
                 <DialogPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
                   <Button size='sm' className='rounded-full w-10 h-10'><X /></Button>
