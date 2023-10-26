@@ -61,7 +61,7 @@ export default function EventViewDetailsPanel(props: IEventViewDetailsPanel) {
       // setLocationName(eventSpace.eventspacelocation[);
       // setLocationAddress(eventSpace.eventspacelocation[0]);
     }
-  }, [social_links, extra_links, eventSpace]);
+  }, [social_links, extra_links, eventSpace, imgUrls]);
   useEffect(() => {
     console.log(schedule, 'schedule');
   });
