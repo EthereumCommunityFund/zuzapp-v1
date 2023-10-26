@@ -114,7 +114,7 @@ export default function EventViewScheduleViewTemplate({ event_space_id, schedule
       }
       eventSpace?.eventspacelocation?.forEach((spaceLocation) => {
         if (spaceLocation.id === currentSchedule.location_id) setLocation(spaceLocation.name);
-      })
+      });
     }
   }, [currentSchedule]);
 
@@ -217,10 +217,10 @@ export default function EventViewScheduleViewTemplate({ event_space_id, schedule
             {/* <Button variant="red" className="rounded-xl w-fit" onClick={handleDeleteSchedule}>
               Delete
             </Button> */}
-            <div className="flex flex-col gap-2.5 px-5 pt-5 pb-[60px]">
+            {/* <div className="flex flex-col gap-2.5 px-5 pt-5 pb-[60px]">
               <h2 className="font-bold">Location</h2>
-              <Label className='text-lg'>{locatin}</Label>
-            </div>
+              <Label className="text-lg">{locatin}</Label>
+            </div> */}
             <div className="flex flex-col gap-2.5 px-5 pt-5 pb-[60px] font-bold">{currentSchedule?.description && <RenderHTMLString htmlString={currentSchedule?.description} />}</div>
             <div className="flex gap-2.5 px-5 items-center">
               <span className="font-medium text-sm text-gray-400">Last edited by :</span>
@@ -229,7 +229,7 @@ export default function EventViewScheduleViewTemplate({ event_space_id, schedule
                 <TimeAgo date={mostRecentEditLog?.edited_at} />
               </span>
             </div>
-            <div className="flex flex-col gap-2 px-5 cursor-pointer">
+            {/* <div className="flex flex-col gap-2 px-5 cursor-pointer">
               <span onClick={toggleLogs} className="font-medium text-sm text-gray-400 cursor-pointer">
                 {showLogs ? 'Hide' : 'View'} All Edits:{' '}
               </span>
@@ -246,7 +246,7 @@ export default function EventViewScheduleViewTemplate({ event_space_id, schedule
                   );
                 })}
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

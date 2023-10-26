@@ -57,7 +57,7 @@ export default function EventViewDetailsPanel(props: IEventViewDetailsPanel) {
           setLocationAddress(spaceLocation.address);
           setImgUrls(spaceLocation.image_urls);
         }
-      })
+      });
       // setLocationName(eventSpace.eventspacelocation[);
       // setLocationAddress(eventSpace.eventspacelocation[0]);
     }
@@ -136,7 +136,7 @@ export default function EventViewDetailsPanel(props: IEventViewDetailsPanel) {
               </div>
             )}
             {schedule && (
-              <div className="flex flex-col pt-2.5 pb-2.5 gap-5 mt-[20px]">
+              <div className="flex flex-col pt-2.5 pb-2.5 gap-5 lg:mt-[-20px]">
                 <div className="flex gap-2 items-center text-gray-300">
                   <LocationMarker />
                   <Label className="text-xl">Location</Label>
@@ -146,7 +146,7 @@ export default function EventViewDetailsPanel(props: IEventViewDetailsPanel) {
                   <Label className="text-sm font-light opacity-70">{locationAddress}</Label>
                 </div>
                 {/* {imgUrls && <Image width={260} height={148} src={imgUrls[0]} alt={''} className={`rounded-xl ${profile ? `blur-none` : `blur`} h-[148px]`} />} */}
-                {imgUrls && <img src={imgUrls[0]} width={150} height={50} alt="No Images" />}
+                {imgUrls && <img src={imgUrls[0]} width={150} height={50} alt="No Images" className="h-[88px] rounded-lg" />}
               </div>
             )}
           </div>
