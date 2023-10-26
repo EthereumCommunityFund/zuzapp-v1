@@ -4,11 +4,13 @@ import EventDataDate from './labels/event-data-date';
 import { ScheduleDetailstype } from '@/types';
 import { useEffect, useState } from 'react';
 import EventDataTime from './labels/event-data-time';
-import { ref } from 'joi';
+
 import React from 'react';
 import useTrackDetails from '@/hooks/useTrackDetails';
 import { Loader } from './Loader';
 import useTrack from '@/hooks/useTrack';
+import { toast } from '@/components/ui/use-toast';
+import { cancelUserRsvpBySchedule, checkUserRsvpBySchedule, rsvpSchedule } from '@/controllers';
 
 interface IUserFacingTrack {
   scheduleId?: string;
@@ -25,8 +27,33 @@ const UserFacingTrack: React.ForwardRefRenderFunction<HTMLDivElement, IUserFacin
   const endDate = new Date(enddate).toLocaleDateString('en-US', { month: 'short', day: '2-digit' });
   const startTime = new Date(scheduleData.start_time).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
   const endTime = new Date(scheduleData.end_time).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+  const [hasRsvpd, setHasRsvpd] = useState<boolean>(false);
 
-  console.log(scheduleData, 'schedule data');
+
+  const handleRsvpAction = async (e: React.MouseEvent<SVGAElement>) => {
+    try {
+      e.stopPropagation();
+      if (scheduleData?.rsvp_amount === 0) {
+        toast({
+          title: 'Error',
+          description: 'No RSVPs available',
+          variant: 'destructive',
+        });
+      } else if (hasRsvpd) {
+        const result = await cancelUserRsvpBySchedule(scheduleData.id as string, scheduleData.event_space_id as string);
+        setHasRsvpd(false);
+      } else {
+
+        const result = await rsvpSchedule(scheduleData.id as string, scheduleData.event_space_id as string);
+        setHasRsvpd(true);
+        toast({
+          title: 'RSVPed successfully',
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return scheduleData && scheduleData.repeating ? (
     <div ref={ref} onClick={onClick} className="flex flex-col gap-3">
@@ -45,7 +72,7 @@ const UserFacingTrack: React.ForwardRefRenderFunction<HTMLDivElement, IUserFacin
           </div>
           <div>
             <div className="bg-trackDateColor p-1 md:rounded-xl sm:rounded-sm">
-              <TbTicket className="md:text-[40px] sm:text-[25px] opacity-70" />
+              <TbTicket className="md:text-[40px] sm:text-[25px] opacity-70" onClick={(e: React.MouseEvent<SVGAElement>) => handleRsvpAction(e)} />
             </div>
           </div>
         </div>
@@ -76,7 +103,7 @@ const UserFacingTrack: React.ForwardRefRenderFunction<HTMLDivElement, IUserFacin
           </div>
           <div>
             <div className="bg-trackDateColor p-1 md:rounded-xl sm:rounded-sm">
-              <TbTicket className="md:text-[40px] sm:text-[25px] opacity-70" />
+              <TbTicket className="md:text-[40px] sm:text-[25px] opacity-70" onClick={(e: React.MouseEvent<SVGAElement>) => handleRsvpAction(e)} />
             </div>
           </div>
         </div>
