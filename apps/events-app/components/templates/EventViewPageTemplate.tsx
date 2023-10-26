@@ -87,9 +87,9 @@ export default function EventViewPageTemplate({ eventSpace, user }: { eventSpace
               <span className="rounded-lg flex w-fit px-4 py-1 items-center gap-1 opacity-60 bg-[#FFFFFF10] font-bold break-words">
                 <HiCalendar /> {formattedStartDate} - {formattedEndDate}
               </span>
-              {eventSpace.format === 'in-person' && (
+              {eventSpace.format === 'in-person' && user && eventspacelocation && (
                 <span className="rounded-lg w-fit flex px-4 py-1 items-center gap-1 opacity-60 bg-[#FFFFFF10] font-bold break-words">
-                  <LocationMarker /> {eventspacelocation && eventspacelocation[0].address}
+                  <LocationMarker /> {eventspacelocation[0].address}
                 </span>
               )}
             </div>
