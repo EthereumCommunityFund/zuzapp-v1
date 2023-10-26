@@ -82,7 +82,7 @@ export default function AddSchedulePage(props: any) {
   const [tagItem, setTagItem] = useState<TagItemProp>({ name: '' });
   const [eventItem, setEventItem] = useState({ name: '', role: 'speaker' });
   const [frequency, setFrequency] = useState<'once' | 'everyday' | 'weekly'>('once');
-
+  const [loading, setIsLoading] = useState(false);
   console.log(eventItem, organizers);
   // const [savedLocations, setSavedLocations] = useState<
   //   LocationUpdateRequestBody[]
@@ -113,13 +113,9 @@ export default function AddSchedulePage(props: any) {
     data: eventSpace,
     isLoading,
     isError,
-  } = useQuery<EventSpaceDetailsType, Error>(
-    ['currentEventSpace', event_space_id], // Query key
-    () => fetchEventSpaceById(event_space_id as string), // Query function
-    {
-      enabled: !!event_space_id, // Only execute the query if event_space_id is available
-    }
-  );
+  } = useQuery<EventSpaceDetailsType, Error>(['currentEventSpace', event_space_id], () => fetchEventSpaceById(event_space_id as string), {
+    enabled: !!event_space_id,
+  });
 
   const [eventType, setEventType] = useState('');
 
@@ -242,6 +238,7 @@ export default function AddSchedulePage(props: any) {
       live_stream_url: values.live_stream_url === '' ? 'https://youtube.com' : values.live_stream_url,
     };
     console.log(payload, 'payload');
+    setIsLoading(true);
     try {
       const result = await createSchedule(payload as any, event_space_id as string);
       setSwitchDialogue(true);
@@ -257,6 +254,8 @@ export default function AddSchedulePage(props: any) {
         description: error?.response.data?.error,
         variant: 'destructive',
       });
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -936,12 +935,12 @@ export default function AddSchedulePage(props: any) {
                       </div>
                     </div>
                     <div className="flex justify-center pt-8">
-                      <div className="flex flex-col md:flex-row gap-[30px] w-full">
-                        <Button className="rounded-full w-full md:w-1/2 flex justify-center" variant="quiet" size="lg" type="button" leftIcon={CgClose}>
+                      <div className="flex md:flex-row gap-[30px] w-full">
+                        {/* <Button className="rounded-full w-full md:w-1/2 flex justify-center" variant="quiet" size="lg" type="button" leftIcon={CgClose}>
                           <span>Discard Session</span>
-                        </Button>
-                        <Button className="rounded-full w-full md:w-1/2 flex justify-center" variant="blue" size="lg" type="submit" leftIcon={FaCircleArrowUp}>
-                          <span>Add Session</span>
+                        </Button> */}
+                        <Button className="rounded-full w-full md:w-full lg:w-full flex justify-center" variant="blue" size="lg" type="submit" leftIcon={FaCircleArrowUp} disabled={loading}>
+                          <span>{loading ? 'Adding' : 'Add Session'}</span>
                         </Button>
                       </div>
                     </div>
