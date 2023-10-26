@@ -67,8 +67,8 @@ export default function UpdateSchedulePage() {
   const [updating, setIsUpdating] = useState(false);
   const handleDeleteSchedule = async () => {
     if (!scheduleId) return;
-    setIsLoading(true);
     try {
+      setIsLoading(true);
       await deleteScheduleById(scheduleId as string, event_space_id as string);
       toast({
         title: 'session deleted successfully',

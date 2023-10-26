@@ -101,6 +101,7 @@ export default function EventViewScheduleViewTemplate({ event_space_id, schedule
   const mostRecentEditLog = currentSchedule?.editlogs?.[currentSchedule?.editlogs?.length - 1];
   const editorUsername = mostRecentEditLog?.user?.username;
   const creatorUsername = currentSchedule?.editlogs[0]?.user?.username;
+  const creatorId = currentSchedule?.editlogs[0]?.editor_id;
   useEffect(() => {
     if (currentSchedule) {
       if (currentSchedule.rsvp_amount === currentSchedule.current_rsvp_no) {
@@ -177,7 +178,7 @@ export default function EventViewScheduleViewTemplate({ event_space_id, schedule
                   </Button>
                 </DialogTrigger>
                 <DialogContent className="lg:h-4/5 w-full h-screen lg:w-3/5 overflow-y-auto">
-                  <EditScheduleForm title="Update" isQuickAccess={true} scheduleId={scheduleId as string} trackId={trackId as string} />
+                  <EditScheduleForm title="Update" isQuickAccess={true} scheduleId={scheduleId as string} trackId={trackId as string} creatorId={creatorId} />
                 </DialogContent>
               </Dialog>
             </div>

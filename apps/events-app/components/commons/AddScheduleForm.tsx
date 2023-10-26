@@ -89,7 +89,7 @@ export default function AddScheduleForm({ title, isQuickAccess, scheduleId, trac
   });
   const [startDate, setStartDate] = useState<Date | undefined>();
   const [optionTags, setOptionTags] = useState<TagItemProp[]>([]);
-
+  const [loading, setIsLoading] = useState(false);
   const [tags, setTags] = useState<string[]>([]);
   const [tagItem, setTagItem] = useState<TagItemProp>({ name: '' });
   const [eventItem, setEventItem] = useState({
@@ -239,7 +239,9 @@ export default function AddScheduleForm({ title, isQuickAccess, scheduleId, trac
       live_stream_url: values.live_stream_url === '' ? 'https://youtube.com' : values.live_stream_url,
     };
     console.log(payload, 'payload');
+
     try {
+      setIsLoading(true);
       const result = await createSchedule(payload as any, event_space_id as string);
       setScheduleAdded(true);
       toast({
@@ -253,6 +255,8 @@ export default function AddScheduleForm({ title, isQuickAccess, scheduleId, trac
         description: error?.response.data?.error,
         variant: 'destructive',
       });
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -977,12 +981,12 @@ export default function AddScheduleForm({ title, isQuickAccess, scheduleId, trac
                 </div>
               </div>
               <div className="flex justify-center pt-8">
-                <div className="flex flex-col md:flex-row gap-[30px] w-full">
-                  <Button className="rounded-full w-full md:w-1/2 flex justify-center" variant="quiet" size="lg" type="button" leftIcon={CgClose}>
+                <div className="flex md:flex-row gap-[30px] w-full">
+                  {/* <Button className="rounded-full w-full md:w-1/2 flex justify-center" variant="quiet" size="lg" type="button" leftIcon={CgClose}>
                     <span>Discard Session</span>
-                  </Button>
-                  <Button className="rounded-full w-full md:w-1/2 flex justify-center" variant="blue" size="lg" type="submit" leftIcon={FaCircleArrowUp}>
-                    <span>Add Session</span>
+                  </Button> */}
+                  <Button className="rounded-full w-full md:w-full lg:w-full flex justify-center" variant="blue" size="lg" type="submit" leftIcon={FaCircleArrowUp} disabled={loading}>
+                    <span>{loading ? 'Adding' : 'Add Session'}</span>
                   </Button>
                 </div>
               </div>
