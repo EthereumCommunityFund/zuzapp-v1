@@ -37,6 +37,8 @@ import { Loader } from '../ui/Loader';
 import { v4 as uuidv4 } from 'uuid';
 import { sessionFrequency } from '@/constant/scheduleconstants';
 import { X } from 'lucide-react';
+import { deleteScheduleById } from '@/services/deleteSchedule';
+import { fetchProfile } from '@/controllers/profile.controllers';
 
 type Organizer = {
   name: string;
@@ -52,12 +54,21 @@ interface IEditScheduleForm {
   isQuickAccess: boolean;
   scheduleId?: string;
   trackId: string;
+  creatorId: string;
   updateIsLoading?: (newState: boolean) => void;
 }
 
-export default function EditScheduleForm({ title, isQuickAccess, scheduleId, trackId, updateIsLoading }: IEditScheduleForm) {
+export default function EditScheduleForm({ title, isQuickAccess, scheduleId, trackId, updateIsLoading, creatorId }: IEditScheduleForm) {
   const router = useRouter();
   const { event_space_id } = router.query;
+  const [userId, setUserId] = useState();
+
+  const fetchUserProfile = async () => {
+    const response = await fetchProfile();
+    const userdata = response?.data?.data;
+    setUserId(userdata?.uuid);
+    console.log(userdata, 'userdata');
+  };
 
   const [schedule, setSchedule] = useState<ScheduleUpdateRequestBody>({
     name: '',
@@ -113,7 +124,28 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
   const [isLimit, setIsLimit] = useState(false);
   const [selectedTrackId, setSelectedTrackId] = useState<string>('');
   const [selectedEventFormat, setSelectedEventFormat] = useState<string>('new');
-
+  const [loading, setIsLoading] = useState(false);
+  const [updating, setIsUpdating] = useState(false);
+  const handleDeleteSchedule = async () => {
+    if (!scheduleId) return;
+    try {
+      setIsLoading(true);
+      await deleteScheduleById(scheduleId as string, event_space_id as string);
+      toast({
+        title: 'session deleted successfully',
+      });
+      router.push({
+        pathname: `/dashboard/eventview/allschedules`,
+        query: {
+          event_space_id,
+        },
+      });
+    } catch (error) {
+      console.error('Error deleting the schedule', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
   const formSchema = z.object({
     name: z.string().min(2, {
       message: 'Session name is required.',
@@ -249,6 +281,7 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
     console.log(payload);
     try {
       console.log(payload, 'payload');
+      setIsUpdating(true);
       const result = await updateSchedule(scheduleId as string, payload, event_space_id as string);
       // setSwitchDialogue(true);
       setScheduleUpdated(true);
@@ -256,8 +289,15 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
         title: 'Session updated successfully',
       });
       console.log(result, 'result');
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
+      toast({
+        title: 'Error',
+        description: error?.response.data?.error,
+        variant: 'destructive',
+      });
+    } finally {
+      setIsUpdating(true);
     }
   }
 
@@ -345,6 +385,7 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
     fetchLocationDetails();
     fetchTags();
     fetchSpeakers();
+    fetchUserProfile();
   }, []);
 
   useEffect(() => {
@@ -382,7 +423,6 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
   if (isLoading) {
     return <Loader />;
   }
-
   return (
     <div className="flex flex-col items-center gap-[34px] self-stretch w-full text-white">
       <div className="flex flex-col items-center gap-[34px] self-stretch w-full p-5">
@@ -404,261 +444,262 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
             </DialogPrimitive.Close>
           </div>
         ) : (
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-10 w-full">
-              <FormField
-                control={form.control}
-                name="format"
-                render={({ field }) => (
-                  <FormItem className="space-y-3">
-                    <FormLabel className="text-2xl opacity-80 leading-[1.2]">Session Format</FormLabel>
-                    <FormDescription>The format you select will determine what information will be required going forward</FormDescription>
-                    <FormControl>
-                      <RadioGroup onValueChange={(value) => (field.onChange(value), handleEventFormatChange(value))} defaultValue={schedule?.format} className="flex flex-col md:flex-row" {...field}>
-                        <FormItem className="flex items-center space-x-3 space-y-0 p-3 hover:bg-btnPrimaryGreen/20 rounded-md focus:bg-btnPrimaryGreen/20">
-                          <FormControl>
-                            <RadioGroupItem value="in-person" />
-                          </FormControl>
-                          <FormLabel className="font-semibold text-white/60 text-base">
-                            In-Person
-                            <span className="text-xs block">This is a physical event</span>
-                          </FormLabel>
-                        </FormItem>
-                        <FormItem className="flex items-center space-x-3 space-y-0 p-3 hover:bg-btnPrimaryGreen/20 rounded-md">
-                          <FormControl>
-                            <RadioGroupItem value="online" />
-                          </FormControl>
-                          <FormLabel className="font-semibold text-white/60 text-base ">
-                            Online
-                            <span className="text-xs block">Specifically Online Event</span>
-                          </FormLabel>
-                        </FormItem>
-                      </RadioGroup>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-lg font-semibold leading-[1.2] text-white">Session Name </FormLabel>
-                    <FormControl>
-                      <InputFieldDark type={InputFieldType.Primary} placeholder={'Enter a name for your event'} {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <div className="w-full">
+          <>
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-10 w-full">
                 <FormField
                   control={form.control}
-                  name="description"
+                  name="format"
                   render={({ field }) => (
-                    <div className="flex flex-col gap-[10px]">
-                      <Label className="text-2xl text-white/80">Session Description</Label>
-                      <TextEditor value={field.value} onChange={field.onChange} />
-                    </div>
+                    <FormItem className="space-y-3">
+                      <FormLabel className="text-2xl opacity-80 leading-[1.2]">Session Format</FormLabel>
+                      <FormDescription>The format you select will determine what information will be required going forward</FormDescription>
+                      <FormControl>
+                        <RadioGroup onValueChange={(value) => (field.onChange(value), handleEventFormatChange(value))} defaultValue={schedule?.format} className="flex flex-col md:flex-row" {...field}>
+                          <FormItem className="flex items-center space-x-3 space-y-0 p-3 hover:bg-btnPrimaryGreen/20 rounded-md focus:bg-btnPrimaryGreen/20">
+                            <FormControl>
+                              <RadioGroupItem value="in-person" />
+                            </FormControl>
+                            <FormLabel className="font-semibold text-white/60 text-base">
+                              In-Person
+                              <span className="text-xs block">This is a physical event</span>
+                            </FormLabel>
+                          </FormItem>
+                          <FormItem className="flex items-center space-x-3 space-y-0 p-3 hover:bg-btnPrimaryGreen/20 rounded-md">
+                            <FormControl>
+                              <RadioGroupItem value="online" />
+                            </FormControl>
+                            <FormLabel className="font-semibold text-white/60 text-base ">
+                              Online
+                              <span className="text-xs block">Specifically Online Event</span>
+                            </FormLabel>
+                          </FormItem>
+                        </RadioGroup>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
                   )}
                 />
-              </div>
-              <div className="w-full">
-                <h2 className="text-2xl text-white/80">Session Date & Times</h2>
-                <div className="flex flex-col items-start gap-5 self-stretch w-full pt-5">
-                  <div className="flex gap-5">
-                    <SwitchButton value={schedule.all_day} onClick={handleChangeSwitch} />
-                    <span className="text-lg opacity-70 self-stretch">All Day</span>
-                  </div>
-                  <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                    <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select Session Frequency</Label>
-                    <select
-                      value={schedule.schedule_frequency}
-                      onChange={(e) =>
-                        setSchedule({
-                          ...schedule,
-                          schedule_frequency: e.target.value as any,
-                        })
-                      }
-                      className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
-                      title="frequency"
-                    >
-                      <option value="once">Once</option>
-                      <option value="everyday">Everyday</option>
-                      <option value="weekly">Weekly</option>
-                    </select>
-                  </div>
-                  <div className="flex flex-col items-center gap-[30px] self-stretch w-full">
-                    {schedule.date !== '' && (
-                      <FormField
-                        control={form.control}
-                        name="date"
-                        render={({ field }) => (
-                          <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                            <span className="text-lg opacity-70 self-stretch">Start Date</span>
-                            <CustomDatePicker defaultDate={undefined} selectedDate={startDate as Date} handleDateChange={field.onChange} {...field} />
-                            <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">Click & Select or type in a date</h3>
-                            <FormMessage />
-                          </div>
-                        )}
-                      />
-                    )}
-
-                    {!schedule.all_day && (
-                      <>
-                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                          <div className="flex justify-between gap-10 text-white">
-                            <TimePicker
-                              label="Start Time"
-                              // slotProps={{ textField: { color: 'white' }}}
-                              value={dayjs(schedule?.start_time) as unknown as string}
-                              // className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
-                              onChange={(newValue: string | Date | null | undefined) =>
-                                setSchedule({
-                                  ...schedule,
-                                  start_time: newValue as string,
-                                })
-                              }
-                              sx={{
-                                input: {
-                                  color: 'white',
-                                },
-                                label: {
-                                  color: 'white',
-                                },
-                                svg: {
-                                  color: 'white', // change the icon color
-                                },
-                                backgroundColor: '#242727',
-                                color: 'white',
-                                borderRadius: '8px',
-                                width: '100%',
-                                // borderColor: "white",
-                                // borderWidth: "1px",
-                                border: '1px solid #4b4a4a',
-                              }}
-                              slotProps={{
-                                popper: {
-                                  autoFocus: true,
-                                  sx: {
-                                    pointerEvents: 'auto',
-                                  },
-                                },
-                              }}
-                            />
-                            <TimePicker
-                              label="End Time"
-                              value={dayjs(schedule?.end_time) as unknown as string}
-                              onChange={(newValue: string | Date | null | undefined) =>
-                                setSchedule({
-                                  ...schedule,
-                                  end_time: newValue as string,
-                                })
-                              }
-                              sx={{
-                                input: {
-                                  color: 'white',
-                                },
-                                label: {
-                                  color: 'white',
-                                },
-                                svg: {
-                                  color: 'white', // change the icon color
-                                },
-                                backgroundColor: '#242727',
-                                color: 'white',
-                                borderRadius: '8px',
-                                width: '100%',
-                                // borderColor: "white",
-                                // borderWidth: "1px",
-                                border: '1px solid #4b4a4a',
-                              }}
-                              slotProps={{
-                                popper: {
-                                  sx: {
-                                    pointerEvents: 'auto',
-                                  },
-                                },
-                              }}
-                            />
-                          </div>
-                        </LocalizationProvider>
-                      </>
-                    )}
-                  </div>
-                  {(schedule?.schedule_frequency === sessionFrequency.WEEKLY || schedule?.schedule_frequency === sessionFrequency.EVERYDAY) && (
-                    <div className="flex flex-col items-center gap-[30px] self-stretch w-full">
-                      <FormField
-                        control={form.control}
-                        name="end_date"
-                        render={({ field }) => (
-                          <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                            <span className="text-lg opacity-70 self-stretch">End Date</span>
-
-                            <CustomDatePicker defaultDate={undefined} selectedDate={field.value || null} handleDateChange={field.onChange} {...field} />
-
-                            <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">Click & Select or type in a date</h3>
-                            <FormMessage />
-                          </div>
-                        )}
-                      />
-                    </div>
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-lg font-semibold leading-[1.2] text-white">Session Name </FormLabel>
+                      <FormControl>
+                        <InputFieldDark type={InputFieldType.Primary} placeholder={'Enter a name for your event'} {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
                   )}
-                  <line></line>
+                />
+                <div className="w-full">
+                  <FormField
+                    control={form.control}
+                    name="description"
+                    render={({ field }) => (
+                      <div className="flex flex-col gap-[10px]">
+                        <Label className="text-2xl text-white/80">Session Description</Label>
+                        <TextEditor value={field.value} onChange={field.onChange} />
+                      </div>
+                    )}
+                  />
                 </div>
-              </div>
-              <div className="w-full">
-                {selectedEventFormat === 'new' && schedule.format === 'in-person' && (
-                  <>
-                    <h2 className="text-2xl opacity-80">Location</h2>
-                    <div className="flex flex-col items-start gap-5 self-stretch w-full pt-5">
-                      <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                        <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select Location</Label>
-                        {/* <InputFieldDark type={InputFieldType.Option} placeholder={'The Dome'} /> */}
-                        <select
-                          onChange={(e) => setLocationId(e.target.value)}
-                          title="location"
-                          value={locationId}
-                          className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
-                        >
-                          {savedLocations.length === 0 && <option value="">No saved locations</option>}
-                          {savedLocations?.map((location: any) => (
-                            <option key={location.id} value={location.id}>
-                              {location.name}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
+                <div className="w-full">
+                  <h2 className="text-2xl text-white/80">Session Date & Times</h2>
+                  <div className="flex flex-col items-start gap-5 self-stretch w-full pt-5">
+                    <div className="flex gap-5">
+                      <SwitchButton value={schedule.all_day} onClick={handleChangeSwitch} />
+                      <span className="text-lg opacity-70 self-stretch">All Day</span>
                     </div>
-                  </>
-                )}
-                {selectedEventFormat === 'in-person' && (
-                  <>
-                    <h2 className="text-2xl opacity-80">Location</h2>
-                    <div className="flex flex-col items-start gap-5 self-stretch w-full pt-5">
-                      <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                        <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select Location</Label>
-                        {/* <InputFieldDark type={InputFieldType.Option} placeholder={'The Dome'} /> */}
-                        <select
-                          onChange={(e) => setLocationId(e.target.value)}
-                          title="location"
-                          value={locationId}
-                          className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
-                        >
-                          {savedLocations.length === 0 && <option value="">No saved locations</option>}
-                          {savedLocations?.map((location: any) => (
-                            <option key={location.id} value={location.id}>
-                              {location.name}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
+                    <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
+                      <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select Session Frequency</Label>
+                      <select
+                        value={schedule.schedule_frequency}
+                        onChange={(e) =>
+                          setSchedule({
+                            ...schedule,
+                            schedule_frequency: e.target.value as any,
+                          })
+                        }
+                        className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
+                        title="frequency"
+                      >
+                        <option value="once">Once</option>
+                        <option value="everyday">Everyday</option>
+                        <option value="weekly">Weekly</option>
+                      </select>
                     </div>
-                  </>
-                )}
-                <div className="flex flex-col items-start gap-5 self-stretch w-full pt-5">
-                  {/* <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
+                    <div className="flex flex-col items-center gap-[30px] self-stretch w-full">
+                      {schedule.date !== '' && (
+                        <FormField
+                          control={form.control}
+                          name="date"
+                          render={({ field }) => (
+                            <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
+                              <span className="text-lg opacity-70 self-stretch">Start Date</span>
+                              <CustomDatePicker defaultDate={undefined} selectedDate={startDate as Date} handleDateChange={field.onChange} {...field} />
+                              <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">Click & Select or type in a date</h3>
+                              <FormMessage />
+                            </div>
+                          )}
+                        />
+                      )}
+
+                      {!schedule.all_day && (
+                        <>
+                          <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <div className="flex justify-between gap-10 text-white">
+                              <TimePicker
+                                label="Start Time"
+                                // slotProps={{ textField: { color: 'white' }}}
+                                value={dayjs(schedule?.start_time) as unknown as string}
+                                // className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
+                                onChange={(newValue: string | Date | null | undefined) =>
+                                  setSchedule({
+                                    ...schedule,
+                                    start_time: newValue as string,
+                                  })
+                                }
+                                sx={{
+                                  input: {
+                                    color: 'white',
+                                  },
+                                  label: {
+                                    color: 'white',
+                                  },
+                                  svg: {
+                                    color: 'white', // change the icon color
+                                  },
+                                  backgroundColor: '#242727',
+                                  color: 'white',
+                                  borderRadius: '8px',
+                                  width: '100%',
+                                  // borderColor: "white",
+                                  // borderWidth: "1px",
+                                  border: '1px solid #4b4a4a',
+                                }}
+                                slotProps={{
+                                  popper: {
+                                    autoFocus: true,
+                                    sx: {
+                                      pointerEvents: 'auto',
+                                    },
+                                  },
+                                }}
+                              />
+                              <TimePicker
+                                label="End Time"
+                                value={dayjs(schedule?.end_time) as unknown as string}
+                                onChange={(newValue: string | Date | null | undefined) =>
+                                  setSchedule({
+                                    ...schedule,
+                                    end_time: newValue as string,
+                                  })
+                                }
+                                sx={{
+                                  input: {
+                                    color: 'white',
+                                  },
+                                  label: {
+                                    color: 'white',
+                                  },
+                                  svg: {
+                                    color: 'white', // change the icon color
+                                  },
+                                  backgroundColor: '#242727',
+                                  color: 'white',
+                                  borderRadius: '8px',
+                                  width: '100%',
+                                  // borderColor: "white",
+                                  // borderWidth: "1px",
+                                  border: '1px solid #4b4a4a',
+                                }}
+                                slotProps={{
+                                  popper: {
+                                    sx: {
+                                      pointerEvents: 'auto',
+                                    },
+                                  },
+                                }}
+                              />
+                            </div>
+                          </LocalizationProvider>
+                        </>
+                      )}
+                    </div>
+                    {(schedule?.schedule_frequency === sessionFrequency.WEEKLY || schedule?.schedule_frequency === sessionFrequency.EVERYDAY) && (
+                      <div className="flex flex-col items-center gap-[30px] self-stretch w-full">
+                        <FormField
+                          control={form.control}
+                          name="end_date"
+                          render={({ field }) => (
+                            <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
+                              <span className="text-lg opacity-70 self-stretch">End Date</span>
+
+                              <CustomDatePicker defaultDate={undefined} selectedDate={field.value || null} handleDateChange={field.onChange} {...field} />
+
+                              <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">Click & Select or type in a date</h3>
+                              <FormMessage />
+                            </div>
+                          )}
+                        />
+                      </div>
+                    )}
+                    <line></line>
+                  </div>
+                </div>
+                <div className="w-full">
+                  {selectedEventFormat === 'new' && schedule.format === 'in-person' && (
+                    <>
+                      <h2 className="text-2xl opacity-80">Location</h2>
+                      <div className="flex flex-col items-start gap-5 self-stretch w-full pt-5">
+                        <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
+                          <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select Location</Label>
+                          {/* <InputFieldDark type={InputFieldType.Option} placeholder={'The Dome'} /> */}
+                          <select
+                            onChange={(e) => setLocationId(e.target.value)}
+                            title="location"
+                            value={locationId}
+                            className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
+                          >
+                            {savedLocations.length === 0 && <option value="">No saved locations</option>}
+                            {savedLocations?.map((location: any) => (
+                              <option key={location.id} value={location.id}>
+                                {location.name}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      </div>
+                    </>
+                  )}
+                  {selectedEventFormat === 'in-person' && (
+                    <>
+                      <h2 className="text-2xl opacity-80">Location</h2>
+                      <div className="flex flex-col items-start gap-5 self-stretch w-full pt-5">
+                        <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
+                          <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select Location</Label>
+                          {/* <InputFieldDark type={InputFieldType.Option} placeholder={'The Dome'} /> */}
+                          <select
+                            onChange={(e) => setLocationId(e.target.value)}
+                            title="location"
+                            value={locationId}
+                            className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
+                          >
+                            {savedLocations.length === 0 && <option value="">No saved locations</option>}
+                            {savedLocations?.map((location: any) => (
+                              <option key={location.id} value={location.id}>
+                                {location.name}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      </div>
+                    </>
+                  )}
+                  <div className="flex flex-col items-start gap-5 self-stretch w-full pt-5">
+                    {/* <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
                     <FormField
                       control={form.control}
                       name="video_call_link"
@@ -673,72 +714,232 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
                       )}
                     />
                   </div> */}
-                  {selectedEventFormat === 'online' && (
-                    <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                      <FormField
-                        control={form.control}
-                        name="live_stream_url"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="text-lg font-semibold leading-[1.2] text-white self-stretch">Live Stream Link</FormLabel>
-                            <FormControl>
-                              <InputFieldDark type={InputFieldType.Link} placeholder={'Type URL'} {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-                  )}
-                  {selectedEventFormat === 'new' && schedule.format === 'online' && (
-                    <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                      <FormField
-                        control={form.control}
-                        name="live_stream_url"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="text-lg font-semibold leading-[1.2] text-white self-stretch">Live Stream Link</FormLabel>
-                            <FormControl>
-                              <InputFieldDark type={InputFieldType.Link} placeholder={'Type URL'} {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-                  )}
-                </div>
-              </div>
-              <line></line>
-              <div className="w-full">
-                <Label className="text-2xl text-white/80">Roles</Label>
-                <div className="flex flex-col gap-6 items-start pt-5">
-                  <div className="flex flex-col gap-6 w-full">
-                    <div className="flex items-end gap-6 self-stretch">
+                    {selectedEventFormat === 'online' && (
                       <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                        <h2 className="md:text-lg  font-semibold leading-[1.2] text-white self-stretch sm:text-base">Enter Name</h2>
-                        <div className="flex w-full text-white outline-none rounded-lg pr-3 pl-2.5 bg-inputField gap-2.5 border border-white/10 border-opacity-10 items-center">
-                          <Autocomplete
-                            {...defaultSpeakers}
-                            id="controlled-demo"
-                            sx={{ color: 'black', width: '100%' }}
-                            color="black"
-                            value={eventItem}
-                            onChange={(event: any, newValue) => {
-                              console.log('onChange', event, newValue);
-                              if (newValue) {
-                                // setTagItem({ name: newValue.name });
+                        <FormField
+                          control={form.control}
+                          name="live_stream_url"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-lg font-semibold leading-[1.2] text-white self-stretch">Live Stream Link</FormLabel>
+                              <FormControl>
+                                <InputFieldDark type={InputFieldType.Link} placeholder={'Type URL'} {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                    )}
+                    {selectedEventFormat === 'new' && schedule.format === 'online' && (
+                      <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
+                        <FormField
+                          control={form.control}
+                          name="live_stream_url"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-lg font-semibold leading-[1.2] text-white self-stretch">Live Stream Link</FormLabel>
+                              <FormControl>
+                                <InputFieldDark type={InputFieldType.Link} placeholder={'Type URL'} {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <line></line>
+                <div className="w-full">
+                  <Label className="text-2xl text-white/80">Roles</Label>
+                  <div className="flex flex-col gap-6 items-start pt-5">
+                    <div className="flex flex-col gap-6 w-full">
+                      <div className="flex items-end gap-6 self-stretch">
+                        <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
+                          <h2 className="md:text-lg  font-semibold leading-[1.2] text-white self-stretch sm:text-base">Enter Name</h2>
+                          <div className="flex w-full text-white outline-none rounded-lg pr-3 pl-2.5 bg-inputField gap-2.5 border border-white/10 border-opacity-10 items-center">
+                            <Autocomplete
+                              {...defaultSpeakers}
+                              id="controlled-demo"
+                              sx={{ color: 'black', width: '100%' }}
+                              color="black"
+                              value={eventItem}
+                              onChange={(event: any, newValue) => {
+                                console.log('onChange', event, newValue);
+                                if (newValue) {
+                                  // setTagItem({ name: newValue.name });
+                                  setEventItem({
+                                    ...eventItem,
+                                    name: newValue.name,
+                                  });
+                                }
+                              }}
+                              onInputChange={(event, newInputValue) => {
                                 setEventItem({
                                   ...eventItem,
-                                  name: newValue.name,
+                                  name: newInputValue,
                                 });
-                              }
-                            }}
-                            onInputChange={(event, newInputValue) => {
+                              }}
+                              slotProps={{
+                                paper: {
+                                  sx: {
+                                    color: 'white',
+                                    backgroundColor: '#242727',
+                                    pointerEvents: 'auto',
+                                  },
+                                },
+                              }}
+                              renderInput={(params) => (
+                                <TextField
+                                  sx={{
+                                    color: 'white',
+                                    input: {
+                                      color: 'white',
+                                    },
+                                    label: {
+                                      color: 'white',
+                                    },
+                                  }}
+                                  {...params}
+                                  label="Enter the name"
+                                  variant="standard"
+                                />
+                              )}
+                            />
+                          </div>
+                          {/* <InputFieldDark
+                                type={InputFieldType.Primary}
+                                value={eventItem?.name}
+                                onChange={(e) => {
+                                  console.log((e.target as HTMLInputElement).value);
+                                  setEventItem({
+                                    ...eventItem,
+                                    name: (e.target as HTMLInputElement).value,
+                                  });
+                                }}
+                                placeholder={'Enter the name'}
+                              /> */}
+                        </div>
+                        <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
+                          <h2 className="md:text-lg  font-semibold leading-[1.2] text-white self-stretch sm:text-base">Select Role</h2>
+                          <select
+                            title="speaker"
+                            value={eventItem.role}
+                            onChange={(e) =>
                               setEventItem({
                                 ...eventItem,
-                                name: newInputValue,
-                              });
+                                role: e.target.value,
+                              })
+                            }
+                            className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
+                          >
+                            <option value="speaker">Speaker</option>
+                            <option value="organizer">Organizer</option>
+                            <option value="facilitator">Facilitator</option>
+                          </select>
+                        </div>
+
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (eventItem.name === '') return;
+                            console.log(eventItem);
+                            setSchedule({
+                              ...schedule,
+                              organizers: [...(schedule.organizers as Organizer[]), eventItem],
+                            });
+                            setOrganizers([...organizers, eventItem]);
+                            setEventItem({
+                              name: '',
+                              role: 'speaker',
+                            });
+                          }}
+                          className="flex gap-2.5 mb-2 text-lg font-normal leading-[1.2] text-white items-center rounded-[8px] px-2 py-1 bg-white bg-opacity-10"
+                        >
+                          +
+                        </button>
+                      </div>
+
+                      <div className="flex gap-2.5">
+                        {schedule.organizers?.map((organizer: any, index: number) => (
+                          <div key={index} className="flex gap-2.5 items-center rounded-[8px] px-2 py-1.5 bg-white bg-opacity-10">
+                            <button type="button" className="flex gap-2.5 items-center">
+                              <GoXCircle onClick={() => handleRemoveSpeaker(index)} className="top-0.5 left-0.5 w-4 h-4" />
+                              <span className="text-lg font-semibold leading-[1.2] text-white self-stretch">{organizer.name ? organizer.name : organizer.name}</span>
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="w-full flex flex-col gap-6">
+                  <Label className="text-2xl text-white/80">Session Labels</Label>
+                  <div className="flex flex-col gap-[14px] items-start w-full">
+                    <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select Event Category</Label>
+
+                    <select
+                      onChange={(e) => {
+                        setSchedule({
+                          ...schedule,
+                          event_type: e.target.value,
+                        });
+                        // setInitialEvent(e.target.value)
+                        console.log(schedule.event_type);
+                      }}
+                      value={schedule.event_type}
+                      // value={schedule.event_type}
+                      title="category"
+                      className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
+                    >
+                      {eventSpace?.event_type?.map((category, index) => {
+                        const id = uuidv4();
+                        return (
+                          <option key={id} value={category}>
+                            {category}
+                          </option>
+                        );
+                      })}
+                    </select>
+                  </div>
+                  <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
+                    <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select Experience Level</Label>
+
+                    <select
+                      onChange={(e) =>
+                        setSchedule({
+                          ...schedule,
+                          experience_level: e.target.value,
+                        })
+                      }
+                      value={schedule.experience_level}
+                      title="category"
+                      className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
+                    >
+                      {eventSpace?.experience_level?.map((category) => {
+                        const id = uuidv4();
+                        return (
+                          <option key={id} value={category}>
+                            {category}
+                          </option>
+                        );
+                      })}
+                    </select>
+                  </div>
+                  <div className="flex flex-col items-start gap-6 self-stretch">
+                    <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
+                      <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Add Tags</Label>
+                      <div className="flex w-full text-white gap-5">
+                        <div className="flex w-full text-white outline-none rounded-lg pr-3 pl-2.5 bg-inputField gap-2.5 border border-white/10 border-opacity-10 items-center">
+                          <Autocomplete
+                            {...defaultProps}
+                            id="controlled-demo"
+                            value={tagItem}
+                            onChange={(event: any, newValue) => {
+                              if (newValue) {
+                                setTagItem({ name: newValue.name });
+                              }
                             }}
                             slotProps={{
                               paper: {
@@ -748,6 +949,11 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
                                   pointerEvents: 'auto',
                                 },
                               },
+                            }}
+                            sx={{ color: 'black', width: '100%' }}
+                            color="black"
+                            onInputChange={(event, newInputValue) => {
+                              setTagItem({ name: newInputValue });
                             }}
                             renderInput={(params) => (
                               <TextField
@@ -761,249 +967,90 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
                                   },
                                 }}
                                 {...params}
-                                label="Enter the name"
+                                label="tags"
                                 variant="standard"
                               />
                             )}
                           />
                         </div>
-                        {/* <InputFieldDark
-                                type={InputFieldType.Primary}
-                                value={eventItem?.name}
-                                onChange={(e) => {
-                                  console.log((e.target as HTMLInputElement).value);
-                                  setEventItem({
-                                    ...eventItem,
-                                    name: (e.target as HTMLInputElement).value,
-                                  });
-                                }}
-                                placeholder={'Enter the name'}
-                              /> */}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (tagItem.name === '') return;
+                            setSchedule({
+                              ...schedule,
+                              tags: [...(schedule.tags as string[]), tagItem.name],
+                            });
+                            setTagItem({ name: '' });
+                          }}
+                          className="flex gap-2.5 text-lg font-normal leading-[1.2] text-white items-center rounded-[8px] px-2 py-1 bg-white bg-opacity-10"
+                        >
+                          +
+                        </button>
                       </div>
+                      <div className="flex gap-2.5">
+                        {schedule.tags?.map((tag, index) => {
+                          const id = uuidv4();
+                          return (
+                            <div key={id} className="flex gap-2.5 items-center rounded-[8px] px-2 py-1.5 bg-white bg-opacity-10">
+                              <button type="button" className="flex gap-2.5 items-center">
+                                <GoXCircle onClick={() => handleRemoveTag(index)} className="top-0.5 left-0.5 w-4 h-4" />
+                                <span className="text-lg font-semibold leading-[1.2] text-white self-stretch">{tag}</span>
+                              </button>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                    <line />
+                  </div>
+                </div>
+                <div className="w-full gap-6">
+                  <Label className="text-2xl text-white/80">Advanced</Label>
+                  <div className="flex flex-col items-center gap-5 self-stretch pt-5">
+                    <div className="flex items-center gap-5 self-stretch">
+                      <SwitchButton value={schedule.limit_rsvp} onClick={handleLimitRSVP} />
+                      <span className="flex-1 text-base font-semibold leading-[1.2]">Limit RSVPs</span>
+                    </div>
+                    {schedule.limit_rsvp && (
                       <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                        <h2 className="md:text-lg  font-semibold leading-[1.2] text-white self-stretch sm:text-base">Select Role</h2>
-                        <select
-                          title="speaker"
-                          value={eventItem.role}
+                        <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select an Amount</Label>
+                        <input
+                          type="number"
+                          min="1"
+                          className="bg-gray-600 w-full outline-none px-4 rounded-md py-2"
+                          placeholder={'50'}
+                          value={schedule.rsvp_amount}
                           onChange={(e) =>
-                            setEventItem({
-                              ...eventItem,
-                              role: e.target.value,
+                            setSchedule({
+                              ...schedule,
+                              rsvp_amount: e.target.value as unknown as number,
                             })
                           }
-                          className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
-                        >
-                          <option value="speaker">Speaker</option>
-                          <option value="organizer">Organizer</option>
-                          <option value="facilitator">Facilitator</option>
-                        </select>
-                      </div>
-
-                      <button
-                        type="button"
-                        onClick={() => {
-                          if (eventItem.name === '') return;
-                          console.log(eventItem);
-                          setSchedule({
-                            ...schedule,
-                            organizers: [...(schedule.organizers as Organizer[]), eventItem],
-                          });
-                          setOrganizers([...organizers, eventItem]);
-                          setEventItem({
-                            name: '',
-                            role: 'speaker',
-                          });
-                        }}
-                        className="flex gap-2.5 mb-2 text-lg font-normal leading-[1.2] text-white items-center rounded-[8px] px-2 py-1 bg-white bg-opacity-10"
-                      >
-                        +
-                      </button>
-                    </div>
-
-                    <div className="flex gap-2.5">
-                      {schedule.organizers?.map((organizer: any, index: number) => (
-                        <div key={index} className="flex gap-2.5 items-center rounded-[8px] px-2 py-1.5 bg-white bg-opacity-10">
-                          <button type="button" className="flex gap-2.5 items-center">
-                            <GoXCircle onClick={() => handleRemoveSpeaker(index)} className="top-0.5 left-0.5 w-4 h-4" />
-                            <span className="text-lg font-semibold leading-[1.2] text-white self-stretch">{organizer.name ? organizer.name : organizer.name}</span>
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="w-full flex flex-col gap-6">
-                <Label className="text-2xl text-white/80">Session Labels</Label>
-                <div className="flex flex-col gap-[14px] items-start w-full">
-                  <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select Event Category</Label>
-
-                  <select
-                    onChange={(e) => {
-                      setSchedule({
-                        ...schedule,
-                        event_type: e.target.value,
-                      });
-                      // setInitialEvent(e.target.value)
-                      console.log(schedule.event_type);
-                    }}
-                    value={schedule.event_type}
-                    // value={schedule.event_type}
-                    title="category"
-                    className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
-                  >
-                    {eventSpace?.event_type?.map((category, index) => {
-                      const id = uuidv4();
-                      return (
-                        <option key={id} value={category}>
-                          {category}
-                        </option>
-                      );
-                    })}
-                  </select>
-                </div>
-                <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                  <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select Experience Level</Label>
-
-                  <select
-                    onChange={(e) =>
-                      setSchedule({
-                        ...schedule,
-                        experience_level: e.target.value,
-                      })
-                    }
-                    value={schedule.experience_level}
-                    title="category"
-                    className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
-                  >
-                    {eventSpace?.experience_level?.map((category) => {
-                      const id = uuidv4();
-                      return (
-                        <option key={id} value={category}>
-                          {category}
-                        </option>
-                      );
-                    })}
-                  </select>
-                </div>
-                <div className="flex flex-col items-start gap-6 self-stretch">
-                  <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                    <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Add Tags</Label>
-                    <div className="flex w-full text-white gap-5">
-                      <div className="flex w-full text-white outline-none rounded-lg pr-3 pl-2.5 bg-inputField gap-2.5 border border-white/10 border-opacity-10 items-center">
-                        <Autocomplete
-                          {...defaultProps}
-                          id="controlled-demo"
-                          value={tagItem}
-                          onChange={(event: any, newValue) => {
-                            if (newValue) {
-                              setTagItem({ name: newValue.name });
-                            }
-                          }}
-                          slotProps={{
-                            paper: {
-                              sx: {
-                                color: 'white',
-                                backgroundColor: '#242727',
-                                pointerEvents: 'auto',
-                              },
-                            },
-                          }}
-                          sx={{ color: 'black', width: '100%' }}
-                          color="black"
-                          onInputChange={(event, newInputValue) => {
-                            setTagItem({ name: newInputValue });
-                          }}
-                          renderInput={(params) => (
-                            <TextField
-                              sx={{
-                                color: 'white',
-                                input: {
-                                  color: 'white',
-                                },
-                                label: {
-                                  color: 'white',
-                                },
-                              }}
-                              {...params}
-                              label="tags"
-                              variant="standard"
-                            />
-                          )}
                         />
                       </div>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          if (tagItem.name === '') return;
-                          setSchedule({
-                            ...schedule,
-                            tags: [...(schedule.tags as string[]), tagItem.name],
-                          });
-                          setTagItem({ name: '' });
-                        }}
-                        className="flex gap-2.5 text-lg font-normal leading-[1.2] text-white items-center rounded-[8px] px-2 py-1 bg-white bg-opacity-10"
-                      >
-                        +
-                      </button>
-                    </div>
-                    <div className="flex gap-2.5">
-                      {schedule.tags?.map((tag, index) => {
-                        const id = uuidv4();
-                        return (
-                          <div key={id} className="flex gap-2.5 items-center rounded-[8px] px-2 py-1.5 bg-white bg-opacity-10">
-                            <button type="button" className="flex gap-2.5 items-center">
-                              <GoXCircle onClick={() => handleRemoveTag(index)} className="top-0.5 left-0.5 w-4 h-4" />
-                              <span className="text-lg font-semibold leading-[1.2] text-white self-stretch">{tag}</span>
-                            </button>
-                          </div>
-                        );
-                      })}
-                    </div>
+                    )}
                   </div>
-                  <line />
                 </div>
-              </div>
-              <div className="w-full gap-6">
-                <Label className="text-2xl text-white/80">Advanced</Label>
-                <div className="flex flex-col items-center gap-5 self-stretch pt-5">
-                  <div className="flex items-center gap-5 self-stretch">
-                    <SwitchButton value={schedule.limit_rsvp} onClick={handleLimitRSVP} />
-                    <span className="flex-1 text-base font-semibold leading-[1.2]">Limit RSVPs</span>
-                  </div>
-                  {schedule.limit_rsvp && (
-                    <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                      <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select an Amount</Label>
-                      <input
-                        type="number"
-                        min="1"
-                        className="bg-gray-600 w-full outline-none px-4 rounded-md py-2"
-                        placeholder={'50'}
-                        value={schedule.rsvp_amount}
-                        onChange={(e) =>
-                          setSchedule({
-                            ...schedule,
-                            rsvp_amount: e.target.value as unknown as number,
-                          })
-                        }
-                      />
-                    </div>
-                  )}
-                </div>
-              </div>
 
-              <div className="flex justify-center pt-8">
-                <div className="flex flex-col lg:flex-row gap-[30px] w-full">
-                  <Button className="rounded-full w-full lg:w-1/2 flex justify-center" variant="quiet" size="lg" type="button" leftIcon={CgClose}>
+                <div className="flex justify-center pt-8">
+                  <div className="flex lg:flex-row gap-[30px] w-full">
+                    {/* <Button className="rounded-full w-full lg:w-1/2 flex justify-center" variant="quiet" size="lg" type="button" leftIcon={CgClose}>
                     <span>Discard Session</span>
-                  </Button>
-                  <Button className="rounded-full w-full lg:w-1/2 flex justify-center" variant="blue" size="lg" type="submit" leftIcon={FaCircleArrowUp}>
-                    <span>Update Session</span>
-                  </Button>
+                  </Button> */}
+                    <Button className="rounded-full w-full md:w-full lg:w-full flex justify-center" variant="blue" size="lg" type="submit" leftIcon={FaCircleArrowUp} disabled={updating}>
+                      <span>{updating ? 'Updating' : 'Update Session'}</span>
+                    </Button>
+                  </div>
                 </div>
-              </div>
-            </form>
-          </Form>
+              </form>
+            </Form>
+            {creatorId === userId && (
+              <Button variant="red" className="rounded-full w-full lg:w-1/2 flex justify-center" size="lg" onClick={handleDeleteSchedule} disabled={loading}>
+                {loading ? 'Deleting...' : 'Delete'}
+              </Button>
+            )}
+          </>
         )}
       </div>
     </div>
