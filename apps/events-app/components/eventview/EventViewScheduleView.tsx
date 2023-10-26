@@ -22,6 +22,7 @@ import EditScheduleForm from '@/components/commons/EditScheduleForm';
 import fetchScheduleById from '@/services/fetchScheduleById';
 import { toast } from '@/components/ui/use-toast';
 import { deleteScheduleById } from '@/services/deleteSchedule';
+import { Label } from '../ui/label';
 
 interface IEventViewScheduleViewTemplate {
   event_space_id: string;
@@ -102,6 +103,7 @@ export default function EventViewScheduleViewTemplate({ event_space_id, schedule
   const editorUsername = mostRecentEditLog?.user?.username;
   const creatorUsername = currentSchedule?.editlogs[0]?.user?.username;
   const creatorId = currentSchedule?.editlogs[0]?.editor_id;
+  const [locatin, setLocation] = useState<string>('');
   useEffect(() => {
     if (currentSchedule) {
       if (currentSchedule.rsvp_amount === currentSchedule.current_rsvp_no) {
@@ -110,6 +112,9 @@ export default function EventViewScheduleViewTemplate({ event_space_id, schedule
       if (currentSchedule.rsvp_amount === 0) {
         setIsRsvpFullOnLoad(false);
       }
+      eventSpace?.eventspacelocation?.forEach((spaceLocation) => {
+        if (spaceLocation.id === currentSchedule.location_id) setLocation(spaceLocation.name);
+      })
     }
   }, [currentSchedule]);
 
@@ -157,7 +162,7 @@ export default function EventViewScheduleViewTemplate({ event_space_id, schedule
   const toggleLogs = () => {
     setShowLogs(!showLogs);
   };
-  console.log(mostRecentEditLog, 'currentSchedule');
+  console.log(eventSpace, 'mostRecentEditLog');
 
   return (
     <div className="flex gap-4 lg:flex-row sm:flex-col">
@@ -214,6 +219,7 @@ export default function EventViewScheduleViewTemplate({ event_space_id, schedule
             </Button> */}
             <div className="flex flex-col gap-2.5 px-5 pt-5 pb-[60px]">
               <h2 className="font-bold">Location</h2>
+              <Label className='text-lg'>{locatin}</Label>
             </div>
             <div className="flex flex-col gap-2.5 px-5 pt-5 pb-[60px] font-bold">{currentSchedule?.description && <RenderHTMLString htmlString={currentSchedule?.description} />}</div>
             <div className="flex gap-2.5 px-5 items-center">
