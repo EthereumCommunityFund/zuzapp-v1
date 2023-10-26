@@ -169,7 +169,7 @@ export default function EventViewScheduleViewTemplate({ event_space_id, schedule
       <div className="flex flex-col lg:w-[1000px] sm:w-full">
         <EventViewHeader imgPath={eventSpace?.image_url as string} name={eventSpace?.name as string} tagline={eventSpace?.tagline as string} />
         <div className="md:p-5 sm:p-0 gap-[30px] max-w-[1200px] h-full">
-          <div className="flex flex-col gap-[10px] p-2.5 bg-componentPrimary rounded-2xl w-[750px] overflow-auto">
+          <div className="flex flex-col gap-[10px] p-2.5 bg-componentPrimary rounded-2xl">
             <div className="flex justify-between">
               {' '}
               {/* Tracks and Edit Button */}
