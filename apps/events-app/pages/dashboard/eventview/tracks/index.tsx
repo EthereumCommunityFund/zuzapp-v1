@@ -132,7 +132,7 @@ export default function EventViewTracksPage() {
               </div>
             </div>
           </div>
-          <div className="lg:w-1/4 sm:w-full lg:mr-10 flex lg:flex-col gap-5 lg:fixed lg:right-0 min-w-fit">
+          {/* <div className="lg:w-1/4 sm:w-full lg:mr-10 flex lg:flex-col gap-5 lg:fixed lg:right-0 min-w-fit">
             <h2 className="p-3.5 gap-[10px] font-bold text-xl sm:hidden lg:flex">
               Tracks: Sort & Filter
             </h2>
@@ -165,7 +165,7 @@ export default function EventViewTracksPage() {
                 optionsClassName={""}
               />
             </div>
-          </div>
+          </div> */}
         </div>
       )}
     </>
