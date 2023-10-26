@@ -101,7 +101,10 @@ export default function DashboardNavigation() {
           <div className="mt-5 py-[15px] px-[13px] gap-3.5 flex flex-col rounded-2xl bg-[#2B2D2D] w-[240px]">
             <Label className="text-white text-xl">Zuzalu</Label>
             <Label className="text-white/70 text-sm">Foster a global network of communities to advance humanity by creating playgrounds at the intersection of free and open technology, science, heath and social innovation</Label>
-            <Dialog>
+            <a href="https://zuzalu.notion.site/Zuzalu-s-Mission-and-Vision-28d0dfaf60c043ab8bb1943f493a225f" target="_blank">
+              <Button variant='quiet' className="rounded-xl justify-center" >Learn About Zuzalu</Button>
+            </a>
+            {/* <Dialog>
               <DialogTrigger asChild>
                 <Button variant='quiet' className="rounded-xl justify-center" >Learn About Zuzalu</Button>
               </DialogTrigger>
@@ -112,7 +115,7 @@ export default function DashboardNavigation() {
                   </DialogTitle>
                   <hr className='bg-grayBackground' />
                   <DialogDescription className="text-white">
-                    {/* <RenderHTMLString htmlString={markdownContent} /> */}
+                    // {/* <RenderHTMLString htmlString={markdownContent} /> 
                     <ReactMarkdown className={'overflow-x-auto h-[500px]'}>{markdownContent}</ReactMarkdown>
                   </DialogDescription>
                 </DialogHeader>
@@ -120,7 +123,7 @@ export default function DashboardNavigation() {
                   <Button size='sm' className='rounded-full w-10 h-10'><X /></Button>
                 </DialogPrimitive.Close>
               </DialogContent>
-            </Dialog>
+            </Dialog> */}
           </div>
         </div>
       </nav>
