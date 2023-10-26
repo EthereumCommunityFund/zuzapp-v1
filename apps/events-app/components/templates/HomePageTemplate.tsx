@@ -93,7 +93,7 @@ export default function HomePageTemplate() {
         'Join us for a two-week popup village where the leading innovators in crypto, AI, governance, decentralized science, and culture unite in the heart of Istanbul to co-work, break downsiloes, and have fun',
       ctas: [
         {
-          ctaText: 'Apply For Waitlist',
+          ctaText: 'Apply to Waitlist',
           ctaLink: 'https://app.tripsha.com/trip/64ff3a6eb4b6950008dee4f8/book',
           action: 'apply',
           twClassNames: 'bg-[#769270] hover:bg-[#92B68B]',
@@ -207,27 +207,27 @@ export default function HomePageTemplate() {
             eventSpaces?.map((event, index) => (
               <div
                 key={index}
-                className="flex flex-col md:flex-row md:justify-between md:items-center border border-white/10 bg-componentPrimary hover:bg-itemHover rounded-lg px-3 md:px-5 py-3 mt-5 duration-200"
+                className="flex flex-col md:flex-row md:justify-between md:items-center border border-white/10 bg-componentPrimary hover:bg-itemHover rounded-2xl px-2 md:px-2 py-3 mt-5 duration-200"
               >
                 <div className="flex flex-col md:flex-row md:space-x-3 md:items-center">
                   <div>
-                    <img src={event.image_url ? event.image_url : `/images/black-img.png`} className="rounded-xl w-full md:max-w-[150px] md:max-h-[120px]" alt="Event" width={150} height={120} />
+                    <img src={event.image_url ? event.image_url : `/images/black-img.png`} className="rounded-xl w-full md:max-w-[180px] md:max-h-[180px]" alt="Event" width={150} height={150} />
                   </div>
                   <div className="space-y-2 space-x-0 mt-2 md:mt-0">
-                    <h4 className="text-2xl font-bold">{event.name}</h4>
-                    <h2 className="text-base font-semibold opacity-70 font-inter">{truncateString(event.tagline, 40)}</h2>
+                    <h4 className="text-2xl font-semibold">{event.name}</h4>
+                    <h2 className="text-base font-normal opacity-70 font-inter">{truncateString(event.tagline, 40)}</h2>
                     <div className="flex gap-2 flex-wrap">
-                      <p className="flex items-center text-xs md:text-sm text-white/60 bg-white/10 rounded-full py-2 px-3 w-fit font-semibold">
+                      <p className="flex items-center text-xs text-white/60 bg-white/10 rounded-xl py-2 px-3 w-fit font-normal">
                         <BsCalendar2Fill className="mr-2 text-sm md:text-base" /> {formatDate(event?.start_date)} - {formatDate(event?.end_date)}
                       </p>
-                      <p className="flex items-center text-xs md:text-sm text-white/60 bg-white/10 rounded-full py-2 px-3 w-fit font-semibold">
+                      <p className="flex items-center text-xs text-white/60 bg-white/10 rounded-xl py-2 px-3 w-fit font-normal">
                         <HiLockClosed className="mr-2 text-sm md:text-base" /> Resident Only
                       </p>
                     </div>
                   </div>
                 </div>
-                <div className="mt-3 md:mt-0">
-                  <Button size="lg" className="rounded-full w-full flex items-center justify-center md:w-auto" onClick={() => event.id && handleButtonClick(event.id)}>
+                <div className="mt-3 md:mt-0 lg:mr-2">
+                  <Button size="lg" className="rounded-full w-full flex items-center justify-center font-semibold md:w-auto bg-white/10" onClick={() => event.id && handleButtonClick(event.id)}>
                     View Event
                   </Button>
                 </div>
