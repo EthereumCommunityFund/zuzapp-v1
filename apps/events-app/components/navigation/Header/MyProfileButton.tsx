@@ -9,6 +9,7 @@ import { User } from '@/components/ui/icons';
 import Avvvatars from 'avvvatars-react';
 
 import { ReactNode } from 'react';
+import SignOut from "@/components/ui/icons/SignOut";
 
 interface DropDownMenuItem {
   icon: ReactNode;
@@ -24,7 +25,7 @@ const MyProfileDropDownMenu: DropDownMenuItem[] = [
     path: '/dashboard/user-profile',
   },
   {
-    icon: <BsArrowRightSquare />,
+    icon: <SignOut/>,
     label: 'Sign Out',
     path: '',
     action: handleSignOut,
@@ -53,7 +54,7 @@ const MyProfileButton: React.FC<MyProfileButtonType> = (props: MyProfileButtonTy
     <>
       <DropdownMenu.Root>
         <DropdownMenu.Trigger>
-          <div className="rounded-[60px] flex items-center gap-3 border border-[#333435] pr-3 pl-1 py-1 bg-white/10 hover:bg-white/20 duration-200">
+          <div className="rounded-[60px] flex items-center gap-3 border border-[#333435] md:pr-3 pr-0 pl-1 py-1 bg-white/10 hover:bg-white/20 duration-200">
             <Avvvatars value={userName} style="shape" />
             <span className="hidden md:inline-block">{userName}</span>
           </div>

@@ -64,13 +64,13 @@ export default function DashboardNavigation() {
         className={`dashboard-menu min-w-[260px] z-10 fixed flex flex-col h-screen border-r border-r-gray-800 bg-[#2F3232] py-10 px-6 transition-transform duration-300 ${dashboardOpen && "open"
           }`}
       >
-        <div className="flex-1 flex flex-col opacity-70">
+        <div className="flex-1 flex flex-col">
           <div className="mt-10 flex-1">
-            <ul className="space-y-2">
+            <ul className="space-y-3">
               {routes.map((route, index) => (
                 <li
                   key={route.path}
-                  className={`flex items-center space-x-2 py-1 px-3 hover:bg-white/20 rounded-3xl ${router.pathname === route.path && "bg-white/20"
+                  className={`flex items-center text-sm transition duration-200 space-x-2 py-2 font-semibold px-3 hover:bg-white/20 rounded-3xl ${router.pathname === route.path ? "bg-white/20" : "opacity-60"
                     }`}
                 >
                   {route.icon && <route.icon size={30} />}
@@ -88,8 +88,8 @@ export default function DashboardNavigation() {
                 <Link href={"/dashboard/events/myspaces"} className="w-full">
                   <Button
                     size="base"
-                    variant={"primaryGreen"}
-                    className="rounded-full w-full text-base"
+                    variant="primaryGreen"
+                    className="rounded-full w-full text-base opacity-70"
                     leftIcon={FaCog}
                   >
                     My Event Spaces
@@ -100,10 +100,10 @@ export default function DashboardNavigation() {
           )}
           <div className="mt-5 py-[15px] px-[13px] gap-3.5 flex flex-col rounded-2xl bg-[#2B2D2D] w-[240px]">
             <Label className="text-white text-xl">Zuzalu</Label>
-            <Label className="text-white/70 text-sm">Foster a global network of communities to advance humanity by creating playgrounds at the intersection of free and open technology, science, heath and social innovation</Label>
+            <Label className="text-white/70 text-xs font-normal">Foster a global network of communities to advance humanity by creating playgrounds at the intersection of free and open technology, science, heath and social innovation</Label>
             <Dialog>
               <DialogTrigger asChild>
-                <Button variant='quiet' className="rounded-xl justify-center" >Learn About Zuzalu</Button>
+                <Button variant='quiet' className="rounded-2xl tracking-wide justify-center" >Learn About Zuzalu</Button>
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>

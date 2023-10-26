@@ -13,7 +13,7 @@ import { useForm } from 'react-hook-form';
 import { useState, useEffect } from 'react';
 import FormTitle from '@/components/ui/labels/form-title';
 import InputFieldDark from '@/components/ui/inputFieldDark';
-import { EventSpaceDetailsType, InputFieldType, LocationUpdateRequestBody, ScheduleDetailstype, ScheduleUpdateRequestBody } from '@/types';
+import { EventSpaceDetailsType, InputFieldType, LocationUpdateRequestBody, ScheduleUpdateRequestBody } from '@/types';
 import TextEditor from '@/components/ui/TextEditor';
 import { Label } from '@/components/ui/label';
 import SwitchButton from '@/components/ui/buttons/SwitchButton';
@@ -112,7 +112,7 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
   const [organizers, setOrganizers] = useState<any>([]);
   const [frequency, setFrequency] = useState<'once' | 'everyday' | 'weekly'>('once');
   const [savedLocations, setSavedLocations] = useState<LocationUpdateRequestBody[]>([]);
-  const [locationId, setLocationId] = useState<string>('');
+  const [locationId, setLocationId] = useState('');
   const [experienceLevel, setExperienceLevel] = useState('');
   const [initialEvent, setInitialEvent] = useState('');
   const handleChangeSwitch = () => {
@@ -328,7 +328,7 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
         const result = await fetchLocationsByEventSpace(event_space_id as string);
         console.log(result);
         setSavedLocations(result?.data?.data);
-
+        setLocationId(result.data.data[0].id);
       } catch (error) {
         console.log(error);
       }
@@ -364,7 +364,6 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
           experience_level: JSON.parse(result.data.data.experience_level)[0],
         });
         setStartDate(new Date(result.data.data.date));
-        setLocationId(result.data.data.location_id);
 
         form.reset({
           name: result.data.data.name,
@@ -659,12 +658,9 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
                           <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select Location</Label>
                           {/* <InputFieldDark type={InputFieldType.Option} placeholder={'The Dome'} /> */}
                           <select
-                            onChange={(e) => setSchedule({
-                              ...schedule,
-                              location_id: e.target.value,
-                            })}
+                            onChange={(e) => setLocationId(e.target.value)}
                             title="location"
-                            value={schedule.location_id}
+                            value={locationId}
                             className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
                           >
                             {savedLocations.length === 0 && <option value="">No saved locations</option>}

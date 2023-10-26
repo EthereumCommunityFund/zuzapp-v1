@@ -67,19 +67,19 @@ export default function EventViewNavigation() {
       >
         <div className="flex-1 flex flex-col ml-5 lg:ml-0 gap-5 max-w-max">
           <div className="lg:mt-10 flex-1">
-            <Button size="lg" variant="quiet-SM" className="lg:pb-10 md:pb-2 sm:pb-1 opacity-80" leftIcon={ArrowCircleLeft} onClick={handleBackToEvents}>
-              Back to Events
+            <Button size="lg" variant="quiet-SM" className="lg:pb-8 md:pb-4 sm:pb-2 opacity-80" leftIcon={ArrowCircleLeft} onClick={handleBackToEvents}>
+               <span className="text-sm opacity-70">Back to Events</span>
             </Button>
             <div className="flex flex-col gap-3.5 lg:pb-10 md:pb-1">
-              <span className="font-semibold md:hidden lg:contents sm:hidden">Navigate Event</span>
-              <ul className="space-y-3 lg:block flex gap-2.5 lg:gap-0 items-end overflow-x-auto">
+              <span className="font-normal text-sm md:hidden lg:contents sm:hidden">Navigate Event</span>
+              <ul className="space-y-5 lg:block flex gap-2.5 lg:gap-0 items-end overflow-x-auto">
                 {routes.map((route, index) => (route.name &&
                   <li
                     key={index}
-                    className={`flex items-center font-bold space-x-2 py-1 px-3 opacity-70 lg:rounded-xl hover:bg-white/20 md:hover:border-b duration-200 ${router.pathname.includes(route.path)
+                    className={`flex items-center font-medium text-sm cursor-pointer space-x-2 py-2 px-3 lg:rounded-xl md:hover:border-b duration-200 ${router.pathname.includes(route.path) ? "bg-white/10" : "opacity-60 hover:bg-white/20"
                       }`}
                   >
-                    {route.icon && <route.icon size={30} />}
+                    {route.icon && <route.icon size={25} />}
                     <Link href={`${route.path}?event_space_id=${event_space_id}`} >
                       {route.name}
                     </Link>
