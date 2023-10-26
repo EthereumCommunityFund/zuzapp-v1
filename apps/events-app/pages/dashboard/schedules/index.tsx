@@ -18,6 +18,7 @@ import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import fetchSchedulesByEvenSpaceId from '@/services/fetchScheduleByEventSpace';
 import EditScheduleForm from '@/components/commons/EditScheduleForm';
 import AddScheduleForm from '@/components/commons/AddScheduleForm';
+import SessionViewPageTemplate from '@/components/templates/SessionViewPageTemplate';
 
 const categoryList: DropDownMenuItemType[] = [
   {
@@ -33,7 +34,7 @@ const categoryList: DropDownMenuItemType[] = [
 
 export default function EventViewTracksAlleSchedulesPage() {
   const router = useRouter();
-  const { trackId, track_title } = router.query;
+
   const event_space_id = '873f2ae3-bcab-4a30-8b99-cb5e011a9db0';
   const [eventSpace, setEventSpace] = useState<EventSpaceDetailsType>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -103,66 +104,15 @@ export default function EventViewTracksAlleSchedulesPage() {
   }, [lastTrackRef]);
 
   return (
-    <div className="flex gap-4 lg:flex-row mt-5 lg:mt-0 pb-24 lg:pb-0 sm:flex-col-reverse lg:bg-pagePrimary md:bg-componentPrimary">
-      <div className="flex flex-col lg:w-2/3 sm:w-full pb-30 lg:pb-0 gap-5">
-        <div className="flex flex-col gap-2.5 lg:px-9 md:px-5">
-          <div className="bg-componentPrimary rounded-2xl lg:px-5 lg:pt-8">
-            <div>
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button variant="blue" size="lg" className="rounded-full sm:w-full lg:w-fit justify-center" leftIcon={BiPlusCircle}>
-                    Add a Session
-                  </Button>
-                </DialogTrigger>
-                {
-                  <DialogContent className="md:w-3/5 md:h-3/5 overflow-x-auto sm:w-3/4">
-                    <AddScheduleForm title={'Add'} isQuickAccess={true} trackId={trackId as string} updateIsLoading={updateIsLoading} event_space_id={event_space_id} />
-                  </DialogContent>
-                }
-              </Dialog>
-            </div>
-            {isLoading ? (
-              <Loader />
-            ) : (
-              <div className=" p-2.5 gap-[10px] flex flex-col overflow-hidden rounded-[10px] pb-36">
-                {schedules && eventSpace && (
-                  <>
-                    {currentSchedules.map((schedule, idx) => (
-                      <UserFacingTrack key={idx} scheduleId={schedule.id} scheduleData={schedule} onClick={() => handleItemClick(schedule.id, schedule.track_id as string)} />
-                    ))}
-                    {totalSchedules > ITEMS_PER_PAGE && <Pagination currentPage={currentPage} totalItems={schedules.length} itemsPerPage={ITEMS_PER_PAGE} onPageChange={handlePageChange} />}
-                  </>
-                )}
-              </div>
-            )}
-          </div>
-          <div className="lg:w-1/4 sm:w-full flex lg:flex-col gap-5 lg:fixed lg:right-0 min-w-fit lg:mr-10 ">
-            <h2 className="p-3.5 gap-[10px] font-bold text-xl sm:hidden lg:flex">Schedules: Sort & Filter</h2>
-            <div className="flex lg:flex-col md:flex-row sm:flex-col w-full p-2.5 md:gap-5 sm:gap-3 text-sm">
-              <DropDownMenu
-                data={categoryList}
-                header={'Select Categories'}
-                headerIcon={SelectCategories}
-                multiple={true}
-                value={''}
-                headerClassName={'rounded-full bg-borderPrimary'}
-                optionsClassName={''}
-              />
-              <DropDownMenu data={categoryList} header={'Select Dates'} headerIcon={Calendar} multiple={true} value={''} headerClassName={'rounded-full bg-borderPrimary'} optionsClassName={''} />
-              <DropDownMenu
-                data={categoryList}
-                header={'Select Location'}
-                headerIcon={SelectLocation}
-                multiple={true}
-                value={''}
-                headerClassName={'rounded-full bg-borderPrimary'}
-                optionsClassName={''}
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <>
+      {
+        eventSpace &&
+        <SessionViewPageTemplate
+          event_space_id={event_space_id}
+          eventSpace={eventSpace}
+        />
+      }
+    </>
   );
 }
 
