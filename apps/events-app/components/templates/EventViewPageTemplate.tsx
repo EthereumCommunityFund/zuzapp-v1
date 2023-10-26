@@ -168,8 +168,8 @@ export default function EventViewPageTemplate({ eventSpace, user }: { eventSpace
               ))}
           </div>
           {eventSpace.format === 'in-person' && (
-            <div className="flex flex-col pt-2.5 pb-2.5 gap-5">
-              <div className="flex gap-2 items-center">
+            <div className="flex flex-col pt-2.5 pb-2.5 gap-5 mt-[-20px]">
+              <div className="flex gap-2 items-center text-gray-300">
                 <LocationMarker />
                 <Label className="text-xl">Location</Label>
               </div>
