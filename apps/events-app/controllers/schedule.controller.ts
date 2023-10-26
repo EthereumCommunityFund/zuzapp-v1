@@ -16,7 +16,7 @@ export const fetchSchedulesByTrack = async (trackID: string) => {
   return await axiosInstance.get(`/api/schedule/fetchByTrackID/?track_id=${trackID}`);
 };
 // Gets all schedules related to an event space
-export const fetchSchedulesByUserRsvp = async (trackID: string) => {
+export const fetchSchedulesByUserRsvp = async () => {
   return await axiosInstance.get(`/api/schedule/fetchByRsvp`);
 };
 
