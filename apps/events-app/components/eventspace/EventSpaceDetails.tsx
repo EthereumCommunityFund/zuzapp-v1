@@ -68,8 +68,8 @@ const formSchema = z.object({
     required_error: 'You need to select a valid date for this event.',
     invalid_type_error: 'You need to select a valid date for this event.',
   }),
-  description: z.string().min(10, {
-    message: 'Description is required and is a minimum of 10 characters',
+  description: z.string().min(40, {
+    message: 'Description is required and is a minimum of 40 characters',
   }),
 });
 
@@ -326,11 +326,13 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace, handl
                         />
                       </div>
                     </div>
+
                     <div className="flex flex-col gap-[10px]">
                       <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">Event Tagline</h2>
                       <InputFieldDark type={InputFieldType.Primary} value={tag_line} onChange={(e) => setTagline((e.target as HTMLInputElement).value)} placeholder={'Coolest Web3 Events'} />
                       <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">This will be the short tagline below your event title</h3>
                     </div>
+
                     <FormField
                       control={form.control}
                       name="description"

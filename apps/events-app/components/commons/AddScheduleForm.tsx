@@ -147,8 +147,8 @@ export default function AddScheduleForm({ title, isQuickAccess, scheduleId, trac
         invalid_type_error: 'You need to select a valid date for this event.',
       })
       .optional(),
-    description: z.string().min(10, {
-      message: 'Description is required and must be a minimum of 5',
+    description: z.string().min(40, {
+      message: 'Description is required and must be a minimum of 40 characters',
     }),
     video_call_link: z.string().optional().or(z.literal('')),
     live_stream_url: z.string().optional().or(z.literal('')),
@@ -189,7 +189,7 @@ export default function AddScheduleForm({ title, isQuickAccess, scheduleId, trac
   async function onSubmit(values: z.infer<typeof formSchema>) {
     if (values.format !== 'in-person' && (!values.live_stream_url || values.live_stream_url === '')) {
       form.setError('live_stream_url', {
-        message: 'Live stream link is required for in-person',
+        message: 'Live stream link is required for online eevents',
       });
       return;
     }
