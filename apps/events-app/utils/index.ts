@@ -5,9 +5,7 @@ import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 export const formatTimestamp = (date: Date) => {
-  console.log(date);
-  // if (typeof (date) !== "string") return null;
-  return new Date(date)
+  return new Date(date).toISOString()
 };
 
 
