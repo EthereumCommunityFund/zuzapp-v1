@@ -102,10 +102,10 @@ export default function AddTrackForm({ onTrackSubmit }: { onTrackSubmit: (values
         )}
         <div className="flex justify-center pt-8">
           <div className="flex flex-col md:flex-row gap-[30px] w-full">
-            <Button className="rounded-full w-full md:w-1/2 flex justify-center" variant="quiet" size="lg" type="button" leftIcon={CgClose}>
+            {/* <Button className="rounded-full w-full md:w-1/2 flex justify-center" variant="quiet" size="lg" type="button" leftIcon={CgClose}>
               <span>Discard Track</span>
-            </Button>
-            <Button className="rounded-full w-full md:w-1/2 flex justify-center" variant="blue" size="lg" onClick={() => form.handleSubmit(onSubmit)()} leftIcon={FaCircleArrowUp}>
+            </Button> */}
+            <Button className="rounded-full w-full md:w-full lg:w-full flex justify-center" variant="blue" size="lg" onClick={() => form.handleSubmit(onSubmit)()} leftIcon={FaCircleArrowUp}>
               <span>Add a Track</span>
             </Button>
           </div>
