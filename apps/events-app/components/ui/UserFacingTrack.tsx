@@ -105,7 +105,7 @@ const UserFacingTrack: React.ForwardRefRenderFunction<HTMLDivElement, IUserFacin
   }, []);
 
   return scheduleData && scheduleData.repeating ? (
-    <div ref={ref} onClick={onClick} className="flex flex-col gap-3">
+    <div ref={ref} onClick={onClick} className="flex flex-col gap-3  cursor-pointer">
       <div className="flex flex-col rounded-2xl">
         <div className="flex gap-1 justify-between border-2 border-[#444646] md:p-2 sm:p-2 rounded-2xl bg-userFacingItem hover:bg-[#434646] duration-200">
           <div className="flex flex-col gap-2.5 w-3/4 ml-2">
@@ -125,7 +125,11 @@ const UserFacingTrack: React.ForwardRefRenderFunction<HTMLDivElement, IUserFacin
                   <IconButton
                     variant={`ghost`}
                     icon={TbTicket}
-                    className={`${hasRsvpd ? `bg-componentPrimary` : `bg-trackDateColor`} rounded-lg md:text-[40px] sm:text-[25px] opacity-70 text-white hover:bg-violet3 inline-flex h-[35px] w-[35px] items-center justify-center outline-none focus:shadow-[0_0_0_2px] focus:shadow-[#3B3B3B] ${(isRsvpFullOnLoad || scheduleData?.rsvp_amount === 0 || (isRsvpFullOnLoad && !hasRsvpd)) ? `cursor-not-allowed` : ``}`}
+                    className={`${
+                      hasRsvpd ? `bg-componentPrimary` : `bg-trackDateColor`
+                    } rounded-lg md:text-[40px] sm:text-[25px] opacity-70 text-white hover:bg-violet3 inline-flex h-[35px] w-[35px] items-center justify-center outline-none focus:shadow-[0_0_0_2px] focus:shadow-[#3B3B3B] ${
+                      isRsvpFullOnLoad || scheduleData?.rsvp_amount === 0 || (isRsvpFullOnLoad && !hasRsvpd) ? `cursor-not-allowed` : ``
+                    }`}
                     onClick={(e: React.MouseEvent<HTMLButtonElement>) => handleRsvpAction(e)}
                   />
                 </Tooltip.Trigger>
@@ -134,7 +138,7 @@ const UserFacingTrack: React.ForwardRefRenderFunction<HTMLDivElement, IUserFacin
                     className="data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFade data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade text-violet11 select-none rounded-md bg-inputField px-2 py-1.5 text-[15px] leading-none shadow-[hsl(206_22%_7%_/_35%)_0px_10px_38px_-10px,_hsl(206_22%_7%_/_20%)_0px_10px_20px_-15px] will-change-[transform,opacity] text-white"
                     sideOffset={5}
                   >
-                    {(isRsvpFullOnLoad || scheduleData?.rsvp_amount === 0 || (isRsvpFullOnLoad && !hasRsvpd) ? `RSVP is not available` : hasRsvpd ? `Cancel RSVP` : `RSVP`)}
+                    {isRsvpFullOnLoad || scheduleData?.rsvp_amount === 0 || (isRsvpFullOnLoad && !hasRsvpd) ? `RSVP is not available` : hasRsvpd ? `Cancel RSVP` : `RSVP`}
                     <Tooltip.Arrow className="TooltipArrow" />
                   </Tooltip.Content>
                 </Tooltip.Portal>
@@ -174,7 +178,11 @@ const UserFacingTrack: React.ForwardRefRenderFunction<HTMLDivElement, IUserFacin
                   <IconButton
                     variant={`ghost`}
                     icon={TbTicket}
-                    className={`${hasRsvpd ? `bg-componentPrimary` : `bg-trackDateColor`} rounded-lg md:text-[40px] sm:text-[25px] opacity-70 text-white hover:bg-violet3 inline-flex h-[35px] w-[35px] items-center justify-center outline-none focus:shadow-[0_0_0_2px] focus:shadow-[#3B3B3B] ${(isRsvpFullOnLoad || scheduleData?.rsvp_amount === 0 || (isRsvpFullOnLoad && !hasRsvpd)) ? `cursor-not-allowed` : ``}`}
+                    className={`${
+                      hasRsvpd ? `bg-componentPrimary` : `bg-trackDateColor`
+                    } rounded-lg md:text-[40px] sm:text-[25px] opacity-70 text-white hover:bg-violet3 inline-flex h-[35px] w-[35px] items-center justify-center outline-none focus:shadow-[0_0_0_2px] focus:shadow-[#3B3B3B] ${
+                      isRsvpFullOnLoad || scheduleData?.rsvp_amount === 0 || (isRsvpFullOnLoad && !hasRsvpd) ? `cursor-not-allowed` : ``
+                    }`}
                     onClick={(e: React.MouseEvent<HTMLButtonElement>) => handleRsvpAction(e)}
                   />
                 </Tooltip.Trigger>
@@ -183,7 +191,7 @@ const UserFacingTrack: React.ForwardRefRenderFunction<HTMLDivElement, IUserFacin
                     className="data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFade data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade text-violet11 select-none rounded-md bg-inputField px-2 py-1.5 text-[15px] leading-none shadow-[hsl(206_22%_7%_/_35%)_0px_10px_38px_-10px,_hsl(206_22%_7%_/_20%)_0px_10px_20px_-15px] will-change-[transform,opacity] text-white"
                     sideOffset={5}
                   >
-                    {(isRsvpFullOnLoad || scheduleData?.rsvp_amount === 0 || (isRsvpFullOnLoad && !hasRsvpd) ? `RSVP is not available` : hasRsvpd ? `Cancel RSVP` : `RSVP`)}
+                    {isRsvpFullOnLoad || scheduleData?.rsvp_amount === 0 || (isRsvpFullOnLoad && !hasRsvpd) ? `RSVP is not available` : hasRsvpd ? `Cancel RSVP` : `RSVP`}
                     <Tooltip.Arrow className="TooltipArrow" />
                   </Tooltip.Content>
                 </Tooltip.Portal>
@@ -197,4 +205,3 @@ const UserFacingTrack: React.ForwardRefRenderFunction<HTMLDivElement, IUserFacin
 };
 
 export default React.forwardRef(UserFacingTrack);
-

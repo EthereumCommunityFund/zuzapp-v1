@@ -425,7 +425,9 @@ export default function UpdateSchedulePage() {
 
   // const formated = formatDate('2023-09-27T23:00:00+00:00');
   // console.log(formated, 'formated');
-
+  const onSubmitWithEnter = (values: z.infer<typeof formSchema>) => {
+    return null;
+  };
   if (isLoading) {
     return <Loader />;
   }
@@ -467,7 +469,7 @@ export default function UpdateSchedulePage() {
                   <DialogDescription className="text-sm font-bold">You can choose to save your edit or discard your edit before going back.</DialogDescription>
                   <DialogFooter className="pt-5">
                     <div className="flex justify-between items-center">
-                      <button onClick={form.handleSubmit(onSubmit)} className="py-2.5 px-3.5 flex items-center gap-1 rounded-[20px] bg-emerald-800">
+                      <button onClick={form.handleSubmit(onSubmitWithEnter)} className="py-2.5 px-3.5 flex items-center gap-1 rounded-[20px] bg-emerald-800">
                         <span>Save edit</span>
                       </button>
                       <button onClick={() => router.back()} className="py-2.5 px-3.5 flex items-center gap-1 text-[#FF5E5E] rounded-[20px] bg-[#EB5757]/20">
@@ -1057,7 +1059,14 @@ export default function UpdateSchedulePage() {
                           {/* <Button className="rounded-full w-full lg:w-1/2 flex justify-center" variant="quiet" size="lg" type="button" leftIcon={CgClose}>
                             <span>Discard Session</span>
                           </Button> */}
-                          <Button className="rounded-full w-full md:w-full lg:w-full flex justify-center" variant="blue" size="lg" type="submit" leftIcon={FaCircleArrowUp} disabled={updating}>
+                          <Button
+                            className="rounded-full w-full md:w-full lg:w-full flex justify-center"
+                            variant="blue"
+                            size="lg"
+                            leftIcon={FaCircleArrowUp}
+                            disabled={updating}
+                            onClick={() => form.handleSubmit(onSubmit)()}
+                          >
                             <span>{updating ? 'Updating' : 'Update Session'}</span>
                           </Button>
                         </div>

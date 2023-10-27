@@ -419,6 +419,9 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
   const handleEventFormatChange = (e: string) => {
     setSelectedEventFormat(e);
   };
+  const onSubmitWithEnter = (values: z.infer<typeof formSchema>) => {
+    return null;
+  };
 
   if (isLoading) {
     return <Loader />;
@@ -446,7 +449,7 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
         ) : (
           <>
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-10 w-full">
+              <form onSubmit={form.handleSubmit(onSubmitWithEnter)} className="space-y-10 w-full">
                 <FormField
                   control={form.control}
                   name="format"
@@ -1038,7 +1041,14 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
                     {/* <Button className="rounded-full w-full lg:w-1/2 flex justify-center" variant="quiet" size="lg" type="button" leftIcon={CgClose}>
                     <span>Discard Session</span>
                   </Button> */}
-                    <Button className="rounded-full w-full md:w-full lg:w-full flex justify-center" variant="blue" size="lg" type="submit" leftIcon={FaCircleArrowUp} disabled={updating}>
+                    <Button
+                      className="rounded-full w-full md:w-full lg:w-full flex justify-center"
+                      variant="blue"
+                      size="lg"
+                      leftIcon={FaCircleArrowUp}
+                      disabled={updating}
+                      onClick={() => form.handleSubmit(onSubmit)()}
+                    >
                       <span>{updating ? 'Updating' : 'Update Session'}</span>
                     </Button>
                   </div>
