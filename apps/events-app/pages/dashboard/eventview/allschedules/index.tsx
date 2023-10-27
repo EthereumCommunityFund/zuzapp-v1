@@ -21,7 +21,7 @@ export default function EventViewTracksAlleSchedulesPage() {
     )
   }
   return (
-    <div className='lg:pt-0 sm:pt-28'>
+    <div className='lg:pt-0 sm:pt-6'>
       {
         event_space_id && eventSpace &&
         <SessionViewPageTemplate

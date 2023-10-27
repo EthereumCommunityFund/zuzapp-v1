@@ -143,7 +143,7 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
   console.log('Grouped Schedules:', groupedSchedules);
   return (
     <>
-      <div className="flex gap-4 lg:flex-row lg:mt-0 pb-24 lg:pb-0 sm:flex-col-reverse lg:bg-pagePrimary md:bg-componentPrimary">
+      <div className="flex gap-4 lg:flex-row lg:mt-0 pb-24 lg:py-0 sm:pt-3 sm:px-3 sm:flex-col-reverse lg:bg-pagePrimary md:bg-componentPrimary">
         <div className="flex flex-col lg:w-2/3 sm:w-full pb-30 lg:pb-0 gap-5">
           <EventViewHeader imgPath={eventSpace?.image_url as string} name={eventSpace?.name as string} tagline={eventSpace?.tagline as string} />
           <div className="flex flex-col gap-2.5 lg:px-1 md:px-1">
