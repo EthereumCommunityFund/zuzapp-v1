@@ -5,7 +5,7 @@ import { EventSpaceDetailsType } from '@/types';
 import { useEffect, useState } from 'react';
 import { LocationMarker, LockClosed, UserGroup } from '../ui/icons';
 import Button from '../ui/buttons/Button';
-import { HiCalendar } from 'react-icons/hi';
+import { HiCalendar, HiLocationMarker } from 'react-icons/hi';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
 import RenderHTMLString from '../ui/RenderHTMLString';
 import { X } from 'lucide-react';
@@ -63,7 +63,7 @@ export default function EventViewPageTemplate({ eventSpace, user }: { eventSpace
   return (
     <>
       <div className="flex gap-10 md:flex-col sm:flex-col">
-        <div className="lg:w-2/3 w-full flex flex-col lg:rounded-2xl bg-componentPrimary lg:min-w-[600px]">
+        <div className="lg:w-2/3 w-full flex flex-col lg:rounded-2xl bg-componentPrimary mt-4 lg:min-w-[600px]">
           {' '}
           {/* Information */}
           <div className="rounded-xl p-5">
@@ -83,13 +83,13 @@ export default function EventViewPageTemplate({ eventSpace, user }: { eventSpace
                 Apply to Event
               </Button> */}
             </div>
-            <div className="flex gap-3 text-lg flex-col sm:text-sm">
-              <span className="rounded-lg flex w-fit px-4 py-1 items-center gap-1 opacity-60 bg-[#FFFFFF10] font-bold break-words">
-                <HiCalendar /> {formattedStartDate} - {formattedEndDate}
+            <div className="flex gap-3 text-lg sm:text-sm overflow-auto pb-5">
+              <span className="rounded-lg flex w-auto min-w-fit px-4 py-2 items-center gap-1 opacity-60 bg-[#FFFFFF10] font-medium whitespace-nowrap">
+                <HiCalendar size={18} /> {formattedStartDate} - {formattedEndDate}
               </span>
               {eventSpace.format === 'in-person' && user && eventspacelocation && (
-                <span className="rounded-lg w-fit flex px-4 py-1 items-center gap-1 opacity-60 bg-[#FFFFFF10] font-bold break-words">
-                  <LocationMarker /> {eventspacelocation[0].address}
+                <span className="rounded-lg w-auto min-w-fit flex px-4 py-1 items-center gap-1 opacity-60 bg-[#FFFFFF10] font-medium whitespace-nowrap">
+                  <HiLocationMarker size={18} /> {eventspacelocation[0].address}
                 </span>
               )}
             </div>
