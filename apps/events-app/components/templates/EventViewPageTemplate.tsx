@@ -136,10 +136,6 @@ export default function EventViewPageTemplate({ eventSpace, user }: { eventSpace
               <Label className="opacity-70">Format: </Label>
               <Label className="opacity-100 text-sm">{eventSpace.format.charAt(0).toUpperCase() + eventSpace.format.slice(1)}</Label>
             </div>
-            {/* <div className="flex gap-2 items-center">
-              <Label className="opacity-70">Type: </Label>
-              <Label className="opacity-100 text-sm">{event_type?.join(', ')}</Label>
-            </div> */}
           </div>
           <div className="flex flex-col gap-4">
             <Label className="opacity-70">Links </Label>
@@ -177,7 +173,7 @@ export default function EventViewPageTemplate({ eventSpace, user }: { eventSpace
                 <Label className="text-lg">{user ? locationName : `Apply to See Address`}</Label>
                 <Label className={`rounded-xl text-sm opacity-70  ${user ? `blur-none` : `blur`}`}>{user && locationAddress}</Label>
               </div>
-              {imgUrls && user && <Image width={260} height={148} src={imgUrls[0]} alt={''} className={`rounded-xl ${user ? `blur-none` : `blur`}`} />}
+              {imgUrls && user && <Image width={260} height={148} src={imgUrls[0]} alt={''} className={`rounded-xl h-[148px] ${user ? `blur-none` : `blur`}`} />}
             </div>
           )}
         </div>

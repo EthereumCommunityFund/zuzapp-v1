@@ -166,10 +166,12 @@ export default function EventViewScheduleViewTemplate({ event_space_id, schedule
 
   return (
     <div className="flex gap-4 lg:flex-row sm:flex-col">
-      <div className="flex flex-col lg:w-[1000px] sm:w-full">
+      <div className="flex flex-col sm:w-full">
         <EventViewHeader imgPath={eventSpace?.image_url as string} name={eventSpace?.name as string} tagline={eventSpace?.tagline as string} />
         <div className="md:p-5 sm:p-0 gap-[30px] max-w-[1200px] h-full">
-          <div className="flex flex-col gap-[10px] p-2.5 bg-componentPrimary rounded-2xl">
+          <div className="flex flex-col gap-[10px] p-2.5 bg-componentPrimary rounded-2xl lg:w-[750px] lg:overflow-auto">
+            {/* flex flex-col gap-[10px] p-2.5 bg-componentPrimary rounded-2xl */}
+
             <div className="flex justify-between">
               {' '}
               {/* Tracks and Edit Button */}
@@ -194,7 +196,7 @@ export default function EventViewScheduleViewTemplate({ event_space_id, schedule
                 <span className="text-sm">{trackItem?.name?.toLocaleUpperCase()}</span>
                 <div className="flex items-start">{startTime && endTime && <EventDataTime startTime={startTime} endTime={endTime} />}</div>
                 <h2 className="text-3xl font-bold">{currentSchedule?.name}</h2>
-                <div className="flex gap-[6px]">{currentSchedule?.organizers?.map((organizer) => <Speaker title={organizer.name} />)}</div>
+                <div className="flex flex-wrap gap-[6px] ">{currentSchedule?.organizers?.map((organizer) => <Speaker title={organizer.name} />)}</div>
 
                 <div>
                   <h3 className="float-right font-medium text-sm ">

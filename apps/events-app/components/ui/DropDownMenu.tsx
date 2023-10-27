@@ -24,7 +24,7 @@ export const DropDownMenu = (props: DropDownMenu) => {
 
   return (
     <>
-      <Listbox as={'div'} className={cn('w-full relative', className)} value={selectedCategories} multiple={multiple} onChange={setSelectedCategories}>
+      <Listbox as={'div'} className={cn('w-full relative', className)} value={selectedCategories} multiple={multiple} onChange={selectedCategories}>
         <Listbox.Button
           className={cn(
             'relative w-full inline-flex justify-between item-center cursor-pointer bg-trackItemHover border border-borderSecondary py-2 px-2 shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm',
