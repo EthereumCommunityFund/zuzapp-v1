@@ -319,6 +319,9 @@ export default function AddSchedulePage(props: any) {
     }
   }, [form.formState.errors]);
 
+  const onSubmitWithEnter = (values: z.infer<typeof formSchema>) => {
+    return null;
+  };
   if (isLoading) {
     return <Loader />;
   }
@@ -372,7 +375,7 @@ export default function AddSchedulePage(props: any) {
                 </div>
               ) : (
                 <Form {...form}>
-                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-10 w-full">
+                  <form onSubmit={form.handleSubmit(onSubmitWithEnter)} className="space-y-10 w-full">
                     {eventSpace?.format && (
                       <FormField
                         control={form.control}
@@ -939,7 +942,14 @@ export default function AddSchedulePage(props: any) {
                         {/* <Button className="rounded-full w-full md:w-1/2 flex justify-center" variant="quiet" size="lg" type="button" leftIcon={CgClose}>
                           <span>Discard Session</span>
                         </Button> */}
-                        <Button className="rounded-full w-full md:w-full lg:w-full flex justify-center" variant="blue" size="lg" type="submit" leftIcon={FaCircleArrowUp} disabled={loading}>
+                        <Button
+                          className="rounded-full w-full md:w-full lg:w-full flex justify-center"
+                          variant="blue"
+                          size="lg"
+                          leftIcon={FaCircleArrowUp}
+                          disabled={loading}
+                          onClick={() => form.handleSubmit(onSubmit)()}
+                        >
                           <span>{loading ? 'Adding' : 'Add Session'}</span>
                         </Button>
                       </div>

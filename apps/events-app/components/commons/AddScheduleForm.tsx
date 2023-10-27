@@ -259,6 +259,9 @@ export default function AddScheduleForm({ title, isQuickAccess, scheduleId, trac
       setIsLoading(false);
     }
   }
+  const onSubmitWithEnter = (values: z.infer<typeof formSchema>) => {
+    return null;
+  };
 
   const handleRemoveTag = (index: number) => {
     const updatedItems = [...(schedule.tags as string[]).slice(0, index), ...(schedule.tags as string[]).slice(index + 1)];
@@ -418,7 +421,7 @@ export default function AddScheduleForm({ title, isQuickAccess, scheduleId, trac
           </div>
         ) : (
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-10 w-full">
+            <form onSubmit={form.handleSubmit(onSubmitWithEnter)} className="space-y-10 w-full">
               <FormField
                 control={form.control}
                 name="format"
@@ -985,7 +988,14 @@ export default function AddScheduleForm({ title, isQuickAccess, scheduleId, trac
                   {/* <Button className="rounded-full w-full md:w-1/2 flex justify-center" variant="quiet" size="lg" type="button" leftIcon={CgClose}>
                     <span>Discard Session</span>
                   </Button> */}
-                  <Button className="rounded-full w-full md:w-full lg:w-full flex justify-center" variant="blue" size="lg" type="submit" leftIcon={FaCircleArrowUp} disabled={loading}>
+                  <Button
+                    className="rounded-full w-full md:w-full lg:w-full flex justify-center"
+                    variant="blue"
+                    size="lg"
+                    leftIcon={FaCircleArrowUp}
+                    disabled={loading}
+                    onClick={() => form.handleSubmit(onSubmit)()}
+                  >
                     <span>{loading ? 'Adding' : 'Add Session'}</span>
                   </Button>
                 </div>
