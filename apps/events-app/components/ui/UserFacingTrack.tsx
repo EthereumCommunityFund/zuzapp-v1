@@ -25,11 +25,11 @@ const UserFacingTrack: React.ForwardRefRenderFunction<HTMLDivElement, IUserFacin
   const { scheduleData, onClick } = props;
   const { trackDetails, isLoading } = useTrack(scheduleData.track_id as string);
   const date = new Date(scheduleData.date);
-  const enddate = new Date(scheduleData.end_date);
-  const startDate = new Date(date).toLocaleDateString('en-US', { month: 'short', day: '2-digit' });
-  const endDate = new Date(enddate).toLocaleDateString('en-US', { month: 'short', day: '2-digit' });
-  const startTime = new Date(scheduleData.start_time).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-  const endTime = new Date(scheduleData.end_time).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+
+  const startDate = new Date(scheduleData.date).toLocaleDateString('en-US', { month: 'short', day: '2-digit', timeZone: "Europe/Istanbul" });
+  const endDate = new Date(scheduleData.end_date).toLocaleDateString('en-US', { month: 'short', day: '2-digit', timeZone: "Europe/Istanbul" });
+  const startTime = new Date(scheduleData.start_time).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', timeZone: "Europe/Istanbul" });
+  const endTime = new Date(scheduleData.end_time).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', timeZone: "Europe/Istanbul" });
   const [hasRsvpd, setHasRsvpd] = useState<boolean>(false);
   const [isRsvpFullOnLoad, setIsRsvpFullOnLoad] = useState<boolean>(false);
 
@@ -125,11 +125,9 @@ const UserFacingTrack: React.ForwardRefRenderFunction<HTMLDivElement, IUserFacin
                   <IconButton
                     variant={`ghost`}
                     icon={TbTicket}
-                    className={`${
-                      hasRsvpd ? `bg-componentPrimary` : `bg-trackDateColor`
-                    } rounded-lg md:text-[40px] sm:text-[25px] opacity-70 text-white hover:bg-violet3 inline-flex h-[35px] w-[35px] items-center justify-center outline-none focus:shadow-[0_0_0_2px] focus:shadow-[#3B3B3B] ${
-                      isRsvpFullOnLoad || scheduleData?.rsvp_amount === 0 || (isRsvpFullOnLoad && !hasRsvpd) ? `cursor-not-allowed` : ``
-                    }`}
+                    className={`${hasRsvpd ? `bg-componentPrimary` : `bg-trackDateColor`
+                      } rounded-lg md:text-[40px] sm:text-[25px] opacity-70 text-white hover:bg-violet3 inline-flex h-[35px] w-[35px] items-center justify-center outline-none focus:shadow-[0_0_0_2px] focus:shadow-[#3B3B3B] ${isRsvpFullOnLoad || scheduleData?.rsvp_amount === 0 || (isRsvpFullOnLoad && !hasRsvpd) ? `cursor-not-allowed` : ``
+                      }`}
                     onClick={(e: React.MouseEvent<HTMLButtonElement>) => handleRsvpAction(e)}
                   />
                 </Tooltip.Trigger>
@@ -178,11 +176,9 @@ const UserFacingTrack: React.ForwardRefRenderFunction<HTMLDivElement, IUserFacin
                   <IconButton
                     variant={`ghost`}
                     icon={TbTicket}
-                    className={`${
-                      hasRsvpd ? `bg-componentPrimary` : `bg-trackDateColor`
-                    } rounded-lg md:text-[40px] sm:text-[25px] opacity-70 text-white hover:bg-violet3 inline-flex h-[35px] w-[35px] items-center justify-center outline-none focus:shadow-[0_0_0_2px] focus:shadow-[#3B3B3B] ${
-                      isRsvpFullOnLoad || scheduleData?.rsvp_amount === 0 || (isRsvpFullOnLoad && !hasRsvpd) ? `cursor-not-allowed` : ``
-                    }`}
+                    className={`${hasRsvpd ? `bg-componentPrimary` : `bg-trackDateColor`
+                      } rounded-lg md:text-[40px] sm:text-[25px] opacity-70 text-white hover:bg-violet3 inline-flex h-[35px] w-[35px] items-center justify-center outline-none focus:shadow-[0_0_0_2px] focus:shadow-[#3B3B3B] ${isRsvpFullOnLoad || scheduleData?.rsvp_amount === 0 || (isRsvpFullOnLoad && !hasRsvpd) ? `cursor-not-allowed` : ``
+                      }`}
                     onClick={(e: React.MouseEvent<HTMLButtonElement>) => handleRsvpAction(e)}
                   />
                 </Tooltip.Trigger>
