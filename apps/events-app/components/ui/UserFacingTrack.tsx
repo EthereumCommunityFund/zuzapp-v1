@@ -43,7 +43,6 @@ const UserFacingTrack: React.ForwardRefRenderFunction<
     day: "2-digit",
   });
   const startTime = toTurkeyTime(scheduleData.start_time).format("H:mm");
-
   const endTime = toTurkeyTime(scheduleData.end_time).format("H:mm");
   const [hasRsvpd, setHasRsvpd] = useState<boolean>(false);
   const [isRsvpFullOnLoad, setIsRsvpFullOnLoad] = useState<boolean>(false);
