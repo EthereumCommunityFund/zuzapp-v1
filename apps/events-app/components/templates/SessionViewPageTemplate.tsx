@@ -19,8 +19,8 @@ import ToggleSwitch from '../commons/ToggleSwitch';
 import { TbChevronDown } from 'react-icons/tb';
 
 interface ISessionViewPageTemplate {
-  event_space_id: string,
-  trackId?: string,
+  event_space_id: string;
+  trackId?: string;
   eventSpace: EventSpaceDetailsType;
 }
 
@@ -33,7 +33,7 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
   const [isUpcoming, setIsUpcoming] = useState<boolean>(true);
   const [selectedTracks, setSelectedTracks] = useState<any[]>([]);
 
-  const groupedEvents = schedules?.forEach((schedule) => { });
+  const groupedEvents = schedules?.forEach((schedule) => {});
   const { isAuthenticated, user } = useGlobalContext();
   const handleItemClick = (scheduleId: string, trackId?: string) => {
     router.push({
@@ -46,14 +46,11 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
     setIsLoading(newState);
   };
 
-
   const fetchSchedules = async () => {
     const response: ScheduleDetailstype[] = await fetchSchedulesByEvenSpaceId(event_space_id as string);
     const filter: ScheduleDetailstype[] = response.filter((schedule) =>
-      isUpcoming ?
-        (new Date(schedule.date).getTime() > new Date().getTime()) :
-        (new Date(schedule.date).getTime() < new Date().getTime())
-    )
+      isUpcoming ? new Date(schedule.date).getTime() > new Date().getTime() : new Date(schedule.date).getTime() < new Date().getTime()
+    );
 
     setFilteredSchedules(filter);
     setSchedules(response);
@@ -64,32 +61,24 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
     setIsLoading(true);
     const selectedTrackIds = selectedTracks.map((item) => item.id);
     const filter: ScheduleDetailstype[] = schedules.filter((schedule) =>
-      newFilter ?
-        (new Date(schedule.date).getTime() > new Date().getTime()) :
-        (new Date(schedule.date).getTime() < new Date().getTime())
-    )
-    const filteredByTracks = selectedTrackIds.length > 0
-      ? filter.filter(schedule => (schedule.track_id && selectedTrackIds.includes(schedule.track_id)))
-      : filter;
+      newFilter ? new Date(schedule.date).getTime() > new Date().getTime() : new Date(schedule.date).getTime() < new Date().getTime()
+    );
+    const filteredByTracks = selectedTrackIds.length > 0 ? filter.filter((schedule) => schedule.track_id && selectedTrackIds.includes(schedule.track_id)) : filter;
     setFilteredSchedules(filteredByTracks);
     setIsUpcoming(newFilter);
     setIsLoading(false);
-  }
+  };
 
   const handleTrackSelect = (newSelectedTracks: any[]) => {
     const selectedTrackIds = newSelectedTracks.map((item) => item.id);
     const filter: ScheduleDetailstype[] = schedules.filter((schedule) =>
-      isUpcoming ?
-        (new Date(schedule.date).getTime() > new Date().getTime()) :
-        (new Date(schedule.date).getTime() < new Date().getTime())
-    )
+      isUpcoming ? new Date(schedule.date).getTime() > new Date().getTime() : new Date(schedule.date).getTime() < new Date().getTime()
+    );
 
-    const filteredByTracks = selectedTrackIds.length > 0
-      ? filter.filter(schedule => (schedule.track_id && selectedTrackIds.includes(schedule.track_id)))
-      : filter;
+    const filteredByTracks = selectedTrackIds.length > 0 ? filter.filter((schedule) => schedule.track_id && selectedTrackIds.includes(schedule.track_id)) : filter;
     setFilteredSchedules(filteredByTracks);
     setSelectedTracks(newSelectedTracks);
-  }
+  };
 
   useEffect(() => {
     if (isLoading) {
@@ -118,7 +107,6 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
       }
     };
   }, [lastTrackRef]);
-
 
   const groupedSchedules: Record<string, ScheduleDetailstype[]> = {};
   let isFirstEvent = true;
@@ -188,12 +176,7 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
                             <span className="text-lg font-normal w-full">{new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
                           </div>
                           {groupedSchedules[date].map((schedule, idx) => {
-                            return <UserFacingTrack
-                              key={idx}
-                              scheduleId={schedule.id}
-                              scheduleData={schedule}
-                              onClick={() => handleItemClick(schedule.id, schedule.track_id as string)}
-                            />;
+                            return <UserFacingTrack key={idx} scheduleId={schedule.id} scheduleData={schedule} onClick={() => handleItemClick(schedule.id, schedule.track_id as string)} />;
                           })}
                         </>
                       );
@@ -205,15 +188,13 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
           </div>
           <div className="lg:w-1/4 sm:w-full flex lg:flex-col gap-5 lg:fixed lg:right-0 min-w-fit lg:mr-10 lg:mt-[-100px]">
             <h2 className="p-3.5 gap-[10px] font-bold text-xl sm:hidden lg:flex">Sessions: Sort & Filter</h2>
-            <ToggleSwitch
-              isUpcoming={isUpcoming}
-              handleIsUpcoming={handleIsUpcoming}
-            />
+            <ToggleSwitch isUpcoming={isUpcoming} handleIsUpcoming={handleIsUpcoming} />
             <div className="flex lg:flex-col md:flex-row sm:flex-col w-full p-2.5 md:gap-5 sm:gap-3 text-sm">
               <Listbox as={'div'} className={'w-full relative'} value={selectedTracks} multiple onChange={(newSelectedTracks) => handleTrackSelect(newSelectedTracks)}>
                 <Listbox.Button
                   className={
-                    'relative w-full inline-flex justify-between item-center cursor-pointer bg-trackItemHover border border-borderSecondary py-2 px-2 shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm rounded-xl'}
+                    'relative w-full inline-flex justify-between item-center cursor-pointer bg-trackItemHover border border-borderSecondary py-2 px-2 shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm rounded-xl'
+                  }
                 >
                   <div className="flex gap-2 items-center font-semibold pl-2">
                     <span>Select Tracks</span>
@@ -229,14 +210,12 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
                   leaveFrom="transform opacity-100 scale-100"
                   leaveTo="transform opacity-0 scale-95"
                 >
-                  <Listbox.Options
-                    className={'absolute right-0 z-10 mt-2 w-full pb-2 bg-componentPrimary origin-top-right rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'}
-                  >
+                  <Listbox.Options className={'absolute right-0 z-10 mt-2 w-full pb-2 bg-componentPrimary origin-top-right rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'}>
                     {eventSpace.tracks.map((item, idx) => (
                       <Listbox.Option key={idx} value={item} className={'block pt-2 px-2 text-sm'}>
                         {({ selected }) => (
                           <>
-                            <span className={`relative block truncate rounded-2xl py-2 px-2 w-full hover:bg-itemHover ${selected ? 'font-medium bg-slate-700' : 'font-normal'}`}>
+                            <span className={`relative block truncate rounded-2xl py-2 cursor-pointer px-2 w-full hover:bg-itemHover ${selected ? 'font-medium bg-slate-700' : 'font-normal'}`}>
                               {item.name.charAt(0).toUpperCase() + item.name.slice(1)}
                             </span>
                           </>
@@ -250,7 +229,7 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
           </div>
         </div>
       </div>
-    </div >
+    </div>
   );
 }
 
