@@ -9,11 +9,12 @@ import { BiPlusCircle } from 'react-icons/bi';
 import { QueryClient } from 'react-query';
 import { EventSpaceDetailsType } from '@/types';
 import { Loader } from '@/components/ui/Loader';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import fetchSchedulesByEvenSpaceId from '@/services/fetchScheduleByEventSpace';
 import AddScheduleForm from '@/components/commons/AddScheduleForm';
 import { useGlobalContext } from '@/context/GlobalContext';
-import useTrackDetails from '@/hooks/useTrackDetails';
+
+import ToggleSwitch from '../commons/ToggleSwitch';
 
 interface ISessionViewPageTemplate {
   event_space_id: string,
@@ -25,7 +26,9 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [schedules, setSchedules] = useState<ScheduleDetailstype[]>([]);
+  const [filteredSchedules, setFilteredSchedules] = useState<ScheduleDetailstype[]>([]);
   const lastTrackRef = useRef<HTMLDivElement>(null);
+  const [isUpcoming, setIsUpcoming] = useState<boolean>(true);
 
   const groupedEvents = schedules?.forEach((schedule) => { });
   const { isAuthenticated, user } = useGlobalContext();
@@ -42,10 +45,26 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
 
 
   const fetchSchedules = async () => {
-    const response = await fetchSchedulesByEvenSpaceId(event_space_id as string);
+    const response: ScheduleDetailstype[] = await fetchSchedulesByEvenSpaceId(event_space_id as string);
+    const filter: ScheduleDetailstype[] = response.filter((schedule) =>
+      isUpcoming ?
+        (new Date(schedule.date).getTime() > new Date().getTime()) :
+        (new Date(schedule.date).getTime() < new Date().getTime())
+    )
+    setFilteredSchedules(filter);
     setSchedules(response);
     setIsLoading(false);
   };
+
+  const handleIsUpcoming = (newFilter: boolean) => {
+    const filter: ScheduleDetailstype[] = schedules.filter((schedule) =>
+      newFilter ?
+        (new Date(schedule.date).getTime() > new Date().getTime()) :
+        (new Date(schedule.date).getTime() < new Date().getTime())
+    )
+    setFilteredSchedules(filter);
+    setIsUpcoming(newFilter);
+  }
 
   useEffect(() => {
     if (isLoading) {
@@ -78,7 +97,7 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
 
   const groupedSchedules: Record<string, ScheduleDetailstype[]> = {};
   let isFirstEvent = true;
-  schedules.forEach((schedule) => {
+  filteredSchedules.forEach((schedule) => {
     const date = new Date(schedule.date);
     const end_date = new Date(schedule.end_date);
     const frequency = schedule.schedule_frequency;
@@ -161,6 +180,10 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
           </div>
           <div className="lg:w-1/4 sm:w-full flex lg:flex-col gap-5 lg:fixed lg:right-0 min-w-fit lg:mr-10 lg:mt-[-100px]">
             <h2 className="p-3.5 gap-[10px] font-bold text-xl sm:hidden lg:flex">Sessions: Sort & Filter</h2>
+            <ToggleSwitch
+              isUpcoming={isUpcoming}
+              handleIsUpcoming={handleIsUpcoming}
+            />
             <div className="flex lg:flex-col md:flex-row sm:flex-col w-full p-2.5 md:gap-5 sm:gap-3 text-sm">
               {/* <DropDownMenu
                 data={categoryList}
