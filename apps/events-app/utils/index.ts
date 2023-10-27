@@ -1,10 +1,26 @@
 import { NextApiResponse } from 'next';
 import { EventSpaceUpdateRequestBody, LocationType } from '@/types';
+import dayjs, { Dayjs } from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 export const formatTimestamp = (date: Date) => {
   console.log(date);
   // if (typeof (date) !== "string") return null;
-  return date.toLocaleString("en-US", { timeZone: "Europe/Istanbul", hour12: false });
+  return new Date(date)
+};
 
+
+dayjs.extend(isSameOrAfter);
+dayjs.extend(utc);
+dayjs.extend(timezone);
+
+export const fromTurkeyToUTC = (date: any): any => {
+  return dayjs(date).tz("Europe/Istanbul").utc();
+};
+
+export const toTurkeyTime = (date: any): any => {
+  return dayjs(date).tz("Europe/Istanbul");
 };
 
 function getRandomInt(min: number, max: number): number {
