@@ -33,7 +33,7 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
   const [isUpcoming, setIsUpcoming] = useState<boolean>(true);
   const [selectedTracks, setSelectedTracks] = useState<any[]>([]);
 
-  const groupedEvents = schedules?.forEach((schedule) => {});
+  const groupedEvents = schedules?.forEach((schedule) => { });
   const { isAuthenticated, user } = useGlobalContext();
   const handleItemClick = (scheduleId: string, trackId?: string) => {
     router.push({
@@ -142,94 +142,96 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
 
   console.log('Grouped Schedules:', groupedSchedules);
   return (
-    <div className="flex gap-4 lg:flex-row mt-5 lg:mt-0 pb-24 lg:pb-0 sm:flex-col-reverse lg:bg-pagePrimary md:bg-componentPrimary">
-      <div className="flex flex-col lg:w-2/3 sm:w-full pb-30 lg:pb-0 gap-5">
-        <EventViewHeader imgPath={eventSpace?.image_url as string} name={eventSpace?.name as string} tagline={eventSpace?.tagline as string} />
-        <div className="flex flex-col gap-2.5 lg:px-1 md:px-1">
-          <div className="bg-componentPrimary rounded-2xl lg:px-2 lg:pt-8">
-            {isAuthenticated && (
-              <div className="px-4">
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button variant="blue" size="lg" className="rounded-full sm:w-full lg:w-fit justify-center" leftIcon={BiPlusCircle}>
-                      Add a Session
-                    </Button>
-                  </DialogTrigger>
-                  {
-                    <DialogContent className="md:w-3/5 md:h-3/5 overflow-x-auto sm:w-3/4">
-                      <AddScheduleForm title={'Add'} isQuickAccess={true} trackId={trackId as string} updateIsLoading={updateIsLoading} event_space_id={event_space_id as string} />
-                    </DialogContent>
-                  }
-                </Dialog>
-              </div>
-            )}
-            {isLoading ? (
-              <Loader />
-            ) : (
-              <div className="p-0 gap-[10px] flex flex-col overflow-hidden rounded-[10px] pb-36">
-                {schedules && eventSpace && (
-                  <>
-                    {Object.keys(groupedSchedules).map((date, idx) => {
-                      return (
-                        <>
-                          <div key={idx} className="text-center border-b-2 p-3 mt-10 border-borderPrimary">
-                            <span className="text-lg font-normal w-full">{new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
-                          </div>
-                          {groupedSchedules[date].map((schedule, idx) => {
-                            return <UserFacingTrack key={idx} scheduleId={schedule.id} scheduleData={schedule} onClick={() => handleItemClick(schedule.id, schedule.track_id as string)} />;
-                          })}
-                        </>
-                      );
-                    })}
-                  </>
-                )}
-              </div>
-            )}
-          </div>
-          <div className="lg:w-1/4 sm:w-full flex lg:flex-col gap-5 lg:fixed lg:right-0 min-w-fit lg:mr-10 lg:mt-[-100px]">
-            <h2 className="p-3.5 gap-[10px] font-bold text-xl sm:hidden lg:flex">Sessions: Sort & Filter</h2>
-            <ToggleSwitch isUpcoming={isUpcoming} handleIsUpcoming={handleIsUpcoming} />
-            <div className="flex lg:flex-col md:flex-row sm:flex-col w-full p-2.5 md:gap-5 sm:gap-3 text-sm">
-              <Listbox as={'div'} className={'w-full relative'} value={selectedTracks} multiple onChange={(newSelectedTracks) => handleTrackSelect(newSelectedTracks)}>
-                <Listbox.Button
-                  className={
-                    'relative w-full inline-flex justify-between item-center cursor-pointer bg-trackItemHover border border-borderSecondary py-2 px-2 shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm rounded-xl'
-                  }
-                >
-                  <div className="flex gap-2 items-center font-semibold pl-2">
-                    <span>Select Tracks</span>
-                  </div>
-                  <TbChevronDown className="h-5 w-5 text-gray-40 font-extrabold" aria-hidden="true" />
-                </Listbox.Button>
-                <Transition
-                  as={Fragment}
-                  enter="transition ease-out duration-100"
-                  enterFrom="transform opacity-0 scale-95"
-                  enterTo="transform opacity-100 scale-100"
-                  leave="transition ease-in duration-75"
-                  leaveFrom="transform opacity-100 scale-100"
-                  leaveTo="transform opacity-0 scale-95"
-                >
-                  <Listbox.Options className={'absolute right-0 z-10 mt-2 w-full pb-2 bg-componentPrimary origin-top-right rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'}>
-                    {eventSpace.tracks.map((item, idx) => (
-                      <Listbox.Option key={idx} value={item} className={'block pt-2 px-2 text-sm'}>
-                        {({ selected }) => (
+    <>
+      <div className="flex gap-4 lg:flex-row lg:mt-0 pb-24 lg:pb-0 sm:flex-col-reverse lg:bg-pagePrimary md:bg-componentPrimary">
+        <div className="flex flex-col lg:w-2/3 sm:w-full pb-30 lg:pb-0 gap-5">
+          <EventViewHeader imgPath={eventSpace?.image_url as string} name={eventSpace?.name as string} tagline={eventSpace?.tagline as string} />
+          <div className="flex flex-col gap-2.5 lg:px-1 md:px-1">
+            <div className="bg-componentPrimary rounded-2xl lg:px-2 lg:pt-8">
+              {isAuthenticated && (
+                <div className="px-4">
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button variant="blue" size="lg" className="rounded-full sm:w-full lg:w-fit justify-center" leftIcon={BiPlusCircle}>
+                        Add a Session
+                      </Button>
+                    </DialogTrigger>
+                    {
+                      <DialogContent className="md:w-3/5 md:h-3/5 overflow-x-auto sm:w-3/4">
+                        <AddScheduleForm title={'Add'} isQuickAccess={true} trackId={trackId as string} updateIsLoading={updateIsLoading} event_space_id={event_space_id as string} />
+                      </DialogContent>
+                    }
+                  </Dialog>
+                </div>
+              )}
+              {isLoading ? (
+                <Loader />
+              ) : (
+                <div className="p-0 gap-[10px] flex flex-col overflow-hidden rounded-[10px] pb-36">
+                  {schedules && eventSpace && (
+                    <>
+                      {Object.keys(groupedSchedules).map((date, idx) => {
+                        return (
                           <>
-                            <span className={`relative block truncate rounded-2xl py-2 cursor-pointer px-2 w-full hover:bg-itemHover ${selected ? 'font-medium bg-slate-700' : 'font-normal'}`}>
-                              {item.name.charAt(0).toUpperCase() + item.name.slice(1)}
-                            </span>
+                            <div key={idx} className="text-center border-b-2 p-3 mt-10 border-borderPrimary">
+                              <span className="text-lg font-normal w-full">{new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                            </div>
+                            {groupedSchedules[date].map((schedule, idx) => {
+                              return <UserFacingTrack key={idx} scheduleId={schedule.id} scheduleData={schedule} onClick={() => handleItemClick(schedule.id, schedule.track_id as string)} />;
+                            })}
                           </>
-                        )}
-                      </Listbox.Option>
-                    ))}
-                  </Listbox.Options>
-                </Transition>
-              </Listbox>
+                        );
+                      })}
+                    </>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </div>
+        <div className="lg:w-1/4 sm:w-full lg:pt-24 lg:flex-col gap-5 lg:fixed lg:right-0 min-w-fit lg:mr-10 lg:mt-[-100px]">
+          <h2 className="p-3.5 gap-[10px] font-bold text-xl sm:hidden lg:flex">Sessions: Sort & Filter</h2>
+          <ToggleSwitch isUpcoming={isUpcoming} handleIsUpcoming={handleIsUpcoming} />
+          <div className="flex lg:flex-col md:flex-row sm:flex-col w-full p-2.5 md:gap-5 sm:gap-3 text-sm">
+            <Listbox as={'div'} className={'w-full relative'} value={selectedTracks} multiple onChange={(newSelectedTracks) => handleTrackSelect(newSelectedTracks)}>
+              <Listbox.Button
+                className={
+                  'relative w-full inline-flex justify-between item-center cursor-pointer bg-trackItemHover border border-borderSecondary py-2 px-2 shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm rounded-xl'
+                }
+              >
+                <div className="flex gap-2 items-center font-semibold pl-2">
+                  <span>Select Tracks</span>
+                </div>
+                <TbChevronDown className="h-5 w-5 text-gray-40 font-extrabold" aria-hidden="true" />
+              </Listbox.Button>
+              <Transition
+                as={Fragment}
+                enter="transition ease-out duration-100"
+                enterFrom="transform opacity-0 scale-95"
+                enterTo="transform opacity-100 scale-100"
+                leave="transition ease-in duration-75"
+                leaveFrom="transform opacity-100 scale-100"
+                leaveTo="transform opacity-0 scale-95"
+              >
+                <Listbox.Options className={'absolute right-0 z-10 mt-2 w-full pb-2 bg-componentPrimary origin-top-right rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'}>
+                  {eventSpace.tracks.map((item, idx) => (
+                    <Listbox.Option key={idx} value={item} className={'block pt-2 px-2 text-sm'}>
+                      {({ selected }) => (
+                        <>
+                          <span className={`relative block truncate rounded-2xl py-2 cursor-pointer px-2 w-full hover:bg-itemHover ${selected ? 'font-medium bg-slate-700' : 'font-normal'}`}>
+                            {item.name.charAt(0).toUpperCase() + item.name.slice(1)}
+                          </span>
+                        </>
+                      )}
+                    </Listbox.Option>
+                  ))}
+                </Listbox.Options>
+              </Transition>
+            </Listbox>
+          </div>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 
