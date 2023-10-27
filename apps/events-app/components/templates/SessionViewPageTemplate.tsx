@@ -57,6 +57,7 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
   };
 
   const handleIsUpcoming = (newFilter: boolean) => {
+    setIsLoading(true);
     const filter: ScheduleDetailstype[] = schedules.filter((schedule) =>
       newFilter ?
         (new Date(schedule.date).getTime() > new Date().getTime()) :
@@ -64,6 +65,7 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
     )
     setFilteredSchedules(filter);
     setIsUpcoming(newFilter);
+    setIsLoading(false);
   }
 
   useEffect(() => {
