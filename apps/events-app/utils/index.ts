@@ -3,7 +3,8 @@ import { EventSpaceUpdateRequestBody, LocationType } from '@/types';
 export const formatTimestamp = (date: Date) => {
   console.log(date);
   // if (typeof (date) !== "string") return null;
-  return new Date(date).toISOString();
+  return date.toLocaleString("en-US", { timeZone: "Europe/Istanbul", hour12: false });
+
 };
 
 function getRandomInt(min: number, max: number): number {
