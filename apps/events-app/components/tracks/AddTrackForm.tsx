@@ -85,7 +85,7 @@ export default function AddTrackForm({ onTrackSubmit }: { onTrackSubmit: (values
         <div className="flex flex-col items-center gap-[10px] self-stretch">
           <InputFieldLabel name="Track Image" />
           <DragAndDrop payload={payload} setPayload={setPayload} />
-          <EventDeatilsDescription1 name="We recommend using at least a 2160x1080px" />
+          {/* <EventDeatilsDescription1 name="We recommend using at least a 2160x1080px" /> */}
         </div>
         {payload.image_urls.length == 0 && <p className="text-sm text-btnRed">Select at least one image</p>}
         {payload.image_urls.length > 0 && (
