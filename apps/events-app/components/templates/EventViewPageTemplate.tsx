@@ -136,10 +136,6 @@ export default function EventViewPageTemplate({ eventSpace, user }: { eventSpace
               <Label className="opacity-70">Format: </Label>
               <Label className="opacity-100 text-sm">{eventSpace.format.charAt(0).toUpperCase() + eventSpace.format.slice(1)}</Label>
             </div>
-            {/* <div className="flex gap-2 items-center">
-              <Label className="opacity-70">Type: </Label>
-              <Label className="opacity-100 text-sm">{event_type?.join(', ')}</Label>
-            </div> */}
           </div>
           <div className="flex flex-col gap-4">
             <Label className="opacity-70">Links </Label>
