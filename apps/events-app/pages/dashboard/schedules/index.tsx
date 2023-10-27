@@ -1,7 +1,7 @@
 import { fetchEventSpaceById } from '@/services/fetchEventSpaceDetails';
 import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
 import { QueryClient, useQuery } from 'react-query';
-import { EventSpaceDetailsType } from '@/types';
+import { DropDownMenuItemType, EventSpaceDetailsType, TrackUpdateRequestBody } from '@/types';
 import { Loader } from '@/components/ui/Loader';
 
 import SessionViewPageTemplate from '@/components/templates/SessionViewPageTemplate';

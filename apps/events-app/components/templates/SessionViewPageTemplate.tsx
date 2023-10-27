@@ -4,7 +4,7 @@ import Button from '@/components/ui/buttons/Button';
 import { ScheduleDetailstype } from '@/types';
 import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
 import { useRouter } from 'next/router';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { Fragment, useEffect, useRef, useState } from 'react';
 import { BiPlusCircle } from 'react-icons/bi';
 import { QueryClient } from 'react-query';
 import { EventSpaceDetailsType } from '@/types';
@@ -13,8 +13,10 @@ import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import fetchSchedulesByEvenSpaceId from '@/services/fetchScheduleByEventSpace';
 import AddScheduleForm from '@/components/commons/AddScheduleForm';
 import { useGlobalContext } from '@/context/GlobalContext';
+import { Listbox, Transition } from '@headlessui/react';
 
 import ToggleSwitch from '../commons/ToggleSwitch';
+import { TbChevronDown } from 'react-icons/tb';
 
 interface ISessionViewPageTemplate {
   event_space_id: string,
@@ -29,6 +31,7 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
   const [filteredSchedules, setFilteredSchedules] = useState<ScheduleDetailstype[]>([]);
   const lastTrackRef = useRef<HTMLDivElement>(null);
   const [isUpcoming, setIsUpcoming] = useState<boolean>(true);
+  const [selectedTracks, setSelectedTracks] = useState<any[]>([]);
 
   const groupedEvents = schedules?.forEach((schedule) => { });
   const { isAuthenticated, user } = useGlobalContext();
@@ -51,6 +54,7 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
         (new Date(schedule.date).getTime() > new Date().getTime()) :
         (new Date(schedule.date).getTime() < new Date().getTime())
     )
+
     setFilteredSchedules(filter);
     setSchedules(response);
     setIsLoading(false);
@@ -58,14 +62,33 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
 
   const handleIsUpcoming = (newFilter: boolean) => {
     setIsLoading(true);
+    const selectedTrackIds = selectedTracks.map((item) => item.id);
     const filter: ScheduleDetailstype[] = schedules.filter((schedule) =>
       newFilter ?
         (new Date(schedule.date).getTime() > new Date().getTime()) :
         (new Date(schedule.date).getTime() < new Date().getTime())
     )
-    setFilteredSchedules(filter);
+    const filteredByTracks = selectedTrackIds.length > 0
+      ? filter.filter(schedule => (schedule.track_id && selectedTrackIds.includes(schedule.track_id)))
+      : filter;
+    setFilteredSchedules(filteredByTracks);
     setIsUpcoming(newFilter);
     setIsLoading(false);
+  }
+
+  const handleTrackSelect = (newSelectedTracks: any[]) => {
+    const selectedTrackIds = newSelectedTracks.map((item) => item.id);
+    const filter: ScheduleDetailstype[] = schedules.filter((schedule) =>
+      isUpcoming ?
+        (new Date(schedule.date).getTime() > new Date().getTime()) :
+        (new Date(schedule.date).getTime() < new Date().getTime())
+    )
+
+    const filteredByTracks = selectedTrackIds.length > 0
+      ? filter.filter(schedule => (schedule.track_id && selectedTrackIds.includes(schedule.track_id)))
+      : filter;
+    setFilteredSchedules(filteredByTracks);
+    setSelectedTracks(newSelectedTracks);
   }
 
   useEffect(() => {
@@ -73,7 +96,7 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
       console.log('isLoading', isLoading);
       fetchSchedules();
     }
-  }, [isLoading]);
+  }, [isLoading, selectedTracks]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -161,7 +184,7 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
                     {Object.keys(groupedSchedules).map((date, idx) => {
                       return (
                         <>
-                          <div className="text-center border-b-2 p-3 mt-10 border-borderPrimary">
+                          <div key={idx} className="text-center border-b-2 p-3 mt-10 border-borderPrimary">
                             <span className="text-lg font-normal w-full">{new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
                           </div>
                           {groupedSchedules[date].map((schedule, idx) => {
@@ -187,20 +210,47 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
               handleIsUpcoming={handleIsUpcoming}
             />
             <div className="flex lg:flex-col md:flex-row sm:flex-col w-full p-2.5 md:gap-5 sm:gap-3 text-sm">
-              {/* <DropDownMenu
-                data={categoryList}
-                header={'Select Categories'}
-                headerIcon={SelectCategories}
-                multiple={true}
-                value={''}
-                headerClassName={'rounded-full bg-borderPrimary'}
-                optionsClassName={''}
-              /> */}
+              <Listbox as={'div'} className={'w-full relative'} value={selectedTracks} multiple onChange={(newSelectedTracks) => handleTrackSelect(newSelectedTracks)}>
+                <Listbox.Button
+                  className={
+                    'relative w-full inline-flex justify-between item-center cursor-pointer bg-trackItemHover border border-borderSecondary py-2 px-2 shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm rounded-xl'}
+                >
+                  <div className="flex gap-2 items-center font-semibold pl-2">
+                    <span>Select Tracks</span>
+                  </div>
+                  <TbChevronDown className="h-5 w-5 text-gray-40 font-extrabold" aria-hidden="true" />
+                </Listbox.Button>
+                <Transition
+                  as={Fragment}
+                  enter="transition ease-out duration-100"
+                  enterFrom="transform opacity-0 scale-95"
+                  enterTo="transform opacity-100 scale-100"
+                  leave="transition ease-in duration-75"
+                  leaveFrom="transform opacity-100 scale-100"
+                  leaveTo="transform opacity-0 scale-95"
+                >
+                  <Listbox.Options
+                    className={'absolute right-0 z-10 mt-2 w-full pb-2 bg-componentPrimary origin-top-right rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'}
+                  >
+                    {eventSpace.tracks.map((item, idx) => (
+                      <Listbox.Option key={idx} value={item} className={'block pt-2 px-2 text-sm'}>
+                        {({ selected }) => (
+                          <>
+                            <span className={`relative block truncate rounded-2xl py-2 px-2 w-full hover:bg-itemHover ${selected ? 'font-medium bg-slate-700' : 'font-normal'}`}>
+                              {item.name.charAt(0).toUpperCase() + item.name.slice(1)}
+                            </span>
+                          </>
+                        )}
+                      </Listbox.Option>
+                    ))}
+                  </Listbox.Options>
+                </Transition>
+              </Listbox>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </div >
   );
 }
 
