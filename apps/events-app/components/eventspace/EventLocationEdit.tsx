@@ -167,7 +167,7 @@ export default function EventLocationEdit({
             <div className="flex flex-col items-center gap-[10px] self-stretch">
               <InputFieldLabel name="Location Media" />
               <DragAndDrop payload={payload} setPayload={setPayload} />
-              <EventDeatilsDescription1 name="We recommend using at least a 2160x1080px" />
+              {/* <EventDeatilsDescription1 name="We recommend using at least a 2160x1080px" /> */}
             </div>
             {(payload.image_urls as string[]).length > 0 && (
               <div className="flex gap-5">
