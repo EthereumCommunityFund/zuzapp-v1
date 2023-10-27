@@ -8,7 +8,7 @@ import LocationMarker from '../ui/icons/LocationMarker';
 
 interface IEventViewDetailsPanel {
   eventSpace: EventSpaceDetailsType;
-  organizers: OrganizerType[];
+  allOrganizers: OrganizerType[];
   tags: string[];
   schedule?: ScheduleUpdateRequestBody;
 }
@@ -18,7 +18,7 @@ interface IEventLink {
 }
 
 export default function EventViewDetailsPanel(props: IEventViewDetailsPanel) {
-  const { eventSpace, organizers, tags, schedule } = props;
+  const { eventSpace, allOrganizers, tags, schedule } = props;
   const {
     // id,
     name,
@@ -41,6 +41,8 @@ export default function EventViewDetailsPanel(props: IEventViewDetailsPanel) {
   const [imgUrls, setImgUrls] = useState<string[]>();
   const [locationName, setLocationName] = useState<string>();
   const [locationAddress, setLocationAddress] = useState<string>();
+  const organizers = allOrganizers.filter(organizer => organizer.role === 'organizer');
+  const speakers = allOrganizers.filter(organizer => organizer.role === 'speaker');
 
   useEffect(() => {
     if (social_links) setSocialLinks(JSON.parse(social_links));
@@ -105,7 +107,7 @@ export default function EventViewDetailsPanel(props: IEventViewDetailsPanel) {
                 </div>
               </div>
             )}
-            {organizers.length > 0 && (
+            {speakers.length > 0 && (
               <div className="flex flex-col gap-5">
                 <div className="flex flex-col border-b border-b-background pb-5 gap-5">
                   <div className="flex gap-2.5 items-center">
@@ -113,7 +115,7 @@ export default function EventViewDetailsPanel(props: IEventViewDetailsPanel) {
                     <h2>Speakers</h2>
                   </div>
                   <div className="flex flex-wrap gap-[6px] md:flex-row sm:flex-col">
-                    {organizers.map((organizer: OrganizerType) => organizer.role === 'speaker' && <Speaker title={organizer.name} />)}
+                    {speakers.map((organizer: OrganizerType) => organizer.role === 'speaker' && <Speaker title={organizer.name} />)}
                   </div>
                 </div>
               </div>

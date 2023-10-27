@@ -191,7 +191,7 @@ export default function TrackDetailsPageTemplate(props: any) {
           </div>
         )}
       </div>
-      {eventSpace && <EventViewDetailsPanel eventSpace={eventSpace} organizers={organizers} tags={tags} />}
+      {eventSpace && <EventViewDetailsPanel eventSpace={eventSpace} allOrganizers={organizers} tags={tags} />}
     </div>
   );
 }

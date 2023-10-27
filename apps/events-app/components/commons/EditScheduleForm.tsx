@@ -661,9 +661,14 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
                           <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select Location</Label>
                           {/* <InputFieldDark type={InputFieldType.Option} placeholder={'The Dome'} /> */}
                           <select
-                            onChange={(e) => setLocationId(e.target.value)}
+                            onChange={(e) =>
+                              setSchedule({
+                                ...schedule,
+                                location_id: e.target.value,
+                              })
+                            }
                             title="location"
-                            value={locationId}
+                            value={schedule.location_id}
                             className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
                           >
                             {savedLocations.length === 0 && <option value="">No saved locations</option>}
