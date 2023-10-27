@@ -333,7 +333,7 @@ export default function EventViewScheduleViewTemplate({
       {eventSpace && currentSchedule?.tags && currentSchedule.organizers && (
         <EventViewDetailsPanel
           eventSpace={eventSpace}
-          organizers={currentSchedule.organizers}
+          allOrganizers={currentSchedule.organizers}
           tags={currentSchedule.tags}
           schedule={currentSchedule}
         />
