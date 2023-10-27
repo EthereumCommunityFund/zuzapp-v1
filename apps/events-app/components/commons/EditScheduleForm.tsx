@@ -6,7 +6,7 @@ import Button from '@/components/ui/buttons/Button';
 import { HiArrowRight } from 'react-icons/hi';
 
 import { CgClose } from 'react-icons/cg';
-import { FaCircleArrowUp } from 'react-icons/fa6';
+import { FaCircleArrowDown, FaCircleArrowUp } from 'react-icons/fa6';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { useForm } from 'react-hook-form';
@@ -847,34 +847,35 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
                             <option value="facilitator">Facilitator</option>
                           </select>
                         </div>
-
-                        <button
-                          type="button"
-                          onClick={() => {
-                            if (eventItem.name === '') return;
-                            console.log(eventItem);
-                            setSchedule({
-                              ...schedule,
-                              organizers: [...(schedule.organizers as Organizer[]), eventItem],
-                            });
-                            setOrganizers([...organizers, eventItem]);
-                            setEventItem({
-                              name: '',
-                              role: 'speaker',
-                            });
-                          }}
-                          className="flex gap-2.5 mb-2 text-lg font-normal leading-[1.2] text-white items-center rounded-[8px] px-2 py-1 bg-white bg-opacity-10"
-                        >
-                          +
-                        </button>
                       </div>
+                      <Button
+                        type="button"
+                        onClick={() => {
+                          if (eventItem.name === '') return;
+                          console.log(eventItem);
+                          setSchedule({
+                            ...schedule,
+                            organizers: [...(schedule.organizers as Organizer[]), eventItem],
+                          });
+                          setOrganizers([...organizers, eventItem]);
+                          setEventItem({
+                            name: '',
+                            role: 'speaker',
+                          });
+                        }}
+                        variant='quiet'
+                        className="flex gap-2.5 w-full text-base font-semibold text-white items-center rounded-full py-1 justify-center duration-200"
+                        leftIcon={FaCircleArrowDown}
+                      >
+                        Add Role
+                      </Button>
 
-                      <div className="flex gap-2.5">
+                      <div className="flex flex-wrap gap-2.5">
                         {schedule.organizers?.map((organizer: any, index: number) => (
                           <div key={index} className="flex gap-2.5 items-center rounded-[8px] px-2 py-1.5 bg-white bg-opacity-10">
                             <button type="button" className="flex gap-2.5 items-center">
                               <GoXCircle onClick={() => handleRemoveSpeaker(index)} className="top-0.5 left-0.5 w-4 h-4" />
-                              <span className="text-lg font-semibold leading-[1.2] text-white self-stretch">{organizer.name ? organizer.name : organizer.name}</span>
+                              <span className="lg:text-lg sm:text-sm font-semibold text-white">{organizer.name ? organizer.name : organizer.name}</span>
                             </button>
                           </div>
                         ))}
@@ -1047,7 +1048,7 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
                     <span>Discard Session</span>
                   </Button> */}
                     <Button
-                      className="rounded-full w-full md:w-full lg:w-full flex justify-center"
+                      className="rounded-full w-full md:w-full flex justify-center"
                       variant="blue"
                       size="lg"
                       leftIcon={FaCircleArrowUp}

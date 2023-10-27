@@ -6,7 +6,7 @@ import { HiArrowLeft, HiArrowRight } from 'react-icons/hi';
 import DetailsBar from '@/components/detailsbar';
 
 import { CgClose } from 'react-icons/cg';
-import { FaCircleArrowUp } from 'react-icons/fa6';
+import { FaCircleArrowDown, FaCircleArrowUp } from 'react-icons/fa6';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { useForm } from 'react-hook-form';
@@ -783,26 +783,27 @@ export default function AddSchedulePage(props: any) {
                                 <option value="facilitator">Facilitator</option>
                               </select>
                             </div>
-
-                            <button
-                              type="button"
-                              onClick={() => {
-                                if (eventItem.name === '') return;
-                                setOrganizers([...organizers, eventItem]);
-                                setEventItem({ name: '', role: 'speaker' });
-                              }}
-                              className="flex gap-2.5 mb-2 text-lg font-normal leading-[1.2] text-white items-center rounded-[8px] px-2 py-1 bg-white bg-opacity-10"
-                            >
-                              +
-                            </button>
                           </div>
+                          <Button
+                            type="button"
+                            onClick={() => {
+                              if (eventItem.name === '') return;
+                              setOrganizers([...organizers, eventItem]);
+                              setEventItem({ name: '', role: 'speaker' });
+                            }}
+                            variant='quiet'
+                            className="flex gap-2.5 w-full text-base font-semibold text-white items-center rounded-full py-1 justify-center duration-200"
+                            leftIcon={FaCircleArrowDown}
+                          >
+                            Add Role
+                          </Button>
 
                           <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5">
                             {organizers?.map((organizer: any, index: number) => (
                               <div key={index} className="flex gap-2.5 items-center rounded-[8px] px-2 py-1.5 bg-white bg-opacity-10">
                                 <button type="button" className="flex gap-2.5 items-center">
                                   <GoXCircle onClick={() => handleRemoveOrganizer(index)} className="top-0.5 left-0.5 w-4 h-4" />
-                                  <span className="text-lg font-semibold leading-[1.2] text-white self-stretch">{organizer.name}</span>
+                                  <span className="lg:text-lg sm:text-sm font-semibold text-white">{organizer.name}</span>
                                 </button>
                               </div>
                             ))}
