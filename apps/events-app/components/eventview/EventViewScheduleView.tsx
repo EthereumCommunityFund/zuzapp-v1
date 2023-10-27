@@ -267,9 +267,8 @@ export default function EventViewScheduleViewTemplate({
               <Button
                 variant="primary"
                 size="lg"
-                className={`rounded-2xl justify-center ${
-                  rsvpUpdated ? "animate-rsvp" : ""
-                }`}
+                className={`rounded-2xl justify-center ${rsvpUpdated ? "animate-rsvp" : ""
+                  }`}
                 leftIcon={BsFillTicketFill}
                 onClick={handleRsvpAction}
                 disabled={
@@ -281,10 +280,10 @@ export default function EventViewScheduleViewTemplate({
                 {currentSchedule?.rsvp_amount === 0
                   ? "No Rsvp Available"
                   : hasRsvpd
-                  ? "Cancel RSVP"
-                  : isRsvpFullOnLoad
-                  ? "RSVP Full"
-                  : "RSVP Session"}
+                    ? "Cancel RSVP"
+                    : isRsvpFullOnLoad
+                      ? "RSVP Full"
+                      : "RSVP Session"}
               </Button>
             </div>
             {/* <Button variant="red" className="rounded-xl w-fit" onClick={handleDeleteSchedule}>
