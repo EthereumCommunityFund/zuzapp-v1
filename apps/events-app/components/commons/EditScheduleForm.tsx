@@ -357,21 +357,36 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
     const fetchCurrentSchedule = async () => {
       try {
         const result = await fetchScheduleByID(scheduleId as string);
-        console.log(result, 'result');
+        const utcDate = new Date(result.data.data.date);
+        const turkeyDate = new Date(utcDate.toLocaleString("en-US", { timeZone: "Europe/Istanbul" }));
+
+        const endDate = new Date(result.data.data.end_date);
+        const turkeyEndDate = new Date(endDate.toLocaleString("en-US", { timeZone: "Europe/Istanbul" }));
+
+        const startTime = new Date(result.data.data.start_time);
+        const turkeyStartTime = new Date(startTime.toLocaleString("en-US", { timeZone: "Europe/Istanbul" }));
+
+        const endTime = new Date(result.data.data.end_time);
+        const turkeyEndTime = new Date(endTime.toLocaleString("en-US", { timeZone: "Europe/Istanbul" }));
+
         setSchedule({
           ...result.data.data,
+          date: turkeyDate,
+          end_date: turkeyEndDate,
+          start_time: turkeyStartTime,
+          end_time: turkeyEndTime,
           event_type: JSON.parse(result.data.data.event_type)[0],
           experience_level: JSON.parse(result.data.data.experience_level)[0],
         });
-        setStartDate(new Date(result.data.data.date));
+        setStartDate(turkeyStartTime);
 
         form.reset({
           name: result.data.data.name,
           format: result.data.data.format,
-          date: new Date(result.data.data.date),
-          end_date: new Date(result.data.data.end_date),
+          date: turkeyDate,
+          end_date: turkeyEndDate,
           description: result.data.data.description,
-          // video_call_link: result.data.data.video_call_link,
+          video_call_link: result.data.data.video_call_link,
           live_stream_url: result.data.data.live_stream_url,
         });
         console.log(result.data.data.date);
@@ -661,9 +676,14 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
                           <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select Location</Label>
                           {/* <InputFieldDark type={InputFieldType.Option} placeholder={'The Dome'} /> */}
                           <select
-                            onChange={(e) => setLocationId(e.target.value)}
+                            onChange={(e) =>
+                              setSchedule({
+                                ...schedule,
+                                location_id: e.target.value,
+                              })
+                            }
                             title="location"
-                            value={locationId}
+                            value={schedule.location_id}
                             className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
                           >
                             {savedLocations.length === 0 && <option value="">No saved locations</option>}

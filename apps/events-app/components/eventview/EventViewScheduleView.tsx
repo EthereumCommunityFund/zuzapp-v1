@@ -103,7 +103,7 @@ export default function EventViewScheduleViewTemplate({ event_space_id, schedule
   const editorUsername = mostRecentEditLog?.user?.username;
   const creatorUsername = currentSchedule?.editlogs[0]?.user?.username;
   const creatorId = currentSchedule?.editlogs[0]?.editor_id;
-  const [locatin, setLocation] = useState<string>('');
+  const [location, setLocation] = useState<string>('');
   useEffect(() => {
     if (currentSchedule) {
       if (currentSchedule.rsvp_amount === currentSchedule.current_rsvp_no) {
@@ -148,12 +148,14 @@ export default function EventViewScheduleViewTemplate({ event_space_id, schedule
     new Date(currentSchedule.start_time).toLocaleTimeString('en-US', {
       hour: '2-digit',
       minute: '2-digit',
-    });
+      timeZone: "Europe/Istanbul"
+    },);
   const endTime =
     currentSchedule &&
     new Date(currentSchedule.end_time).toLocaleTimeString('en-US', {
       hour: '2-digit',
       minute: '2-digit',
+      timeZone: "Europe/Istanbul"
     });
 
   if (isLoading) {
@@ -254,7 +256,7 @@ export default function EventViewScheduleViewTemplate({ event_space_id, schedule
       </div>
 
       {eventSpace && currentSchedule?.tags && currentSchedule.organizers && (
-        <EventViewDetailsPanel eventSpace={eventSpace} organizers={currentSchedule.organizers} tags={currentSchedule.tags} schedule={currentSchedule} />
+        <EventViewDetailsPanel eventSpace={eventSpace} allOrganizers={currentSchedule.organizers} tags={currentSchedule.tags} schedule={currentSchedule} />
       )}
     </div>
   );
