@@ -254,7 +254,7 @@ export default function EventViewScheduleViewTemplate({ event_space_id, schedule
       </div>
 
       {eventSpace && currentSchedule?.tags && currentSchedule.organizers && (
-        <EventViewDetailsPanel eventSpace={eventSpace} organizers={currentSchedule.organizers} tags={currentSchedule.tags} schedule={currentSchedule} />
+        <EventViewDetailsPanel eventSpace={eventSpace} allOrganizers={currentSchedule.organizers} tags={currentSchedule.tags} schedule={currentSchedule} />
       )}
     </div>
   );
