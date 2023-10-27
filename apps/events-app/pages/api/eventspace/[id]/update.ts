@@ -44,8 +44,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     if (!start_date || !end_date) return;
 
 
-
-
     // update event space
     const event_space_update_result = await supabase.from('eventspace').update({
         ...data,
