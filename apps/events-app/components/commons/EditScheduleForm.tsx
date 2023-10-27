@@ -1,44 +1,65 @@
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
-import * as DialogPrimitive from '@radix-ui/react-dialog';
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import * as DialogPrimitive from "@radix-ui/react-dialog";
 
-import Button from '@/components/ui/buttons/Button';
-import { HiArrowRight } from 'react-icons/hi';
+import Button from "@/components/ui/buttons/Button";
+import { HiArrowRight } from "react-icons/hi";
 
-import { CgClose } from 'react-icons/cg';
-import { FaCircleArrowUp } from 'react-icons/fa6';
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { useForm } from 'react-hook-form';
-import { useState, useEffect } from 'react';
-import FormTitle from '@/components/ui/labels/form-title';
-import InputFieldDark from '@/components/ui/inputFieldDark';
-import { EventSpaceDetailsType, InputFieldType, LocationUpdateRequestBody, ScheduleUpdateRequestBody } from '@/types';
-import TextEditor from '@/components/ui/TextEditor';
-import { Label } from '@/components/ui/label';
-import SwitchButton from '@/components/ui/buttons/SwitchButton';
-import { GoXCircle } from 'react-icons/go';
-import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
-import { Database } from '@/database.types';
-import CustomDatePicker from '@/components/ui/DatePicker';
-import { useRouter } from 'next/router';
-import { fetchLocationsByEventSpace, fetchAllTags, fetchScheduleByID, updateSchedule, createSchedule, fetchAllSpeakers } from '@/controllers';
-import { useQuery } from 'react-query';
-import { fetchEventSpaceById } from '@/services/fetchEventSpaceDetails';
-import dayjs, { Dayjs } from 'dayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+import { CgClose } from "react-icons/cg";
+import { FaCircleArrowUp } from "react-icons/fa6";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { useForm } from "react-hook-form";
+import { useState, useEffect } from "react";
+import FormTitle from "@/components/ui/labels/form-title";
+import InputFieldDark from "@/components/ui/inputFieldDark";
+import {
+  EventSpaceDetailsType,
+  InputFieldType,
+  LocationUpdateRequestBody,
+  ScheduleUpdateRequestBody,
+} from "@/types";
+import TextEditor from "@/components/ui/TextEditor";
+import { Label } from "@/components/ui/label";
+import SwitchButton from "@/components/ui/buttons/SwitchButton";
+import { GoXCircle } from "react-icons/go";
+import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
+import { Database } from "@/database.types";
+import CustomDatePicker from "@/components/ui/DatePicker";
+import { useRouter } from "next/router";
+import {
+  fetchLocationsByEventSpace,
+  fetchAllTags,
+  fetchScheduleByID,
+  updateSchedule,
+  createSchedule,
+  fetchAllSpeakers,
+} from "@/controllers";
+import { useQuery } from "react-query";
+import { fetchEventSpaceById } from "@/services/fetchEventSpaceDetails";
+import dayjs, { Dayjs } from "dayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 
-import TextField from '@mui/material/TextField';
-import Autocomplete from '@mui/material/Autocomplete';
-import { toast } from '@/components/ui/use-toast';
-import { Loader } from '../ui/Loader';
-import { v4 as uuidv4 } from 'uuid';
-import { sessionFrequency } from '@/constant/scheduleconstants';
-import { X } from 'lucide-react';
-import { deleteScheduleById } from '@/services/deleteSchedule';
-import { fetchProfile } from '@/controllers/profile.controllers';
+import TextField from "@mui/material/TextField";
+import Autocomplete from "@mui/material/Autocomplete";
+import { toast } from "@/components/ui/use-toast";
+import { Loader } from "../ui/Loader";
+import { v4 as uuidv4 } from "uuid";
+import { sessionFrequency } from "@/constant/scheduleconstants";
+import { X } from "lucide-react";
+import { deleteScheduleById } from "@/services/deleteSchedule";
+import { fetchProfile } from "@/controllers/profile.controllers";
+import { fromTurkeyToUTC, toTurkeyTime } from "@/utils";
 
 type Organizer = {
   name: string;
@@ -58,7 +79,14 @@ interface IEditScheduleForm {
   updateIsLoading?: (newState: boolean) => void;
 }
 
-export default function EditScheduleForm({ title, isQuickAccess, scheduleId, trackId, updateIsLoading, creatorId }: IEditScheduleForm) {
+export default function EditScheduleForm({
+  title,
+  isQuickAccess,
+  scheduleId,
+  trackId,
+  updateIsLoading,
+  creatorId,
+}: IEditScheduleForm) {
   const router = useRouter();
   const { event_space_id } = router.query;
   const [userId, setUserId] = useState();
@@ -67,63 +95,67 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
     const response = await fetchProfile();
     const userdata = response?.data?.data;
     setUserId(userdata?.uuid);
-    console.log(userdata, 'userdata');
+    console.log(userdata, "userdata");
   };
 
   const [schedule, setSchedule] = useState<ScheduleUpdateRequestBody>({
-    name: '',
-    format: 'in-person',
-    description: '',
-    date: '',
-    end_date: '',
-    start_time: '',
-    end_time: '',
+    name: "",
+    format: "in-person",
+    description: "",
+    date: "",
+    end_date: "",
+    start_time: "",
+    end_time: "",
     all_day: undefined,
-    schedule_frequency: 'once',
-    images: [''],
-    video_call_link: '',
-    live_stream_url: '',
-    location_id: '',
-    event_type: '',
-    experience_level: '',
+    schedule_frequency: "once",
+    images: [""],
+    video_call_link: "",
+    live_stream_url: "",
+    location_id: "",
+    event_type: "",
+    experience_level: "",
     limit_rsvp: false,
     rsvp_amount: 1,
-    event_space_id: '',
-    track_id: '',
-    tags: [''],
+    event_space_id: "",
+    track_id: "",
+    tags: [""],
     organizers: [
       {
-        name: '',
-        role: '',
+        name: "",
+        role: "",
       },
     ],
     current_rsvp_no: 0,
-    editlogs: '',
+    editlogs: "",
   });
   const [startDate, setStartDate] = useState<Date | undefined>();
   const [optionTags, setOptionTags] = useState<TagItemProp[]>([]);
   const [optionSpeakers, setOptionSpeakers] = useState<TagItemProp[]>([]);
   const [tags, setTags] = useState<string[]>([]);
-  const [tagItem, setTagItem] = useState<TagItemProp>({ name: '' });
+  const [tagItem, setTagItem] = useState<TagItemProp>({ name: "" });
   const [eventItem, setEventItem] = useState({
-    name: '',
-    role: 'speaker',
+    name: "",
+    role: "speaker",
   });
   const [organizers, setOrganizers] = useState<any>([]);
-  const [frequency, setFrequency] = useState<'once' | 'everyday' | 'weekly'>('once');
-  const [savedLocations, setSavedLocations] = useState<LocationUpdateRequestBody[]>([]);
-  const [locationId, setLocationId] = useState('');
-  const [experienceLevel, setExperienceLevel] = useState('');
-  const [initialEvent, setInitialEvent] = useState('');
+  const [frequency, setFrequency] = useState<"once" | "everyday" | "weekly">(
+    "once"
+  );
+  const [savedLocations, setSavedLocations] = useState<
+    LocationUpdateRequestBody[]
+  >([]);
+  const [locationId, setLocationId] = useState("");
+  const [experienceLevel, setExperienceLevel] = useState("");
+  const [initialEvent, setInitialEvent] = useState("");
   const handleChangeSwitch = () => {
     setSchedule({ ...schedule, all_day: !schedule.all_day });
   };
-  const [startTime, setStartTime] = useState(dayjs().startOf('day'));
-  const [endTime, setEndTime] = useState(dayjs().endOf('day'));
+  const [startTime, setStartTime] = useState(dayjs().startOf("day"));
+  const [endTime, setEndTime] = useState(dayjs().endOf("day"));
   const [scheduleUpdated, setScheduleUpdated] = useState(false);
   const [isLimit, setIsLimit] = useState(false);
-  const [selectedTrackId, setSelectedTrackId] = useState<string>('');
-  const [selectedEventFormat, setSelectedEventFormat] = useState<string>('new');
+  const [selectedTrackId, setSelectedTrackId] = useState<string>("");
+  const [selectedEventFormat, setSelectedEventFormat] = useState<string>("new");
   const [loading, setIsLoading] = useState(false);
   const [updating, setIsUpdating] = useState(false);
   const handleDeleteSchedule = async () => {
@@ -132,7 +164,7 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
       setIsLoading(true);
       await deleteScheduleById(scheduleId as string, event_space_id as string);
       toast({
-        title: 'session deleted successfully',
+        title: "session deleted successfully",
       });
       router.push({
         pathname: `/dashboard/eventview/allschedules`,
@@ -141,22 +173,22 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
         },
       });
     } catch (error) {
-      console.error('Error deleting the schedule', error);
+      console.error("Error deleting the schedule", error);
     } finally {
       setIsLoading(false);
     }
   };
   const formSchema = z.object({
     name: z.string().min(2, {
-      message: 'Session name is required.',
+      message: "Session name is required.",
     }),
-    format: z.enum(['in-person', 'online'], {
-      required_error: 'You need to select a format.',
+    format: z.enum(["in-person", "online"], {
+      required_error: "You need to select a format.",
     }),
     date: z
       .date({
-        required_error: 'You need to select a valid date for this Session.',
-        invalid_type_error: 'You need to select a valid date for this Session.',
+        required_error: "You need to select a valid date for this Session.",
+        invalid_type_error: "You need to select a valid date for this Session.",
       })
       .refine(
         (date) => {
@@ -169,20 +201,20 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
           return false;
         },
         {
-          message: 'You need to select a valid date for this Session.',
+          message: "You need to select a valid date for this Session.",
         }
       ),
     end_date: z
       .date({
-        required_error: 'You need to select a valid date for this event.',
-        invalid_type_error: 'You need to select a valid date for this event.',
+        required_error: "You need to select a valid date for this event.",
+        invalid_type_error: "You need to select a valid date for this event.",
       })
       .optional(),
-    description: z.string().min(40, {
-      message: 'Description is required and must be a minimum of 40 characters',
+    description: z.string().min(10, {
+      message: "Description is required and must be a minimum of 10 characters",
     }),
-    video_call_link: z.string().optional().or(z.literal('')),
-    live_stream_url: z.string().optional().or(z.literal('')),
+    video_call_link: z.string().optional().or(z.literal("")),
+    live_stream_url: z.string().optional().or(z.literal("")),
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -190,10 +222,13 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
     defaultValues: {
       name: schedule?.name,
       format: schedule?.format,
-      date: schedule?.date !== '' ? new Date(schedule?.date) : new Date(),
-      end_date: schedule.end_date !== undefined && schedule.end_date !== null ? new Date(schedule.end_date) : new Date(),
-      description: '',
-      video_call_link: '',
+      date: schedule?.date !== "" ? new Date(schedule?.date) : new Date(),
+      end_date:
+        schedule.end_date !== undefined && schedule.end_date !== null
+          ? new Date(schedule.end_date)
+          : new Date(),
+      description: "",
+      video_call_link: "",
       live_stream_url: schedule?.live_stream_url,
     },
   });
@@ -203,7 +238,7 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
     isLoading,
     isError,
   } = useQuery<EventSpaceDetailsType, Error>(
-    ['currentEventSpace', event_space_id], // Query key
+    ["currentEventSpace", event_space_id], // Query key
     () => fetchEventSpaceById(event_space_id as string), // Query function
     {
       enabled: !!event_space_id, // Only execute the query if event_space_id is available
@@ -215,27 +250,36 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
   };
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    if (values.format !== 'in-person' && (!values.live_stream_url || values.live_stream_url === '')) {
-      form.setError('live_stream_url', {
-        message: 'Live stream link is required for online events',
+    if (
+      values.format !== "in-person" &&
+      (!values.live_stream_url || values.live_stream_url === "")
+    ) {
+      form.setError("live_stream_url", {
+        message: "Live stream link is required for online events",
       });
       return;
     }
-    if (values.format === 'in-person' && locationId === '') {
+    if (values.format === "in-person" && locationId === "") {
       toast({
-        title: 'Error',
-        description: 'Location is required for in-person events',
-        variant: 'destructive',
+        title: "Error",
+        description: "Location is required for in-person events",
+        variant: "destructive",
       });
       return;
     }
-    if (frequency === 'everyday' || frequency === 'weekly') {
-      const endDate = dayjs(values.end_date);
-      const startDate = dayjs(values.date);
+    if (frequency === "everyday" || frequency === "weekly") {
+      const endDate = fromTurkeyToUTC(values.end_date)
+        .toDate()
+        .setHours(0, 0, 0, 0);
+      const startDate = fromTurkeyToUTC(values.date)
+        .toDate()
+        .setHours(0, 0, 0, 0);
+
+      console.log(startDate, endDate, "start dates");
 
       if (endDate.isBefore(startDate)) {
-        form.setError('end_date', {
-          message: 'End date cannot be earlier than start date',
+        form.setError("end_date", {
+          message: "End date cannot be earlier than start date",
         });
         return;
       }
@@ -245,7 +289,7 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
         return {
           ...user,
           name: user.name,
-          role: 'speaker',
+          role: "speaker",
         };
       } else {
         return {
@@ -259,9 +303,14 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
       event_space_id: schedule.event_space_id,
       start_time: schedule.start_time as unknown as string,
       end_time: schedule.end_time as unknown as string,
-      event_type: (schedule.event_type as unknown as []).length > 0 ? JSON.stringify([schedule.event_type]) : ((eventSpace?.event_type as string[])[0] as unknown as string[]),
+      event_type:
+        (schedule.event_type as unknown as []).length > 0
+          ? JSON.stringify([schedule.event_type])
+          : ((eventSpace?.event_type as string[])[0] as unknown as string[]),
       experience_level:
-        (schedule.experience_level as unknown as []).length > 0 ? (JSON.stringify([schedule.experience_level]) as unknown as string[]) : [(eventSpace?.experience_level as string[])[0]],
+        (schedule.experience_level as unknown as []).length > 0
+          ? (JSON.stringify([schedule.experience_level]) as unknown as string[])
+          : [(eventSpace?.experience_level as string[])[0]],
       tags: schedule.tags,
       schedule_frequency: schedule.schedule_frequency,
       location_id: schedule.location_id,
@@ -271,7 +320,11 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
       all_day: schedule.all_day,
       track_id: trackId,
       limit_rsvp: schedule.limit_rsvp,
-      ...(eventSpace?.event_space_type === 'tracks' && {
+      date: fromTurkeyToUTC(schedule.date).toDate().setHours(0, 0, 0, 0),
+      end_date: fromTurkeyToUTC(schedule.end_date)
+        .toDate()
+        .setHours(0, 0, 0, 0),
+      ...(eventSpace?.event_space_type === "tracks" && {
         track_id: trackId as string,
       }),
       ...(schedule.limit_rsvp ? { rsvp_amount: schedule.rsvp_amount } : {}),
@@ -280,21 +333,25 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
     const payload: any = { ...values, ...additionalPayload };
     console.log(payload);
     try {
-      console.log(payload, 'payload');
+      console.log(payload, "payload");
       setIsUpdating(true);
-      const result = await updateSchedule(scheduleId as string, payload, event_space_id as string);
+      const result = await updateSchedule(
+        scheduleId as string,
+        payload,
+        event_space_id as string
+      );
       // setSwitchDialogue(true);
       setScheduleUpdated(true);
       toast({
-        title: 'Session updated successfully',
+        title: "Session updated successfully",
       });
-      console.log(result, 'result');
+      console.log(result, "result");
     } catch (error: any) {
       console.log(error);
       toast({
-        title: 'Error',
+        title: "Error",
         description: error?.response.data?.error,
-        variant: 'destructive',
+        variant: "destructive",
       });
     } finally {
       setIsUpdating(true);
@@ -302,12 +359,18 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
   }
 
   const handleRemoveSpeaker = (index: number) => {
-    const updatedItems = [...(schedule.organizers as Organizer[]).slice(0, index), ...(schedule.organizers as Organizer[]).slice(index + 1)];
+    const updatedItems = [
+      ...(schedule.organizers as Organizer[]).slice(0, index),
+      ...(schedule.organizers as Organizer[]).slice(index + 1),
+    ];
     setSchedule({ ...schedule, organizers: updatedItems as any });
   };
 
   const handleRemoveTag = (index: number) => {
-    const updatedItems = [...(schedule.tags as string[]).slice(0, index), ...(schedule.tags as string[]).slice(index + 1)];
+    const updatedItems = [
+      ...(schedule.tags as string[]).slice(0, index),
+      ...(schedule.tags as string[]).slice(index + 1),
+    ];
     console.log(updatedItems);
     setSchedule({ ...schedule, tags: updatedItems });
   };
@@ -325,7 +388,9 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
   useEffect(() => {
     const fetchLocationDetails = async () => {
       try {
-        const result = await fetchLocationsByEventSpace(event_space_id as string);
+        const result = await fetchLocationsByEventSpace(
+          event_space_id as string
+        );
         console.log(result);
         setSavedLocations(result?.data?.data);
         setLocationId(result.data.data[0].id);
@@ -357,13 +422,14 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
     const fetchCurrentSchedule = async () => {
       try {
         const result = await fetchScheduleByID(scheduleId as string);
-        console.log(result, 'result');
+        console.log(result, "result");
         setSchedule({
           ...result.data.data,
           event_type: JSON.parse(result.data.data.event_type)[0],
           experience_level: JSON.parse(result.data.data.experience_level)[0],
         });
-        setStartDate(new Date(result.data.data.date));
+
+        setStartDate(toTurkeyTime(result.data.data.date).toDate() as Date);
 
         form.reset({
           name: result.data.data.name,
@@ -394,9 +460,9 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
     const firstError = Object.values(form.formState.errors)[0];
     if (firstError) {
       toast({
-        title: 'Error',
+        title: "Error",
         description: firstError?.message,
-        variant: 'destructive',
+        variant: "destructive",
       });
     }
   }, [form.formState.errors]);
@@ -405,14 +471,16 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
     updateIsLoading && updateIsLoading(true);
     try {
       router.push({
-        pathname: isQuickAccess ? `/dashboard/eventview/allschedules` : `/dashboard/eventview/tracks/track`,
+        pathname: isQuickAccess
+          ? `/dashboard/eventview/allschedules`
+          : `/dashboard/eventview/tracks/track`,
         query: {
           event_space_id: event_space_id,
           trackId: trackId,
         },
       });
     } catch (error) {
-      console.error('Error redirecting schedulelists', error);
+      console.error("Error redirecting schedulelists", error);
     }
   };
 
@@ -441,7 +509,12 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
           <div className="flex flex-col items-center">
             <h3 className="font-bold text-xl">Your Session Has Been Updated</h3>
             <DialogPrimitive.Close>
-              <Button onClick={handleEnterSchedules} variant="primary" className="mt-8 bg-[#67DBFF]/20 text-[#67DBFF] rounded-full" leftIcon={HiArrowRight}>
+              <Button
+                onClick={handleEnterSchedules}
+                variant="primary"
+                className="mt-8 bg-[#67DBFF]/20 text-[#67DBFF] rounded-full"
+                leftIcon={HiArrowRight}
+              >
                 Go to sessions
               </Button>
             </DialogPrimitive.Close>
@@ -449,23 +522,41 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
         ) : (
           <>
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmitWithEnter)} className="space-y-10 w-full">
+              <form
+                onSubmit={form.handleSubmit(onSubmitWithEnter)}
+                className="space-y-10 w-full"
+              >
                 <FormField
                   control={form.control}
                   name="format"
                   render={({ field }) => (
                     <FormItem className="space-y-3">
-                      <FormLabel className="text-2xl opacity-80 leading-[1.2]">Session Format</FormLabel>
-                      <FormDescription>The format you select will determine what information will be required going forward</FormDescription>
+                      <FormLabel className="text-2xl opacity-80 leading-[1.2]">
+                        Session Format
+                      </FormLabel>
+                      <FormDescription>
+                        The format you select will determine what information
+                        will be required going forward
+                      </FormDescription>
                       <FormControl>
-                        <RadioGroup onValueChange={(value) => (field.onChange(value), handleEventFormatChange(value))} defaultValue={schedule?.format} className="flex flex-col md:flex-row" {...field}>
+                        <RadioGroup
+                          onValueChange={(value) => (
+                            field.onChange(value),
+                            handleEventFormatChange(value)
+                          )}
+                          defaultValue={schedule?.format}
+                          className="flex flex-col md:flex-row"
+                          {...field}
+                        >
                           <FormItem className="flex items-center space-x-3 space-y-0 p-3 hover:bg-btnPrimaryGreen/20 rounded-md focus:bg-btnPrimaryGreen/20">
                             <FormControl>
                               <RadioGroupItem value="in-person" />
                             </FormControl>
                             <FormLabel className="font-semibold text-white/60 text-base">
                               In-Person
-                              <span className="text-xs block">This is a physical event</span>
+                              <span className="text-xs block">
+                                This is a physical event
+                              </span>
                             </FormLabel>
                           </FormItem>
                           <FormItem className="flex items-center space-x-3 space-y-0 p-3 hover:bg-btnPrimaryGreen/20 rounded-md">
@@ -474,7 +565,9 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
                             </FormControl>
                             <FormLabel className="font-semibold text-white/60 text-base ">
                               Online
-                              <span className="text-xs block">Specifically Online Event</span>
+                              <span className="text-xs block">
+                                Specifically Online Event
+                              </span>
                             </FormLabel>
                           </FormItem>
                         </RadioGroup>
@@ -488,9 +581,15 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
                   name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-lg font-semibold leading-[1.2] text-white">Session Name </FormLabel>
+                      <FormLabel className="text-lg font-semibold leading-[1.2] text-white">
+                        Session Name{" "}
+                      </FormLabel>
                       <FormControl>
-                        <InputFieldDark type={InputFieldType.Primary} placeholder={'Enter a name for your event'} {...field} />
+                        <InputFieldDark
+                          type={InputFieldType.Primary}
+                          placeholder={"Enter a name for your event"}
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -502,21 +601,35 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
                     name="description"
                     render={({ field }) => (
                       <div className="flex flex-col gap-[10px]">
-                        <Label className="text-2xl text-white/80">Session Description</Label>
-                        <TextEditor value={field.value} onChange={field.onChange} />
+                        <Label className="text-2xl text-white/80">
+                          Session Description
+                        </Label>
+                        <TextEditor
+                          value={field.value}
+                          onChange={field.onChange}
+                        />
                       </div>
                     )}
                   />
                 </div>
                 <div className="w-full">
-                  <h2 className="text-2xl text-white/80">Session Date & Times</h2>
+                  <h2 className="text-2xl text-white/80">
+                    Session Date & Times
+                  </h2>
                   <div className="flex flex-col items-start gap-5 self-stretch w-full pt-5">
                     <div className="flex gap-5">
-                      <SwitchButton value={schedule.all_day} onClick={handleChangeSwitch} />
-                      <span className="text-lg opacity-70 self-stretch">All Day</span>
+                      <SwitchButton
+                        value={schedule.all_day}
+                        onClick={handleChangeSwitch}
+                      />
+                      <span className="text-lg opacity-70 self-stretch">
+                        All Day
+                      </span>
                     </div>
                     <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                      <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select Session Frequency</Label>
+                      <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
+                        Select Session Frequency
+                      </Label>
                       <select
                         value={schedule.schedule_frequency}
                         onChange={(e) =>
@@ -534,15 +647,24 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
                       </select>
                     </div>
                     <div className="flex flex-col items-center gap-[30px] self-stretch w-full">
-                      {schedule.date !== '' && (
+                      {schedule.date !== "" && (
                         <FormField
                           control={form.control}
                           name="date"
                           render={({ field }) => (
                             <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                              <span className="text-lg opacity-70 self-stretch">Start Date</span>
-                              <CustomDatePicker defaultDate={undefined} selectedDate={startDate as Date} handleDateChange={field.onChange} {...field} />
-                              <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">Click & Select or type in a date</h3>
+                              <span className="text-lg opacity-70 self-stretch">
+                                Start Date
+                              </span>
+                              <CustomDatePicker
+                                defaultDate={undefined}
+                                selectedDate={startDate as Date}
+                                handleDateChange={field.onChange}
+                                {...field}
+                              />
+                              <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">
+                                Click & Select or type in a date
+                              </h3>
                               <FormMessage />
                             </div>
                           )}
@@ -556,72 +678,86 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
                               <TimePicker
                                 label="Start Time"
                                 // slotProps={{ textField: { color: 'white' }}}
-                                value={dayjs(schedule?.start_time) as unknown as string}
-                                // className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
-                                onChange={(newValue: string | Date | null | undefined) =>
+                                value={
+                                  toTurkeyTime(
+                                    schedule?.start_time
+                                  ) as unknown as string
+                                } // className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
+                                onChange={(
+                                  newValue: string | Date | null | undefined
+                                ) => {
+                                  console.log(newValue);
+                                  let _time = fromTurkeyToUTC(newValue);
                                   setSchedule({
                                     ...schedule,
-                                    start_time: newValue as string,
-                                  })
-                                }
+                                    start_time: _time as string,
+                                  });
+                                }}
                                 sx={{
                                   input: {
-                                    color: 'white',
+                                    color: "white",
                                   },
                                   label: {
-                                    color: 'white',
+                                    color: "white",
                                   },
                                   svg: {
-                                    color: 'white', // change the icon color
+                                    color: "white", // change the icon color
                                   },
-                                  backgroundColor: '#242727',
-                                  color: 'white',
-                                  borderRadius: '8px',
-                                  width: '100%',
+                                  backgroundColor: "#242727",
+                                  color: "white",
+                                  borderRadius: "8px",
+                                  width: "100%",
                                   // borderColor: "white",
                                   // borderWidth: "1px",
-                                  border: '1px solid #4b4a4a',
+                                  border: "1px solid #4b4a4a",
                                 }}
                                 slotProps={{
                                   popper: {
                                     autoFocus: true,
                                     sx: {
-                                      pointerEvents: 'auto',
+                                      pointerEvents: "auto",
                                     },
                                   },
                                 }}
                               />
                               <TimePicker
                                 label="End Time"
-                                value={dayjs(schedule?.end_time) as unknown as string}
-                                onChange={(newValue: string | Date | null | undefined) =>
+                                value={
+                                  toTurkeyTime(
+                                    schedule?.end_time
+                                  ) as unknown as string
+                                }
+                                onChange={(
+                                  newValue: string | Date | null | undefined
+                                ) => {
+                                  let _time = fromTurkeyToUTC(newValue);
                                   setSchedule({
                                     ...schedule,
-                                    end_time: newValue as string,
-                                  })
-                                }
+                                    end_time: _time as string,
+                                  });
+                                }}
                                 sx={{
                                   input: {
-                                    color: 'white',
+                                    color: "white",
                                   },
                                   label: {
-                                    color: 'white',
+                                    color: "white",
                                   },
                                   svg: {
-                                    color: 'white', // change the icon color
+                                    color: "white", // change the icon color
                                   },
-                                  backgroundColor: '#242727',
-                                  color: 'white',
-                                  borderRadius: '8px',
-                                  width: '100%',
+                                  backgroundColor: "#242727",
+                                  color: "white",
+                                  borderRadius: "8px",
+                                  width: "100%",
                                   // borderColor: "white",
                                   // borderWidth: "1px",
-                                  border: '1px solid #4b4a4a',
+                                  border: "1px solid #4b4a4a",
                                 }}
                                 slotProps={{
                                   popper: {
                                     sx: {
-                                      pointerEvents: 'auto',
+                                      pointerEvents: "auto",
                                     },
                                   },
                                 }}
@@ -631,18 +767,30 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
                         </>
                       )}
                     </div>
-                    {(schedule?.schedule_frequency === sessionFrequency.WEEKLY || schedule?.schedule_frequency === sessionFrequency.EVERYDAY) && (
+                    {(schedule?.schedule_frequency ===
+                      sessionFrequency.WEEKLY ||
+                      schedule?.schedule_frequency ===
+                        sessionFrequency.EVERYDAY) && (
                       <div className="flex flex-col items-center gap-[30px] self-stretch w-full">
                         <FormField
                           control={form.control}
                           name="end_date"
                           render={({ field }) => (
                             <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                              <span className="text-lg opacity-70 self-stretch">End Date</span>
+                              <span className="text-lg opacity-70 self-stretch">
+                                End Date
+                              </span>
 
-                              <CustomDatePicker defaultDate={undefined} selectedDate={field.value || null} handleDateChange={field.onChange} {...field} />
+                              <CustomDatePicker
+                                defaultDate={undefined}
+                                selectedDate={field.value || null}
+                                handleDateChange={field.onChange}
+                                {...field}
+                              />
 
-                              <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">Click & Select or type in a date</h3>
+                              <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">
+                                Click & Select or type in a date
+                              </h3>
                               <FormMessage />
                             </div>
                           )}
@@ -653,41 +801,48 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
                   </div>
                 </div>
                 <div className="w-full">
-                  {selectedEventFormat === 'new' && schedule.format === 'in-person' && (
-                    <>
-                      <h2 className="text-2xl opacity-80">Location</h2>
-                      <div className="flex flex-col items-start gap-5 self-stretch w-full pt-5">
-                        <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                          <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select Location</Label>
-                          {/* <InputFieldDark type={InputFieldType.Option} placeholder={'The Dome'} /> */}
-                          <select
-                            onChange={(e) =>
-                              setSchedule({
-                                ...schedule,
-                                location_id: e.target.value,
-                              })
-                            }
-                            title="location"
-                            value={schedule.location_id}
-                            className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
-                          >
-                            {savedLocations.length === 0 && <option value="">No saved locations</option>}
-                            {savedLocations?.map((location: any) => (
-                              <option key={location.id} value={location.id}>
-                                {location.name}
-                              </option>
-                            ))}
-                          </select>
+                  {selectedEventFormat === "new" &&
+                    schedule.format === "in-person" && (
+                      <>
+                        <h2 className="text-2xl opacity-80">Location</h2>
+                        <div className="flex flex-col items-start gap-5 self-stretch w-full pt-5">
+                          <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
+                            <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
+                              Select Location
+                            </Label>
+                            {/* <InputFieldDark type={InputFieldType.Option} placeholder={'The Dome'} /> */}
+                            <select
+                              onChange={(e) =>
+                                setSchedule({
+                                  ...schedule,
+                                  location_id: e.target.value,
+                                })
+                              }
+                              title="location"
+                              value={schedule.location_id}
+                              className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
+                            >
+                              {savedLocations.length === 0 && (
+                                <option value="">No saved locations</option>
+                              )}
+                              {savedLocations?.map((location: any) => (
+                                <option key={location.id} value={location.id}>
+                                  {location.name}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
                         </div>
-                      </div>
-                    </>
-                  )}
-                  {selectedEventFormat === 'in-person' && (
+                      </>
+                    )}
+                  {selectedEventFormat === "in-person" && (
                     <>
                       <h2 className="text-2xl opacity-80">Location</h2>
                       <div className="flex flex-col items-start gap-5 self-stretch w-full pt-5">
                         <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                          <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select Location</Label>
+                          <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
+                            Select Location
+                          </Label>
                           {/* <InputFieldDark type={InputFieldType.Option} placeholder={'The Dome'} /> */}
                           <select
                             onChange={(e) => setLocationId(e.target.value)}
@@ -695,7 +850,9 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
                             value={locationId}
                             className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
                           >
-                            {savedLocations.length === 0 && <option value="">No saved locations</option>}
+                            {savedLocations.length === 0 && (
+                              <option value="">No saved locations</option>
+                            )}
                             {savedLocations?.map((location: any) => (
                               <option key={location.id} value={location.id}>
                                 {location.name}
@@ -722,16 +879,22 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
                       )}
                     />
                   </div> */}
-                    {selectedEventFormat === 'online' && (
+                    {selectedEventFormat === "online" && (
                       <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
                         <FormField
                           control={form.control}
                           name="live_stream_url"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel className="text-lg font-semibold leading-[1.2] text-white self-stretch">Live Stream Link</FormLabel>
+                              <FormLabel className="text-lg font-semibold leading-[1.2] text-white self-stretch">
+                                Live Stream Link
+                              </FormLabel>
                               <FormControl>
-                                <InputFieldDark type={InputFieldType.Link} placeholder={'Type URL'} {...field} />
+                                <InputFieldDark
+                                  type={InputFieldType.Link}
+                                  placeholder={"Type URL"}
+                                  {...field}
+                                />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -739,23 +902,30 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
                         />
                       </div>
                     )}
-                    {selectedEventFormat === 'new' && schedule.format === 'online' && (
-                      <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                        <FormField
-                          control={form.control}
-                          name="live_stream_url"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel className="text-lg font-semibold leading-[1.2] text-white self-stretch">Live Stream Link</FormLabel>
-                              <FormControl>
-                                <InputFieldDark type={InputFieldType.Link} placeholder={'Type URL'} {...field} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-                    )}
+                    {selectedEventFormat === "new" &&
+                      schedule.format === "online" && (
+                        <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
+                          <FormField
+                            control={form.control}
+                            name="live_stream_url"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel className="text-lg font-semibold leading-[1.2] text-white self-stretch">
+                                  Live Stream Link
+                                </FormLabel>
+                                <FormControl>
+                                  <InputFieldDark
+                                    type={InputFieldType.Link}
+                                    placeholder={"Type URL"}
+                                    {...field}
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                        </div>
+                      )}
                   </div>
                 </div>
                 <line></line>
@@ -765,16 +935,18 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
                     <div className="flex flex-col gap-6 w-full">
                       <div className="flex items-end gap-6 self-stretch">
                         <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                          <h2 className="md:text-lg  font-semibold leading-[1.2] text-white self-stretch sm:text-base">Enter Name</h2>
+                          <h2 className="md:text-lg  font-semibold leading-[1.2] text-white self-stretch sm:text-base">
+                            Enter Name
+                          </h2>
                           <div className="flex w-full text-white outline-none rounded-lg pr-3 pl-2.5 bg-inputField gap-2.5 border border-white/10 border-opacity-10 items-center">
                             <Autocomplete
                               {...defaultSpeakers}
                               id="controlled-demo"
-                              sx={{ color: 'black', width: '100%' }}
+                              sx={{ color: "black", width: "100%" }}
                               color="black"
                               value={eventItem}
                               onChange={(event: any, newValue) => {
-                                console.log('onChange', event, newValue);
+                                console.log("onChange", event, newValue);
                                 if (newValue) {
                                   // setTagItem({ name: newValue.name });
                                   setEventItem({
@@ -792,21 +964,21 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
                               slotProps={{
                                 paper: {
                                   sx: {
-                                    color: 'white',
-                                    backgroundColor: '#242727',
-                                    pointerEvents: 'auto',
+                                    color: "white",
+                                    backgroundColor: "#242727",
+                                    pointerEvents: "auto",
                                   },
                                 },
                               }}
                               renderInput={(params) => (
                                 <TextField
                                   sx={{
-                                    color: 'white',
+                                    color: "white",
                                     input: {
-                                      color: 'white',
+                                      color: "white",
                                     },
                                     label: {
-                                      color: 'white',
+                                      color: "white",
                                     },
                                   }}
                                   {...params}
@@ -830,7 +1002,9 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
                               /> */}
                         </div>
                         <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                          <h2 className="md:text-lg  font-semibold leading-[1.2] text-white self-stretch sm:text-base">Select Role</h2>
+                          <h2 className="md:text-lg  font-semibold leading-[1.2] text-white self-stretch sm:text-base">
+                            Select Role
+                          </h2>
                           <select
                             title="speaker"
                             value={eventItem.role}
@@ -851,16 +1025,19 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
                         <button
                           type="button"
                           onClick={() => {
-                            if (eventItem.name === '') return;
+                            if (eventItem.name === "") return;
                             console.log(eventItem);
                             setSchedule({
                               ...schedule,
-                              organizers: [...(schedule.organizers as Organizer[]), eventItem],
+                              organizers: [
+                                ...(schedule.organizers as Organizer[]),
+                                eventItem,
+                              ],
                             });
                             setOrganizers([...organizers, eventItem]);
                             setEventItem({
-                              name: '',
-                              role: 'speaker',
+                              name: "",
+                              role: "speaker",
                             });
                           }}
                           className="flex gap-2.5 mb-2 text-lg font-normal leading-[1.2] text-white items-center rounded-[8px] px-2 py-1 bg-white bg-opacity-10"
@@ -870,22 +1047,41 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
                       </div>
 
                       <div className="flex gap-2.5">
-                        {schedule.organizers?.map((organizer: any, index: number) => (
-                          <div key={index} className="flex gap-2.5 items-center rounded-[8px] px-2 py-1.5 bg-white bg-opacity-10">
-                            <button type="button" className="flex gap-2.5 items-center">
-                              <GoXCircle onClick={() => handleRemoveSpeaker(index)} className="top-0.5 left-0.5 w-4 h-4" />
-                              <span className="text-lg font-semibold leading-[1.2] text-white self-stretch">{organizer.name ? organizer.name : organizer.name}</span>
-                            </button>
-                          </div>
-                        ))}
+                        {schedule.organizers?.map(
+                          (organizer: any, index: number) => (
+                            <div
+                              key={index}
+                              className="flex gap-2.5 items-center rounded-[8px] px-2 py-1.5 bg-white bg-opacity-10"
+                            >
+                              <button
+                                type="button"
+                                className="flex gap-2.5 items-center"
+                              >
+                                <GoXCircle
+                                  onClick={() => handleRemoveSpeaker(index)}
+                                  className="top-0.5 left-0.5 w-4 h-4"
+                                />
+                                <span className="text-lg font-semibold leading-[1.2] text-white self-stretch">
+                                  {organizer.name
+                                    ? organizer.name
+                                    : organizer.name}
+                                </span>
+                              </button>
+                            </div>
+                          )
+                        )}
                       </div>
                     </div>
                   </div>
                 </div>
                 <div className="w-full flex flex-col gap-6">
-                  <Label className="text-2xl text-white/80">Session Labels</Label>
+                  <Label className="text-2xl text-white/80">
+                    Session Labels
+                  </Label>
                   <div className="flex flex-col gap-[14px] items-start w-full">
-                    <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select Event Category</Label>
+                    <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
+                      Select Event Category
+                    </Label>
 
                     <select
                       onChange={(e) => {
@@ -912,7 +1108,9 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
                     </select>
                   </div>
                   <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                    <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select Experience Level</Label>
+                    <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
+                      Select Experience Level
+                    </Label>
 
                     <select
                       onChange={(e) =>
@@ -937,7 +1135,9 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
                   </div>
                   <div className="flex flex-col items-start gap-6 self-stretch">
                     <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                      <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Add Tags</Label>
+                      <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
+                        Add Tags
+                      </Label>
                       <div className="flex w-full text-white gap-5">
                         <div className="flex w-full text-white outline-none rounded-lg pr-3 pl-2.5 bg-inputField gap-2.5 border border-white/10 border-opacity-10 items-center">
                           <Autocomplete
@@ -952,13 +1152,13 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
                             slotProps={{
                               paper: {
                                 sx: {
-                                  color: 'white',
-                                  backgroundColor: '#242727',
-                                  pointerEvents: 'auto',
+                                  color: "white",
+                                  backgroundColor: "#242727",
+                                  pointerEvents: "auto",
                                 },
                               },
                             }}
-                            sx={{ color: 'black', width: '100%' }}
+                            sx={{ color: "black", width: "100%" }}
                             color="black"
                             onInputChange={(event, newInputValue) => {
                               setTagItem({ name: newInputValue });
@@ -966,12 +1166,12 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
                             renderInput={(params) => (
                               <TextField
                                 sx={{
-                                  color: 'white',
+                                  color: "white",
                                   input: {
-                                    color: 'white',
+                                    color: "white",
                                   },
                                   label: {
-                                    color: 'white',
+                                    color: "white",
                                   },
                                 }}
                                 {...params}
@@ -984,12 +1184,15 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
                         <button
                           type="button"
                           onClick={() => {
-                            if (tagItem.name === '') return;
+                            if (tagItem.name === "") return;
                             setSchedule({
                               ...schedule,
-                              tags: [...(schedule.tags as string[]), tagItem.name],
+                              tags: [
+                                ...(schedule.tags as string[]),
+                                tagItem.name,
+                              ],
                             });
-                            setTagItem({ name: '' });
+                            setTagItem({ name: "" });
                           }}
                           className="flex gap-2.5 text-lg font-normal leading-[1.2] text-white items-center rounded-[8px] px-2 py-1 bg-white bg-opacity-10"
                         >
@@ -1000,10 +1203,21 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
                         {schedule.tags?.map((tag, index) => {
                           const id = uuidv4();
                           return (
-                            <div key={id} className="flex gap-2.5 items-center rounded-[8px] px-2 py-1.5 bg-white bg-opacity-10">
-                              <button type="button" className="flex gap-2.5 items-center">
-                                <GoXCircle onClick={() => handleRemoveTag(index)} className="top-0.5 left-0.5 w-4 h-4" />
-                                <span className="text-lg font-semibold leading-[1.2] text-white self-stretch">{tag}</span>
+                            <div
+                              key={id}
+                              className="flex gap-2.5 items-center rounded-[8px] px-2 py-1.5 bg-white bg-opacity-10"
+                            >
+                              <button
+                                type="button"
+                                className="flex gap-2.5 items-center"
+                              >
+                                <GoXCircle
+                                  onClick={() => handleRemoveTag(index)}
+                                  className="top-0.5 left-0.5 w-4 h-4"
+                                />
+                                <span className="text-lg font-semibold leading-[1.2] text-white self-stretch">
+                                  {tag}
+                                </span>
                               </button>
                             </div>
                           );
@@ -1017,17 +1231,24 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
                   <Label className="text-2xl text-white/80">Advanced</Label>
                   <div className="flex flex-col items-center gap-5 self-stretch pt-5">
                     <div className="flex items-center gap-5 self-stretch">
-                      <SwitchButton value={schedule.limit_rsvp} onClick={handleLimitRSVP} />
-                      <span className="flex-1 text-base font-semibold leading-[1.2]">Limit RSVPs</span>
+                      <SwitchButton
+                        value={schedule.limit_rsvp}
+                        onClick={handleLimitRSVP}
+                      />
+                      <span className="flex-1 text-base font-semibold leading-[1.2]">
+                        Limit RSVPs
+                      </span>
                     </div>
                     {schedule.limit_rsvp && (
                       <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                        <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select an Amount</Label>
+                        <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
+                          Select an Amount
+                        </Label>
                         <input
                           type="number"
                           min="1"
                           className="bg-gray-600 w-full outline-none px-4 rounded-md py-2"
-                          placeholder={'50'}
+                          placeholder={"50"}
                           value={schedule.rsvp_amount}
                           onChange={(e) =>
                             setSchedule({
@@ -1054,15 +1275,21 @@ export default function EditScheduleForm({ title, isQuickAccess, scheduleId, tra
                       disabled={updating}
                       onClick={() => form.handleSubmit(onSubmit)()}
                     >
-                      <span>{updating ? 'Updating' : 'Update Session'}</span>
+                      <span>{updating ? "Updating" : "Update Session"}</span>
                     </Button>
                   </div>
                 </div>
               </form>
             </Form>
             {creatorId === userId && (
-              <Button variant="red" className="rounded-full w-full lg:w-1/2 flex justify-center" size="lg" onClick={handleDeleteSchedule} disabled={loading}>
-                {loading ? 'Deleting...' : 'Delete'}
+              <Button
+                variant="red"
+                className="rounded-full w-full lg:w-1/2 flex justify-center"
+                size="lg"
+                onClick={handleDeleteSchedule}
+                disabled={loading}
+              >
+                {loading ? "Deleting..." : "Delete"}
               </Button>
             )}
           </>
@@ -1087,7 +1314,10 @@ export const getServerSideProps = async (ctx: any) => {
     };
 
   // get profile from session
-  const { data: profile, error } = await supabase.from('profile').select('*').eq('uuid', session.user.id);
+  const { data: profile, error } = await supabase
+    .from("profile")
+    .select("*")
+    .eq("uuid", session.user.id);
 
   return {
     props: {
