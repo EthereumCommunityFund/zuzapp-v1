@@ -26,7 +26,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         editlogs: editlogs!schedule_id (*, user: profile!uuid (username))
     `)
         .eq("track_id", id).order('date', { ascending: true })
-        .order('start_time', { ascending: true });
+        .order('date, start_time', { ascending: true });
     if (error) {
         logToFile("server error", error.message, error.code, "Unknown user");
         return res.status(404).send("Schedule not found");

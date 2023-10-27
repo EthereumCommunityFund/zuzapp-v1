@@ -229,8 +229,8 @@ export default function UpdateSchedulePage() {
         invalid_type_error: "You need to select a valid date for this event.",
       })
       .optional(),
-    description: z.string().min(40, {
-      message: "Description is required and must be a minimum of 40 characters",
+    description: z.string().min(10, {
+      message: "Description is required and must be a minimum of 10 characters",
     }),
     video_call_link: z.string().optional().or(z.literal("")),
     live_stream_url: z.string().optional().or(z.literal("")),
@@ -292,9 +292,16 @@ export default function UpdateSchedulePage() {
       });
       return;
     }
+
     if (frequency === "everyday" || frequency === "weekly") {
-      const endDate = dayjs(values.end_date);
-      const startDate = dayjs(values.date);
+      const endDate = fromTurkeyToUTC(values.end_date)
+        .toDate()
+        .setHours(0, 0, 0, 0);
+      const startDate = fromTurkeyToUTC(values.date)
+        .toDate()
+        .setHours(0, 0, 0, 0);
+
+      console.log(startDate, endDate, "start dates");
 
       if (endDate.isBefore(startDate)) {
         form.setError("end_date", {
@@ -339,6 +346,10 @@ export default function UpdateSchedulePage() {
       all_day: schedule.all_day,
       track_id: trackId,
       limit_rsvp: schedule.limit_rsvp,
+      date: fromTurkeyToUTC(schedule.date).toDate().setHours(0, 0, 0, 0),
+      end_date: fromTurkeyToUTC(schedule.end_date)
+        .toDate()
+        .setHours(0, 0, 0, 0),
       ...(eventSpace?.event_space_type === "tracks" && {
         track_id: trackId as string,
       }),
