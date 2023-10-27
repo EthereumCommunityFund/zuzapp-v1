@@ -9,7 +9,7 @@ interface IEventViewHeader {
 export default function EventViewHeader(props: IEventViewHeader) {
   const { imgPath, name, tagline } = props;
   return (
-    <div className="lg:sticky lg:top-[65px] lg:z-50 lg:backdrop-blur-[250px] px-2 py-4 rounded-b-xl sm:fixed sm:bottom-0 sm:w-full sm:left-0 sm:p-0 sm:z-40">
+    <div className="lg:sticky lg:block lg:top-[65px] lg:z-50 lg:backdrop-blur-[250px] px-2 py-4 rounded-b-xl sm:hidden sm:bottom-0 sm:w-full sm:left-0 sm:p-0 sm:z-40">
       <div
         className={
           'flex md:px-10 lg:p-10 pb-2 gap-[10px] lg:rounded-full lg:h-[60px] justify-between items-center lg:bg-inherit lg:backdrop-blur-none sm:backdrop-blur-sm lg:relative md:flex-row sm:bottom-0 sm:bg-white/10 sm:flex-col w-full z-10'
