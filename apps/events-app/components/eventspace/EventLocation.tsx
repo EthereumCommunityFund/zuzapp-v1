@@ -14,6 +14,8 @@ import { LocationType, LocationUpdateRequestBody } from '@/types';
 import EventLocationEdit from './EventLocationEdit';
 import { useQuery, useQueryClient } from 'react-query';
 import fetchLocationsByEventSpaceId from '@/services/fetchLocationsByEventSpace';
+import { Loader } from '../ui/Loader';
+import { toast } from '../ui/use-toast';
 
 export default function EventLocation() {
   const queryClient = useQueryClient();
@@ -32,25 +34,40 @@ export default function EventLocation() {
   const [isLocationForm, setIsLocationForm] = useState<boolean>(false);
   const [savedLocations, setSavedLocations] = useState<LocationUpdateRequestBody[]>(data as LocationUpdateRequestBody[]);
   const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
-
+  const [deleting, setIsDeleting] = useState(false);
   const handleLocationClick = (id: string) => {
     setSelectedLocation(id);
   };
 
   const handleDeleteLocation = async (id: string, index: number) => {
     try {
+      setIsDeleting(true);
       const result = await deleteEventSpaceLocation(id, event_space_id as string);
       console.log(result);
       const updatedItems = [...savedLocations.slice(0, index), ...savedLocations.slice(index + 1)];
       setSavedLocations(updatedItems);
+      toast({
+        title: 'Location deleted successfully',
+      });
       queryClient.invalidateQueries({ queryKey: ['locationDetails'] });
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
+      toast({
+        title: 'Error',
+        description: error?.response.data?.error,
+        variant: 'destructive',
+      });
+    } finally {
+      setIsDeleting(false);
     }
   };
-
+  useEffect(() => {
+    if (data) {
+      setSavedLocations(data);
+    }
+  }, [data]);
   if (isLoading) {
-    return <p>Loading...</p>;
+    return <Loader />;
   }
   if (isError) {
     return <p>Error loading space details</p>;
@@ -62,11 +79,12 @@ export default function EventLocation() {
         <div className="text-[25px] font-normal leading-7.5">Locations</div>
         <div className="text-xl text-right font-bold opacity-70"></div>
       </div>
-      {data && data.length > 0 && (
+      {savedLocations && savedLocations.length > 0 && (
         <div className="flex flex-col gap-5">
-          {data?.map((savedLocation, index) => (
+          {savedLocations?.map((savedLocation, index) => (
             <>
-              <div key={savedLocation.id} className="flex flex-col md:flex-row rounded-[10px] border border-opacity-10 border-white p-3.5 gap-[30px] bg-[#2B2E2E] bg-opacity-10 w-full">
+
+              <div key={savedLocation.id} className="flex flex-col md:flex-row rounded-[10px] border border-opacity-10 border-white p-3.5 gap-[30px] bg-componentPrimary bg-opacity-10 w-full justify-between">
                 <div className="flex gap-7">
                   <img src={(savedLocation.image_urls as unknown as string)[0]} alt="Avatar" width={42} height={42} className="rounded-[6px]" />
                   <div className="opacity-50 gap-5 flex items-center w-1/2">
@@ -82,8 +100,9 @@ export default function EventLocation() {
                     type="button"
                     leftIcon={CgClose}
                     onClick={() => handleDeleteLocation(savedLocation.id as string, index)}
+                    disabled={deleting}
                   >
-                    Delete
+                    {deleting ? 'Deleting' : 'Delete'}
                   </Button>
                   <Button
                     onClick={() => handleLocationClick(savedLocation.id as string)}
