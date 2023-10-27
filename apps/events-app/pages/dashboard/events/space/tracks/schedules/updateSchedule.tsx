@@ -211,8 +211,8 @@ export default function UpdateSchedulePage() {
         invalid_type_error: "You need to select a valid date for this event.",
       })
       .optional(),
-    description: z.string().min(10, {
-      message: "Description is required and must be a minimum of 10 characters",
+    description: z.string().min(40, {
+      message: "Description is required and must be a minimum of 40 characters",
     }),
     video_call_link: z.string().optional().or(z.literal("")),
     live_stream_url: z.string().optional().or(z.literal("")),
