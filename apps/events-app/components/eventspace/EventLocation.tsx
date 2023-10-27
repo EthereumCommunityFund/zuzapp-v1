@@ -35,13 +35,14 @@ export default function EventLocation() {
   const [savedLocations, setSavedLocations] = useState<LocationUpdateRequestBody[]>(data as LocationUpdateRequestBody[]);
   const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
   const [deleting, setIsDeleting] = useState(false);
+  const [deletingStates, setDeletingStates] = useState<Record<string, boolean>>({});
   const handleLocationClick = (id: string) => {
     setSelectedLocation(id);
   };
 
   const handleDeleteLocation = async (id: string, index: number) => {
     try {
-      setIsDeleting(true);
+      setDeletingStates((prev) => ({ ...prev, [id]: true }));
       const result = await deleteEventSpaceLocation(id, event_space_id as string);
       console.log(result);
       const updatedItems = [...savedLocations.slice(0, index), ...savedLocations.slice(index + 1)];
@@ -58,7 +59,7 @@ export default function EventLocation() {
         variant: 'destructive',
       });
     } finally {
-      setIsDeleting(false);
+      setDeletingStates((prev) => ({ ...prev, [id]: false }));
     }
   };
   useEffect(() => {
@@ -102,9 +103,9 @@ export default function EventLocation() {
                     type="button"
                     leftIcon={CgClose}
                     onClick={() => handleDeleteLocation(savedLocation.id as string, index)}
-                    disabled={deleting}
+                    disabled={deletingStates[savedLocation.id]}
                   >
-                    {deleting ? 'Deleting' : 'Delete'}
+                    {deletingStates[savedLocation.id] ? 'Deleting' : 'Delete'}
                   </Button>
                   <Button
                     onClick={() => handleLocationClick(savedLocation.id as string)}
