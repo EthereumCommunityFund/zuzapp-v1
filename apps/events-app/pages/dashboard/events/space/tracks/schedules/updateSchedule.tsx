@@ -47,6 +47,8 @@ import { useQuery } from "react-query";
 import { fetchEventSpaceById } from "@/services/fetchEventSpaceDetails";
 // import timepicker as Timepicker from "react-time-picker";
 import dayjs, { Dayjs } from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
@@ -78,7 +80,10 @@ import {
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import { sessionFrequency } from "@/constant/scheduleconstants";
 import { deleteScheduleById } from "@/services/deleteSchedule";
+import { fromTurkeyToUTC, toTurkeyTime } from "@/utils";
 dayjs.extend(isSameOrAfter);
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 type Organizer = {
   name: string;
@@ -767,7 +772,7 @@ export default function UpdateSchedulePage() {
                                       label="Start Time"
                                       // slotProps={{ textField: { color: 'white' }}}
                                       value={
-                                        dayjs(
+                                        toTurkeyTime(
                                           schedule?.start_time
                                         ) as unknown as string
                                       }
@@ -778,12 +783,14 @@ export default function UpdateSchedulePage() {
                                           | Date
                                           | null
                                           | undefined
-                                      ) =>
+                                      ) => {
+                                        console.log(newValue);
+                                        let _time = fromTurkeyToUTC(newValue);
                                         setSchedule({
                                           ...schedule,
-                                          start_time: newValue as string,
-                                        })
-                                      }
+                                          start_time: _time as string,
+                                        });
+                                      }}
                                       sx={{
                                         input: {
                                           color: "white",
@@ -806,7 +813,7 @@ export default function UpdateSchedulePage() {
                                     <TimePicker
                                       label="End Time"
                                       value={
-                                        dayjs(
+                                        toTurkeyTime(
                                           schedule?.end_time
                                         ) as unknown as string
                                       }
@@ -816,12 +823,13 @@ export default function UpdateSchedulePage() {
                                           | Date
                                           | null
                                           | undefined
-                                      ) =>
+                                      ) => {
+                                        let _time = fromTurkeyToUTC(newValue);
                                         setSchedule({
                                           ...schedule,
-                                          end_time: newValue as string,
-                                        })
-                                      }
+                                          end_time: _time as string,
+                                        });
+                                      }}
                                       sx={{
                                         input: {
                                           color: "white",

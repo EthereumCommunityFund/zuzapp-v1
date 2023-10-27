@@ -20,12 +20,12 @@ const schedule_create_schema = Joi.object({
   start_time: Joi.date().when('all_day', {
     is: false,
     then: Joi.required(),
-    otherwise: Joi.optional().default(Date.now()),
+    // otherwise: Joi.optional().default(Date.now()),
   }),
   end_time: Joi.date().when('all_day', {
     is: false,
     then: Joi.required(),
-    otherwise: Joi.optional().default(Date.now()),
+    // otherwise: Joi.optional().default(Date.now()),
   }),
   all_day: Joi.boolean().default(false),
   schedule_frequency: Joi.string().valid('once', 'everyday', 'weekly').required(),
