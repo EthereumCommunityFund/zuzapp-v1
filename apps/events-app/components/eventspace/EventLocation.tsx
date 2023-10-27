@@ -66,10 +66,8 @@ export default function EventLocation() {
         <div className="flex flex-col gap-5">
           {data?.map((savedLocation, index) => (
             <>
-              <div
-                key={savedLocation.id}
-                className="flex flex-col md:flex-row rounded-[10px] border border-opacity-10 border-white p-3.5 gap-[30px] bg-componentPrimary bg-opacity-10 w-full justify-between"
-              >
+
+              <div key={savedLocation.id} className="flex flex-col md:flex-row rounded-[10px] border border-opacity-10 border-white p-3.5 gap-[30px] bg-componentPrimary bg-opacity-10 w-full justify-between">
                 <div className="flex gap-7">
                   <img src={(savedLocation.image_urls as unknown as string)[0]} alt="Avatar" width={42} height={42} className="rounded-[6px]" />
                   <div className="opacity-50 gap-5 flex items-center w-1/2">
