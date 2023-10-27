@@ -34,10 +34,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     // console.log(response.data.eventspace, 'event space');
 
-    // confirm that the person deleting has access
-    if (response.data.eventspace.creator_id !== req.body.user.id) {
-        return res.status(403).send("You are not authorized to delete this event space location");
-    }
+
 
 
     const { error, status } = await supabase

@@ -30,9 +30,6 @@ const deleteTrackHandler = async (req: NextApiRequest, res: NextApiResponse) => 
     //     return res.status(500).send("Internal server error");
     // }
 
-    // if (track_response.data.creator_id !== req.body.user.id) {
-    //     return res.status(403).send("You are not authorized to delete this track");
-    // }
 
 
     const { error, status } = await supabase

@@ -29,9 +29,7 @@ const deleteScheduleHandler = async (req: NextApiRequest, res: NextApiResponse) 
     //     return res.status(500).send("Internal server error");
     // }
 
-    // if (schedule_response.data.creator_id !== req.body.user.id) {
-    //     return res.status(403).send("You are not authorized to delete this schedule");
-    // }
+
 
     const { error, status } = await supabase
         .from('schedule')
