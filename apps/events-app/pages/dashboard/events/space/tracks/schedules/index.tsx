@@ -24,6 +24,7 @@ import { Loader } from "@/components/ui/Loader";
 import useTrackDetails from "@/hooks/useTrackDetails";
 import ScheduleItemCard from "@/components/schedules/ScheduleItemCard";
 import TrackScheduleItemCard from "@/components/schedules/TrackScheduleItemCard";
+import Image from "next/image";
 
 type IdProp = {
   id: string;
@@ -127,7 +128,7 @@ export default function SchedulesDashboardPage() {
                 {loading ? (
                   <Loader />
                 ) : (
-                  <img src={trackDetails?.image as string} alt="track-image" />
+                  <Image src={trackDetails?.image as string} alt="track-image" width={100} height={100} loading="lazy" />
                 )}
               </div>
               <div className="flex flex-col gap-5 self-stretch">

@@ -10,6 +10,7 @@ import { X } from "lucide-react";
 import { ArrowCircleRight, GithubLogo, Guilded } from "@/components/ui/icons";
 import IconButton from "@/components/ui/buttons/IconButton";
 import { BiHome, BiLogoGithub } from "react-icons/bi";
+import Image from "next/image";
 
 export default function Zapps() {
   const handleItemClick = (path: string) => {
@@ -49,7 +50,7 @@ export default function Zapps() {
                   </DialogTitle>
                   <hr className='bg-grayBackground' />
                   <DialogDescription className="text-white flex flex-col gap-2.5">
-                    <img className="rounded-lg" src={zAppCard.imgURL} alt="item-card" />
+                    <Image className="rounded-lg" src={zAppCard.imgURL as string} alt="item-card" width={100} height={100} layout="responsive" loading="lazy" />
                     <div className="flex flex-col p-2.5 gap-2.5">
                       <Label className="text-white text-2xl font-bold">
                         {zAppCard.appTitle}

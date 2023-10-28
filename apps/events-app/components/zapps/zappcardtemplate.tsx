@@ -2,12 +2,13 @@ import { ZappCardTemplate } from "@/types";
 import { Label } from "@radix-ui/react-label";
 import Button from "../ui/buttons/Button";
 import { BiCode } from "react-icons/bi";
+import Image from "next/image";
 
 export default function ZappCardComponentTemplate(props: ZappCardTemplate) {
   const { imgURL, appTitle, appTagLine, appContents } = props;
   return (
-    <div className="flex flex-col p-2.5 bg-componentPrimary rounded-2xl md:w-72 sm:w-full h-80 hover:bg-itemHover hover:cursor-pointer gap-3.5">
-      <img className="rounded-[10px] h-[120px] w-full object-cover" src={imgURL ? `${imgURL}` : `/images/zapps/new.png`} alt="item-card" />
+    <div className="flex flex-col p-2.5 bg-componentPrimary rounded-2xl md:w-72 sm:w-full h-auto hover:bg-itemHover hover:cursor-pointer gap-3.5">
+      <Image className="rounded-[10px] w-full" src={imgURL ? `${imgURL}` : `/images/zapps/new.png`} alt="item-card" width={100} height={120} layout="responsive" loading="lazy" />
       <div className="flex flex-col gap-3.5 w-full">
         <div className="flex flex-col gap-2.5">
           <Label className="text-white text-xl font-bold">

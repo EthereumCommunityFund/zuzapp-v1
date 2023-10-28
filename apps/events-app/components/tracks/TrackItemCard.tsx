@@ -3,6 +3,7 @@ import { HiArrowRight, HiCalendar } from 'react-icons/hi';
 import Button from '../ui/buttons/Button';
 import router, { useRouter } from 'next/router';
 import { TrackCreateRequestBody } from '@/types';
+import Image from 'next/image';
 
 interface IProps {
   trackTitle: string;
@@ -24,12 +25,13 @@ export default function TrackItem(props: IProps) {
     >
       <div className="flex items-center gap-2 w-full md:w-auto">
         <div className="bg-gray-300 rounded-lg p-1 w-[130px]">
-          <img
+          <Image
             src={trackImage}
             alt="track-image"
             className="rounded-lg object-cover"
-            // width={130}
-            // height={100}
+            width={130}
+            height={100}
+            loading='lazy'
           />
         </div>
         <div className="flex flex-col justify-center items-start gap-[14px] w-full md:w-auto self-stretch">

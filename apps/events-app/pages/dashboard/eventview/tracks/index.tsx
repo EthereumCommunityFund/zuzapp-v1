@@ -29,8 +29,7 @@ export default function EventViewTracksPage() {
 
   const { eventSpace, isLoading } = useEventDetails();
 
-  const ITEMS_PER_PAGE = 7;
-  const [currentPage, setCurrentPage] = useState<number>(1);
+
 
   const {
     data: tracks,
@@ -53,28 +52,6 @@ export default function EventViewTracksPage() {
       },
     }
   );
-
-  const totalTracks = tracks ? tracks.length : 0;
-
-  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-  const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, totalTracks);
-  const currentTracks = tracks ? tracks.slice(startIndex, endIndex) : [];
-
-  const categoryList: DropDownMenuItemType[] = [
-    {
-      name: 'Network States',
-    },
-    {
-      name: 'Character Cities',
-    },
-    {
-      name: 'Coordinations',
-    },
-  ];
-
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
 
   const handleItemClick = (track_title: string, trackId?: string) => {
     router.push({
@@ -100,10 +77,10 @@ export default function EventViewTracksPage() {
                   <>
                     {tracks && (
                       <div className="flex flex-col gap-[10px] overflow-hidden md:p-3 cursor-pointer">
-                        {currentTracks?.map((item, idx) => (
+                        {tracks?.map((item, idx) => (
                           <TrackItemCard key={idx} trackId={item.id} trackTitle={item.name} trackImage={item.image as string} onClick={() => handleItemClick(item.name, item.id)} />
                         ))}
-                        {totalTracks > ITEMS_PER_PAGE && <Pagination currentPage={currentPage} totalItems={tracks.length} itemsPerPage={ITEMS_PER_PAGE} onPageChange={handlePageChange} />}
+
                       </div>
                     )}
                   </>

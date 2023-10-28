@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import Button from "../ui/buttons/Button";
 import { HiUpload } from "react-icons/hi";
 import { uploadImage } from "@/controllers/image.controller";
+import Image from 'next/image';
 
 export const EventBanner = ({ banner, setBanner }: any) => {
   const [dragActive, setDragActive] = useState<boolean>(false);
@@ -83,7 +84,7 @@ export const EventBanner = ({ banner, setBanner }: any) => {
             </Button>
           </div>
         </div>
-        <img src={banner} alt="" className="border rounded-lg h-[100px] w-[130px]" />
+        <Image src={banner} alt="" className="border rounded-lg h-[100px] w-[130px]" width={100} height={130} loading='lazy' />
       </div>
     </div>
   );
