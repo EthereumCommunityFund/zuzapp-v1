@@ -136,18 +136,15 @@ export default function SessionViewPageTemplate({
   }, [lastTrackRef]);
 
   const groupedSchedules: Record<string, ScheduleDetailstype[]> = {};
-  let isFirstEvent = true;
+
   filteredSchedules.forEach((schedule) => {
+    let isFirstEvent = true; // Moved inside the forEach loop
+
     let date = toTurkeyTime(schedule.date).toDate();
-    // Set the time component to midnight for consistency
-    date.setHours(0, 0, 0, 0);
+    date.setHours(0, 0, 0, 0); // Reset the time to midnight
 
-    const end_date = toTurkeyTime(schedule.end_date).toDate(); // Convert end_date to Turkey time too
+    const end_date = toTurkeyTime(schedule.end_date).toDate();
     const frequency = schedule.schedule_frequency;
-
-    if (frequency === "everyday" || frequency === "weekly") {
-      isFirstEvent = false;
-    }
 
     do {
       const formattedDate = date.toLocaleDateString("en-US", {
@@ -175,10 +172,13 @@ export default function SessionViewPageTemplate({
       } else {
         break;
       }
+
+      isFirstEvent = false; // After the first iteration, set this to false
     } while (date <= end_date);
   });
 
   console.log("Grouped Schedules:", groupedSchedules);
+
   return (
     <>
       <div className="flex gap-4 lg:flex-row lg:mt-0 pb-24 lg:py-0 sm:pt-3 sm:px-3 sm:flex-col-reverse lg:bg-pagePrimary md:bg-componentPrimary">
