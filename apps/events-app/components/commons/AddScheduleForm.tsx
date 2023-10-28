@@ -449,7 +449,7 @@ export default function AddScheduleForm({
   }
 
   return (
-    <div className="flex flex-col items-center gap-[34px] self-stretch w-full text-white">
+    <div className="flex flex-col items-center gap-[34px] self-stretch w-full text-white py-3">
       <div className="flex flex-col py-5 items-center gap-[10px] self-stretch w-full">
         <div className="flex justify-between self-stretch">
           <FormTitle name="Add a Session" />
@@ -659,7 +659,7 @@ export default function AddScheduleForm({
                     {!isAllDay && (
                       <>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
-                          <div className="flex justify-between gap-10 text-white">
+                          <div className="flex justify-between gap-10 text-white w-full">
                             <TimePicker
                               label="Start Time"
                               value={startTime}
@@ -725,6 +725,10 @@ export default function AddScheduleForm({
                                 },
                               }}
                             />
+                          </div>
+                          <div className="w-full flex flex-col gap-2">
+                            <Label className="text-[#FFDD87] md:text-base sm:text-sm">Times here will temporarily only be set to the Istanbul timezone</Label>
+                            <Label className="md:text-sm sm:text-xs">(Dynamic timezones will be added soon)</Label>
                           </div>
                         </LocalizationProvider>
                       </>
