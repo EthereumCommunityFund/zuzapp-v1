@@ -58,7 +58,7 @@ import { Dialog } from "@radix-ui/react-dialog";
 
 import { X } from "lucide-react";
 import { sessionFrequency } from "@/constant/scheduleconstants";
-import { toTurkeyTime } from "@/utils";
+import { fromTurkeyToUTC, toTurkeyTime } from "@/utils";
 
 type Organizer = {
   name: string;
