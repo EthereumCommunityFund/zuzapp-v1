@@ -263,7 +263,7 @@ export default function UpdateSchedulePage() {
           : new Date(),
       end_date:
         schedule.end_date !== undefined &&
-        toTurkeyTime(schedule.end_date) !== null
+          toTurkeyTime(schedule.end_date) !== null
           ? new Date(schedule.end_date)
           : new Date(),
       description: "",
@@ -776,7 +776,7 @@ export default function UpdateSchedulePage() {
                                 <LocalizationProvider
                                   dateAdapter={AdapterDayjs}
                                 >
-                                  <div className="flex justify-between gap-10 text-white">
+                                  <div className="flex justify-between gap-10 text-white w-full">
                                     <TimePicker
                                       label="Start Time"
                                       // slotProps={{ textField: { color: 'white' }}}
@@ -785,7 +785,7 @@ export default function UpdateSchedulePage() {
                                           schedule?.start_time
                                         ) as unknown as string
                                       }
-                                      // className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
+                                      className="w-full text-white outline-none rounded-lg pr-3 pl-2.5 bg-inputField items-center border border-white/10 border-opacity-10"
                                       onChange={(
                                         newValue:
                                           | string
@@ -826,6 +826,7 @@ export default function UpdateSchedulePage() {
                                           schedule?.end_time
                                         ) as unknown as string
                                       }
+                                      className="w-full text-white outline-none rounded-lg pr-3 pl-2.5 bg-inputField items-center border border-white/10 border-opacity-10"
                                       onChange={(
                                         newValue:
                                           | string
@@ -859,6 +860,10 @@ export default function UpdateSchedulePage() {
                                       }}
                                     />
                                   </div>
+                                  <div className="w-full flex flex-col gap-2">
+                                    <Label className="text-[#FFDD87] md:text-base sm:text-sm">Times here will temporarily only be set to the Istanbul timezone</Label>
+                                    <Label className="md:text-sm sm:text-xs">(Dynamic timezones will be added soon)</Label>
+                                  </div>
                                 </LocalizationProvider>
                               </>
                             )}
@@ -866,33 +871,33 @@ export default function UpdateSchedulePage() {
                           {(schedule?.schedule_frequency ===
                             sessionFrequency.WEEKLY ||
                             schedule?.schedule_frequency ===
-                              sessionFrequency.EVERYDAY) && (
-                            <div className="flex flex-col items-center gap-[30px] self-stretch w-full">
-                              <FormField
-                                control={form.control}
-                                name="end_date"
-                                render={({ field }) => (
-                                  <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                                    <span className="text-lg opacity-70 self-stretch">
-                                      End Date
-                                    </span>
+                            sessionFrequency.EVERYDAY) && (
+                              <div className="flex flex-col items-center gap-[30px] self-stretch w-full">
+                                <FormField
+                                  control={form.control}
+                                  name="end_date"
+                                  render={({ field }) => (
+                                    <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
+                                      <span className="text-lg opacity-70 self-stretch">
+                                        End Date
+                                      </span>
 
-                                    <CustomDatePicker
-                                      defaultDate={undefined}
-                                      selectedDate={field.value || null}
-                                      handleDateChange={field.onChange}
-                                      {...field}
-                                    />
+                                      <CustomDatePicker
+                                        defaultDate={undefined}
+                                        selectedDate={field.value || null}
+                                        handleDateChange={field.onChange}
+                                        {...field}
+                                      />
 
-                                    <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">
-                                      Click & Select or type in a date
-                                    </h3>
-                                    <FormMessage />
-                                  </div>
-                                )}
-                              />
-                            </div>
-                          )}
+                                      <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">
+                                        Click & Select or type in a date
+                                      </h3>
+                                      <FormMessage />
+                                    </div>
+                                  )}
+                                />
+                              </div>
+                            )}
                           <line></line>
                         </div>
                       </div>
