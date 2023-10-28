@@ -449,13 +449,12 @@ export default function UpdateSchedulePage() {
           event_type: JSON.parse(result.data.data.event_type)[0],
           experience_level: JSON.parse(result.data.data.experience_level)[0],
         });
-        setStartDate(new Date(result.data.data.date));
-
+        setStartDate(toTurkeyTime(result.data.data.date).toDate());
         form.reset({
           name: result.data.data.name,
           format: result.data.data.format,
-          date: new Date(result.data.data.date),
-          end_date: new Date(result.data.data.end_date),
+          date: toTurkeyTime(result.data.data.date).toDate(),
+          end_date: toTurkeyTime(result.data.data.end_date).toDate(),
           description: result.data.data.description,
           video_call_link: result.data.data.video_call_link,
           live_stream_url: result.data.data.live_stream_url,

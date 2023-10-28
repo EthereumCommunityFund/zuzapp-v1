@@ -431,8 +431,14 @@ export default function EditScheduleForm({
         form.reset({
           name: result.data.data.name,
           format: result.data.data.format,
-          date: new Date(result.data.data.date),
-          end_date: new Date(result.data.data.end_date),
+          date:
+            schedule?.date !== ""
+              ? toTurkeyTime(result.data.data.date).toDate()
+              : new Date(),
+          end_date:
+            schedule.end_date !== undefined && schedule.end_date !== null
+              ? toTurkeyTime(schedule.end_date).toDate()
+              : new Date(),
           description: result.data.data.description,
           // video_call_link: result.data.data.video_call_link,
           live_stream_url: result.data.data.live_stream_url,

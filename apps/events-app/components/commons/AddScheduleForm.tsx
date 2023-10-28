@@ -272,12 +272,16 @@ export default function AddScheduleForm({
       location_id:
         locationId === "" ? "403a376c-7ac7-4460-b15d-6cc5eabf5e6c" : locationId,
       organizers,
+
       all_day: isAllDay,
       limit_rsvp: isLimit,
       ...(eventSpace?.event_space_type === "tracks" && {
         track_id: selectedTrackId ? selectedTrackId : (trackId as string),
       }),
+      date: fromTurkeyToUTC(values.date).toDate(),
+      end_date: fromTurkeyToUTC(values.end_date).toDate(),
       ...(isLimit ? { rsvp_amount: rsvpAmount } : {}),
+
       // isLimit && rsvp_amount: rsvpAmount
     };
     const payload = {
@@ -411,7 +415,7 @@ export default function AddScheduleForm({
           event_type: JSON.parse(result.data.data.event_type)[0],
           experience_level: JSON.parse(result.data.data.experience_level)[0],
         });
-        setStartDate(new Date(result.data.data.date));
+        setStartDate(toTurkeyTime(result.data.data.date).toDate());
 
         form.reset({
           name: result.data.data.name,
