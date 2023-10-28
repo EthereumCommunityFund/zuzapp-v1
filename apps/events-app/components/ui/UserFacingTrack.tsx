@@ -32,7 +32,8 @@ const UserFacingTrack: React.ForwardRefRenderFunction<
 > = (props, ref) => {
   const { scheduleData, onClick } = props;
   const { trackDetails, isLoading } = useTrack(scheduleData.track_id as string);
-  // const date = new Date(scheduleData.date);
+  const date = toTurkeyTime(scheduleData.date);
+
   const startDate = toTurkeyTime(scheduleData.date).format("DD/MM/YY");
   const endDate = toTurkeyTime(scheduleData.end_date).format("DD/MM/YY");
   const startTime = toTurkeyTime(scheduleData.start_time).format("H:mm");
@@ -194,10 +195,8 @@ const UserFacingTrack: React.ForwardRefRenderFunction<
         <div className="flex md:gap-3 gap-1 justify-between border-2 border-[#444646] md:p-3 sm:p-3 rounded-2xl bg-userFacingItem hover:bg-[#434646] duration-200">
           <div>
             <div className="md:rounded-[10px] sm:rounded-lg text-center border bg-trackDateColor border-[#5F6262] md:text-xl sm:text-sm px-4 py-2">
-              <h2 className="font-bold">{date.getDate()}</h2>
-              <b className="font-medium">
-                {date.toLocaleDateString("en-US", { month: "short" })}.
-              </b>
+              <h2 className="font-bold">{date.format("DD")}</h2>
+              <b className="font-medium">{date.format("MMM")}.</b>
             </div>
           </div>
           <div className="flex flex-col gap-1.5 flex-1 ml-2">
