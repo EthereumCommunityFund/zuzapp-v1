@@ -31,6 +31,7 @@ import React from 'react';
 import { fetchAllSpeakers } from '@/controllers';
 import { DialogOverlay } from '@radix-ui/react-dialog';
 import { useGlobalContext } from '@/context/GlobalContext';
+import Image from 'next/image';
 
 interface ITrackDetailsPageTemplate {
   trackItem: TrackType;
@@ -141,10 +142,10 @@ export default function TrackDetailsPageTemplate(props: any) {
                 </Dialog>
               )}
             </div>
-            <div className="flex flex-col gap-[10px] p-5 ">
+            <div className="flex flex-col gap-[10px] p-2">
               {' '}
               {/* Track Info */}
-              <img src={trackItem?.image as string} alt="track image" className="lg:h-[496px] md:h-full rounded-[10px]" />
+              <Image src={trackItem?.image as string} alt="track image" className="lg:h-[496px] md:h-full rounded-[10px]" layout="responsive" width={100} height={100} loading='lazy' />
               <div className="flex flex-col gap-[10px] p-2.5">
                 {' '}
                 {/* Tracks Name */}
