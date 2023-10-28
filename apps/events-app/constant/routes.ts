@@ -75,7 +75,7 @@ export const navBarRoutes: Routes[] = [
     icon: HiHome,
   },
   {
-    path: "/dashboard/schedules",
+    path: "/dashboard/eventview/allschedules?event_space_id=873f2ae3-bcab-4a30-8b99-cb5e011a9db0",
     title: "Zuconnect Sessions",
     icon: HiViewBoards,
   },
