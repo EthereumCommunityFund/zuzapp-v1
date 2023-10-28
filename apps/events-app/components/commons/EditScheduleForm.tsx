@@ -5,30 +5,50 @@ import * as DialogPrimitive from "@radix-ui/react-dialog";
 import Button from "@/components/ui/buttons/Button";
 import { HiArrowRight } from "react-icons/hi";
 
-import { CgClose } from 'react-icons/cg';
-import { FaCircleArrowDown, FaCircleArrowUp } from 'react-icons/fa6';
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { useForm } from 'react-hook-form';
-import { useState, useEffect } from 'react';
-import FormTitle from '@/components/ui/labels/form-title';
-import InputFieldDark from '@/components/ui/inputFieldDark';
-import { EventSpaceDetailsType, InputFieldType, LocationUpdateRequestBody, ScheduleUpdateRequestBody } from '@/types';
-import TextEditor from '@/components/ui/TextEditor';
-import { Label } from '@/components/ui/label';
-import SwitchButton from '@/components/ui/buttons/SwitchButton';
-import { GoXCircle } from 'react-icons/go';
-import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
-import { Database } from '@/database.types';
-import CustomDatePicker from '@/components/ui/DatePicker';
-import { useRouter } from 'next/router';
-import { fetchLocationsByEventSpace, fetchAllTags, fetchScheduleByID, updateSchedule, createSchedule, fetchAllSpeakers } from '@/controllers';
-import { useQuery } from 'react-query';
-import { fetchEventSpaceById } from '@/services/fetchEventSpaceDetails';
-import dayjs, { Dayjs } from 'dayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+import { CgClose } from "react-icons/cg";
+import { FaCircleArrowDown, FaCircleArrowUp } from "react-icons/fa6";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { useForm } from "react-hook-form";
+import { useState, useEffect } from "react";
+import FormTitle from "@/components/ui/labels/form-title";
+import InputFieldDark from "@/components/ui/inputFieldDark";
+import {
+  EventSpaceDetailsType,
+  InputFieldType,
+  LocationUpdateRequestBody,
+  ScheduleUpdateRequestBody,
+} from "@/types";
+import TextEditor from "@/components/ui/TextEditor";
+import { Label } from "@/components/ui/label";
+import SwitchButton from "@/components/ui/buttons/SwitchButton";
+import { GoXCircle } from "react-icons/go";
+import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
+import { Database } from "@/database.types";
+import CustomDatePicker from "@/components/ui/DatePicker";
+import { useRouter } from "next/router";
+import {
+  fetchLocationsByEventSpace,
+  fetchAllTags,
+  fetchScheduleByID,
+  updateSchedule,
+  createSchedule,
+  fetchAllSpeakers,
+} from "@/controllers";
+import { useQuery } from "react-query";
+import { fetchEventSpaceById } from "@/services/fetchEventSpaceDetails";
+import dayjs, { Dayjs } from "dayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
@@ -202,10 +222,13 @@ export default function EditScheduleForm({
     defaultValues: {
       name: schedule?.name,
       format: schedule?.format,
-      date: schedule?.date !== "" ? new Date(schedule?.date) : new Date(),
+      date:
+        schedule?.date !== ""
+          ? toTurkeyTime(schedule.date).toDate()
+          : new Date(),
       end_date:
         schedule.end_date !== undefined && schedule.end_date !== null
-          ? new Date(schedule.end_date)
+          ? toTurkeyTime(schedule.end_date).toDate()
           : new Date(),
       description: "",
       video_call_link: "",
@@ -248,12 +271,8 @@ export default function EditScheduleForm({
       return;
     }
     if (frequency === "everyday" || frequency === "weekly") {
-      const endDate = fromTurkeyToUTC(values.end_date)
-        .toDate()
-        .setHours(0, 0, 0, 0);
-      const startDate = fromTurkeyToUTC(values.date)
-        .toDate()
-        .setHours(0, 0, 0, 0);
+      const endDate = fromTurkeyToUTC(values.end_date);
+      const startDate = fromTurkeyToUTC(values.date);
 
       console.log(startDate, endDate, "start dates");
 
@@ -300,10 +319,8 @@ export default function EditScheduleForm({
       all_day: schedule.all_day,
       track_id: trackId,
       limit_rsvp: schedule.limit_rsvp,
-      date: fromTurkeyToUTC(schedule.date).toDate().setHours(0, 0, 0, 0),
-      end_date: fromTurkeyToUTC(schedule.end_date)
-        .toDate()
-        .setHours(0, 0, 0, 0),
+      date: fromTurkeyToUTC(values.date).toDate(),
+      end_date: fromTurkeyToUTC(values.end_date).toDate(),
       ...(eventSpace?.event_space_type === "tracks" && {
         track_id: trackId as string,
       }),
@@ -750,33 +767,33 @@ export default function EditScheduleForm({
                     {(schedule?.schedule_frequency ===
                       sessionFrequency.WEEKLY ||
                       schedule?.schedule_frequency ===
-                      sessionFrequency.EVERYDAY) && (
-                        <div className="flex flex-col items-center gap-[30px] self-stretch w-full">
-                          <FormField
-                            control={form.control}
-                            name="end_date"
-                            render={({ field }) => (
-                              <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                                <span className="text-lg opacity-70 self-stretch">
-                                  End Date
-                                </span>
+                        sessionFrequency.EVERYDAY) && (
+                      <div className="flex flex-col items-center gap-[30px] self-stretch w-full">
+                        <FormField
+                          control={form.control}
+                          name="end_date"
+                          render={({ field }) => (
+                            <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
+                              <span className="text-lg opacity-70 self-stretch">
+                                End Date
+                              </span>
 
-                                <CustomDatePicker
-                                  defaultDate={undefined}
-                                  selectedDate={field.value || null}
-                                  handleDateChange={field.onChange}
-                                  {...field}
-                                />
+                              <CustomDatePicker
+                                defaultDate={undefined}
+                                selectedDate={field.value || null}
+                                handleDateChange={field.onChange}
+                                {...field}
+                              />
 
-                                <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">
-                                  Click & Select or type in a date
-                                </h3>
-                                <FormMessage />
-                              </div>
-                            )}
-                          />
-                        </div>
-                      )}
+                              <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">
+                                Click & Select or type in a date
+                              </h3>
+                              <FormMessage />
+                            </div>
+                          )}
+                        />
+                      </div>
+                    )}
                     <line></line>
                   </div>
                 </div>
@@ -1005,19 +1022,22 @@ export default function EditScheduleForm({
                       <Button
                         type="button"
                         onClick={() => {
-                          if (eventItem.name === '') return;
+                          if (eventItem.name === "") return;
                           console.log(eventItem);
                           setSchedule({
                             ...schedule,
-                            organizers: [...(schedule.organizers as Organizer[]), eventItem],
+                            organizers: [
+                              ...(schedule.organizers as Organizer[]),
+                              eventItem,
+                            ],
                           });
                           setOrganizers([...organizers, eventItem]);
                           setEventItem({
-                            name: '',
-                            role: 'speaker',
+                            name: "",
+                            role: "speaker",
                           });
                         }}
-                        variant='quiet'
+                        variant="quiet"
                         className="flex gap-2.5 w-full text-base font-semibold text-white items-center rounded-full py-1 justify-center duration-200"
                         leftIcon={FaCircleArrowDown}
                       >
@@ -1025,14 +1045,29 @@ export default function EditScheduleForm({
                       </Button>
 
                       <div className="flex flex-wrap gap-2.5">
-                        {schedule.organizers?.map((organizer: any, index: number) => (
-                          <div key={index} className="flex gap-2.5 items-center rounded-[8px] px-2 py-1.5 bg-white bg-opacity-10">
-                            <button type="button" className="flex gap-2.5 items-center">
-                              <GoXCircle onClick={() => handleRemoveSpeaker(index)} className="top-0.5 left-0.5 w-4 h-4" />
-                              <span className="lg:text-lg sm:text-sm font-semibold text-white">{organizer.name ? organizer.name : organizer.name}</span>
-                            </button>
-                          </div>
-                        ))}
+                        {schedule.organizers?.map(
+                          (organizer: any, index: number) => (
+                            <div
+                              key={index}
+                              className="flex gap-2.5 items-center rounded-[8px] px-2 py-1.5 bg-white bg-opacity-10"
+                            >
+                              <button
+                                type="button"
+                                className="flex gap-2.5 items-center"
+                              >
+                                <GoXCircle
+                                  onClick={() => handleRemoveSpeaker(index)}
+                                  className="top-0.5 left-0.5 w-4 h-4"
+                                />
+                                <span className="lg:text-lg sm:text-sm font-semibold text-white">
+                                  {organizer.name
+                                    ? organizer.name
+                                    : organizer.name}
+                                </span>
+                              </button>
+                            </div>
+                          )
+                        )}
                       </div>
                     </div>
                   </div>
