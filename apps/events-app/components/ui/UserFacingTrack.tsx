@@ -33,9 +33,8 @@ const UserFacingTrack: React.ForwardRefRenderFunction<
   const { scheduleData, onClick } = props;
   const { trackDetails, isLoading } = useTrack(scheduleData.track_id as string);
   const date = new Date(scheduleData.date);
-  const enddate = toTurkeyTime(scheduleData.end_date).format("DD/MM/YY");
   const startDate = toTurkeyTime(date).format("DD/MM/YY");
-  const endDate = toTurkeyTime(enddate).format("DD/MM/YY");
+  const endDate = toTurkeyTime(scheduleData.end_date).format("DD/MM/YY");
   const startTime = toTurkeyTime(scheduleData.start_time).format("H:mm");
   const endTime = toTurkeyTime(scheduleData.end_time).format("H:mm");
   const [hasRsvpd, setHasRsvpd] = useState<boolean>(false);
