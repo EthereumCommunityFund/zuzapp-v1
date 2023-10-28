@@ -154,15 +154,13 @@ const UserFacingTrack: React.ForwardRefRenderFunction<
                   <IconButton
                     variant={`ghost`}
                     icon={TbTicket}
-                    className={`${
-                      hasRsvpd ? `bg-componentPrimary` : `bg-trackDateColor`
-                    } rounded-lg md:text-[40px] sm:text-[25px] opacity-70 text-white hover:bg-violet3 inline-flex h-[35px] w-[35px] items-center justify-center outline-none focus:shadow-[0_0_0_2px] focus:shadow-[#3B3B3B] ${
-                      isRsvpFullOnLoad ||
-                      scheduleData?.rsvp_amount === 0 ||
-                      (isRsvpFullOnLoad && !hasRsvpd)
+                    className={`${hasRsvpd ? `bg-componentPrimary` : `bg-trackDateColor`
+                      } rounded-lg md:text-[40px] sm:text-[25px] opacity-70 text-white hover:bg-violet3 inline-flex h-[35px] w-[35px] items-center justify-center outline-none focus:shadow-[0_0_0_2px] focus:shadow-[#3B3B3B] ${isRsvpFullOnLoad ||
+                        scheduleData?.rsvp_amount === 0 ||
+                        (isRsvpFullOnLoad && !hasRsvpd)
                         ? `cursor-not-allowed`
                         : ``
-                    }`}
+                      }`}
                     onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
                       handleRsvpAction(e)
                     }
@@ -174,12 +172,12 @@ const UserFacingTrack: React.ForwardRefRenderFunction<
                     sideOffset={5}
                   >
                     {isRsvpFullOnLoad ||
-                    scheduleData?.rsvp_amount === 0 ||
-                    (isRsvpFullOnLoad && !hasRsvpd)
+                      scheduleData?.rsvp_amount === 0 ||
+                      (isRsvpFullOnLoad && !hasRsvpd)
                       ? `RSVP is not available`
                       : hasRsvpd
-                      ? `Cancel RSVP`
-                      : `RSVP`}
+                        ? `Cancel RSVP`
+                        : `RSVP`}
                     <Tooltip.Arrow className="TooltipArrow" />
                   </Tooltip.Content>
                 </Tooltip.Portal>
@@ -235,15 +233,13 @@ const UserFacingTrack: React.ForwardRefRenderFunction<
                   <IconButton
                     variant={`ghost`}
                     icon={TbTicket}
-                    className={`${
-                      hasRsvpd ? `bg-componentPrimary` : `bg-trackDateColor`
-                    } rounded-lg md:text-[40px] sm:text-[25px] opacity-70 text-white hover:bg-violet3 inline-flex h-[35px] w-[35px] items-center justify-center outline-none focus:shadow-[0_0_0_2px] focus:shadow-[#3B3B3B] ${
-                      isRsvpFullOnLoad ||
-                      scheduleData?.rsvp_amount === 0 ||
-                      (isRsvpFullOnLoad && !hasRsvpd)
+                    className={`${hasRsvpd ? `bg-componentPrimary` : `bg-trackDateColor`
+                      } rounded-lg md:text-[40px] sm:text-[25px] opacity-70 text-white hover:bg-violet3 inline-flex h-[35px] w-[35px] items-center justify-center outline-none focus:shadow-[0_0_0_2px] focus:shadow-[#3B3B3B] ${isRsvpFullOnLoad ||
+                        scheduleData?.rsvp_amount === 0 ||
+                        (isRsvpFullOnLoad && !hasRsvpd)
                         ? `cursor-not-allowed`
                         : ``
-                    }`}
+                      }`}
                     onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
                       handleRsvpAction(e)
                     }
@@ -255,12 +251,12 @@ const UserFacingTrack: React.ForwardRefRenderFunction<
                     sideOffset={5}
                   >
                     {isRsvpFullOnLoad ||
-                    scheduleData?.rsvp_amount === 0 ||
-                    (isRsvpFullOnLoad && !hasRsvpd)
+                      scheduleData?.rsvp_amount === 0 ||
+                      (isRsvpFullOnLoad && !hasRsvpd)
                       ? `RSVP is not available`
                       : hasRsvpd
-                      ? `Cancel RSVP`
-                      : `RSVP`}
+                        ? `Cancel RSVP`
+                        : `RSVP`}
                     <Tooltip.Arrow className="TooltipArrow" />
                   </Tooltip.Content>
                 </Tooltip.Portal>
