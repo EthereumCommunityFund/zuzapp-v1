@@ -414,13 +414,15 @@ export default function EditScheduleForm({
           experience_level: JSON.parse(result.data.data.experience_level)[0],
         });
 
-        setStartDate(stringToDateObject(result.data.data.start_date));
+        setStartDate(stringToDateObject(result.data.data.start_date as string));
 
         form.reset({
           name: result.data.data.name,
           format: result.data.data.format,
-          date: stringToDateObject(result.data.data.start_date),
-          end_date: stringToDateObject(result.data.data.real_end_date),
+          date: stringToDateObject(result.data.data.start_date as string),
+          end_date: stringToDateObject(
+            result.data.data.real_end_date as string
+          ),
           description: result.data.data.description,
           // video_call_link: result.data.data.video_call_link,
           live_stream_url: result.data.data.live_stream_url,

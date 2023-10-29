@@ -40,12 +40,12 @@ const UserFacingTrack: React.ForwardRefRenderFunction<
   const { scheduleData, onClick } = props;
   const { trackDetails, isLoading } = useTrack(scheduleData.track_id as string);
   // const date = convertToTurkeyTimeAsDate(scheduleData.date);
-  let date = stringToDateObject(scheduleData.start_date);
+  let date = stringToDateObject(scheduleData.start_date as string);
   const month = getMonthFromDate(date);
   const day = getDayFromDate(date);
 
-  let startDate = stringToDateObject(scheduleData.start_date);
-  let endDate = stringToDateObject(scheduleData.real_end_date);
+  let startDate = stringToDateObject(scheduleData.start_date as string);
+  let endDate = stringToDateObject(scheduleData.real_end_date as string);
 
   const startTime = toTurkeyTime(scheduleData.start_time).format("H:mm");
   const endTime = toTurkeyTime(scheduleData.end_time).format("H:mm");
