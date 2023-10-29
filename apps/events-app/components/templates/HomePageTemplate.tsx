@@ -51,31 +51,31 @@ export default function HomePageTemplate() {
   const handleButtonClick = async (event_space_id: string) => {
     router.push({
       pathname: `/dashboard/eventview/about/`, // Update with your actual route
-      query: { event_space_id: event_space_id },
+      query: { event_space_id: '7aa90b9a-456e-4852-bfad-ed247513b28f' },
     });
   };
 
-  const {
-    data: eventSpaces,
-    isLoading,
-    isError,
-  } = useQuery<EventSpaceDetailsType[], Error>(
-    ['publishedEventSpaces'], // Query key
-    () => fetchPublishedEventSpaces({ page: 1, limit: 10 }),
-    {
-      onSuccess: (data) => {
-        setEventSpaceList(data);
-      },
-      onError: (error) => {
-        console.log(error, 'error loading events');
-        toast({
-          title: 'Error',
-          description: 'Error loading Published Events',
-          variant: 'destructive',
-        });
-      },
-    }
-  );
+  // const {
+  //   data: eventSpaces,
+  //   isLoading,
+  //   isError,
+  // } = useQuery<EventSpaceDetailsType[], Error>(
+  //   ['publishedEventSpaces'], // Query key
+  //   () => fetchPublishedEventSpaces({ page: 1, limit: 10 }),
+  //   {
+  //     onSuccess: (data) => {
+  //       setEventSpaceList(data);
+  //     },
+  //     onError: (error) => {
+  //       console.log(error, 'error loading events');
+  //       toast({
+  //         title: 'Error',
+  //         description: 'Error loading Published Events',
+  //         variant: 'destructive',
+  //       });
+  //     },
+  //   }
+  // );
 
   function formatDate(dateString: string | number | Date) {
     const date = new Date(dateString);
@@ -192,46 +192,43 @@ export default function HomePageTemplate() {
       <div className="mt-10">
         <Label className="text-xl md:text-4xl">Events</Label>
         <div className="mt-3">
-          {isLoading && (
+          {/* {isLoading && (
             <div>
               {arrayFromLength(1).map((_, i) => (
                 <HomePageTemplateSkeleton key={i} />
               ))}
             </div>
-          )}
-          {eventSpaces &&
-            eventSpaces?.map((event, index) => (
-              <div
-                key={index}
-                className="flex flex-col md:flex-row md:justify-between md:items-center border border-white/10 bg-componentPrimary hover:bg-itemHover rounded-2xl px-2 md:px-2 py-3 mt-5 duration-200"
-              >
-                <div className="flex flex-col md:flex-row md:space-x-3 md:items-center">
-                  <div>
-                    <Image src={event.image_url ? event.image_url : `/images/black-img.png`} className="rounded-xl w-full md:max-w-[180px] md:max-h-[180px]" alt="Event" width={150} height={150} loading='lazy' />
-                  </div>
-                  <div className="space-y-2 space-x-0 mt-2 md:mt-0">
-                    <h4 className="text-2xl font-semibold">{event.name}</h4>
-                    <h2 className="text-base font-normal opacity-70 font-inter">{truncateString(event.tagline, 40)}</h2>
-                    <div className="flex gap-2 flex-wrap">
-                      <p className="flex items-center text-xs text-white/60 bg-white/10 rounded-xl py-2 px-3 w-fit font-normal">
-                        <BsCalendar2Fill className="mr-2 text-sm md:text-base" /> {formatDate(event?.start_date)} - {formatDate(event?.end_date)}
-                      </p>
-                      <p className="flex items-center text-xs text-white/60 bg-white/10 rounded-xl py-2 px-3 w-fit font-normal">
-                        <HiLockClosed className="mr-2 text-sm md:text-base" /> Resident Only
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                <div className="mt-3 md:mt-0 lg:mr-2">
-                  <Button size="lg" className="rounded-full w-full flex items-center justify-center font-semibold md:w-auto bg-white/10" onClick={() => event.id && handleButtonClick(event.id)}>
-                    View Event
-                  </Button>
+          )} */}
+          <div
+
+            className="flex flex-col md:flex-row md:justify-between md:items-center border border-white/10 bg-componentPrimary hover:bg-itemHover rounded-2xl px-2 md:px-2 py-3 mt-5 duration-200"
+          >
+            <div className="flex flex-col md:flex-row md:space-x-3 md:items-center">
+              <div>
+                {/* <Image src={event.image_url ? event.image_url : `/images/black-img.png`} className="rounded-xl w-full md:max-w-[180px] md:max-h-[180px]" alt="Event" width={150} height={150} loading='lazy' /> */}
+              </div>
+              <div className="space-y-2 space-x-0 mt-2 md:mt-0">
+                {/* <h4 className="text-2xl font-semibold">{event.name}</h4> */}
+                {/* <h2 className="text-base font-normal opacity-70 font-inter">{truncateString(event.tagline, 40)}</h2> */}
+                <div className="flex gap-2 flex-wrap">
+                  <p className="flex items-center text-xs text-white/60 bg-white/10 rounded-xl py-2 px-3 w-fit font-normal">
+                    {/* <BsCalendar2Fill className="mr-2 text-sm md:text-base" /> {formatDate(event?.start_date)} - {formatDate(event?.end_date)} */}
+                  </p>
+                  <p className="flex items-center text-xs text-white/60 bg-white/10 rounded-xl py-2 px-3 w-fit font-normal">
+                    <HiLockClosed className="mr-2 text-sm md:text-base" /> Resident Only
+                  </p>
                 </div>
               </div>
-            ))}
+            </div>
+            <div className="mt-3 md:mt-0 lg:mr-2">
+              <Button size="lg" className="rounded-full w-full flex items-center justify-center font-semibold md:w-auto bg-white/10" onClick={() => handleButtonClick('')}>
+                View Event
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
-      {profile && firstLogin && !profile.username && (
+      {/* {profile && firstLogin && !profile.username && (
         <Dialog open={true}>
           <DialogContent className="w-96 sm:max-w-xl p-6">
             <DialogHeader>
@@ -252,7 +249,7 @@ export default function HomePageTemplate() {
             </DialogFooter>
           </DialogContent>
         </Dialog>
-      )}
+      )} */}
     </div>
   );
 }
