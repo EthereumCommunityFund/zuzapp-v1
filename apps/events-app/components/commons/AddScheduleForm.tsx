@@ -282,7 +282,7 @@ export default function AddScheduleForm({
         track_id: selectedTrackId ? selectedTrackId : (trackId as string),
       }),
       date: convertDateToString(values.date),
-      end_date: convertDateToString(values.end_date),
+      end_date: convertDateToString(values.end_date as Date),
       ...(isLimit ? { rsvp_amount: rsvpAmount } : {}),
 
       // isLimit && rsvp_amount: rsvpAmount
