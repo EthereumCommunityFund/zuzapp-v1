@@ -86,10 +86,8 @@ const EventSpaceSettings = () => {
   };
 
   const handleRemoveInvitee = async (id: string) => {
-    console.log(event_space_id);
     try {
       const res = await revokeInvite(id, event_space_id as string);
-      console.log(res);
       queryClient.invalidateQueries({ queryKey: ['inviteDetails'] });
     } catch (error) {
       console.error('Error revoking invite', error);
@@ -109,9 +107,7 @@ const EventSpaceSettings = () => {
     }
   };
 
-  if (invites) {
-    console.log(invites);
-  }
+
 
   return (
     <>

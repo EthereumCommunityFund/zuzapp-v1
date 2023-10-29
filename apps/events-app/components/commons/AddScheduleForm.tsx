@@ -164,7 +164,6 @@ export default function AddScheduleForm({
       .refine(
         (date) => {
           if (date) {
-            console.log(date, `date`);
             const today = dayjs();
             const selectedDate = dayjs(date);
             return selectedDate.isAfter(today);
@@ -259,14 +258,14 @@ export default function AddScheduleForm({
         eventType.length > 0
           ? [eventType]
           : eventSpace?.event_type?.[0]
-          ? [eventSpace?.event_type[0]]
-          : [eventSpace?.event_type || "Meetup"],
+            ? [eventSpace?.event_type[0]]
+            : [eventSpace?.event_type || "Meetup"],
       experience_level:
         experienceLevel.length > 0
           ? [experienceLevel]
           : eventSpace?.experience_level?.[0]
-          ? [eventSpace?.experience_level[0]]
-          : [eventSpace?.experience_level || "Beginner"],
+            ? [eventSpace?.experience_level[0]]
+            : [eventSpace?.experience_level || "Beginner"],
       tags: tags,
       schedule_frequency: frequency,
       location_id:
@@ -296,7 +295,6 @@ export default function AddScheduleForm({
           ? "https://youtube.com"
           : values.live_stream_url,
     };
-    console.log(payload, "payload");
 
     try {
       setIsLoading(true);
@@ -308,9 +306,7 @@ export default function AddScheduleForm({
       toast({
         title: "Schedule created successfully",
       });
-      console.log(result, "result");
     } catch (error: any) {
-      console.log(error);
       toast({
         title: "Error",
         description: error?.response.data?.error,
@@ -329,7 +325,6 @@ export default function AddScheduleForm({
       ...(schedule.tags as string[]).slice(0, index),
       ...(schedule.tags as string[]).slice(index + 1),
     ];
-    console.log(updatedItems);
     setSchedule({ ...schedule, tags: updatedItems });
   };
 
@@ -375,11 +370,9 @@ export default function AddScheduleForm({
   useEffect(() => {
     const fetchLocationDetails = async () => {
       try {
-        console.log("evnet space id", event_space_id);
         const result = await fetchLocationsByEventSpace(
           event_space_id as string
         );
-        console.log(result);
         setSavedLocations(result?.data?.data);
         setLocationId(result.data.data[0].id);
       } catch (error) {
@@ -390,7 +383,6 @@ export default function AddScheduleForm({
     const fetchTags = async () => {
       try {
         const result = await fetchAllTags();
-        console.log(result);
         setOptionTags(result.data.data);
       } catch (error) {
         console.log(error);
@@ -409,7 +401,6 @@ export default function AddScheduleForm({
     const fetchCurrentSchedule = async () => {
       try {
         const result = await fetchScheduleByID(scheduleId as string);
-        console.log("result.data", result.data.data);
         setSchedule({
           ...result.data.data,
           event_type: JSON.parse(result.data.data.event_type)[0],
@@ -432,7 +423,6 @@ export default function AddScheduleForm({
           // video_call_link: result.data.data.video_call_link,
           live_stream_url: result.data.data.live_stream_url,
         });
-        console.log(result.data.data.date);
       } catch (error) {
         console.log(error);
       }
@@ -446,7 +436,6 @@ export default function AddScheduleForm({
   }, []);
 
   useEffect(() => {
-    console.log(form.formState.errors);
     //get the first item from the errors object
     const firstError = Object.values(form.formState.errors)[0];
     if (firstError) {
@@ -767,33 +756,33 @@ export default function AddScheduleForm({
 
                   {(schedule?.schedule_frequency === sessionFrequency.WEEKLY ||
                     schedule?.schedule_frequency ===
-                      sessionFrequency.EVERYDAY) && (
-                    <div className="flex flex-col items-center gap-[30px] self-stretch w-full">
-                      <FormField
-                        control={form.control}
-                        name="end_date"
-                        render={({ field }) => (
-                          <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                            <span className="text-lg opacity-70 self-stretch">
-                              End Date
-                            </span>
+                    sessionFrequency.EVERYDAY) && (
+                      <div className="flex flex-col items-center gap-[30px] self-stretch w-full">
+                        <FormField
+                          control={form.control}
+                          name="end_date"
+                          render={({ field }) => (
+                            <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
+                              <span className="text-lg opacity-70 self-stretch">
+                                End Date
+                              </span>
 
-                            <CustomDatePicker
-                              defaultDate={undefined}
-                              selectedDate={field.value || null}
-                              handleDateChange={field.onChange}
-                              {...field}
-                            />
+                              <CustomDatePicker
+                                defaultDate={undefined}
+                                selectedDate={field.value || null}
+                                handleDateChange={field.onChange}
+                                {...field}
+                              />
 
-                            <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">
-                              Click & Select or type in a date
-                            </h3>
-                            <FormMessage />
-                          </div>
-                        )}
-                      />
-                    </div>
-                  )}
+                              <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">
+                                Click & Select or type in a date
+                              </h3>
+                              <FormMessage />
+                            </div>
+                          )}
+                        />
+                      </div>
+                    )}
                   <line></line>
                 </div>
               </div>
@@ -941,7 +930,6 @@ export default function AddScheduleForm({
                             color="black"
                             value={eventItem}
                             onChange={(event: any, newValue) => {
-                              console.log("onChange", event, newValue);
                               if (newValue) {
                                 // setTagItem({ name: newValue.name });
                                 setEventItem({
@@ -1115,7 +1103,6 @@ export default function AddScheduleForm({
                         color="black"
                         value={tagItem}
                         onChange={(event: any, newValue) => {
-                          console.log("onChange", event, newValue);
                           if (newValue) {
                             setTagItem({ name: newValue.name });
                           }

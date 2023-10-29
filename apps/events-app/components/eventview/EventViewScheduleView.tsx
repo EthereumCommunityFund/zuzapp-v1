@@ -87,7 +87,6 @@ export default function EventViewScheduleViewTemplate({
         );
         setHasRsvpd(false);
       } else {
-        console.log(scheduleId, "scheduleId");
         const result = await rsvpSchedule(
           scheduleId as string,
           event_space_id as string
@@ -121,7 +120,6 @@ export default function EventViewScheduleViewTemplate({
     {
       enabled: !!scheduleId,
       onSuccess: (data) => {
-        console.log("schedule details", data);
         const modifiedSchedule = {
           ...data,
           event_type: JSON.parse(data.event_type as string)[0],
@@ -182,7 +180,6 @@ export default function EventViewScheduleViewTemplate({
   const startTime =
     currentSchedule && toTurkeyTime(currentSchedule.start_time).format("H:mm");
 
-  console.log("start time", startTime);
   const endTime =
     currentSchedule && toTurkeyTime(currentSchedule.end_time).format("H:mm");
 
@@ -192,7 +189,6 @@ export default function EventViewScheduleViewTemplate({
   const toggleLogs = () => {
     setShowLogs(!showLogs);
   };
-  console.log(eventSpace, "mostRecentEditLog");
 
   return (
     <div className="flex gap-4 lg:flex-row sm:flex-col">

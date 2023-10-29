@@ -40,7 +40,7 @@ export default function SessionViewPageTemplate({
   const [isUpcoming, setIsUpcoming] = useState<boolean>(true);
   const [selectedTracks, setSelectedTracks] = useState<any[]>([]);
 
-  const groupedEvents = schedules?.forEach((schedule) => {});
+  const groupedEvents = schedules?.forEach((schedule) => { });
   const { isAuthenticated, user } = useGlobalContext();
   const handleItemClick = (scheduleId: string, trackId?: string) => {
     router.push({
@@ -79,9 +79,9 @@ export default function SessionViewPageTemplate({
     const filteredByTracks =
       selectedTrackIds.length > 0
         ? filter.filter(
-            (schedule) =>
-              schedule.track_id && selectedTrackIds.includes(schedule.track_id)
-          )
+          (schedule) =>
+            schedule.track_id && selectedTrackIds.includes(schedule.track_id)
+        )
         : filter;
     setFilteredSchedules(filteredByTracks);
     setIsUpcoming(newFilter);
@@ -99,9 +99,9 @@ export default function SessionViewPageTemplate({
     const filteredByTracks =
       selectedTrackIds.length > 0
         ? filter.filter(
-            (schedule) =>
-              schedule.track_id && selectedTrackIds.includes(schedule.track_id)
-          )
+          (schedule) =>
+            schedule.track_id && selectedTrackIds.includes(schedule.track_id)
+        )
         : filter;
     setFilteredSchedules(filteredByTracks);
     setSelectedTracks(newSelectedTracks);
@@ -109,7 +109,6 @@ export default function SessionViewPageTemplate({
 
   useEffect(() => {
     if (isLoading) {
-      console.log("isLoading", isLoading);
       fetchSchedules();
     }
   }, [isLoading, selectedTracks]);
@@ -118,7 +117,6 @@ export default function SessionViewPageTemplate({
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting) {
-          console.log("Load more data");
         }
       },
       { threshold: 1 }
@@ -175,7 +173,6 @@ export default function SessionViewPageTemplate({
     } while (date <= end_date);
   });
 
-  console.log("Grouped Schedules:", groupedSchedules);
 
   return (
     <>
@@ -315,11 +312,10 @@ export default function SessionViewPageTemplate({
                       {({ selected }) => (
                         <>
                           <span
-                            className={`relative block truncate rounded-2xl py-2 cursor-pointer px-2 w-full hover:bg-itemHover ${
-                              selected
-                                ? "font-medium bg-slate-700"
-                                : "font-normal"
-                            }`}
+                            className={`relative block truncate rounded-2xl py-2 cursor-pointer px-2 w-full hover:bg-itemHover ${selected
+                              ? "font-medium bg-slate-700"
+                              : "font-normal"
+                              }`}
                           >
                             {item.name.charAt(0).toUpperCase() +
                               item.name.slice(1)}

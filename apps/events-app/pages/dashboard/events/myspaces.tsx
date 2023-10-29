@@ -19,7 +19,6 @@ export default function MyEventSpacesPage() {
 
     {
       onSuccess: (data) => {
-        console.log("Event Spaces:", data);
       },
     }
   );
@@ -29,7 +28,6 @@ export default function MyEventSpacesPage() {
     () => fetchInvitedEvents({ limit: 10, page: 1 }),
     {
       onSuccess: (data) => {
-        console.log("Event Spaces:", data);
       },
     }
   );

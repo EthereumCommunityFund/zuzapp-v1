@@ -71,7 +71,6 @@ export function UserPassportContextProvider({
         signatureProof.claim.signedMessage
       ) as SignInMessagePayload;
 
-      console.log("signInPayload", signInPayload);
       fetchUser(ZUPASS_SERVER_URL, signInPayload.uuid).then((user) => {
         if (user) {
           logInUser(user);
@@ -113,7 +112,6 @@ export function UserPassportContextProvider({
   // Once we have the UUID, fetch the user data from Passport.
   const logInUser = async (user: User) => {
     let pcdStr = "adfaf";
-    console.log("logging in user", user);
 
     try {
       await axiosInstance.post("/api/auth/authenticate", {

@@ -31,7 +31,6 @@ export default function CreateEventsForm({ setEventCreated }: { setEventCreated:
     try {
       const result = await createEventSpace(values);
       setEventCreated(true);
-      console.log(result);
     } catch (error) {
       setEventCreated(false);
       console.log(error);

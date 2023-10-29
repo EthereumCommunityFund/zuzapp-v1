@@ -24,7 +24,6 @@ export default function EventSpaceDetailsPage() {
   };
 
   const { eventSpace, isLoading, isError } = useCurrentEventSpace();
-  console.log(isLoading, "isloading");
   if (isLoading) {
     return <Loader />;
   }

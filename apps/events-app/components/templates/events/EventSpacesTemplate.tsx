@@ -19,7 +19,6 @@ const EventSpacesTemplate: React.FC<EventSpacesTemplateProps> = ({
   isLoading,
   invitedSpaces,
 }) => {
-  console.log(eventSpaces, "event spaces");
   const { setEventSpace } = useEventSpace();
   return (
     <>

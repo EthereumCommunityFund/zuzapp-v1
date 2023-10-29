@@ -50,7 +50,6 @@ export default function SchedulesDashboardPage() {
 
   // useEffect(() => {
   //   const data = fetchSchedulesByEvenSpaceId(event_space_id as string);
-  //   console.log(data, 'schedules');
   // }, []);
 
   const handleEnterSchedule = async (id: string) => {

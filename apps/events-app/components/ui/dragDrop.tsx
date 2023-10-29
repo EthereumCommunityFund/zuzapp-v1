@@ -16,17 +16,13 @@ export default function DragAndDrop({ setPayload, payload }: any) {
 
   const handleChange = async (e: any) => {
     e.preventDefault();
-    console.log(e)
-    console.log('File has been added');
     if (e.target.files && e.target.files[0]) {
       for (let i = 0; i < e.target.files['length']; i++) {
-        console.log(e.target.files[i]);
         setFiles((prevState: any) => [...prevState, e.target.files[i]]);
       }
     }
     try {
       const result = await uploadImage(e, 'events');
-      console.log(result);
       setPayload({
         ...payload,
         image_urls: [...imageLink, result],
@@ -52,7 +48,6 @@ export default function DragAndDrop({ setPayload, payload }: any) {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
-    console.log('Files', files);
   };
 
   function handleDragOver(e: any) {

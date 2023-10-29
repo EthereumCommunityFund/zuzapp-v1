@@ -13,8 +13,7 @@ import fetchTracksByEventSpaceId from "../../../../../services/fetchTracksByEven
 import { Loader } from "@/components/ui/Loader";
 import { error } from "console";
 export default function Tracks() {
-  // const { eventSpace } = useEventSpace();
-  // console.log(eventSpace, 'eventSpace')
+
 
   const router = useRouter();
   const { event_space_id } = router.query;
@@ -40,7 +39,6 @@ export default function Tracks() {
     {
       enabled: !!event_space_id,
       onSuccess: (data) => {
-        console.log("tracks", data);
       },
       onError: (error) => {
         console.log("an error", error);

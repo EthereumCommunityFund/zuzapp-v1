@@ -84,12 +84,9 @@ export default function EventLocationEdit({
   const handleUpdateEventLocation = async (e: React.FormEvent) => {
     e.preventDefault();
     // setSelectedLocation(null);
-    console.log(payload);
     try {
       const result = await updateEventSpaceLocation(savedLocation.id as string, payload, event_space_id as string);
       setLocationUpdated(true);
-      console.log(result, 'location updated');
-      console.log(locationUpdated);
     } catch (error) {
       console.log(error);
     }

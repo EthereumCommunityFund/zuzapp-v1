@@ -17,7 +17,6 @@ export default function EventViewPage(props: { user: any }) {
 export const getServerSideProps = async (ctx: any) => {
   const supabase = createPagesServerClient(ctx);
 
-  // console.log(dehydrate(queryClient).queries[0].state, "dehydrated");
   let {
     data: { session },
   } = await supabase.auth.getSession();

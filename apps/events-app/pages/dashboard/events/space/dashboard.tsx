@@ -44,7 +44,6 @@ export default function EventSpaceDashboard(props: IProps) {
     null
   );
   const [isDialogOpen, setDialogOpen] = useState(false);
-  console.log(eventSpace, "myeventspace");
 
   const handlePublishEvent = async () => {
     if (!eventSpace) {

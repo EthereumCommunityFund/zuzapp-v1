@@ -45,7 +45,6 @@ export default function EventViewTracksPage() {
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
       onSuccess: (data) => {
-        console.log('tracks', data);
       },
       onError: (error) => {
         console.log('an error', error);
