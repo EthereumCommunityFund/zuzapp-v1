@@ -81,7 +81,6 @@ import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import { sessionFrequency } from "@/constant/scheduleconstants";
 import { deleteScheduleById } from "@/services/deleteSchedule";
 import {
-  convertToTurkeyTime,
   convertToTurkeyTimeAsDate,
   fromTurkeyToUTC,
   toTurkeyDateOnly,
