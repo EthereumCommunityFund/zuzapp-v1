@@ -314,7 +314,7 @@ export default function EditScheduleForm({
       all_day: schedule.all_day,
       track_id: trackId,
       limit_rsvp: schedule.limit_rsvp,
-      date: convertDateToString(values.date),
+      date: convertDateToString(values.date as Date),
       end_date: convertDateToString(values.end_date as Date),
       ...(eventSpace?.event_space_type === "tracks" && {
         track_id: trackId as string,

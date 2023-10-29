@@ -344,8 +344,8 @@ export default function UpdateSchedulePage() {
       all_day: schedule.all_day,
       track_id: trackId,
       limit_rsvp: schedule.limit_rsvp,
-      date: convertDateToString(values.date),
-      end_date: convertDateToString(values.end_date),
+      date: convertDateToString(values.date as Date),
+      end_date: convertDateToString(values.end_date as Date),
       ...(eventSpace?.event_space_type === "tracks" && {
         track_id: trackId as string,
       }),

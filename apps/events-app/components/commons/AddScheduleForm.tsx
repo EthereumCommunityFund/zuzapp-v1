@@ -281,7 +281,7 @@ export default function AddScheduleForm({
       ...(eventSpace?.event_space_type === "tracks" && {
         track_id: selectedTrackId ? selectedTrackId : (trackId as string),
       }),
-      date: convertDateToString(values.date),
+      date: convertDateToString(values.date as Date),
       end_date: convertDateToString(values.end_date as Date),
       ...(isLimit ? { rsvp_amount: rsvpAmount } : {}),
 

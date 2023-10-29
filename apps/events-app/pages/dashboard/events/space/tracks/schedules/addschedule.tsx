@@ -277,8 +277,8 @@ export default function AddSchedulePage(props: any) {
       organizers,
       all_day: isAllDay,
       limit_rsvp: isLimit,
-      date: convertDateToString(values.date),
-      end_date: convertDateToString(values.end_date),
+      date: convertDateToString(values.date as Date),
+      end_date: convertDateToString(values.end_date as Date),
       ...(eventSpace?.event_space_type === "tracks" && {
         track_id: selectedTrackId ? selectedTrackId : (trackId as string),
       }),
