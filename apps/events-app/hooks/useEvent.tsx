@@ -19,7 +19,6 @@ const useEventDetatils = (event_space_id: string) => {
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
       onSuccess: (data) => {
-        console.log('selectedEventSpace Event Spaces:', data);
       },
     }
   );

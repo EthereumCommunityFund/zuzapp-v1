@@ -218,7 +218,6 @@ export default function UpdateSchedulePage() {
       .refine(
         (date) => {
           if (date) {
-            console.log(date, `date`);
             const today = dayjs();
             const selectedDate = dayjs(date);
             return selectedDate.isSameOrAfter(today, "day");
@@ -269,7 +268,7 @@ export default function UpdateSchedulePage() {
           : new Date(),
       end_date:
         schedule.end_date !== undefined &&
-        toTurkeyTime(schedule.end_date) !== null
+          toTurkeyTime(schedule.end_date) !== null
           ? new Date(schedule.end_date)
           : new Date(),
       description: "",
@@ -286,7 +285,6 @@ export default function UpdateSchedulePage() {
     //   return;
     // }
 
-    console.log(values, "values", schedule, schedule);
 
     if (
       values.format !== "in-person" &&
@@ -310,7 +308,6 @@ export default function UpdateSchedulePage() {
       const endDate = fromTurkeyToUTC(values.end_date);
       const startDate = fromTurkeyToUTC(values.date);
 
-      console.log(startDate, endDate, "start dates");
 
       if (endDate.isBefore(startDate)) {
         form.setError("end_date", {
@@ -332,7 +329,6 @@ export default function UpdateSchedulePage() {
         };
       }
     });
-    console.log(updatedOrganizers);
 
     const additionalPayload = {
       event_space_id: schedule.event_space_id,
@@ -366,9 +362,7 @@ export default function UpdateSchedulePage() {
       // isLimit && rsvp_amount: rsvpAmount
     };
     const payload: any = { ...values, ...additionalPayload };
-    console.log(payload);
     try {
-      console.log(payload, "payload");
       setIsUpdating(true);
       const result = await updateSchedule(
         scheduleId as string,
@@ -380,7 +374,6 @@ export default function UpdateSchedulePage() {
       toast({
         title: "Session updated successfully",
       });
-      console.log(result, "result");
     } catch (error) {
       console.log(error);
     } finally {
@@ -401,7 +394,6 @@ export default function UpdateSchedulePage() {
       ...(schedule.tags as string[]).slice(0, index),
       ...(schedule.tags as string[]).slice(index + 1),
     ];
-    console.log(updatedItems);
     setSchedule({ ...schedule, tags: updatedItems });
   };
 
@@ -421,7 +413,6 @@ export default function UpdateSchedulePage() {
         const result = await fetchLocationsByEventSpace(
           event_space_id as string
         );
-        console.log(result);
         setSavedLocations(result?.data?.data);
         setLocationId(result.data.data[0].id);
       } catch (error) {
@@ -432,7 +423,6 @@ export default function UpdateSchedulePage() {
     const fetchTags = async () => {
       try {
         const result = await fetchAllTags();
-        console.log(result);
         setOptionTags(result.data.data);
       } catch (error) {
         console.log(error);
@@ -442,7 +432,6 @@ export default function UpdateSchedulePage() {
     const fetchSpeakers = async () => {
       try {
         const result = await fetchAllSpeakers();
-        console.log(result);
         setOptionSpeakers(result.data.data);
       } catch (error) {
         console.log(error);
@@ -452,18 +441,12 @@ export default function UpdateSchedulePage() {
     const fetchCurrentSchedule = async () => {
       try {
         const result = await fetchScheduleByID(scheduleId as string);
-        console.log(result, "result");
         setSchedule({
           ...result.data.data,
           event_type: JSON.parse(result.data.data.event_type)[0],
           experience_level: JSON.parse(result.data.data.experience_level)[0],
         });
-        console.log(
-          toTurkeyTime(result.data.data.date).toDate(),
-          "turke",
-          result.data.data.date,
-          convertToTurkeyTimeAsDate(result.data.data.date)
-        );
+
         setStartDate(convertToTurkeyTimeAsDate(result.data.data.date));
         form.reset({
           name: result.data.data.name,
@@ -474,7 +457,6 @@ export default function UpdateSchedulePage() {
           video_call_link: result.data.data.video_call_link,
           live_stream_url: result.data.data.live_stream_url,
         });
-        console.log(result.data.data.date);
       } catch (error) {
         console.log(error);
       }
@@ -488,7 +470,6 @@ export default function UpdateSchedulePage() {
   }, []);
 
   useEffect(() => {
-    console.log(form.formState.errors);
     //get the first item from the errors object
     const firstError = Object.values(form.formState.errors)[0];
     if (firstError) {
@@ -516,7 +497,6 @@ export default function UpdateSchedulePage() {
   };
 
   // const formated = formatDate('2023-09-27T23:00:00+00:00');
-  // console.log(formated, 'formated');
   const onSubmitWithEnter = (values: z.infer<typeof formSchema>) => {
     return null;
   };
@@ -808,7 +788,6 @@ export default function UpdateSchedulePage() {
                                           | undefined
                                       ) => {
                                         let _time = fromTurkeyToUTC(newValue);
-                                        console.log("utc time", _time);
                                         setSchedule({
                                           ...schedule,
                                           start_time: _time as string,
@@ -880,33 +859,33 @@ export default function UpdateSchedulePage() {
                           {(schedule?.schedule_frequency ===
                             sessionFrequency.WEEKLY ||
                             schedule?.schedule_frequency ===
-                              sessionFrequency.EVERYDAY) && (
-                            <div className="flex flex-col items-center gap-[30px] self-stretch w-full">
-                              <FormField
-                                control={form.control}
-                                name="end_date"
-                                render={({ field }) => (
-                                  <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                                    <span className="text-lg opacity-70 self-stretch">
-                                      End Date
-                                    </span>
+                            sessionFrequency.EVERYDAY) && (
+                              <div className="flex flex-col items-center gap-[30px] self-stretch w-full">
+                                <FormField
+                                  control={form.control}
+                                  name="end_date"
+                                  render={({ field }) => (
+                                    <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
+                                      <span className="text-lg opacity-70 self-stretch">
+                                        End Date
+                                      </span>
 
-                                    <CustomDatePicker
-                                      defaultDate={undefined}
-                                      selectedDate={field.value || null}
-                                      handleDateChange={field.onChange}
-                                      {...field}
-                                    />
+                                      <CustomDatePicker
+                                        defaultDate={undefined}
+                                        selectedDate={field.value || null}
+                                        handleDateChange={field.onChange}
+                                        {...field}
+                                      />
 
-                                    <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">
-                                      Click & Select or type in a date
-                                    </h3>
-                                    <FormMessage />
-                                  </div>
-                                )}
-                              />
-                            </div>
-                          )}
+                                      <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">
+                                        Click & Select or type in a date
+                                      </h3>
+                                      <FormMessage />
+                                    </div>
+                                  )}
+                                />
+                              </div>
+                            )}
                           <line></line>
                         </div>
                       </div>
@@ -1008,7 +987,6 @@ export default function UpdateSchedulePage() {
                                     color="black"
                                     value={eventItem}
                                     onChange={(event: any, newValue) => {
-                                      console.log("onChange", event, newValue);
                                       if (newValue) {
                                         // setTagItem({ name: newValue.name });
                                         setEventItem({
@@ -1053,7 +1031,6 @@ export default function UpdateSchedulePage() {
                                 type={InputFieldType.Primary}
                                 value={eventItem?.name}
                                 onChange={(e) => {
-                                  console.log((e.target as HTMLInputElement).value);
                                   setEventItem({
                                     ...eventItem,
                                     name: (e.target as HTMLInputElement).value,
@@ -1089,7 +1066,6 @@ export default function UpdateSchedulePage() {
                               type="button"
                               onClick={() => {
                                 if (eventItem.name === "") return;
-                                console.log(eventItem);
                                 setSchedule({
                                   ...schedule,
                                   organizers: [
@@ -1159,7 +1135,6 @@ export default function UpdateSchedulePage() {
                                 event_type: e.target.value,
                               });
                               // setInitialEvent(e.target.value)
-                              console.log(schedule.event_type);
                             }}
                             value={schedule.event_type}
                             // value={schedule.event_type}

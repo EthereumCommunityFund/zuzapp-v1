@@ -78,7 +78,6 @@ type TagItemProp = {
 };
 
 export default function AddSchedulePage(props: any) {
-  // console.log(props, "page props");
 
   const optionTags = props.tags;
   const optionSpeakers = props.organizers;
@@ -111,7 +110,6 @@ export default function AddSchedulePage(props: any) {
     "once"
   );
   const [loading, setIsLoading] = useState(false);
-  console.log(eventItem, organizers);
   // const [savedLocations, setSavedLocations] = useState<
   //   LocationUpdateRequestBody[]
   // >([]);
@@ -137,7 +135,6 @@ export default function AddSchedulePage(props: any) {
     {
       enabled: !!event_space_id,
       onSuccess: (data) => {
-        console.log("tracks", data);
       },
     }
   );
@@ -252,7 +249,6 @@ export default function AddSchedulePage(props: any) {
       const endDate = fromTurkeyToUTC(values.end_date);
       const startDate = fromTurkeyToUTC(values.date);
 
-      console.log(endDate, "enddate");
 
       if (endDate.isBefore(startDate)) {
         form.setError("end_date", {
@@ -269,14 +265,14 @@ export default function AddSchedulePage(props: any) {
         eventType.length > 0
           ? [eventType]
           : eventSpace?.event_type?.[0]
-          ? [eventSpace?.event_type[0]]
-          : [eventSpace?.event_type || "Meetup"],
+            ? [eventSpace?.event_type[0]]
+            : [eventSpace?.event_type || "Meetup"],
       experience_level:
         experienceLevel.length > 0
           ? [experienceLevel]
           : eventSpace?.experience_level?.[0]
-          ? [eventSpace?.experience_level[0]]
-          : [eventSpace?.experience_level || "Beginner"],
+            ? [eventSpace?.experience_level[0]]
+            : [eventSpace?.experience_level || "Beginner"],
       tags: tags,
       schedule_frequency: frequency,
       organizers,
@@ -306,7 +302,6 @@ export default function AddSchedulePage(props: any) {
           ? "https://youtube.com"
           : values.live_stream_url,
     };
-    console.log(payload, "payload");
     setIsLoading(true);
     try {
       const result = await createSchedule(
@@ -318,7 +313,6 @@ export default function AddSchedulePage(props: any) {
       toast({
         title: "Session created successfully",
       });
-      console.log(result, "result");
     } catch (error: any) {
       console.log(error);
       toast({
@@ -379,10 +373,8 @@ export default function AddSchedulePage(props: any) {
   const handleTrackSelect = (e: any) => {
     setSelectedTrackId(e.target.value);
   };
-  console.log("eventSpaceFormat: ", eventSpace?.format);
 
   useEffect(() => {
-    console.log(form.formState.errors);
     //get the first item from the errors object
     const firstError = Object.values(form.formState.errors)[0];
     if (firstError) {
@@ -722,32 +714,32 @@ export default function AddSchedulePage(props: any) {
                         </div>
                         {(frequency === sessionFrequency.WEEKLY ||
                           frequency === sessionFrequency.EVERYDAY) && (
-                          <div className="flex flex-col items-center gap-[30px] self-stretch w-full">
-                            <FormField
-                              control={form.control}
-                              name="end_date"
-                              render={({ field }) => (
-                                <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                                  <span className="text-lg opacity-70 self-stretch">
-                                    End Date
-                                  </span>
+                            <div className="flex flex-col items-center gap-[30px] self-stretch w-full">
+                              <FormField
+                                control={form.control}
+                                name="end_date"
+                                render={({ field }) => (
+                                  <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
+                                    <span className="text-lg opacity-70 self-stretch">
+                                      End Date
+                                    </span>
 
-                                  <CustomDatePicker
-                                    defaultDate={undefined}
-                                    selectedDate={field.value || null}
-                                    handleDateChange={field.onChange}
-                                    {...field}
-                                  />
+                                    <CustomDatePicker
+                                      defaultDate={undefined}
+                                      selectedDate={field.value || null}
+                                      handleDateChange={field.onChange}
+                                      {...field}
+                                    />
 
-                                  <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">
-                                    Click & Select or type in a date
-                                  </h3>
-                                  <FormMessage />
-                                </div>
-                              )}
-                            />
-                          </div>
-                        )}
+                                    <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">
+                                      Click & Select or type in a date
+                                    </h3>
+                                    <FormMessage />
+                                  </div>
+                                )}
+                              />
+                            </div>
+                          )}
                         <line></line>
                       </div>
                     </div>
@@ -838,28 +830,28 @@ export default function AddSchedulePage(props: any) {
                         </div> */}
                         {(selectedEventFormat === "online" ||
                           eventSpace?.format === "online") && (
-                          <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                            <FormField
-                              control={form.control}
-                              name="live_stream_url"
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                                    Live Stream Link
-                                  </FormLabel>
-                                  <FormControl>
-                                    <InputFieldDark
-                                      type={InputFieldType.Link}
-                                      placeholder={"Type URL"}
-                                      {...field}
-                                    />
-                                  </FormControl>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
-                          </div>
-                        )}
+                            <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
+                              <FormField
+                                control={form.control}
+                                name="live_stream_url"
+                                render={({ field }) => (
+                                  <FormItem>
+                                    <FormLabel className="text-lg font-semibold leading-[1.2] text-white self-stretch">
+                                      Live Stream Link
+                                    </FormLabel>
+                                    <FormControl>
+                                      <InputFieldDark
+                                        type={InputFieldType.Link}
+                                        placeholder={"Type URL"}
+                                        {...field}
+                                      />
+                                    </FormControl>
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                              />
+                            </div>
+                          )}
                         {selectedEventFormat === "new" &&
                           eventSpace?.format === "in-person" && (
                             <>
@@ -919,7 +911,6 @@ export default function AddSchedulePage(props: any) {
                                   color="black"
                                   value={eventItem}
                                   onChange={(event: any, newValue) => {
-                                    console.log("onChange", event, newValue);
                                     if (newValue) {
                                       // setTagItem({ name: newValue.name });
                                       setEventItem({
@@ -1101,7 +1092,6 @@ export default function AddSchedulePage(props: any) {
                               color="black"
                               value={tagItem}
                               onChange={(event: any, newValue) => {
-                                console.log("onChange", event, newValue);
                                 if (newValue) {
                                   setTagItem({ name: newValue.name });
                                 }

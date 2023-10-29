@@ -11,10 +11,8 @@ export const EventBanner = ({ banner, setBanner }: any) => {
 
   const handleChange = async (e: any) => {
     e.preventDefault();
-    console.log(e)
     try {
       const result = await uploadImage(e, 'events');
-      console.log(result);
       setBanner(result)
       setImageLink(result);
     } catch (error) {
@@ -37,7 +35,6 @@ export const EventBanner = ({ banner, setBanner }: any) => {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
-    console.log("Files", files);
   };
 
   function handleDragOver(e: any) {

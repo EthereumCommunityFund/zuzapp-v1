@@ -4,8 +4,6 @@ import { Database } from "@/database.types";
 import { useGlobalContext } from "@/context/GlobalContext";
 
 export default function DashboardHomePage() {
-  // console.log(profile, "profile");
-  const { profile } = useGlobalContext();
   return <>{<HomePageTemplate />}</>;
 }
 

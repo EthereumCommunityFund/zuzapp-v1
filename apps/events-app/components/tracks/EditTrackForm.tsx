@@ -37,7 +37,6 @@ const trackSchema = z.object({
 export default function EditTrackForm({ onTrackSubmit, trackDetails }: { onTrackSubmit: (values: z.infer<typeof trackSchema>) => void; trackDetails: TrackUpdateRequestBody }) {
   const router = useRouter();
   const { event_space_id, trackId } = router.query;
-  console.log(trackDetails);
   const [payload, setPayload] = useState({ image_urls: [trackDetails.image] });
 
   // const handleDiscardTrack = async () => {
@@ -97,7 +96,7 @@ export default function EditTrackForm({ onTrackSubmit, trackDetails }: { onTrack
                 placeholder="What is the name of this track?"
                 value={field.value}
                 onChange={field.onChange}
-                // {...field}
+              // {...field}
               />
               <FormMessage />
             </FormItem>

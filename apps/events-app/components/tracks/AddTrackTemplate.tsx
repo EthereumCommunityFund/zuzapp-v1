@@ -22,7 +22,6 @@ export default function AddTrackTemplate() {
       trackData.event_space_id = event_space_id as string;
       const result = await createTrack(trackData, event_space_id as string);
       setTrackCreated(true);
-      console.log(result);
       toast({
         title: 'track created successfully',
       });

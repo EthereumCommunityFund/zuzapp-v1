@@ -64,7 +64,6 @@ export default function HomePageTemplate() {
     () => fetchPublishedEventSpaces({ page: 1, limit: 10 }),
     {
       onSuccess: (data) => {
-        console.log('HomePageTemplate Event Spaces:', data);
         setEventSpaceList(data);
       },
       onError: (error) => {
@@ -122,10 +121,8 @@ export default function HomePageTemplate() {
   ];
 
   const handleDialogButton = async () => {
-    console.log('userName', userName);
     try {
       const res = await updateUsername({ username: userName });
-      console.log(res);
       setDialogContent({
         title: `Welcome, ${userName}`,
         description: 'Now, head to explore Zuzalu & community events!',
@@ -135,7 +132,6 @@ export default function HomePageTemplate() {
       console.error('Error updating username', error);
     }
   };
-  console.log(banner1);
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const slides = [banner1.src, banner2.src];

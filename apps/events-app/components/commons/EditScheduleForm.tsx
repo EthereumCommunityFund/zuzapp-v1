@@ -99,7 +99,6 @@ export default function EditScheduleForm({
     const response = await fetchProfile();
     const userdata = response?.data?.data;
     setUserId(userdata?.uuid);
-    console.log(userdata, "userdata");
   };
 
   const [schedule, setSchedule] = useState<ScheduleUpdateRequestBody>({
@@ -197,7 +196,6 @@ export default function EditScheduleForm({
       .refine(
         (date) => {
           if (date) {
-            console.log(date, `date`);
             const today = dayjs();
             const selectedDate = dayjs(date);
             return selectedDate.isAfter(today);
@@ -278,7 +276,6 @@ export default function EditScheduleForm({
       const endDate = fromTurkeyToUTC(values.end_date);
       const startDate = fromTurkeyToUTC(values.date);
 
-      console.log(startDate, endDate, "start dates");
 
       if (endDate.isBefore(startDate)) {
         form.setError("end_date", {
@@ -300,7 +297,6 @@ export default function EditScheduleForm({
         };
       }
     });
-    console.log(updatedOrganizers);
 
     const additionalPayload = {
       event_space_id: schedule.event_space_id,
@@ -332,9 +328,7 @@ export default function EditScheduleForm({
       // isLimit && rsvp_amount: rsvpAmount
     };
     const payload: any = { ...values, ...additionalPayload };
-    console.log(payload);
     try {
-      console.log(payload, "payload");
       setIsUpdating(true);
       const result = await updateSchedule(
         scheduleId as string,
@@ -346,7 +340,6 @@ export default function EditScheduleForm({
       toast({
         title: "Session updated successfully",
       });
-      console.log(result, "result");
     } catch (error: any) {
       console.log(error);
       toast({
@@ -372,7 +365,6 @@ export default function EditScheduleForm({
       ...(schedule.tags as string[]).slice(0, index),
       ...(schedule.tags as string[]).slice(index + 1),
     ];
-    console.log(updatedItems);
     setSchedule({ ...schedule, tags: updatedItems });
   };
 
@@ -392,7 +384,6 @@ export default function EditScheduleForm({
         const result = await fetchLocationsByEventSpace(
           event_space_id as string
         );
-        console.log(result);
         setSavedLocations(result?.data?.data);
         setLocationId(result.data.data[0].id);
       } catch (error) {
@@ -403,7 +394,6 @@ export default function EditScheduleForm({
     const fetchTags = async () => {
       try {
         const result = await fetchAllTags();
-        console.log(result);
         setOptionTags(result.data.data);
       } catch (error) {
         console.log(error);
@@ -413,7 +403,6 @@ export default function EditScheduleForm({
     const fetchSpeakers = async () => {
       try {
         const result = await fetchAllSpeakers();
-        console.log(result);
         setOptionSpeakers(result.data.data);
       } catch (error) {
         console.log(error);
@@ -423,7 +412,6 @@ export default function EditScheduleForm({
     const fetchCurrentSchedule = async () => {
       try {
         const result = await fetchScheduleByID(scheduleId as string);
-        console.log(result, "result");
         setSchedule({
           ...result.data.data,
           event_type: JSON.parse(result.data.data.event_type)[0],
@@ -441,7 +429,6 @@ export default function EditScheduleForm({
           // video_call_link: result.data.data.video_call_link,
           live_stream_url: result.data.data.live_stream_url,
         });
-        console.log(result.data.data.date);
       } catch (error) {
         console.log(error);
       }
@@ -456,7 +443,6 @@ export default function EditScheduleForm({
   }, []);
 
   useEffect(() => {
-    console.log(form.formState.errors);
     //get the first item from the errors object
     const firstError = Object.values(form.formState.errors)[0];
     if (firstError) {
@@ -687,7 +673,6 @@ export default function EditScheduleForm({
                                 onChange={(
                                   newValue: string | Date | null | undefined
                                 ) => {
-                                  console.log(newValue);
                                   let _time = fromTurkeyToUTC(newValue);
                                   setSchedule({
                                     ...schedule,
@@ -771,33 +756,33 @@ export default function EditScheduleForm({
                     {(schedule?.schedule_frequency ===
                       sessionFrequency.WEEKLY ||
                       schedule?.schedule_frequency ===
-                        sessionFrequency.EVERYDAY) && (
-                      <div className="flex flex-col items-center gap-[30px] self-stretch w-full">
-                        <FormField
-                          control={form.control}
-                          name="end_date"
-                          render={({ field }) => (
-                            <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                              <span className="text-lg opacity-70 self-stretch">
-                                End Date
-                              </span>
+                      sessionFrequency.EVERYDAY) && (
+                        <div className="flex flex-col items-center gap-[30px] self-stretch w-full">
+                          <FormField
+                            control={form.control}
+                            name="end_date"
+                            render={({ field }) => (
+                              <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
+                                <span className="text-lg opacity-70 self-stretch">
+                                  End Date
+                                </span>
 
-                              <CustomDatePicker
-                                defaultDate={undefined}
-                                selectedDate={field.value || null}
-                                handleDateChange={field.onChange}
-                                {...field}
-                              />
+                                <CustomDatePicker
+                                  defaultDate={undefined}
+                                  selectedDate={field.value || null}
+                                  handleDateChange={field.onChange}
+                                  {...field}
+                                />
 
-                              <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">
-                                Click & Select or type in a date
-                              </h3>
-                              <FormMessage />
-                            </div>
-                          )}
-                        />
-                      </div>
-                    )}
+                                <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">
+                                  Click & Select or type in a date
+                                </h3>
+                                <FormMessage />
+                              </div>
+                            )}
+                          />
+                        </div>
+                      )}
                     <line></line>
                   </div>
                 </div>
@@ -947,7 +932,6 @@ export default function EditScheduleForm({
                               color="black"
                               value={eventItem}
                               onChange={(event: any, newValue) => {
-                                console.log("onChange", event, newValue);
                                 if (newValue) {
                                   // setTagItem({ name: newValue.name });
                                   setEventItem({
@@ -993,7 +977,6 @@ export default function EditScheduleForm({
                                 type={InputFieldType.Primary}
                                 value={eventItem?.name}
                                 onChange={(e) => {
-                                  console.log((e.target as HTMLInputElement).value);
                                   setEventItem({
                                     ...eventItem,
                                     name: (e.target as HTMLInputElement).value,
@@ -1027,7 +1010,6 @@ export default function EditScheduleForm({
                         type="button"
                         onClick={() => {
                           if (eventItem.name === "") return;
-                          console.log(eventItem);
                           setSchedule({
                             ...schedule,
                             organizers: [
@@ -1092,7 +1074,6 @@ export default function EditScheduleForm({
                           event_type: e.target.value,
                         });
                         // setInitialEvent(e.target.value)
-                        console.log(schedule.event_type);
                       }}
                       value={schedule.event_type}
                       // value={schedule.event_type}

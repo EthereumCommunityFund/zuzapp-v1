@@ -164,14 +164,12 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace, handl
     };
 
     const payload = { ...values, ...additionalPayload };
-    console.log(payload);
 
     try {
       setIsLoading(true);
       const result = await updateEventSpace(event_space_id as string, payload);
       setDetailsUpdated(true);
       queryClient.invalidateQueries({ queryKey: ['currentEventSpace'] });
-      console.log(result, 'result');
       toast({
         title: 'Details updated successfully',
       });
@@ -215,13 +213,8 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace, handl
     setExperienceItem('');
   };
 
-  useEffect(() => {
-    console.log('Selected Event Format:', selectedEventFormat);
-    console.log(eventSpace);
-  }, [selectedEventFormat]);
 
   useEffect(() => {
-    console.log(form.formState.errors);
     //get the first item from the errors object
     const firstError = Object.values(form.formState.errors)[0];
     if (firstError) {

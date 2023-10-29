@@ -81,7 +81,6 @@ export default function TrackDetailsPageTemplate(props: any) {
     setCurrentPage(page);
   };
 
-  console.log('eventSpace', eventSpace);
 
   const fetchSchedules = async () => {
     const response: ScheduleDetailstype[] = await fetchSchedulesByTrackId(trackId as string);

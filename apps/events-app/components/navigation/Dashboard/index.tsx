@@ -26,7 +26,6 @@ export default function DashboardNavigation() {
   const handleClick = () => {
     setDashboardOpen(!dashboardOpen);
   };
-  console.log('markdownContent', markdownContent);
 
   useEffect(() => {
     const fetchMarkdownContent = async () => {

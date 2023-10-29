@@ -64,7 +64,6 @@ export default function UpdateTrackPageTemplate() {
       toast({
         title: "track updated successfully",
       });
-      console.log(result);
       queryClient.invalidateQueries({ queryKey: ["trackDetails"] });
     } catch (error) {
       setTrackCreated(false);

@@ -29,7 +29,6 @@ export const DashboardProvider = ({
 
   const { profile } = useGlobalContext();
 
-  console.log("actual profile", profile);
   const checkIfCurrentRouteIsInEventViewRoutes = () => {
     const routes = eventViewRoutes;
     const currentRoute = routes.find((route) => route.path === router.pathname);

@@ -90,7 +90,6 @@ const MyApp = ({
       queryKeys.forEach(async (key) => {
         if (Array.isArray(key)) {
           let [queryKey, id] = key;
-          console.log(queryKey, id);
           const currentCache = queryClient.getQueryData([queryKey, id]); // Use [queryKey, id] here
           if (currentCache) {
             await localforage.setItem(

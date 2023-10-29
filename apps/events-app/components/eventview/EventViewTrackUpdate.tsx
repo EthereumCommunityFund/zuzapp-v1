@@ -69,7 +69,6 @@ export default function EventViewTrackUpdate({ className }: IUpdate) {
       toast({
         title: 'Track updated successfully',
       });
-      console.log(result);
       queryClient.invalidateQueries({ queryKey: ['trackDetails'] });
     } catch (error) {
       setTrackCreated(false);

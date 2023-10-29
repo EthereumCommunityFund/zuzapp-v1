@@ -44,7 +44,6 @@ export default function EventLocation() {
     try {
       setDeletingStates((prev) => ({ ...prev, [id]: true }));
       const result = await deleteEventSpaceLocation(id, event_space_id as string);
-      console.log(result);
       const updatedItems = [...savedLocations.slice(0, index), ...savedLocations.slice(index + 1)];
       setSavedLocations(updatedItems);
       toast({

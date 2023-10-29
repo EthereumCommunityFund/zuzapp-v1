@@ -19,7 +19,6 @@ export default function EventViewTracksAlleSchedulesPage() {
     () => fetchEventSpaceById(event_space_id),
     {
       onSuccess: (data) => {
-        console.log('EventSpace:', data);
       },
       onError: (error) => {
         console.log(error, 'error loading events');

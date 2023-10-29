@@ -22,7 +22,6 @@ const useCurrentEventSpace = () => {
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
       onSuccess: (data) => {
-        console.log("selectedEventSpace Event Spaces:", data);
       },
     }
   );
