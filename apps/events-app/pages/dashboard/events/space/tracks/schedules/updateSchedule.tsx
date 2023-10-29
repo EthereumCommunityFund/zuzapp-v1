@@ -83,9 +83,12 @@ import { deleteScheduleById } from "@/services/deleteSchedule";
 import {
   convertToTurkeyTimeAsDate,
   fromTurkeyToUTC,
+  stringToDateFormated,
   toTurkeyDateOnly,
   toTurkeyTime,
+  stringToDateObject,
   toTurkeyTimestampWithDefaultTime,
+  convertDateToString,
 } from "@/utils";
 dayjs.extend(isSameOrAfter);
 dayjs.extend(utc);
@@ -268,7 +271,7 @@ export default function UpdateSchedulePage() {
           : new Date(),
       end_date:
         schedule.end_date !== undefined &&
-          toTurkeyTime(schedule.end_date) !== null
+        toTurkeyTime(schedule.end_date) !== null
           ? new Date(schedule.end_date)
           : new Date(),
       description: "",
@@ -284,7 +287,6 @@ export default function UpdateSchedulePage() {
     //   });
     //   return;
     // }
-
 
     if (
       values.format !== "in-person" &&
@@ -305,16 +307,14 @@ export default function UpdateSchedulePage() {
     }
 
     if (frequency === "everyday" || frequency === "weekly") {
-      const endDate = fromTurkeyToUTC(values.end_date);
-      const startDate = fromTurkeyToUTC(values.date);
-
-
-      if (endDate.isBefore(startDate)) {
-        form.setError("end_date", {
-          message: "End date cannot be earlier than start date",
-        });
-        return;
-      }
+      // const endDate = fromTurkeyToUTC(values.end_date);
+      // const startDate = fromTurkeyToUTC(values.date);
+      // if (endDate.isBefore(startDate)) {
+      //   form.setError("end_date", {
+      //     message: "End date cannot be earlier than start date",
+      //   });
+      //   return;
+      // }
     }
     const updatedOrganizers = (schedule.organizers as any).map((user: any) => {
       if (user.name) {
@@ -351,8 +351,8 @@ export default function UpdateSchedulePage() {
       all_day: schedule.all_day,
       track_id: trackId,
       limit_rsvp: schedule.limit_rsvp,
-      date: toTurkeyTimestampWithDefaultTime(values.date),
-      end_date: toTurkeyTimestampWithDefaultTime(values.date),
+      date: convertDateToString(values.date),
+      end_date: convertDateToString(values.end_date),
       ...(eventSpace?.event_space_type === "tracks" && {
         track_id: trackId as string,
       }),
@@ -447,12 +447,12 @@ export default function UpdateSchedulePage() {
           experience_level: JSON.parse(result.data.data.experience_level)[0],
         });
 
-        setStartDate(convertToTurkeyTimeAsDate(result.data.data.date));
+        setStartDate(stringToDateObject(result.data.data.start_date));
         form.reset({
           name: result.data.data.name,
           format: result.data.data.format,
-          date: convertToTurkeyTimeAsDate(result.data.data.date),
-          end_date: convertToTurkeyTimeAsDate(result.data.data.end_date),
+          date: stringToDateObject(result.data.data.start_date),
+          end_date: stringToDateObject(result.data.data.real_end_date),
           description: result.data.data.description,
           video_call_link: result.data.data.video_call_link,
           live_stream_url: result.data.data.live_stream_url,
@@ -854,8 +854,13 @@ export default function UpdateSchedulePage() {
                                     />
                                   </div>
                                   <div className="w-full flex flex-col gap-2">
-                                    <Label className="text-[#FFDD87] md:text-base sm:text-sm">Times here will temporarily only be set to the Istanbul timezone</Label>
-                                    <Label className="md:text-sm sm:text-xs">(Dynamic timezones will be added soon)</Label>
+                                    <Label className="text-[#FFDD87] md:text-base sm:text-sm">
+                                      Times here will temporarily only be set to
+                                      the Istanbul timezone
+                                    </Label>
+                                    <Label className="md:text-sm sm:text-xs">
+                                      (Dynamic timezones will be added soon)
+                                    </Label>
                                   </div>
                                 </LocalizationProvider>
                               </>
@@ -864,33 +869,33 @@ export default function UpdateSchedulePage() {
                           {(schedule?.schedule_frequency ===
                             sessionFrequency.WEEKLY ||
                             schedule?.schedule_frequency ===
-                            sessionFrequency.EVERYDAY) && (
-                              <div className="flex flex-col items-center gap-[30px] self-stretch w-full">
-                                <FormField
-                                  control={form.control}
-                                  name="end_date"
-                                  render={({ field }) => (
-                                    <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                                      <span className="text-lg opacity-70 self-stretch">
-                                        End Date
-                                      </span>
+                              sessionFrequency.EVERYDAY) && (
+                            <div className="flex flex-col items-center gap-[30px] self-stretch w-full">
+                              <FormField
+                                control={form.control}
+                                name="end_date"
+                                render={({ field }) => (
+                                  <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
+                                    <span className="text-lg opacity-70 self-stretch">
+                                      End Date
+                                    </span>
 
-                                      <CustomDatePicker
-                                        defaultDate={undefined}
-                                        selectedDate={field.value || null}
-                                        handleDateChange={field.onChange}
-                                        {...field}
-                                      />
+                                    <CustomDatePicker
+                                      defaultDate={undefined}
+                                      selectedDate={field.value || null}
+                                      handleDateChange={field.onChange}
+                                      {...field}
+                                    />
 
-                                      <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">
-                                        Click & Select or type in a date
-                                      </h3>
-                                      <FormMessage />
-                                    </div>
-                                  )}
-                                />
-                              </div>
-                            )}
+                                    <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">
+                                      Click & Select or type in a date
+                                    </h3>
+                                    <FormMessage />
+                                  </div>
+                                )}
+                              />
+                            </div>
+                          )}
                           <line></line>
                         </div>
                       </div>

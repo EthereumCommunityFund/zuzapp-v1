@@ -118,6 +118,8 @@ export type ScheduleDetailstype = {
   rsvp_amount?: number;
   event_space_id: string;
   track_id?: string;
+  start_date: string;
+  real_end_date: string;
   tags?: string[];
   organizers?: {
     name: string;

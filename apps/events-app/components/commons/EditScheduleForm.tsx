@@ -60,8 +60,10 @@ import { X } from "lucide-react";
 import { deleteScheduleById } from "@/services/deleteSchedule";
 import { fetchProfile } from "@/controllers/profile.controllers";
 import {
+  convertDateToString,
   convertToTurkeyTimeAsDate,
   fromTurkeyToUTC,
+  stringToDateObject,
   toTurkeyTime,
 } from "@/utils";
 
@@ -276,7 +278,6 @@ export default function EditScheduleForm({
       const endDate = fromTurkeyToUTC(values.end_date);
       const startDate = fromTurkeyToUTC(values.date);
 
-
       if (endDate.isBefore(startDate)) {
         form.setError("end_date", {
           message: "End date cannot be earlier than start date",
@@ -319,14 +320,15 @@ export default function EditScheduleForm({
       all_day: schedule.all_day,
       track_id: trackId,
       limit_rsvp: schedule.limit_rsvp,
-      date: fromTurkeyToUTC(values.date).toDate(),
-      end_date: fromTurkeyToUTC(values.end_date).toDate(),
+      date: convertDateToString(values.date),
+      end_date: convertDateToString(values.end_date as Date),
       ...(eventSpace?.event_space_type === "tracks" && {
         track_id: trackId as string,
       }),
       ...(schedule.limit_rsvp ? { rsvp_amount: schedule.rsvp_amount } : {}),
       // isLimit && rsvp_amount: rsvpAmount
     };
+
     const payload: any = { ...values, ...additionalPayload };
     try {
       setIsUpdating(true);
@@ -418,13 +420,13 @@ export default function EditScheduleForm({
           experience_level: JSON.parse(result.data.data.experience_level)[0],
         });
 
-        setStartDate(convertToTurkeyTimeAsDate(result.data.data.date));
+        setStartDate(stringToDateObject(result.data.data.start_date));
 
         form.reset({
           name: result.data.data.name,
           format: result.data.data.format,
-          date: convertToTurkeyTimeAsDate(result.data.data.date),
-          end_date: convertToTurkeyTimeAsDate(result.data.data.end_date),
+          date: stringToDateObject(result.data.data.start_date),
+          end_date: stringToDateObject(result.data.data.real_end_date),
           description: result.data.data.description,
           // video_call_link: result.data.data.video_call_link,
           live_stream_url: result.data.data.live_stream_url,
@@ -752,8 +754,13 @@ export default function EditScheduleForm({
                               />
                             </div>
                             <div className="w-full flex flex-col gap-2">
-                              <Label className="text-[#FFDD87] md:text-base sm:text-sm">Times here will temporarily only be set to the Istanbul timezone</Label>
-                              <Label className="md:text-sm sm:text-xs">(Dynamic timezones will be added soon)</Label>
+                              <Label className="text-[#FFDD87] md:text-base sm:text-sm">
+                                Times here will temporarily only be set to the
+                                Istanbul timezone
+                              </Label>
+                              <Label className="md:text-sm sm:text-xs">
+                                (Dynamic timezones will be added soon)
+                              </Label>
                             </div>
                           </LocalizationProvider>
                         </>
@@ -762,33 +769,33 @@ export default function EditScheduleForm({
                     {(schedule?.schedule_frequency ===
                       sessionFrequency.WEEKLY ||
                       schedule?.schedule_frequency ===
-                      sessionFrequency.EVERYDAY) && (
-                        <div className="flex flex-col items-center gap-[30px] self-stretch w-full">
-                          <FormField
-                            control={form.control}
-                            name="end_date"
-                            render={({ field }) => (
-                              <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                                <span className="text-lg opacity-70 self-stretch">
-                                  End Date
-                                </span>
+                        sessionFrequency.EVERYDAY) && (
+                      <div className="flex flex-col items-center gap-[30px] self-stretch w-full">
+                        <FormField
+                          control={form.control}
+                          name="end_date"
+                          render={({ field }) => (
+                            <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
+                              <span className="text-lg opacity-70 self-stretch">
+                                End Date
+                              </span>
 
-                                <CustomDatePicker
-                                  defaultDate={undefined}
-                                  selectedDate={field.value || null}
-                                  handleDateChange={field.onChange}
-                                  {...field}
-                                />
+                              <CustomDatePicker
+                                defaultDate={undefined}
+                                selectedDate={field.value || null}
+                                handleDateChange={field.onChange}
+                                {...field}
+                              />
 
-                                <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">
-                                  Click & Select or type in a date
-                                </h3>
-                                <FormMessage />
-                              </div>
-                            )}
-                          />
-                        </div>
-                      )}
+                              <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">
+                                Click & Select or type in a date
+                              </h3>
+                              <FormMessage />
+                            </div>
+                          )}
+                        />
+                      </div>
+                    )}
                     <line></line>
                   </div>
                 </div>

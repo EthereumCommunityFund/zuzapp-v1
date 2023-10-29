@@ -20,9 +20,11 @@ import * as Tooltip from "@radix-ui/react-tooltip";
 import { StatusCodes } from "http-status-codes";
 import {
   convertToTurkeyTimeAsDate,
+  getDayFromDate,
   getDayFromTurkeyDate,
+  getMonthFromDate,
   getMonthFromTurkeyDate,
-  toTurkeyDateOnly,
+  stringToDateObject,
   toTurkeyTime,
 } from "@/utils";
 import dayjs from "dayjs";
@@ -39,12 +41,13 @@ const UserFacingTrack: React.ForwardRefRenderFunction<
 > = (props, ref) => {
   const { scheduleData, onClick } = props;
   const { trackDetails, isLoading } = useTrack(scheduleData.track_id as string);
-  const date = convertToTurkeyTimeAsDate(scheduleData.date);
-  const month = getMonthFromTurkeyDate(date);
-  const day = getDayFromTurkeyDate(date);
+  // const date = convertToTurkeyTimeAsDate(scheduleData.date);
+  let date = stringToDateObject(scheduleData.start_date);
+  const month = getMonthFromDate(date);
+  const day = getDayFromDate(date);
 
-  const startDate = convertToTurkeyTimeAsDate(scheduleData.date);
-  const endDate = convertToTurkeyTimeAsDate(scheduleData.end_date);
+  let startDate = stringToDateObject(scheduleData.start_date);
+  let endDate = stringToDateObject(scheduleData.real_end_date);
 
   const startTime = toTurkeyTime(scheduleData.start_time).format("H:mm");
   const endTime = toTurkeyTime(scheduleData.end_time).format("H:mm");
@@ -164,13 +167,15 @@ const UserFacingTrack: React.ForwardRefRenderFunction<
                   <IconButton
                     variant={`ghost`}
                     icon={TbTicket}
-                    className={`${hasRsvpd ? `bg-componentPrimary` : `bg-trackDateColor`
-                      } rounded-lg md:text-[40px] sm:text-[25px] opacity-70 text-white hover:bg-violet3 inline-flex h-[35px] w-[35px] items-center justify-center outline-none focus:shadow-[0_0_0_2px] focus:shadow-[#3B3B3B] ${isRsvpFullOnLoad ||
-                        scheduleData?.rsvp_amount === 0 ||
-                        (isRsvpFullOnLoad && !hasRsvpd)
+                    className={`${
+                      hasRsvpd ? `bg-componentPrimary` : `bg-trackDateColor`
+                    } rounded-lg md:text-[40px] sm:text-[25px] opacity-70 text-white hover:bg-violet3 inline-flex h-[35px] w-[35px] items-center justify-center outline-none focus:shadow-[0_0_0_2px] focus:shadow-[#3B3B3B] ${
+                      isRsvpFullOnLoad ||
+                      scheduleData?.rsvp_amount === 0 ||
+                      (isRsvpFullOnLoad && !hasRsvpd)
                         ? `cursor-not-allowed`
                         : ``
-                      }`}
+                    }`}
                     onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
                       handleRsvpAction(e)
                     }
@@ -182,12 +187,12 @@ const UserFacingTrack: React.ForwardRefRenderFunction<
                     sideOffset={5}
                   >
                     {isRsvpFullOnLoad ||
-                      scheduleData?.rsvp_amount === 0 ||
-                      (isRsvpFullOnLoad && !hasRsvpd)
+                    scheduleData?.rsvp_amount === 0 ||
+                    (isRsvpFullOnLoad && !hasRsvpd)
                       ? `RSVP is not available`
                       : hasRsvpd
-                        ? `Cancel RSVP`
-                        : `RSVP`}
+                      ? `Cancel RSVP`
+                      : `RSVP`}
                     <Tooltip.Arrow className="TooltipArrow" />
                   </Tooltip.Content>
                 </Tooltip.Portal>
@@ -242,13 +247,15 @@ const UserFacingTrack: React.ForwardRefRenderFunction<
                   <IconButton
                     variant={`ghost`}
                     icon={TbTicket}
-                    className={`${hasRsvpd ? `bg-componentPrimary` : `bg-trackDateColor`
-                      } rounded-lg md:text-[40px] sm:text-[25px] opacity-70 text-white hover:bg-violet3 inline-flex h-[35px] w-[35px] items-center justify-center outline-none focus:shadow-[0_0_0_2px] focus:shadow-[#3B3B3B] ${isRsvpFullOnLoad ||
-                        scheduleData?.rsvp_amount === 0 ||
-                        (isRsvpFullOnLoad && !hasRsvpd)
+                    className={`${
+                      hasRsvpd ? `bg-componentPrimary` : `bg-trackDateColor`
+                    } rounded-lg md:text-[40px] sm:text-[25px] opacity-70 text-white hover:bg-violet3 inline-flex h-[35px] w-[35px] items-center justify-center outline-none focus:shadow-[0_0_0_2px] focus:shadow-[#3B3B3B] ${
+                      isRsvpFullOnLoad ||
+                      scheduleData?.rsvp_amount === 0 ||
+                      (isRsvpFullOnLoad && !hasRsvpd)
                         ? `cursor-not-allowed`
                         : ``
-                      }`}
+                    }`}
                     onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
                       handleRsvpAction(e)
                     }
@@ -260,12 +267,12 @@ const UserFacingTrack: React.ForwardRefRenderFunction<
                     sideOffset={5}
                   >
                     {isRsvpFullOnLoad ||
-                      scheduleData?.rsvp_amount === 0 ||
-                      (isRsvpFullOnLoad && !hasRsvpd)
+                    scheduleData?.rsvp_amount === 0 ||
+                    (isRsvpFullOnLoad && !hasRsvpd)
                       ? `RSVP is not available`
                       : hasRsvpd
-                        ? `Cancel RSVP`
-                        : `RSVP`}
+                      ? `Cancel RSVP`
+                      : `RSVP`}
                     <Tooltip.Arrow className="TooltipArrow" />
                   </Tooltip.Content>
                 </Tooltip.Portal>

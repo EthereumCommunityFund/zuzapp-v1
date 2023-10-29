@@ -7,6 +7,12 @@ interface DatePickerProps {
   handleDateChange: (date: Date | null) => void;
   defaultDate: string | undefined;
 }
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 function range(start: number, end: number, step: number): number[] {
   return Array.from(
@@ -46,9 +52,14 @@ const CustomDatePicker: React.FC<DatePickerProps> = ({
         showIcon
         placeholderText="00-00-0000"
         selected={startDate}
-        onChange={(date) => {
-          setStartDate(date);
-          handleDateChange(date);
+        onChange={(date: Date) => {
+          const day = date.getDate();
+          const month = date.getMonth() + 1;
+          const year = date.getFullYear();
+          const dateString = `${year}-${month}-${day}`;
+          const dateObject: Date = new Date(dateString);
+          setStartDate(dateObject);
+          handleDateChange(dateObject);
         }}
         value={defaultDate}
         dateFormat="dd-MM-yyyy"
