@@ -13,7 +13,7 @@ import { fetchEventSpaceById } from '@/services/fetchEventSpaceDetails';
 import { DropDownMenuItemType } from '@/types';
 import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Option } from 'react-dropdown';
 import { BiLeftArrow, BiSolidCategory } from 'react-icons/bi';
 import { QueryClient, dehydrate, useQuery } from 'react-query';
@@ -28,7 +28,8 @@ export default function EventViewTracksPage() {
   }
 
   const { eventSpace, isLoading } = useEventDetails();
-
+  const [page, setPage] = useState<number>(1);
+  const [loadedTracks, setLoadedTracks] = useState<TrackUpdateRequestBody[]>([]);
 
 
   const {
@@ -60,6 +61,34 @@ export default function EventViewTracksPage() {
     });
   };
 
+  const fetchAdditionalTracks = async () => {
+    try {
+      const response = await fetchTracksByEventSpaceId(event_space_id as string);
+      setLoadedTracks(prevTracks => [...prevTracks, ...response.slice((page - 1) * 7, page * 7)]);
+      setPage(prevPage => prevPage + 1);
+    } catch (error) {
+      console.error('Error fetching tracks:', error);
+    }
+  };
+
+  // useEffect(() => {
+  //   const handleScroll = () => {
+  //     if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+  //       // fetchAdditionalTracks();
+  //     }
+  //   };
+
+  //   window.addEventListener('scroll', handleScroll);
+
+  //   return () => {
+  //     window.removeEventListener('scroll', handleScroll);
+  //   };
+  // }, []);
+
+  if (LoadingTracks) {
+    return <Loader />
+  }
+
   return (
     <>
       {' '}
@@ -75,7 +104,7 @@ export default function EventViewTracksPage() {
                   <Loader />
                 ) : (
                   <>
-                    {tracks && (
+                    {loadedTracks && (
                       <div className="flex flex-col gap-[10px] overflow-hidden md:p-3 cursor-pointer">
                         {tracks?.map((item, idx) => (
                           <TrackItemCard key={idx} trackId={item.id} trackTitle={item.name} trackImage={item.image as string} onClick={() => handleItemClick(item.name, item.id)} />
