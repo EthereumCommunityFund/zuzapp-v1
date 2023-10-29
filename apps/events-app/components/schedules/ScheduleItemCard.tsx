@@ -1,4 +1,4 @@
-import { ScheduleUpdateRequestBody } from "@/types";
+import { ScheduleDetailstype, ScheduleUpdateRequestBody } from "@/types";
 import { BiCalendarAlt, BiRadioCircle, BiTimeFive } from "react-icons/bi";
 import Button from "../ui/buttons/Button";
 import { HiArrowRight } from "react-icons/hi";
@@ -14,7 +14,7 @@ type IdProp = {
   id: string;
 };
 
-type Joined<T> = ScheduleUpdateRequestBody & T;
+type Joined<T> = ScheduleDetailstype & T;
 
 export default function ScheduleItemCard() {
   const router = useRouter();
