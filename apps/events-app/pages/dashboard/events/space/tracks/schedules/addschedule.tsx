@@ -231,13 +231,6 @@ export default function AddSchedulePage(props: any) {
     },
   });
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values, "values");
-    console.log(
-      toTurkeyTimestampWithDefaultTime(values.date),
-      toTurkeyTimestampWithDefaultTime(values.end_date),
-      "daters"
-    );
-
     if (
       values.format !== "in-person" &&
       (!values.live_stream_url || values.live_stream_url === "")

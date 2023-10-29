@@ -51,7 +51,7 @@ export const toTurkeyDateOnly = (date: any): string => {
 
 
 
-export const toTurkeyTimestampWithDefaultTime = (date: Date): string => {
+export const toTurkeyTimestampWithDefaultTime = (date: any): string => {
   return dayjs(date).tz("Europe/Istanbul").startOf('day').format('YYYY-MM-DDTHH:mm:ss.SSSZ');
 };
 function getRandomInt(min: number, max: number): number {
