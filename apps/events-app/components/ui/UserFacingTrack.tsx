@@ -21,9 +21,7 @@ import { StatusCodes } from "http-status-codes";
 import {
   convertToTurkeyTimeAsDate,
   getDayFromDate,
-  getDayFromTurkeyDate,
   getMonthFromDate,
-  getMonthFromTurkeyDate,
   stringToDateObject,
   toTurkeyTime,
 } from "@/utils";

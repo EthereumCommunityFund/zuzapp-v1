@@ -8,7 +8,7 @@ import { useRouter } from "next/router";
 import { Loader } from "../ui/Loader";
 import useEventDetails from "@/hooks/useCurrentEventSpace";
 import fetchSchedulesByEvenSpaceId from "@/services/fetchScheduleByEventSpace";
-import { stringToDateFormated, toTurkeyDateOnly, toTurkeyTime } from "@/utils";
+import { stringToDateFormated, toTurkeyTime } from "@/utils";
 
 type IdProp = {
   id: string;

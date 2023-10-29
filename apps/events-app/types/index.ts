@@ -121,6 +121,7 @@ export type ScheduleDetailstype = {
   start_date: string;
   real_end_date: string;
   tags?: string[];
+  editlogs?: any;
   organizers?: {
     name: string;
     role: string;
@@ -149,6 +150,8 @@ export type ScheduleUpdateRequestBody = {
   event_space_id: string;
   track_id?: string;
   tags?: string[];
+  start_date?: string;
+  real_end_date?: string;
   organizers?: {
     name: string;
     role: string;

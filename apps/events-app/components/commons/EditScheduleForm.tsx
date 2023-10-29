@@ -25,7 +25,6 @@ import {
   EventSpaceDetailsType,
   InputFieldType,
   LocationUpdateRequestBody,
-  ScheduleDetailstype,
   ScheduleUpdateRequestBody,
 } from "@/types";
 import TextEditor from "@/components/ui/TextEditor";
@@ -104,7 +103,7 @@ export default function EditScheduleForm({
     setUserId(userdata?.uuid);
   };
 
-  const [schedule, setSchedule] = useState<ScheduleDetailstype>({
+  const [schedule, setSchedule] = useState<ScheduleUpdateRequestBody>({
     name: "",
     format: "in-person",
     description: "",
@@ -227,8 +226,8 @@ export default function EditScheduleForm({
     defaultValues: {
       name: schedule?.name,
       format: schedule?.format,
-      date: stringToDateObject(schedule.start_date),
-      end_date: stringToDateObject(schedule.real_end_date),
+      date: stringToDateObject(schedule.start_date as string),
+      end_date: stringToDateObject(schedule.real_end_date as string),
       description: "",
       video_call_link: "",
       live_stream_url: schedule?.live_stream_url,
