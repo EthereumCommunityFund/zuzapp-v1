@@ -5,6 +5,7 @@ import { EventSpaceDetailsType, OrganizerType, ScheduleDetailstype, ScheduleUpda
 import { useEffect, useState } from 'react';
 import { useGlobalContext } from '@/context/GlobalContext';
 import LocationMarker from '../ui/icons/LocationMarker';
+import Image from 'next/image';
 
 interface IEventViewDetailsPanel {
   eventSpace: EventSpaceDetailsType;
@@ -146,7 +147,7 @@ export default function EventViewDetailsPanel(props: IEventViewDetailsPanel) {
                   <Label className="text-sm font-light opacity-70">{locationAddress}</Label>
                 </div>
                 {/* {imgUrls && <Image width={260} height={148} src={imgUrls[0]} alt={''} className={`rounded-xl ${profile ? `blur-none` : `blur`} h-[148px]`} />} */}
-                {imgUrls && <img src={imgUrls[0]} width={150} height={50} alt="No Images" className="h-[88px] rounded-lg" />}
+                {imgUrls && <Image src={imgUrls[0]} width={150} height={50} alt="No Images" className="h-[88px] rounded-lg" loading='lazy' />}
               </div>
             )}
           </div>

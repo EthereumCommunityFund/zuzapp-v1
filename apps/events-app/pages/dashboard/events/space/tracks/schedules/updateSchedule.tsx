@@ -770,7 +770,7 @@ export default function UpdateSchedulePage() {
                                 <LocalizationProvider
                                   dateAdapter={AdapterDayjs}
                                 >
-                                  <div className="flex justify-between gap-10 text-white">
+                                  <div className="flex justify-between gap-10 text-white w-full">
                                     <TimePicker
                                       label="Start Time"
                                       // slotProps={{ textField: { color: 'white' }}}
@@ -779,7 +779,7 @@ export default function UpdateSchedulePage() {
                                           schedule?.start_time
                                         ) as unknown as string
                                       }
-                                      // className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
+                                      className="w-full text-white outline-none rounded-lg pr-3 pl-2.5 bg-inputField items-center border border-white/10 border-opacity-10"
                                       onChange={(
                                         newValue:
                                           | string
@@ -819,6 +819,7 @@ export default function UpdateSchedulePage() {
                                           schedule?.end_time
                                         ) as unknown as string
                                       }
+                                      className="w-full text-white outline-none rounded-lg pr-3 pl-2.5 bg-inputField items-center border border-white/10 border-opacity-10"
                                       onChange={(
                                         newValue:
                                           | string
@@ -851,6 +852,10 @@ export default function UpdateSchedulePage() {
                                         border: "1px solid #4b4a4a",
                                       }}
                                     />
+                                  </div>
+                                  <div className="w-full flex flex-col gap-2">
+                                    <Label className="text-[#FFDD87] md:text-base sm:text-sm">Times here will temporarily only be set to the Istanbul timezone</Label>
+                                    <Label className="md:text-sm sm:text-xs">(Dynamic timezones will be added soon)</Label>
                                   </div>
                                 </LocalizationProvider>
                               </>

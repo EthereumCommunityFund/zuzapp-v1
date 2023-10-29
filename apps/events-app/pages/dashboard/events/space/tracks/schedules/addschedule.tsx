@@ -652,11 +652,11 @@ export default function AddSchedulePage(props: any) {
                           {!isAllDay && (
                             <>
                               <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                <div className="flex justify-between gap-10 text-white">
+                                <div className="flex justify-between gap-10 text-white w-full">
                                   <TimePicker
                                     label="Start Time"
                                     value={toTurkeyTime(startTime)}
-                                    className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
+                                    className="w-full text-white outline-none rounded-lg pr-3 pl-2.5 bg-inputField items-center border border-white/10 border-opacity-10"
                                     onChange={(newValue: any) => {
                                       let _time = fromTurkeyToUTC(newValue);
                                       setStartTime(_time);
@@ -683,7 +683,7 @@ export default function AddSchedulePage(props: any) {
                                   <TimePicker
                                     label="End Time"
                                     value={toTurkeyTime(endTime)}
-                                    className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
+                                    className="w-full text-white outline-none rounded-lg pr-3 pl-2.5 bg-inputField items-center border border-white/10 border-opacity-10"
                                     onChange={(newValue: any) => {
                                       let _time = fromTurkeyToUTC(newValue);
                                       setEndTime(_time);
@@ -707,6 +707,10 @@ export default function AddSchedulePage(props: any) {
                                       border: "1px solid #1A1A1A",
                                     }}
                                   />
+                                </div>
+                                <div className="w-full flex flex-col gap-2">
+                                  <Label className="text-[#FFDD87] md:text-base sm:text-sm">Times here will temporarily only be set to the Istanbul timezone</Label>
+                                  <Label className="md:text-sm sm:text-xs">(Dynamic timezones will be added soon)</Label>
                                 </div>
                               </LocalizationProvider>
                             </>
@@ -744,40 +748,6 @@ export default function AddSchedulePage(props: any) {
                       </div>
                     </div>
                     <div className="w-full" ref={sectionRefs[3]}>
-                      {selectedEventFormat === "new" &&
-                        eventSpace?.format === "in-person" && (
-                          <>
-                            <h2 className="text-2xl opacity-80">Location</h2>
-                            <div className="flex flex-col items-start gap-5 self-stretch w-full pt-5">
-                              <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                                <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                                  Select Location
-                                </Label>
-                                {/* <InputFieldDark type={InputFieldType.Option} placeholder={'The Dome'} /> */}
-                                <select
-                                  onChange={(e) =>
-                                    setLocationId(e.target.value)
-                                  }
-                                  title="location"
-                                  value={locationId}
-                                  className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
-                                >
-                                  {savedLocations.length === 0 && (
-                                    <option value="">No saved locations</option>
-                                  )}
-                                  {savedLocations?.map((location: any) => (
-                                    <option
-                                      key={location.id}
-                                      value={location.id}
-                                    >
-                                      {location.name}
-                                    </option>
-                                  ))}
-                                </select>
-                              </div>
-                            </div>
-                          </>
-                        )}
                       {selectedEventFormat === "in-person" && (
                         <>
                           <h2 className="text-2xl opacity-80">Location</h2>

@@ -16,6 +16,7 @@ import { useQuery, useQueryClient } from 'react-query';
 import fetchLocationsByEventSpaceId from '@/services/fetchLocationsByEventSpace';
 import { Loader } from '../ui/Loader';
 import { toast } from '../ui/use-toast';
+import Image from 'next/image';
 
 export default function EventLocation() {
   const queryClient = useQueryClient();
@@ -86,7 +87,7 @@ export default function EventLocation() {
 
               <div key={savedLocation.id} className="flex flex-col md:flex-row rounded-[10px] border border-opacity-10 border-white p-3.5 gap-[30px] bg-componentPrimary bg-opacity-10 w-full justify-between">
                 <div className="flex gap-7">
-                  <img src={(savedLocation.image_urls as unknown as string)[0]} alt="Avatar" width={42} height={42} className="rounded-[6px]" />
+                  <Image src={(savedLocation.image_urls as unknown as string)[0]} alt="Avatar" width={42} height={42} className="rounded-[6px]" loading='lazy' />
                   <div className="opacity-50 gap-5 flex items-center w-1/2">
                     <span className="font-semibold text-lg leading-[21.6px] text-white">{savedLocation.name}</span>
                   </div>

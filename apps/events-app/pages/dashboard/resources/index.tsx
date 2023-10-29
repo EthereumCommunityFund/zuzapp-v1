@@ -6,6 +6,7 @@ import { Database } from "@/database.types";
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
 import { ZuConnectResourceItemCards, ZuzaluResouceItemCards } from "@/constant/resourcecards";
 import ResourcesItemCard from "@/components/resources/ResourcesItemCard";
+import Image from "next/image";
 
 export default function Resources() {
   const { signIn } = useUserPassportContext();
@@ -57,7 +58,7 @@ export default function Resources() {
                   <div className="flex flex-col gap-2.5 p-5 items-center">
                     <Label className="text-xl text-white/70">To view these resources, please connect your ZuPass.</Label>
                     <div className="flex space-x-2 items-center rounded-3xl px-5 py-2 h-full bg-dark text-sm md:text-base justify-center hover:cursor-pointer" onClick={signIn}>
-                      <img src="/images/zaluza blackandwhite.png" width={20} height={20} alt="Passport" className="mr-2" />
+                      <Image src="/images/zaluza blackandwhite.png" width={20} height={20} alt="Passport" className="mr-2" loading="lazy" />
                       Connect <span className="hidden md:inline"> Passport</span>
                     </div>
                   </div>

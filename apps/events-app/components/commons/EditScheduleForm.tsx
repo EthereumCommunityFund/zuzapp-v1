@@ -482,7 +482,7 @@ export default function EditScheduleForm({
     return <Loader />;
   }
   return (
-    <div className="flex flex-col items-center gap-[34px] self-stretch w-full text-white">
+    <div className="flex flex-col items-center gap-[34px] self-stretch w-full text-white py-3">
       <div className="flex flex-col items-center gap-[34px] self-stretch w-full p-5">
         <div className="flex justify-between self-stretch">
           <FormTitle name="Update Session" />
@@ -661,7 +661,7 @@ export default function EditScheduleForm({
                       {!schedule.all_day && (
                         <>
                           <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <div className="flex justify-between gap-10 text-white">
+                            <div className="flex justify-between gap-10 text-white w-full">
                               <TimePicker
                                 label="Start Time"
                                 // slotProps={{ textField: { color: 'white' }}}
@@ -669,7 +669,8 @@ export default function EditScheduleForm({
                                   toTurkeyTime(
                                     schedule?.start_time
                                   ) as unknown as string
-                                } // className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
+                                }
+                                className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
                                 onChange={(
                                   newValue: string | Date | null | undefined
                                 ) => {
@@ -713,6 +714,7 @@ export default function EditScheduleForm({
                                     schedule?.end_time
                                   ) as unknown as string
                                 }
+                                className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
                                 onChange={(
                                   newValue: string | Date | null | undefined
                                 ) => {
@@ -748,6 +750,10 @@ export default function EditScheduleForm({
                                   },
                                 }}
                               />
+                            </div>
+                            <div className="w-full flex flex-col gap-2">
+                              <Label className="text-[#FFDD87] md:text-base sm:text-sm">Times here will temporarily only be set to the Istanbul timezone</Label>
+                              <Label className="md:text-sm sm:text-xs">(Dynamic timezones will be added soon)</Label>
                             </div>
                           </LocalizationProvider>
                         </>
