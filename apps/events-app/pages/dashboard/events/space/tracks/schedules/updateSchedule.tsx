@@ -265,15 +265,8 @@ export default function UpdateSchedulePage() {
     defaultValues: {
       name: schedule?.name,
       format: schedule?.format,
-      date:
-        schedule?.date !== ""
-          ? toTurkeyTime(schedule?.date).toDate()
-          : new Date(),
-      end_date:
-        schedule.end_date !== undefined &&
-        toTurkeyTime(schedule.end_date) !== null
-          ? new Date(schedule.end_date)
-          : new Date(),
+      date: stringToDateObject(schedule.start_date),
+      end_date: stringToDateObject(schedule.real_end_date),
       description: "",
       video_call_link: schedule?.video_call_link,
       live_stream_url: schedule?.live_stream_url,
