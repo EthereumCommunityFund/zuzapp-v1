@@ -85,7 +85,6 @@ export default function EventSpaceDashboard(props: IProps) {
         status: "published",
         id: eventSpace.id,
       });
-      console.log(result, "Event space published successfully");
       if (result) {
         setDialogContent({
           title: "Success!",

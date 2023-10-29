@@ -38,7 +38,6 @@ export default function Invited() {
   } = useQuery<any, Error>(['inviteDetails', invite_id], () => fetchInviteById(invite_id as string), {
     enabled: !!invite_id,
     onSuccess: (data) => {
-      console.log('invite', data);
       setEventId(data?.event_space_id as string);
       if (data.status === 'accepted') {
         setAccepted(true);
