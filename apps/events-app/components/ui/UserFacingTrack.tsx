@@ -18,7 +18,14 @@ import {
 import IconButton from "./buttons/IconButton";
 import * as Tooltip from "@radix-ui/react-tooltip";
 import { StatusCodes } from "http-status-codes";
-import { toTurkeyTime } from "@/utils";
+import {
+  convertToTurkeyTimeAsDate,
+  getDayFromTurkeyDate,
+  getMonthFromTurkeyDate,
+  toTurkeyDateOnly,
+  toTurkeyTime,
+} from "@/utils";
+import dayjs from "dayjs";
 
 interface IUserFacingTrack {
   scheduleId?: string;
@@ -32,10 +39,14 @@ const UserFacingTrack: React.ForwardRefRenderFunction<
 > = (props, ref) => {
   const { scheduleData, onClick } = props;
   const { trackDetails, isLoading } = useTrack(scheduleData.track_id as string);
-  const date = toTurkeyTime(scheduleData.date);
+  const date = convertToTurkeyTimeAsDate(scheduleData.date);
+  const month = getMonthFromTurkeyDate(date);
+  const day = getDayFromTurkeyDate(date);
 
-  const startDate = toTurkeyTime(scheduleData.date).format("DD/MM/YY");
-  const endDate = toTurkeyTime(scheduleData.end_date).format("DD/MM/YY");
+  console.log(date, "converted date");
+  const startDate = convertToTurkeyTimeAsDate(scheduleData.date);
+  const endDate = convertToTurkeyTimeAsDate(scheduleData.end_date);
+
   const startTime = toTurkeyTime(scheduleData.start_time).format("H:mm");
   const endTime = toTurkeyTime(scheduleData.end_time).format("H:mm");
   const [hasRsvpd, setHasRsvpd] = useState<boolean>(false);
@@ -195,8 +206,8 @@ const UserFacingTrack: React.ForwardRefRenderFunction<
         <div className="flex md:gap-3 gap-1 justify-between border-2 border-[#444646] md:p-3 sm:p-3 rounded-2xl bg-userFacingItem hover:bg-[#434646] duration-200">
           <div>
             <div className="md:rounded-[10px] sm:rounded-lg text-center border bg-trackDateColor border-[#5F6262] md:text-xl sm:text-sm px-4 py-2">
-              <h2 className="font-bold">{date.format("DD")}</h2>
-              <b className="font-medium">{date.format("MMM")}.</b>
+              <h2 className="font-bold">{day}.</h2>
+              <b className="font-medium">{month}</b>
             </div>
           </div>
           <div className="flex flex-col gap-1.5 flex-1 ml-2">
@@ -216,7 +227,8 @@ const UserFacingTrack: React.ForwardRefRenderFunction<
             </span>
             <div className="flex gap-2.5 md:flex-row sm:flex-col w-fit">
               {scheduleData.schedule_frequency !== "once" && (
-                <EventDataDate startDate={startDate} endDate={endDate} />
+                <></>
+                // <EventDataDate startDate={startDate} endDate={endDate} />
               )}
               <EventDataTime startTime={startTime} endTime={endTime} />
             </div>

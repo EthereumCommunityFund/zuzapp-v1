@@ -8,7 +8,7 @@ import { useRouter } from "next/router";
 import { Loader } from "../ui/Loader";
 import useEventDetails from "@/hooks/useCurrentEventSpace";
 import fetchSchedulesByEvenSpaceId from "@/services/fetchScheduleByEventSpace";
-import { toTurkeyTime } from "@/utils";
+import { toTurkeyDateOnly, toTurkeyTime } from "@/utils";
 
 type IdProp = {
   id: string;
@@ -99,7 +99,7 @@ export default function TrackScheduleItemCard() {
                       <span className="flex items-center p-1 gap-1 rounded-[10px] opacity-60 bg-[#FFFFFF10] white-space-nowrap overflow-hidden text-ellipsis">
                         <BiCalendarAlt size={30} />
                         <span className="ml-2 text-xs md:text-sm ">
-                          {formatDate(schedule?.date)}
+                          {toTurkeyDateOnly(schedule?.date)}
                         </span>
                       </span>
                       <span className="flex items-center p-1 gap-1 rounded-[10px] opacity-60 bg-[#FFFFFF10] white-space-nowrap overflow-hidden text-ellipsis">

@@ -63,7 +63,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   let date = formatTimestamp(validatedData.date as Date);
   if (validatedData.end_date) {
     let end_date = formatTimestamp(validatedData.end_date as Date);
-    insertData = { start_time, end_time, date, end_date };
+    insertData = { start_time, end_time, date: validatedData.date, end_date: validatedData.end_date };
   } else {
     insertData = { start_time, end_time, date };
   }

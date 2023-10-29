@@ -1,3 +1,5 @@
+
+
 import { NextApiResponse } from 'next';
 import { EventSpaceUpdateRequestBody, LocationType } from '@/types';
 import dayjs, { Dayjs } from "dayjs";
@@ -21,6 +23,37 @@ export const toTurkeyTime = (date: any): any => {
   return dayjs(date).tz("Europe/Istanbul");
 };
 
+
+
+
+
+
+export const convertToTurkeyTimeAsDate = (utcTimestamp: any) => {
+  const turkeyTime = dayjs(utcTimestamp).tz("Europe/Istanbul");
+  return new Date(turkeyTime.year(), turkeyTime.month(), turkeyTime.date());
+};
+
+// Separate functions to get month and day
+export const getMonthFromTurkeyDate = (utcTimestamp: any) => {
+  const turkeyTime = dayjs(utcTimestamp).tz("Europe/Istanbul");
+  return turkeyTime.format("MMM"); // This will return the month, e.g., "Oct"
+};
+
+export const getDayFromTurkeyDate = (utcTimestamp: any) => {
+  const turkeyTime = dayjs(utcTimestamp).tz("Europe/Istanbul");
+  return turkeyTime.format("D"); // This will return the day, e.g., "20"
+};
+
+
+export const toTurkeyDateOnly = (date: any): string => {
+  return dayjs(date).tz("Europe/Istanbul").format('MMMM-YYYY-DD');
+};
+
+
+
+export const toTurkeyTimestampWithDefaultTime = (date: Date): string => {
+  return dayjs(date).tz("Europe/Istanbul").startOf('day').format('YYYY-MM-DDTHH:mm:ss.SSSZ');
+};
 function getRandomInt(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
@@ -73,3 +106,4 @@ export const truncateString = (string: string, charLength: number, withEllipses:
   return `${truncated} ${ellipses}`;
 };
 // eventspacelocation: [generateRandomLocation(), generateRandomLocation(), generateRandomLocation()]
+

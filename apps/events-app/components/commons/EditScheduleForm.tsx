@@ -59,7 +59,11 @@ import { sessionFrequency } from "@/constant/scheduleconstants";
 import { X } from "lucide-react";
 import { deleteScheduleById } from "@/services/deleteSchedule";
 import { fetchProfile } from "@/controllers/profile.controllers";
-import { fromTurkeyToUTC, toTurkeyTime } from "@/utils";
+import {
+  convertToTurkeyTimeAsDate,
+  fromTurkeyToUTC,
+  toTurkeyTime,
+} from "@/utils";
 
 type Organizer = {
   name: string;
@@ -426,13 +430,13 @@ export default function EditScheduleForm({
           experience_level: JSON.parse(result.data.data.experience_level)[0],
         });
 
-        setStartDate(toTurkeyTime(result.data.data.date).toDate() as Date);
+        setStartDate(convertToTurkeyTimeAsDate(result.data.data.date));
 
         form.reset({
           name: result.data.data.name,
           format: result.data.data.format,
-          date: toTurkeyTime(result.data.data.date).toDate(),
-          end_date: toTurkeyTime(result.data.data.date).toDate(),
+          date: convertToTurkeyTimeAsDate(result.data.data.date),
+          end_date: convertToTurkeyTimeAsDate(result.data.data.end_date),
           description: result.data.data.description,
           // video_call_link: result.data.data.video_call_link,
           live_stream_url: result.data.data.live_stream_url,

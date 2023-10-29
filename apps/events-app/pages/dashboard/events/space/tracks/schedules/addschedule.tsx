@@ -61,7 +61,11 @@ import { toast } from "@/components/ui/use-toast";
 import { BsFillTicketFill } from "react-icons/bs";
 import { sessionNavBarDetails } from "@/constant/addschedulenavbar";
 import { sessionFrequency } from "@/constant/scheduleconstants";
-import { fromTurkeyToUTC, toTurkeyTime } from "@/utils";
+import {
+  fromTurkeyToUTC,
+  toTurkeyTime,
+  toTurkeyTimestampWithDefaultTime,
+} from "@/utils";
 dayjs.extend(isSameOrAfter);
 
 type Organizer = {
@@ -227,6 +231,13 @@ export default function AddSchedulePage(props: any) {
     },
   });
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    console.log(values, "values");
+    console.log(
+      toTurkeyTimestampWithDefaultTime(values.date),
+      toTurkeyTimestampWithDefaultTime(values.end_date),
+      "daters"
+    );
+
     if (
       values.format !== "in-person" &&
       (!values.live_stream_url || values.live_stream_url === "")
@@ -278,8 +289,8 @@ export default function AddSchedulePage(props: any) {
       organizers,
       all_day: isAllDay,
       limit_rsvp: isLimit,
-      date: fromTurkeyToUTC(values.date).toDate(),
-      end_date: fromTurkeyToUTC(values.end_date).toDate(),
+      date: toTurkeyTimestampWithDefaultTime(values.date),
+      end_date: toTurkeyTimestampWithDefaultTime(values.end_date),
       ...(eventSpace?.event_space_type === "tracks" && {
         track_id: selectedTrackId ? selectedTrackId : (trackId as string),
       }),

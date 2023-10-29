@@ -17,7 +17,7 @@ import { Listbox, Transition } from "@headlessui/react";
 
 import ToggleSwitch from "../commons/ToggleSwitch";
 import { TbChevronDown } from "react-icons/tb";
-import { toTurkeyTime } from "@/utils";
+import { convertToTurkeyTimeAsDate, toTurkeyTime } from "@/utils";
 
 interface ISessionViewPageTemplate {
   event_space_id: string;
@@ -140,10 +140,8 @@ export default function SessionViewPageTemplate({
   filteredSchedules.forEach((schedule) => {
     let isFirstEvent = true; // Moved inside the forEach loop
 
-    let date = toTurkeyTime(schedule.date).toDate();
-    date.setHours(0, 0, 0, 0); // Reset the time to midnight
-
-    const end_date = toTurkeyTime(schedule.end_date).toDate();
+    let date = convertToTurkeyTimeAsDate(schedule.date);
+    const end_date = convertToTurkeyTimeAsDate(schedule.end_date);
     const frequency = schedule.schedule_frequency;
 
     do {

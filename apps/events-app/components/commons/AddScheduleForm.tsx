@@ -693,11 +693,11 @@ export default function AddScheduleForm({
                           <div className="flex justify-between gap-10 text-white">
                             <TimePicker
                               label="Start Time"
-                              value={startTime}
+                              value={toTurkeyTime(startTime)}
                               className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
                               onChange={(newValue: any) => {
-                                console.log(newValue);
-                                setStartTime(newValue);
+                                let _time = fromTurkeyToUTC(newValue);
+                                setStartTime(_time);
                               }}
                               sx={{
                                 input: {
@@ -727,9 +727,12 @@ export default function AddScheduleForm({
                             />
                             <TimePicker
                               label="End Time"
-                              value={endTime}
+                              value={toTurkeyTime(endTime)}
                               className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
-                              onChange={(newValue: any) => setEndTime(newValue)}
+                              onChange={(newValue: any) => {
+                                let _time = fromTurkeyToUTC(newValue);
+                                setEndTime(_time);
+                              }}
                               sx={{
                                 input: {
                                   color: "white",

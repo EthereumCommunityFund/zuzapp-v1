@@ -80,7 +80,14 @@ import {
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import { sessionFrequency } from "@/constant/scheduleconstants";
 import { deleteScheduleById } from "@/services/deleteSchedule";
-import { fromTurkeyToUTC, toTurkeyTime } from "@/utils";
+import {
+  convertToTurkeyTime,
+  convertToTurkeyTimeAsDate,
+  fromTurkeyToUTC,
+  toTurkeyDateOnly,
+  toTurkeyTime,
+  toTurkeyTimestampWithDefaultTime,
+} from "@/utils";
 dayjs.extend(isSameOrAfter);
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -279,6 +286,9 @@ export default function UpdateSchedulePage() {
     //   });
     //   return;
     // }
+
+    console.log(values, "values", schedule, schedule);
+
     if (
       values.format !== "in-person" &&
       (!values.live_stream_url || values.live_stream_url === "")
@@ -346,8 +356,8 @@ export default function UpdateSchedulePage() {
       all_day: schedule.all_day,
       track_id: trackId,
       limit_rsvp: schedule.limit_rsvp,
-      date: fromTurkeyToUTC(values.date).toDate(),
-      end_date: fromTurkeyToUTC(values.end_date).toDate(),
+      date: toTurkeyTimestampWithDefaultTime(values.date),
+      end_date: toTurkeyTimestampWithDefaultTime(values.date),
       ...(eventSpace?.event_space_type === "tracks" && {
         track_id: trackId as string,
       }),
@@ -449,12 +459,18 @@ export default function UpdateSchedulePage() {
           event_type: JSON.parse(result.data.data.event_type)[0],
           experience_level: JSON.parse(result.data.data.experience_level)[0],
         });
-        setStartDate(toTurkeyTime(result.data.data.date).toDate());
+        console.log(
+          toTurkeyTime(result.data.data.date).toDate(),
+          "turke",
+          result.data.data.date,
+          convertToTurkeyTimeAsDate(result.data.data.date)
+        );
+        setStartDate(convertToTurkeyTimeAsDate(result.data.data.date));
         form.reset({
           name: result.data.data.name,
           format: result.data.data.format,
-          date: toTurkeyTime(result.data.data.date).toDate(),
-          end_date: toTurkeyTime(result.data.data.end_date).toDate(),
+          date: convertToTurkeyTimeAsDate(result.data.data.date),
+          end_date: convertToTurkeyTimeAsDate(result.data.data.end_date),
           description: result.data.data.description,
           video_call_link: result.data.data.video_call_link,
           live_stream_url: result.data.data.live_stream_url,
@@ -792,8 +808,8 @@ export default function UpdateSchedulePage() {
                                           | null
                                           | undefined
                                       ) => {
-                                        console.log(newValue);
                                         let _time = fromTurkeyToUTC(newValue);
+                                        console.log("utc time", _time);
                                         setSchedule({
                                           ...schedule,
                                           start_time: _time as string,
