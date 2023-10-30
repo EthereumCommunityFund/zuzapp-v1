@@ -48,26 +48,29 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
   };
 
   const filterEventsByTime = (events: ScheduleDetailstype[], isUpcoming: boolean): ScheduleDetailstype[] => {
-    const now = new Date();
+    const nowInIstanbul = toTurkeyTime(new Date()); // Ensure current time is in Istanbul time zone
+
     return events.filter((event) => {
-      let eventDate = new Date(convertToTurkeyTimeAsDate(event.date));
-      const endDate = new Date(convertToTurkeyTimeAsDate(event.end_date));
+      let eventStartDate = new Date(convertToTurkeyTimeAsDate(event.date));
+      const eventEndDate = new Date(convertToTurkeyTimeAsDate(event.end_date));
       let isEventInFuture = false;
 
       if (event.schedule_frequency) {
+        // Check all instances of the recurring event
         do {
-          if (eventDate >= now) {
+          if (eventStartDate >= nowInIstanbul) {
             isEventInFuture = true;
             break;
           }
           if (event.schedule_frequency === 'everyday') {
-            eventDate.setDate(eventDate.getDate() + 1);
+            eventStartDate.setDate(eventStartDate.getDate() + 1);
           } else if (event.schedule_frequency === 'weekly') {
-            eventDate.setDate(eventDate.getDate() + 7);
+            eventStartDate.setDate(eventStartDate.getDate() + 7);
           }
-        } while (eventDate <= endDate);
+        } while (eventStartDate <= eventEndDate);
       } else {
-        isEventInFuture = eventDate >= now;
+        // For non-recurring events, check if the event date is in the future
+        isEventInFuture = eventStartDate >= nowInIstanbul;
       }
 
       return isUpcoming ? isEventInFuture : !isEventInFuture;
