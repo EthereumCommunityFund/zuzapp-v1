@@ -57,11 +57,16 @@ export default function SessionViewPageTemplate({
     const response: ScheduleDetailstype[] = await fetchSchedulesByEvenSpaceId(
       event_space_id as string
     );
+
     const filter: ScheduleDetailstype[] = response.filter((schedule) =>
       isUpcoming
-        ? new Date(schedule.date).getTime() > new Date().getTime()
-        : new Date(schedule.date).getTime() < new Date().getTime()
+        ? stringToDateObject(schedule.start_date).getTime() >=
+          new Date().setHours(0, 0, 0, 0)
+        : stringToDateObject(schedule.start_date).getTime() <
+          new Date().setHours(0, 0, 0, 0)
     );
+
+    setFilteredSchedules(filter);
 
     setFilteredSchedules(filter);
     setSchedules(response);
@@ -70,20 +75,49 @@ export default function SessionViewPageTemplate({
 
   const handleIsUpcoming = (newFilter: boolean) => {
     setIsLoading(true);
+    // Extract track IDs from selectedTracks
     const selectedTrackIds = selectedTracks.map((item) => item.id);
-    const filter: ScheduleDetailstype[] = schedules.filter((schedule) =>
-      newFilter
-        ? new Date(schedule.date).getTime() > new Date().getTime()
-        : new Date(schedule.date).getTime() < new Date().getTime()
-    );
-    const filteredByTracks =
+
+    // Determine whether to filter for upcoming or past events
+    const isUpcomingEvent = (schedule: ScheduleDetailstype) => {
+      // Convert start_date to a Date object
+      const eventDate = stringToDateObject(schedule.start_date);
+
+      // Convert start_time (assuming it's a timestamp) to a Date object
+      const eventTimeObj = new Date(schedule.start_time);
+
+      // Apply the hours, minutes, and seconds from start_time to start_date
+      eventDate.setHours(
+        eventTimeObj.getHours(),
+        eventTimeObj.getMinutes(),
+        eventTimeObj.getSeconds()
+      );
+
+      // Get the timestamp for the combined start_date and start_time
+      const eventTimestamp = eventDate.getTime();
+
+      const todayStart = new Date();
+      todayStart.setHours(0, 0, 0, 0); // set the time to the start of the day
+      const todayStartTime = todayStart.getTime();
+
+      return newFilter
+        ? eventTimestamp >= todayStartTime
+        : eventTimestamp < todayStartTime;
+    };
+
+    // Apply the upcoming/past filter
+    const filteredByDate = schedules.filter(isUpcomingEvent);
+
+    // If any tracks are selected, further filter by those tracks
+    const finalFilteredSchedules =
       selectedTrackIds.length > 0
-        ? filter.filter(
+        ? filteredByDate.filter(
             (schedule) =>
               schedule.track_id && selectedTrackIds.includes(schedule.track_id)
           )
-        : filter;
-    setFilteredSchedules(filteredByTracks);
+        : filteredByDate;
+
+    setFilteredSchedules(finalFilteredSchedules);
     setIsUpcoming(newFilter);
     setIsLoading(false);
   };
@@ -92,8 +126,10 @@ export default function SessionViewPageTemplate({
     const selectedTrackIds = newSelectedTracks.map((item) => item.id);
     const filter: ScheduleDetailstype[] = schedules.filter((schedule) =>
       isUpcoming
-        ? new Date(schedule.date).getTime() > new Date().getTime()
-        : new Date(schedule.date).getTime() < new Date().getTime()
+        ? stringToDateObject(schedule.start_date).getTime() >
+          new Date().getTime()
+        : stringToDateObject(schedule.start_date).getTime() <
+          new Date().getTime()
     );
 
     const filteredByTracks =
@@ -111,7 +147,7 @@ export default function SessionViewPageTemplate({
     if (isLoading) {
       fetchSchedules();
     }
-  }, [isLoading, selectedTracks]);
+  }, [isLoading, selectedTracks, isUpcoming]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(

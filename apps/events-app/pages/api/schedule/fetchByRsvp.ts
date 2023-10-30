@@ -39,7 +39,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             schedulespeakerrole: schedulespeakerrole!id (role, speaker: speaker!id (name))
         `)
         .in("id", scheduleIds)
-        .order('date', { ascending: true })
+        .order('start_date', { ascending: true })
         .order('start_time', { ascending: true });
 
     if (error) {
