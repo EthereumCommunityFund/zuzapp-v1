@@ -103,6 +103,7 @@ export default function SessionViewPageTemplate({
 
   const handleIsUpcoming = (newFilter: boolean) => {
     setIsLoading(true);
+
     // Extract track IDs from selectedTracks
     const selectedTrackIds = selectedTracks.map((item) => item.id);
 
@@ -111,15 +112,11 @@ export default function SessionViewPageTemplate({
       // Convert start_date to a Date object
       const eventDate = stringToDateObject(schedule.start_date);
 
-      // Convert start_time (assuming it's a timestamp) to a Date object in Turkey timezone
-      const eventTimeObj = toTurkeyTime(new Date(schedule.start_time));
+      // Extract hours and minutes from the start_time string (HH:mm format)
+      const [hours, minutes] = schedule.start_time.split(":").map(Number);
 
-      // Apply the hours, minutes, and seconds from the Turkey timezone date to the start_date
-      eventDate.setHours(
-        eventTimeObj.hour(),
-        eventTimeObj.minute(),
-        eventTimeObj.second()
-      );
+      // Adjust the eventDate using the extracted hours and minutes
+      eventDate.setHours(hours, minutes, 0, 0); // set the extracted hours and minutes, and reset seconds and milliseconds
 
       // Get the timestamp for the combined start_date and start_time
       const eventTimestamp = eventDate.getTime();
@@ -149,6 +146,7 @@ export default function SessionViewPageTemplate({
     setIsUpcoming(newFilter);
     setIsLoading(false);
   };
+
   const handleTrackSelect = (newSelectedTracks: any[]) => {
     const selectedTrackIds = newSelectedTracks.map((item) => item.id);
     const filter: ScheduleDetailstype[] = schedules.filter((schedule) =>
@@ -198,6 +196,12 @@ export default function SessionViewPageTemplate({
 
   const groupedSchedules: Record<string, ScheduleDetailstype[]> = {};
 
+  // Function to convert "HH:mm" format to total minutes
+  const timeToMinutes = (time: string) => {
+    const [hours, minutes] = time.split(":").map(Number);
+    return hours * 60 + minutes;
+  };
+
   filteredSchedules.forEach((schedule) => {
     let isFirstEvent = true; // Moved inside the forEach loop
 
@@ -235,6 +239,26 @@ export default function SessionViewPageTemplate({
       isFirstEvent = false; // After the first iteration, set this to false
     } while (date <= end_date);
   });
+
+  // Now, sort the schedules within each group based on start_time
+  Object.keys(groupedSchedules).forEach((formattedDate) => {
+    groupedSchedules[formattedDate].sort((a, b) => {
+      const timeA = timeToMinutes(a.start_time);
+      const timeB = timeToMinutes(b.start_time);
+      return timeA - timeB;
+    });
+  });
+
+  // Now, sort the schedules within each group based on start_time
+  Object.keys(groupedSchedules).forEach((formattedDate) => {
+    groupedSchedules[formattedDate].sort((a, b) => {
+      const timeA = new Date(a.start_time).getTime();
+      const timeB = new Date(b.start_time).getTime();
+      return timeA - timeB;
+    });
+  });
+
+  // console.log(groupedSchedules);
 
   return (
     <>

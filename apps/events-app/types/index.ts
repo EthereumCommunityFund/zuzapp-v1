@@ -102,7 +102,7 @@ export type ScheduleDetailstype = {
   format: 'in-person' | 'online';
   description: string;
   date: string | Date | number;
-  start_time: string | Date | number;
+  start_time: any;
   end_time: string | Date | number;
   end_date: string | Date | number;
   all_day?: boolean;
