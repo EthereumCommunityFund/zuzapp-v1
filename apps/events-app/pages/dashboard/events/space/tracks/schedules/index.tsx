@@ -24,6 +24,7 @@ import { Loader } from "@/components/ui/Loader";
 import useTrackDetails from "@/hooks/useTrackDetails";
 import ScheduleItemCard from "@/components/schedules/ScheduleItemCard";
 import TrackScheduleItemCard from "@/components/schedules/TrackScheduleItemCard";
+import Image from "next/image";
 
 type IdProp = {
   id: string;
@@ -78,22 +79,7 @@ export default function SchedulesDashboardPage() {
       console.error("Error fetching space details", error);
     }
   };
-  function formatDate(dateString: string | number | Date) {
-    const date = new Date(dateString);
-    return new Intl.DateTimeFormat("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    }).format(date);
-  }
-  function formatTime(dateString: string | number | Date) {
-    const date = new Date(dateString);
-    return new Intl.DateTimeFormat("en-US", {
-      hour: "numeric",
-      minute: "numeric",
-      hour12: true,
-    }).format(date);
-  }
+
   return (
     <div className="">
       <div className="flex flex-col items-start gap-10 self-stretch pb-[60px] px-5 lg:px-20">
@@ -127,7 +113,13 @@ export default function SchedulesDashboardPage() {
                 {loading ? (
                   <Loader />
                 ) : (
-                  <img src={trackDetails?.image as string} alt="track-image" />
+                  <Image
+                    src={trackDetails?.image as string}
+                    alt="track-image"
+                    width={100}
+                    height={100}
+                    loading="lazy"
+                  />
                 )}
               </div>
               <div className="flex flex-col gap-5 self-stretch">

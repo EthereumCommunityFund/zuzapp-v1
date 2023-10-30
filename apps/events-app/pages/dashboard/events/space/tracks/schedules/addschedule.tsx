@@ -62,6 +62,7 @@ import { BsFillTicketFill } from "react-icons/bs";
 import { sessionNavBarDetails } from "@/constant/addschedulenavbar";
 import { sessionFrequency } from "@/constant/scheduleconstants";
 import {
+  convertDateToString,
   fromTurkeyToUTC,
   toTurkeyTime,
   toTurkeyTimestampWithDefaultTime,
@@ -78,7 +79,6 @@ type TagItemProp = {
 };
 
 export default function AddSchedulePage(props: any) {
-
   const optionTags = props.tags;
   const optionSpeakers = props.organizers;
   const defaultProps = {
@@ -134,8 +134,7 @@ export default function AddSchedulePage(props: any) {
     () => fetchTracksByEventSpaceId(event_space_id as string),
     {
       enabled: !!event_space_id,
-      onSuccess: (data) => {
-      },
+      onSuccess: (data) => {},
     }
   );
   const {
@@ -228,6 +227,8 @@ export default function AddSchedulePage(props: any) {
     },
   });
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    console.log("valuesof", values);
+    // return;
     if (
       values.format !== "in-person" &&
       (!values.live_stream_url || values.live_stream_url === "")
@@ -246,16 +247,14 @@ export default function AddSchedulePage(props: any) {
       return;
     }
     if (frequency === "everyday" || frequency === "weekly") {
-      const endDate = fromTurkeyToUTC(values.end_date);
-      const startDate = fromTurkeyToUTC(values.date);
-
-
-      if (endDate.isBefore(startDate)) {
-        form.setError("end_date", {
-          message: "End date cannot be earlier than start date",
-        });
-        return;
-      }
+      // const endDate = values.endate;
+      // const startDate = values.date;
+      // if (endDate.isBefore(startDate)) {
+      //   form.setError("end_date", {
+      //     message: "End date cannot be earlier than start date",
+      //   });
+      //   return;
+      // }
     }
     const basePayload = {
       event_space_id: event_space_id as string,
@@ -265,21 +264,21 @@ export default function AddSchedulePage(props: any) {
         eventType.length > 0
           ? [eventType]
           : eventSpace?.event_type?.[0]
-            ? [eventSpace?.event_type[0]]
-            : [eventSpace?.event_type || "Meetup"],
+          ? [eventSpace?.event_type[0]]
+          : [eventSpace?.event_type || "Meetup"],
       experience_level:
         experienceLevel.length > 0
           ? [experienceLevel]
           : eventSpace?.experience_level?.[0]
-            ? [eventSpace?.experience_level[0]]
-            : [eventSpace?.experience_level || "Beginner"],
+          ? [eventSpace?.experience_level[0]]
+          : [eventSpace?.experience_level || "Beginner"],
       tags: tags,
       schedule_frequency: frequency,
       organizers,
       all_day: isAllDay,
       limit_rsvp: isLimit,
-      date: toTurkeyTimestampWithDefaultTime(values.date),
-      end_date: toTurkeyTimestampWithDefaultTime(values.end_date),
+      date: convertDateToString(values.date as Date),
+      end_date: convertDateToString(values.end_date as Date),
       ...(eventSpace?.event_space_type === "tracks" && {
         track_id: selectedTrackId ? selectedTrackId : (trackId as string),
       }),
@@ -652,11 +651,11 @@ export default function AddSchedulePage(props: any) {
                           {!isAllDay && (
                             <>
                               <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                <div className="flex justify-between gap-10 text-white">
+                                <div className="flex justify-between gap-10 text-white w-full">
                                   <TimePicker
                                     label="Start Time"
                                     value={toTurkeyTime(startTime)}
-                                    className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
+                                    className="w-full text-white outline-none rounded-lg pr-3 pl-2.5 bg-inputField items-center border border-white/10 border-opacity-10"
                                     onChange={(newValue: any) => {
                                       let _time = fromTurkeyToUTC(newValue);
                                       setStartTime(_time);
@@ -683,7 +682,7 @@ export default function AddSchedulePage(props: any) {
                                   <TimePicker
                                     label="End Time"
                                     value={toTurkeyTime(endTime)}
-                                    className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
+                                    className="w-full text-white outline-none rounded-lg pr-3 pl-2.5 bg-inputField items-center border border-white/10 border-opacity-10"
                                     onChange={(newValue: any) => {
                                       let _time = fromTurkeyToUTC(newValue);
                                       setEndTime(_time);
@@ -708,76 +707,51 @@ export default function AddSchedulePage(props: any) {
                                     }}
                                   />
                                 </div>
+                                <div className="w-full flex flex-col gap-2">
+                                  <Label className="text-[#FFDD87] md:text-base sm:text-sm">
+                                    Times here will temporarily only be set to
+                                    the Istanbul timezone
+                                  </Label>
+                                  <Label className="md:text-sm sm:text-xs">
+                                    (Dynamic timezones will be added soon)
+                                  </Label>
+                                </div>
                               </LocalizationProvider>
                             </>
                           )}
                         </div>
                         {(frequency === sessionFrequency.WEEKLY ||
                           frequency === sessionFrequency.EVERYDAY) && (
-                            <div className="flex flex-col items-center gap-[30px] self-stretch w-full">
-                              <FormField
-                                control={form.control}
-                                name="end_date"
-                                render={({ field }) => (
-                                  <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                                    <span className="text-lg opacity-70 self-stretch">
-                                      End Date
-                                    </span>
+                          <div className="flex flex-col items-center gap-[30px] self-stretch w-full">
+                            <FormField
+                              control={form.control}
+                              name="end_date"
+                              render={({ field }) => (
+                                <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
+                                  <span className="text-lg opacity-70 self-stretch">
+                                    End Date
+                                  </span>
 
-                                    <CustomDatePicker
-                                      defaultDate={undefined}
-                                      selectedDate={field.value || null}
-                                      handleDateChange={field.onChange}
-                                      {...field}
-                                    />
+                                  <CustomDatePicker
+                                    defaultDate={undefined}
+                                    selectedDate={field.value || null}
+                                    handleDateChange={field.onChange}
+                                    {...field}
+                                  />
 
-                                    <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">
-                                      Click & Select or type in a date
-                                    </h3>
-                                    <FormMessage />
-                                  </div>
-                                )}
-                              />
-                            </div>
-                          )}
+                                  <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">
+                                    Click & Select or type in a date
+                                  </h3>
+                                  <FormMessage />
+                                </div>
+                              )}
+                            />
+                          </div>
+                        )}
                         <line></line>
                       </div>
                     </div>
                     <div className="w-full" ref={sectionRefs[3]}>
-                      {selectedEventFormat === "new" &&
-                        eventSpace?.format === "in-person" && (
-                          <>
-                            <h2 className="text-2xl opacity-80">Location</h2>
-                            <div className="flex flex-col items-start gap-5 self-stretch w-full pt-5">
-                              <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                                <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                                  Select Location
-                                </Label>
-                                {/* <InputFieldDark type={InputFieldType.Option} placeholder={'The Dome'} /> */}
-                                <select
-                                  onChange={(e) =>
-                                    setLocationId(e.target.value)
-                                  }
-                                  title="location"
-                                  value={locationId}
-                                  className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
-                                >
-                                  {savedLocations.length === 0 && (
-                                    <option value="">No saved locations</option>
-                                  )}
-                                  {savedLocations?.map((location: any) => (
-                                    <option
-                                      key={location.id}
-                                      value={location.id}
-                                    >
-                                      {location.name}
-                                    </option>
-                                  ))}
-                                </select>
-                              </div>
-                            </div>
-                          </>
-                        )}
                       {selectedEventFormat === "in-person" && (
                         <>
                           <h2 className="text-2xl opacity-80">Location</h2>
@@ -830,28 +804,28 @@ export default function AddSchedulePage(props: any) {
                         </div> */}
                         {(selectedEventFormat === "online" ||
                           eventSpace?.format === "online") && (
-                            <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                              <FormField
-                                control={form.control}
-                                name="live_stream_url"
-                                render={({ field }) => (
-                                  <FormItem>
-                                    <FormLabel className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                                      Live Stream Link
-                                    </FormLabel>
-                                    <FormControl>
-                                      <InputFieldDark
-                                        type={InputFieldType.Link}
-                                        placeholder={"Type URL"}
-                                        {...field}
-                                      />
-                                    </FormControl>
-                                    <FormMessage />
-                                  </FormItem>
-                                )}
-                              />
-                            </div>
-                          )}
+                          <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
+                            <FormField
+                              control={form.control}
+                              name="live_stream_url"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel className="text-lg font-semibold leading-[1.2] text-white self-stretch">
+                                    Live Stream Link
+                                  </FormLabel>
+                                  <FormControl>
+                                    <InputFieldDark
+                                      type={InputFieldType.Link}
+                                      placeholder={"Type URL"}
+                                      {...field}
+                                    />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                          </div>
+                        )}
                         {selectedEventFormat === "new" &&
                           eventSpace?.format === "in-person" && (
                             <>

@@ -58,7 +58,12 @@ import { Dialog } from "@radix-ui/react-dialog";
 
 import { X } from "lucide-react";
 import { sessionFrequency } from "@/constant/scheduleconstants";
-import { fromTurkeyToUTC, toTurkeyTime } from "@/utils";
+import {
+  convertDateToString,
+  fromTurkeyToUTC,
+  stringToDateObject,
+  toTurkeyTime,
+} from "@/utils";
 
 type Organizer = {
   name: string;
@@ -239,15 +244,14 @@ export default function AddScheduleForm({
     }
 
     if (frequency === "everyday" || frequency === "weekly") {
-      const endDate = fromTurkeyToUTC(values.end_date);
-      const startDate = fromTurkeyToUTC(values.date);
-
-      if (endDate.isBefore(startDate)) {
-        form.setError("end_date", {
-          message: "End date cannot be earlier than start date",
-        });
-        return;
-      }
+      // const endDate = fromTurkeyToUTC(values.end_date);
+      // const startDate = fromTurkeyToUTC(values.date);
+      // if (endDate.isBefore(startDate)) {
+      //   form.setError("end_date", {
+      //     message: "End date cannot be earlier than start date",
+      //   });
+      //   return;
+      // }
     }
 
     const additionalPayload = {
@@ -258,14 +262,14 @@ export default function AddScheduleForm({
         eventType.length > 0
           ? [eventType]
           : eventSpace?.event_type?.[0]
-            ? [eventSpace?.event_type[0]]
-            : [eventSpace?.event_type || "Meetup"],
+          ? [eventSpace?.event_type[0]]
+          : [eventSpace?.event_type || "Meetup"],
       experience_level:
         experienceLevel.length > 0
           ? [experienceLevel]
           : eventSpace?.experience_level?.[0]
-            ? [eventSpace?.experience_level[0]]
-            : [eventSpace?.experience_level || "Beginner"],
+          ? [eventSpace?.experience_level[0]]
+          : [eventSpace?.experience_level || "Beginner"],
       tags: tags,
       schedule_frequency: frequency,
       location_id:
@@ -277,12 +281,13 @@ export default function AddScheduleForm({
       ...(eventSpace?.event_space_type === "tracks" && {
         track_id: selectedTrackId ? selectedTrackId : (trackId as string),
       }),
-      date: fromTurkeyToUTC(values.date).toDate(),
-      end_date: fromTurkeyToUTC(values.end_date).toDate(),
+      date: convertDateToString(values.date as Date),
+      end_date: convertDateToString(values.end_date as Date),
       ...(isLimit ? { rsvp_amount: rsvpAmount } : {}),
 
       // isLimit && rsvp_amount: rsvpAmount
     };
+
     const payload = {
       ...values,
       ...additionalPayload,
@@ -398,37 +403,34 @@ export default function AddScheduleForm({
       }
     };
 
-    const fetchCurrentSchedule = async () => {
-      try {
-        const result = await fetchScheduleByID(scheduleId as string);
-        setSchedule({
-          ...result.data.data,
-          event_type: JSON.parse(result.data.data.event_type)[0],
-          experience_level: JSON.parse(result.data.data.experience_level)[0],
-        });
-        setStartDate(toTurkeyTime(result.data.data.date).toDate());
+    // const fetchCurrentSchedule = async () => {
+    //   try {
+    //     const result = await fetchScheduleByID(scheduleId as string);
+    //     setSchedule({
+    //       ...result.data.data,
+    //       event_type: JSON.parse(result.data.data.event_type)[0],
+    //       experience_level: JSON.parse(result.data.data.experience_level)[0],
+    //     });
 
-        form.reset({
-          name: result.data.data.name,
-          format: result.data.data.format,
-          date:
-            schedule?.date !== ""
-              ? toTurkeyTime(result.data.data.date).toDate()
-              : new Date(),
-          end_date:
-            schedule.end_date !== undefined && schedule.end_date !== null
-              ? toTurkeyTime(schedule.end_date).toDate()
-              : new Date(),
-          description: result.data.data.description,
-          // video_call_link: result.data.data.video_call_link,
-          live_stream_url: result.data.data.live_stream_url,
-        });
-      } catch (error) {
-        console.log(error);
-      }
-    };
+    //     form.reset({
+    //       name: result.data.data.name,
+    //       format: result.data.data.format,
+    //       date: stringToDateObject(result.data.data.date),
+    //       end_date:
+    //         schedule.end_date !== undefined && schedule.end_date !== null
+    //           ? toTurkeyTime(schedule.end_date).toDate()
+    //           : new Date(),
+    //       description: result.data.data.description,
+    //       // video_call_link: result.data.data.video_call_link,
+    //       live_stream_url: result.data.data.live_stream_url,
+    //     });
+    //   } catch (error) {
+    //     console.log(error);
+    //   }
+    // };
 
-    fetchCurrentSchedule();
+    // fetchCurrentSchedule();
+    // console.log(scheduleId, "schedule id");
     fetchSpeakers();
 
     fetchLocationDetails();
@@ -469,7 +471,7 @@ export default function AddScheduleForm({
   }
 
   return (
-    <div className="flex flex-col items-center gap-[34px] self-stretch w-full text-white">
+    <div className="flex flex-col items-center gap-[34px] self-stretch w-full text-white py-3">
       <div className="flex flex-col py-5 items-center gap-[10px] self-stretch w-full">
         <div className="flex justify-between self-stretch">
           <FormTitle name="Add a Session" />
@@ -679,7 +681,7 @@ export default function AddScheduleForm({
                     {!isAllDay && (
                       <>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
-                          <div className="flex justify-between gap-10 text-white">
+                          <div className="flex justify-between gap-10 text-white w-full">
                             <TimePicker
                               label="Start Time"
                               value={toTurkeyTime(startTime)}
@@ -749,6 +751,15 @@ export default function AddScheduleForm({
                               }}
                             />
                           </div>
+                          <div className="w-full flex flex-col gap-2">
+                            <Label className="text-[#FFDD87] md:text-base sm:text-sm">
+                              Times here will temporarily only be set to the
+                              Istanbul timezone
+                            </Label>
+                            <Label className="md:text-sm sm:text-xs">
+                              (Dynamic timezones will be added soon)
+                            </Label>
+                          </div>
                         </LocalizationProvider>
                       </>
                     )}
@@ -756,33 +767,33 @@ export default function AddScheduleForm({
 
                   {(schedule?.schedule_frequency === sessionFrequency.WEEKLY ||
                     schedule?.schedule_frequency ===
-                    sessionFrequency.EVERYDAY) && (
-                      <div className="flex flex-col items-center gap-[30px] self-stretch w-full">
-                        <FormField
-                          control={form.control}
-                          name="end_date"
-                          render={({ field }) => (
-                            <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                              <span className="text-lg opacity-70 self-stretch">
-                                End Date
-                              </span>
+                      sessionFrequency.EVERYDAY) && (
+                    <div className="flex flex-col items-center gap-[30px] self-stretch w-full">
+                      <FormField
+                        control={form.control}
+                        name="end_date"
+                        render={({ field }) => (
+                          <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
+                            <span className="text-lg opacity-70 self-stretch">
+                              End Date
+                            </span>
 
-                              <CustomDatePicker
-                                defaultDate={undefined}
-                                selectedDate={field.value || null}
-                                handleDateChange={field.onChange}
-                                {...field}
-                              />
+                            <CustomDatePicker
+                              defaultDate={undefined}
+                              selectedDate={field.value || null}
+                              handleDateChange={field.onChange}
+                              {...field}
+                            />
 
-                              <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">
-                                Click & Select or type in a date
-                              </h3>
-                              <FormMessage />
-                            </div>
-                          )}
-                        />
-                      </div>
-                    )}
+                            <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">
+                              Click & Select or type in a date
+                            </h3>
+                            <FormMessage />
+                          </div>
+                        )}
+                      />
+                    </div>
+                  )}
                   <line></line>
                 </div>
               </div>

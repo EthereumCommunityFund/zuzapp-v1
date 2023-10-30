@@ -5,7 +5,7 @@ import { Database } from '@/database.types';
 import { logToFile } from '@/utils/logger';
 import { OrganizerType } from '@/types';
 import { validateScheduleUpdate, validateUUID } from '@/validators';
-import { formatTimestamp } from '@/utils';
+import { convertDateToString, formatTimestamp } from '@/utils';
 import { array } from 'joi';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -70,12 +70,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   let insertData: any = {}
   let start_time = formatTimestamp(validatedData.start_time as Date);
   let end_time = formatTimestamp(validatedData.end_time as Date);
-  let date = formatTimestamp(validatedData.date as Date);
+  let start_date = convertDateToString(validatedData.date as Date)
   if (validatedData.end_date) {
-    let end_date = formatTimestamp(validatedData.end_date as Date);
-    insertData = { start_time, end_time, date: validatedData.date, end_date: validatedData.end_date };
+    let end_date = convertDateToString(validatedData.end_date as Date)
+    insertData = { start_time, end_time, start_date, real_end_date: end_date };
   } else {
-    insertData = { start_time, end_time, date };
+    insertData = { start_time, end_time, start_date };
   }
 
   for (let key in validatedFields) {

@@ -1,4 +1,4 @@
-import { ScheduleUpdateRequestBody } from "@/types";
+import { ScheduleDetailstype, ScheduleUpdateRequestBody } from "@/types";
 import { BiCalendarAlt, BiRadioCircle, BiTimeFive } from "react-icons/bi";
 import Button from "../ui/buttons/Button";
 import { HiArrowRight } from "react-icons/hi";
@@ -8,13 +8,13 @@ import { useRouter } from "next/router";
 import { Loader } from "../ui/Loader";
 import useEventDetails from "@/hooks/useCurrentEventSpace";
 import fetchSchedulesByEvenSpaceId from "@/services/fetchScheduleByEventSpace";
-import { toTurkeyDateOnly, toTurkeyTime } from "@/utils";
+import { stringToDateFormated, toTurkeyTime } from "@/utils";
 
 type IdProp = {
   id: string;
 };
 
-type Joined<T> = ScheduleUpdateRequestBody & T;
+type Joined<T> = ScheduleDetailstype & T;
 
 export default function TrackScheduleItemCard() {
   const router = useRouter();
@@ -53,24 +53,6 @@ export default function TrackScheduleItemCard() {
     }
   };
 
-  function formatDate(dateString: string | number | Date) {
-    const date = new Date(dateString);
-    return new Intl.DateTimeFormat("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    }).format(date);
-  }
-
-  function formatTime(dateString: string | number | Date) {
-    const date = new Date(dateString);
-    return new Intl.DateTimeFormat("en-US", {
-      hour: "numeric",
-      minute: "numeric",
-      hour12: true,
-    }).format(date);
-  }
-
   if (isLoading) {
     return <Loader />;
   }
@@ -99,7 +81,7 @@ export default function TrackScheduleItemCard() {
                       <span className="flex items-center p-1 gap-1 rounded-[10px] opacity-60 bg-[#FFFFFF10] white-space-nowrap overflow-hidden text-ellipsis">
                         <BiCalendarAlt size={30} />
                         <span className="ml-2 text-xs md:text-sm ">
-                          {toTurkeyDateOnly(schedule?.date)}
+                          {stringToDateFormated(schedule?.start_date)}
                         </span>
                       </span>
                       <span className="flex items-center p-1 gap-1 rounded-[10px] opacity-60 bg-[#FFFFFF10] white-space-nowrap overflow-hidden text-ellipsis">

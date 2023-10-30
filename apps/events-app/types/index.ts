@@ -118,7 +118,10 @@ export type ScheduleDetailstype = {
   rsvp_amount?: number;
   event_space_id: string;
   track_id?: string;
+  start_date: string;
+  real_end_date: string;
   tags?: string[];
+  editlogs?: any;
   organizers?: {
     name: string;
     role: string;
@@ -131,7 +134,7 @@ export type ScheduleUpdateRequestBody = {
   format: 'in-person' | 'online';
   description: string;
   date: string | Date | number;
-  end_date: string | Date | number;
+  end_date: string | Date | number | null;
   start_time: string | Date | number;
   end_time: string | Date | number;
   all_day?: boolean;
@@ -147,6 +150,8 @@ export type ScheduleUpdateRequestBody = {
   event_space_id: string;
   track_id?: string;
   tags?: string[];
+  start_date?: string;
+  real_end_date?: string;
   organizers?: {
     name: string;
     role: string;

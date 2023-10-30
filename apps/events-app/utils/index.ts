@@ -10,6 +10,21 @@ export const formatTimestamp = (date: Date) => {
   return new Date(date).toISOString() as string
 };
 
+export const convertDateToString = (date: Date) => {
+  if (!date) {
+    return new Date();
+  }
+  const day = date.getDate();
+  const month = date.getMonth() + 1;  // JavaScript month starts from 0
+  const year = date.getFullYear();
+
+  const dateString: string = `${year}-${month}-${day}`;  // e.g., "2023-11-01"
+  return dateString
+
+
+
+}
+
 
 dayjs.extend(isSameOrAfter);
 dayjs.extend(utc);
@@ -26,33 +41,36 @@ export const toTurkeyTime = (date: any): any => {
 
 
 
-
-
 export const convertToTurkeyTimeAsDate = (utcTimestamp: any) => {
   const turkeyTime = dayjs(utcTimestamp).tz("Europe/Istanbul");
   return new Date(turkeyTime.year(), turkeyTime.month(), turkeyTime.date());
 };
 
 // Separate functions to get month and day
-export const getMonthFromTurkeyDate = (utcTimestamp: any) => {
-  const turkeyTime = dayjs(utcTimestamp).tz("Europe/Istanbul");
-  return turkeyTime.format("MMM"); // This will return the month, e.g., "Oct"
-};
-
-export const getDayFromTurkeyDate = (utcTimestamp: any) => {
-  const turkeyTime = dayjs(utcTimestamp).tz("Europe/Istanbul");
-  return turkeyTime.format("D"); // This will return the day, e.g., "20"
-};
 
 
-export const toTurkeyDateOnly = (date: any): string => {
-  return dayjs(date).tz("Europe/Istanbul").format('MMMM-YYYY-DD');
+export const getMonthFromDate = (date: any) => {
+  return dayjs(date).format("MMM")
+}
+
+export const getDayFromDate = (date: any) => {
+  return dayjs(date).format("D")
+
 };
 
 
 
-export const toTurkeyTimestampWithDefaultTime = (date: any): string => {
-  return dayjs(date).tz("Europe/Istanbul").startOf('day').format('YYYY-MM-DDTHH:mm:ss.SSSZ');
+export const stringToDateFormated = (string: any): string => {
+  return dayjs(string).format('MMMM-YYYY-DD');
+};
+
+export const stringToDateObject = (string: string) => {
+  return dayjs(string).toDate()
+}
+
+
+export const toTurkeyTimestampWithDefaultTime = (date: any): any => {
+  return dayjs(date).tz("Europe/Istanbul").startOf('day').toDate()
 };
 function getRandomInt(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min;
