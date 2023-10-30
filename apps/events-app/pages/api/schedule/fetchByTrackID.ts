@@ -38,7 +38,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     // Sort the data based on date and just the time portion of start_time
-    data.sort((a, b) => {
+    data.sort((a: any, b: any) => {
         if (a.start_date < b.start_date) return -1;
         if (a.start_date > b.start_date) return 1;
 
