@@ -56,7 +56,6 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
       let isEventInFuture = false;
 
       if (event.schedule_frequency) {
-        // Check all instances of the recurring event
         do {
           if (eventStartDate >= nowInIstanbul) {
             isEventInFuture = true;
@@ -69,7 +68,6 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
           }
         } while (eventStartDate <= eventEndDate);
       } else {
-        // For non-recurring events, check if the event date is in the future
         isEventInFuture = eventStartDate >= nowInIstanbul;
       }
 
@@ -228,7 +226,7 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
         </div>
         <div className="lg:w-1/4 sm:w-full lg:pt-24 lg:flex-col gap-5 lg:fixed lg:right-0 min-w-fit lg:mr-10 lg:mt-[-100px]">
           <h2 className="p-3.5 gap-[10px] font-bold text-xl sm:hidden lg:flex">Sessions: Sort & Filter</h2>
-          <ToggleSwitch isUpcoming={isUpcoming} handleIsUpcoming={handleIsUpcoming} />
+          {/* <ToggleSwitch isUpcoming={isUpcoming} handleIsUpcoming={handleIsUpcoming} /> */}
           <div className="flex lg:flex-col md:flex-row sm:flex-col w-full p-2.5 md:gap-5 sm:gap-3 text-sm">
             <Listbox as={'div'} className={'w-full relative'} value={selectedTracks} multiple onChange={(newSelectedTracks) => handleTrackSelect(newSelectedTracks)}>
               <Listbox.Button
