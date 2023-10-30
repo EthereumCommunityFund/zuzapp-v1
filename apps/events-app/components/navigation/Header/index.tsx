@@ -10,7 +10,7 @@ import { useRouter } from 'next/router';
 import { RxAvatar } from 'react-icons/rx';
 import IconButton from '@/components/ui/buttons/IconButton';
 import { HiMenuAlt1 } from 'react-icons/hi';
-import { User } from '@/components/ui/icons';
+import { XCircle } from '@/components/ui/icons';
 import { useState } from 'react';
 import { navBarRoutes } from '@/constant/routes';
 import { FaCog } from 'react-icons/fa';
@@ -18,6 +18,7 @@ import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
 import { Database } from '@/database.types';
 import MyProfileButton from './MyProfileButton';
 import CreateEventSpace from "@/components/navigation/Header/CreateEventSpace";
+import { Label } from '@/components/ui/label';
 
 export default function DashboardHeader() {
   const { signIn } = useUserPassportContext();
@@ -27,11 +28,16 @@ export default function DashboardHeader() {
   const routes = navBarRoutes;
 
 
-  const [dashboardOpen, setDashboardOpen] = useState(false);
+  const [dashboardOpen, setDashboardOpen] = useState<boolean>(false);
+  const [isAlert, setIsAlert] = useState<boolean>(true);
 
   const handleClick = () => {
     setDashboardOpen(!dashboardOpen);
   };
+
+  const handleAlert = () => {
+    setIsAlert(false);
+  }
 
   return (
     <div className="fixed top-0 left-0 w-full z-50 border-b border-white/10">
@@ -128,6 +134,14 @@ export default function DashboardHeader() {
           )}
         </div>
       </header>
+      {router.pathname === `/dashboard/home` && isAlert &&
+      <div className='flex justify-between w-full bg-[#7D432C] hover:bg-[#7D432C] text-[#FF956B] items-center'>
+        <Label className='bg-[]'>
+        Note: as the app is still in beta, there will be bugs and constant fixes. We ask residents to hold on adding or editing sessions. Thank you!
+        </Label>
+        <IconButton variant='ghost' className='text-[#FF956B]' icon={XCircle} onClick={handleAlert}/>
+      </div>
+          }
     </div>
   );
 }
