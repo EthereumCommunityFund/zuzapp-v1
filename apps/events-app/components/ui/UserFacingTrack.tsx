@@ -129,7 +129,7 @@ const UserFacingTrack: React.ForwardRefRenderFunction<
   }, [scheduleData]);
 
   useEffect(() => {
-    // checkIfUserHasRsvpd();
+    checkIfUserHasRsvpd();
   }, []);
 
   return scheduleData && scheduleData.repeating ? (

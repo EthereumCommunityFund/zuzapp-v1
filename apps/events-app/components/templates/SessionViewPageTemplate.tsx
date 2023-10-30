@@ -83,14 +83,14 @@ export default function SessionViewPageTemplate({
       // Convert start_date to a Date object
       const eventDate = stringToDateObject(schedule.start_date);
 
-      // Convert start_time (assuming it's a timestamp) to a Date object
-      const eventTimeObj = new Date(schedule.start_time);
+      // Convert start_time (assuming it's a timestamp) to a Date object in Turkey timezone
+      const eventTimeObj = toTurkeyTime(new Date(schedule.start_time));
 
-      // Apply the hours, minutes, and seconds from start_time to start_date
+      // Apply the hours, minutes, and seconds from the Turkey timezone date to the start_date
       eventDate.setHours(
-        eventTimeObj.getHours(),
-        eventTimeObj.getMinutes(),
-        eventTimeObj.getSeconds()
+        eventTimeObj.hour(),
+        eventTimeObj.minute(),
+        eventTimeObj.second()
       );
 
       // Get the timestamp for the combined start_date and start_time
@@ -121,7 +121,6 @@ export default function SessionViewPageTemplate({
     setIsUpcoming(newFilter);
     setIsLoading(false);
   };
-
   const handleTrackSelect = (newSelectedTracks: any[]) => {
     const selectedTrackIds = newSelectedTracks.map((item) => item.id);
     const filter: ScheduleDetailstype[] = schedules.filter((schedule) =>

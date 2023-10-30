@@ -15,7 +15,7 @@ const ToggleSwitch = ({ isUpcoming, handleIsUpcoming }: IToggleSwitch) => {
           className="switch-button"
           onClick={() => handleIsUpcoming(true)}
         >
-          Today
+          Upcoming
         </button>
         <button
           className="switch-button"
