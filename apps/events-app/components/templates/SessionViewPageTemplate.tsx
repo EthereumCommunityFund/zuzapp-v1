@@ -59,8 +59,8 @@ export default function SessionViewPageTemplate({
     );
     const filter: ScheduleDetailstype[] = response.filter((schedule) =>
       isUpcoming
-        ? new Date(schedule.date).getTime() > new Date().getTime()
-        : new Date(schedule.date).getTime() < new Date().getTime()
+        ? new Date(convertToTurkeyTimeAsDate(schedule.date)).getTime() > new Date().getTime()
+        : new Date(convertToTurkeyTimeAsDate(schedule.date)).getTime() < new Date().getTime()
     );
 
     setFilteredSchedules(filter);
@@ -73,8 +73,8 @@ export default function SessionViewPageTemplate({
     const selectedTrackIds = selectedTracks.map((item) => item.id);
     const filter: ScheduleDetailstype[] = schedules.filter((schedule) =>
       newFilter
-        ? new Date(schedule.date).getTime() > new Date().getTime()
-        : new Date(schedule.date).getTime() < new Date().getTime()
+        ? new Date(convertToTurkeyTimeAsDate(schedule.date)).getTime() > new Date().getTime()
+        : new Date(convertToTurkeyTimeAsDate(schedule.date)).getTime() < new Date().getTime()
     );
     const filteredByTracks =
       selectedTrackIds.length > 0
@@ -92,8 +92,8 @@ export default function SessionViewPageTemplate({
     const selectedTrackIds = newSelectedTracks.map((item) => item.id);
     const filter: ScheduleDetailstype[] = schedules.filter((schedule) =>
       isUpcoming
-        ? new Date(schedule.date).getTime() > new Date().getTime()
-        : new Date(schedule.date).getTime() < new Date().getTime()
+        ? new Date(convertToTurkeyTimeAsDate(schedule.date)).getTime() > new Date().getTime()
+        : new Date(convertToTurkeyTimeAsDate(schedule.date)).getTime() < new Date().getTime()
     );
 
     const filteredByTracks =
