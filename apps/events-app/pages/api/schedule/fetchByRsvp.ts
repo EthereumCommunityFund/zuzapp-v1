@@ -78,6 +78,5 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(200).json({ data: response });
 };
 
-export default handler;
 
 export default withSession(handler);
