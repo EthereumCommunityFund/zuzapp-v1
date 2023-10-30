@@ -47,7 +47,7 @@ const UserFacingTrack: React.ForwardRefRenderFunction<
   let startDate = stringToDateObject(scheduleData.start_date as string);
   let endDate = stringToDateObject(scheduleData.real_end_date as string);
 
-  const startTime = toTurkeyTime(scheduleData.start_time).format("H:mm");
+  const startTime = scheduleData.start_time;
   const endTime = toTurkeyTime(scheduleData.end_time).format("H:mm");
   const [hasRsvpd, setHasRsvpd] = useState<boolean>(false);
   const [isRsvpFullOnLoad, setIsRsvpFullOnLoad] = useState<boolean>(false);
@@ -129,7 +129,7 @@ const UserFacingTrack: React.ForwardRefRenderFunction<
   }, [scheduleData]);
 
   useEffect(() => {
-    checkIfUserHasRsvpd();
+    // checkIfUserHasRsvpd();
   }, []);
 
   return scheduleData && scheduleData.repeating ? (
