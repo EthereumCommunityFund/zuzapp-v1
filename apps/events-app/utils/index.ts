@@ -11,6 +11,9 @@ export const formatTimestamp = (date: Date) => {
 };
 
 export const convertDateToString = (date: Date) => {
+  if (!date) {
+    return new Date();
+  }
   const day = date.getDate();
   const month = date.getMonth() + 1;  // JavaScript month starts from 0
   const year = date.getFullYear();
