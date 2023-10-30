@@ -50,8 +50,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     let response: any = [];
 
     data.map(item => {
+        const adjustedTime = new Date(item.start_time);
+        adjustedTime.setUTCHours(adjustedTime.getUTCHours() + 3); // Adjusting time to Turkey time
+
+        const timeString = `${String(adjustedTime.getUTCHours()).padStart(2, '0')}:${String(adjustedTime.getUTCMinutes()).padStart(2, '0')}`; // Convert to HH:mm format
+
         let result = {
             ...item,
+            start_time: timeString, // Set the start_time to just the time
             tags: item.scheduletags.map((tagObj: any) => tagObj.tags.name),
             organizers: item.schedulespeakerrole.map((speakerObj: any) => ({
                 name: speakerObj.speaker.name,
@@ -65,7 +71,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         delete result?.schedulespeakerrole; // cleaning up the extra data
         response.push(result);
     });
-
     return res.status(200).json({ data: response });
 };
 
