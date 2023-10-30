@@ -34,7 +34,7 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
   const [isUpcoming, setIsUpcoming] = useState<boolean>(true);
   const [selectedTracks, setSelectedTracks] = useState<any[]>([]);
 
-  const groupedEvents = schedules?.forEach((schedule) => {});
+  const groupedEvents = schedules?.forEach((schedule) => { });
   const { isAuthenticated, user } = useGlobalContext();
   const handleItemClick = (scheduleId: string, trackId?: string) => {
     router.push({
@@ -77,9 +77,9 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
 
   const fetchSchedules = async () => {
     const response: ScheduleDetailstype[] = await fetchSchedulesByEvenSpaceId(event_space_id as string);
-    const filteredEvents = filterEventsByTime(response, isUpcoming);
+    // const filteredEvents = filterEventsByTime(response, isUpcoming);
 
-    setFilteredSchedules(filteredEvents);
+    setFilteredSchedules(response);
     setSchedules(response);
     setIsLoading(false);
   };
@@ -96,11 +96,11 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
 
   const handleTrackSelect = (newSelectedTracks: any[]) => {
     const selectedTrackIds = newSelectedTracks.map((item) => item.id);
-    const filter: ScheduleDetailstype[] = schedules.filter((schedule) =>
-      isUpcoming ? new Date(convertToTurkeyTimeAsDate(schedule.date)).getTime() > new Date().getTime() : new Date(convertToTurkeyTimeAsDate(schedule.date)).getTime() < new Date().getTime()
-    );
+    // const filter: ScheduleDetailstype[] = schedules.filter((schedule) =>
+    //   isUpcoming ? new Date(convertToTurkeyTimeAsDate(schedule.date)).getTime() > new Date().getTime() : new Date(convertToTurkeyTimeAsDate(schedule.date)).getTime() < new Date().getTime()
+    // );
 
-    const filteredByTracks = selectedTrackIds.length > 0 ? filter.filter((schedule) => schedule.track_id && selectedTrackIds.includes(schedule.track_id)) : filter;
+    const filteredByTracks = filteredSchedules.length > 0 ? schedules.filter((schedule) => schedule.track_id && selectedTrackIds.includes(schedule.track_id)) : filteredSchedules;
     setFilteredSchedules(filteredByTracks);
     setSelectedTracks(newSelectedTracks);
   };
