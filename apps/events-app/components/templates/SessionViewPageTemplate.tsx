@@ -287,9 +287,9 @@ export default function SessionViewPageTemplate({
                     {
                       <DialogContent className="md:w-3/5 md:h-3/5 overflow-x-auto sm:w-3/4">
                         <AddScheduleForm
-                          title={"Add"}
                           isQuickAccess={true}
                           trackId={trackId as string}
+                          isFromEventView={true}
                           updateIsLoading={updateIsLoading}
                           event_space_id={event_space_id as string}
                         />
