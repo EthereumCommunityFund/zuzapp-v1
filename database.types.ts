@@ -9,8 +9,46 @@ export type Json =
 export interface Database {
   public: {
     Tables: {
+      editlogs: {
+        Row: {
+          edit_summary: string | null
+          edited_at: string | null
+          editor_id: string | null
+          id: string
+          schedule_id: string | null
+        }
+        Insert: {
+          edit_summary?: string | null
+          edited_at?: string | null
+          editor_id?: string | null
+          id?: string
+          schedule_id?: string | null
+        }
+        Update: {
+          edit_summary?: string | null
+          edited_at?: string | null
+          editor_id?: string | null
+          id?: string
+          schedule_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "editlogs_editor_id_fkey"
+            columns: ["editor_id"]
+            referencedRelation: "profile"
+            referencedColumns: ["uuid"]
+          },
+          {
+            foreignKeyName: "editlogs_schedule_id_fkey"
+            columns: ["schedule_id"]
+            referencedRelation: "schedule"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       eventspace: {
         Row: {
+          created_at: string | null
           creator_id: string
           description: string | null
           end_date: string | null
@@ -26,8 +64,10 @@ export interface Database {
           start_date: string | null
           status: string | null
           tagline: string | null
+          updated_at: string | null
         }
         Insert: {
+          created_at?: string | null
           creator_id: string
           description?: string | null
           end_date?: string | null
@@ -43,8 +83,10 @@ export interface Database {
           start_date?: string | null
           status?: string | null
           tagline?: string | null
+          updated_at?: string | null
         }
         Update: {
+          created_at?: string | null
           creator_id?: string
           description?: string | null
           end_date?: string | null
@@ -60,6 +102,7 @@ export interface Database {
           start_date?: string | null
           status?: string | null
           tagline?: string | null
+          updated_at?: string | null
         }
         Relationships: [
           {
@@ -226,9 +269,11 @@ export interface Database {
       schedule: {
         Row: {
           all_day: boolean | null
+          created_at: string | null
           current_rsvp_no: number
-          date: string
+          date: string | null
           description: string | null
+          end_date: string | null
           end_time: string
           event_space_id: string | null
           event_type: string | null
@@ -240,17 +285,22 @@ export interface Database {
           live_stream_url: string | null
           location_id: string | null
           name: string
+          real_end_date: string | null
           rsvp_amount: number
           schedule_frequency: string | null
+          start_date: string | null
           start_time: string
           track_id: string | null
+          updated_at: string | null
           video_call_link: string | null
         }
         Insert: {
           all_day?: boolean | null
+          created_at?: string | null
           current_rsvp_no?: number
-          date: string
+          date?: string | null
           description?: string | null
+          end_date?: string | null
           end_time: string
           event_space_id?: string | null
           event_type?: string | null
@@ -262,17 +312,22 @@ export interface Database {
           live_stream_url?: string | null
           location_id?: string | null
           name: string
+          real_end_date?: string | null
           rsvp_amount?: number
           schedule_frequency?: string | null
+          start_date?: string | null
           start_time: string
           track_id?: string | null
+          updated_at?: string | null
           video_call_link?: string | null
         }
         Update: {
           all_day?: boolean | null
+          created_at?: string | null
           current_rsvp_no?: number
-          date?: string
+          date?: string | null
           description?: string | null
+          end_date?: string | null
           end_time?: string
           event_space_id?: string | null
           event_type?: string | null
@@ -284,10 +339,13 @@ export interface Database {
           live_stream_url?: string | null
           location_id?: string | null
           name?: string
+          real_end_date?: string | null
           rsvp_amount?: number
           schedule_frequency?: string | null
+          start_date?: string | null
           start_time?: string
           track_id?: string | null
+          updated_at?: string | null
           video_call_link?: string | null
         }
         Relationships: [
