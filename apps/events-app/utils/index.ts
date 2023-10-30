@@ -12,7 +12,7 @@ export const formatTimestamp = (date: Date) => {
 
 export const convertDateToString = (date: Date) => {
   if (!date) {
-    return new Date();
+    return null
   }
   const day = date.getDate();
   const month = date.getMonth() + 1;  // JavaScript month starts from 0

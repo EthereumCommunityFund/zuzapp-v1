@@ -134,7 +134,7 @@ export type ScheduleUpdateRequestBody = {
   format: 'in-person' | 'online';
   description: string;
   date: string | Date | number;
-  end_date: string | Date | number;
+  end_date: string | Date | number | null;
   start_time: string | Date | number;
   end_time: string | Date | number;
   all_day?: boolean;
