@@ -39,13 +39,22 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             schedulespeakerrole: schedulespeakerrole!id (role, speaker: speaker!id (name))
         `)
         .in("id", scheduleIds)
-        .order('start_date', { ascending: true })
-        .order('start_time', { ascending: true });
+        .order('start_date', { ascending: true });
 
     if (error) {
         logToFile("server error", error.message, error.code, "Unknown user");
         return res.status(404).send("Schedules not found");
     }
+
+    // Sort the data based on date and just the time portion of start_time
+    data.sort((a, b) => {
+        if (a.start_date < b.start_date) return -1;
+        if (a.start_date > b.start_date) return 1;
+
+        const timeA = new Date(a.start_time).getUTCHours() * 60 + new Date(a.start_time).getUTCMinutes();
+        const timeB = new Date(b.start_time).getUTCHours() * 60 + new Date(b.start_time).getUTCMinutes();
+        return timeA - timeB;
+    });
 
     let response: any = [];
 
@@ -60,13 +69,15 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         };
 
         //@ts-ignore
-        delete result?.scheduletags;
+        delete result?.scheduletags; // cleaning up the extra data
         //@ts-ignore
-        delete result?.schedulespeakerrole;
+        delete result?.schedulespeakerrole; // cleaning up the extra data
         response.push(result);
     });
 
     return res.status(200).json({ data: response });
 };
+
+export default handler;
 
 export default withSession(handler);

@@ -16,17 +16,18 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         return res.status(400).json({ errors });
     }
 
-    // Use a join to fetch the schedule, its tags, and speakers in one query
+    // Fetch the data
     const { data, error } = await supabase
         .from("schedule")
         .select(`
-        *,
-        scheduletags: scheduletags!id (tags: tags!id (*)),
-        schedulespeakerrole: schedulespeakerrole!id (role, speaker: speaker!id (name)),
-        editlogs: editlogs!schedule_id (*, user: profile!uuid (username))
-    `)
-        .eq("track_id", id).order('date', { ascending: true })
-        .order('start_date, start_time', { ascending: true });
+            *,
+            scheduletags: scheduletags!id (tags: tags!id (*)),
+            schedulespeakerrole: schedulespeakerrole!id (role, speaker: speaker!id (name)),
+            editlogs: editlogs!schedule_id (*, user: profile!uuid (username))
+        `)
+        .eq("track_id", id)
+        .order('start_date', { ascending: true });
+
     if (error) {
         logToFile("server error", error.message, error.code, "Unknown user");
         return res.status(404).send("Schedule not found");
@@ -36,11 +37,19 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         return res.status(404).send("Schedule not found");
     }
 
+    // Sort the data based on date and just the time portion of start_time
+    data.sort((a, b) => {
+        if (a.start_date < b.start_date) return -1;
+        if (a.start_date > b.start_date) return 1;
 
-    let response: any = []
+        const timeA = new Date(a.start_time).getUTCHours() * 60 + new Date(a.start_time).getUTCMinutes();
+        const timeB = new Date(b.start_time).getUTCHours() * 60 + new Date(b.start_time).getUTCMinutes();
+        return timeA - timeB;
+    });
+
+    let response: any = [];
 
     data.map(item => {
-        // console.log(item.schedulespeakerrole)
         let result = {
             ...item,
             tags: item.scheduletags.map((tagObj: any) => tagObj.tags.name),
@@ -48,16 +57,19 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 name: speakerObj.speaker.name,
                 role: speakerObj.role,
             })),
-        }
+        };
+
         //@ts-ignore
         delete result?.scheduletags; // cleaning up the extra data
         //@ts-ignore
         delete result?.schedulespeakerrole; // cleaning up the extra data
-        response.push(result)
-    })
-
+        response.push(result);
+    });
 
     return res.status(200).json({ data: response });
 };
 
 export default handler;
+
+
+
