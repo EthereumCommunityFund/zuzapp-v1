@@ -105,7 +105,7 @@ export default function ScheduleItemCard() {
                       <span className="flex items-center p-1 gap-1 rounded-[10px] opacity-60 bg-[#FFFFFF10] white-space-nowrap overflow-hidden text-ellipsis">
                         <BiTimeFive size={30} />
                         <span className="ml-2 text-xs md:text-sm ">
-                          {toTurkeyTime(schedule?.start_time).format("H:mm")} -{" "}
+                          {schedule?.start_time} -{" "}
                           {toTurkeyTime(schedule?.end_time).format("H:mm")}
                         </span>
                       </span>
