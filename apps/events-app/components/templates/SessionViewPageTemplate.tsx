@@ -103,31 +103,42 @@ export default function SessionViewPageTemplate({
 
   const handleIsUpcoming = (newFilter: boolean) => {
     setIsLoading(true);
-
     // Extract track IDs from selectedTracks
     const selectedTrackIds = selectedTracks.map((item) => item.id);
-
     // Determine whether to filter for upcoming or past events
     const isUpcomingEvent = (schedule: ScheduleDetailstype) => {
-      // Convert start_date to a Date object
-      const eventDate = stringToDateObject(schedule.start_date);
+      console.log(schedule, "isUpcoming");
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
 
-      // Extract hours and minutes from the start_time string (HH:mm format)
-      const [hours, minutes] = schedule.start_time.split(":").map(Number);
+      const startDate = stringToDateObject(schedule.start_date);
+      const endDate = stringToDateObject(schedule.real_end_date);
 
-      // Adjust the eventDate using the extracted hours and minutes
-      eventDate.setHours(hours, minutes, 0, 0); // set the extracted hours and minutes, and reset seconds and milliseconds
+      // For non-recurring events:
+      if (
+        !schedule.schedule_frequency ||
+        schedule.schedule_frequency === "once"
+      ) {
+        const [hours, minutes] = schedule.start_time.split(":").map(Number);
+        startDate.setHours(hours, minutes, 0, 0);
 
-      // Get the timestamp for the combined start_date and start_time
-      const eventTimestamp = eventDate.getTime();
-
-      const todayStart = new Date();
-      todayStart.setHours(0, 0, 0, 0); // set the time to the start of the day
-      const todayStartTime = todayStart.getTime();
-
-      return newFilter
-        ? eventTimestamp >= todayStartTime
-        : eventTimestamp < todayStartTime;
+        return newFilter ? startDate >= today : startDate < today;
+      }
+      // For recurring events:
+      if (
+        schedule.schedule_frequency === "everyday" ||
+        schedule.schedule_frequency === "weekly"
+      ) {
+        if (newFilter) {
+          // Upcoming filter
+          return endDate >= today; // It's upcoming if the end date is today or in the future.
+        } else {
+          // Past filter
+          // It's past if the start date is before today, but it's also upcoming if end date hasn't passed yet.
+          // So, it will appear in both categories.
+          return startDate < today;
+        }
+      }
     };
 
     // Apply the upcoming/past filter
@@ -194,16 +205,20 @@ export default function SessionViewPageTemplate({
     };
   }, [lastTrackRef]);
 
-  const groupedSchedules: Record<string, ScheduleDetailstype[]> = {};
-
   // Function to convert "HH:mm" format to total minutes
   const timeToMinutes = (time: string) => {
     const [hours, minutes] = time.split(":").map(Number);
     return hours * 60 + minutes;
   };
+  console.log(filteredSchedules, "filtered schedules");
+
+  const groupedSchedules: Record<string, ScheduleDetailstype[]> = {};
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
 
   filteredSchedules.forEach((schedule) => {
-    let isFirstEvent = true; // Moved inside the forEach loop
+    let isFirstEvent = true;
 
     let date = stringToDateObject(schedule.start_date as string);
     const end_date = stringToDateObject(schedule.real_end_date as string);
@@ -216,15 +231,15 @@ export default function SessionViewPageTemplate({
         day: "numeric",
       });
 
-      if (!groupedSchedules[formattedDate]) {
-        groupedSchedules[formattedDate] = [];
-      }
-
       const newSchedule = {
         ...schedule,
         repeating:
           !isFirstEvent && (frequency === "everyday" || frequency === "weekly"),
       } as ScheduleDetailstype & { repeating: boolean };
+
+      if (!groupedSchedules[formattedDate]) {
+        groupedSchedules[formattedDate] = [];
+      }
 
       groupedSchedules[formattedDate].push(newSchedule);
 
@@ -236,13 +251,31 @@ export default function SessionViewPageTemplate({
         break;
       }
 
-      isFirstEvent = false; // After the first iteration, set this to false
+      isFirstEvent = false;
     } while (date <= end_date);
   });
 
+  // Now, let's categorize them into "past" and "upcoming"
+
+  const pastSchedules: Record<string, ScheduleDetailstype[]> = {};
+  const upcomingSchedules: Record<string, ScheduleDetailstype[]> = {};
+
+  for (const dateStr in groupedSchedules) {
+    const dateOfGroup = new Date(dateStr);
+
+    if (dateOfGroup < today) {
+      pastSchedules[dateStr] = groupedSchedules[dateStr];
+    } else {
+      upcomingSchedules[dateStr] = groupedSchedules[dateStr];
+    }
+  }
+
+  let chosenSchedules = isUpcoming ? upcomingSchedules : pastSchedules;
+  // Now, pastSchedules contains all the past events and upcomingSchedules contains the upcoming ones.
+
   // Now, sort the schedules within each group based on start_time
-  Object.keys(groupedSchedules).forEach((formattedDate) => {
-    groupedSchedules[formattedDate].sort((a, b) => {
+  Object.keys(chosenSchedules).forEach((formattedDate) => {
+    chosenSchedules[formattedDate].sort((a, b) => {
       const timeA = timeToMinutes(a.start_time);
       const timeB = timeToMinutes(b.start_time);
       return timeA - timeB;
@@ -250,15 +283,15 @@ export default function SessionViewPageTemplate({
   });
 
   // Now, sort the schedules within each group based on start_time
-  Object.keys(groupedSchedules).forEach((formattedDate) => {
-    groupedSchedules[formattedDate].sort((a, b) => {
+  Object.keys(chosenSchedules).forEach((formattedDate) => {
+    chosenSchedules[formattedDate].sort((a, b) => {
       const timeA = new Date(a.start_time).getTime();
       const timeB = new Date(b.start_time).getTime();
       return timeA - timeB;
     });
   });
 
-  // console.log(groupedSchedules);
+  console.log(chosenSchedules, "grouped schedules");
 
   return (
     <>
@@ -304,7 +337,7 @@ export default function SessionViewPageTemplate({
                 <div className="p-0 gap-[10px] flex flex-col overflow-hidden rounded-[10px] pb-36">
                   {schedules && eventSpace && (
                     <>
-                      {Object.keys(groupedSchedules).map((date, idx) => {
+                      {Object.keys(chosenSchedules).map((date, idx) => {
                         return (
                           <>
                             <div
