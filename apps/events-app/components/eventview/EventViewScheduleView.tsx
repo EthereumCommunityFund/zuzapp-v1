@@ -37,6 +37,7 @@ import { toast } from "@/components/ui/use-toast";
 import { deleteScheduleById } from "@/services/deleteSchedule";
 import { Label } from "../ui/label";
 import { toTurkeyTime } from "@/utils";
+import { VideoCamera } from "../ui/icons";
 
 interface IEventViewScheduleViewTemplate {
   event_space_id: string;
@@ -136,7 +137,7 @@ export default function EventViewScheduleViewTemplate({
   const editorUsername = mostRecentEditLog?.user?.username;
   const creatorUsername = currentSchedule?.editlogs[0]?.user?.username;
   const creatorId = currentSchedule?.editlogs[0]?.editor_id;
-  const [locatin, setLocation] = useState<string>("");
+  const [location, setLocation] = useState<string>("");
   useEffect(() => {
     if (currentSchedule) {
       if (currentSchedule.rsvp_amount === currentSchedule.current_rsvp_no) {
@@ -152,27 +153,6 @@ export default function EventViewScheduleViewTemplate({
     }
   }, [currentSchedule]);
 
-  const handleDeleteSchedule = async () => {
-    if (!scheduleId) return;
-
-    setIsLoading(true);
-    try {
-      await deleteScheduleById(scheduleId as string, event_space_id as string);
-      toast({
-        title: "session deleted successfully",
-      });
-      router.push({
-        pathname: `/dashboard/eventview/allschedules`,
-        query: {
-          event_space_id,
-        },
-      });
-    } catch (error) {
-      console.error("Error deleting the schedule", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
   useEffect(() => {
     checkIfUserHasRsvpd();
   }, []);
@@ -263,8 +243,9 @@ export default function EventViewScheduleViewTemplate({
               <Button
                 variant="primary"
                 size="lg"
-                className={`rounded-2xl justify-center ${rsvpUpdated ? "animate-rsvp" : ""
-                  }`}
+                className={`rounded-2xl justify-center ${
+                  rsvpUpdated ? "animate-rsvp" : ""
+                }`}
                 leftIcon={BsFillTicketFill}
                 onClick={handleRsvpAction}
                 disabled={
@@ -276,22 +257,66 @@ export default function EventViewScheduleViewTemplate({
                 {currentSchedule?.rsvp_amount === 0
                   ? "No Rsvp Available"
                   : hasRsvpd
-                    ? "Cancel RSVP"
-                    : isRsvpFullOnLoad
-                      ? "RSVP Full"
-                      : "RSVP Session"}
+                  ? "Cancel RSVP"
+                  : isRsvpFullOnLoad
+                  ? "RSVP Full"
+                  : "RSVP Session"}
               </Button>
             </div>
+
             {/* <Button variant="red" className="rounded-xl w-fit" onClick={handleDeleteSchedule}>
               Delete
             </Button> */}
-            {/* <div className="flex flex-col gap-2.5 px-5 pt-5 pb-[60px]">
-              <h2 className="font-bold">Location</h2>
-              <Label className="text-lg">{locatin}</Label>
-            </div> */}
+            <div className="flex flex-col gap-2.5 border-b border-t border-borderSecondary">
+              <div className=""></div>
+              <div className="flex flex-col gap-4 py-[15px] px-[13px] w-full">
+                <div className="flex gap-4 w-full justify-between">
+                  <div className="flex flex-col gap-1.5 w-full">
+                    <Label className="text-xl">
+                      Location Name | Stream Name
+                    </Label>
+                    <div className="flex gap-3">
+                      <Label className="text-white/50 text-xs">
+                        Date: 00.00.000
+                      </Label>
+                      <Label className="text-white/50 text-xs">
+                        via StreamEth
+                      </Label>
+                    </div>
+                  </div>
+                  <Label className="rounded-sm bg-[#F3966F20] px-2.5 py-1 text-[#F3966E]">
+                    Ended
+                  </Label>
+                  <Label className="rounded-sm bg-[#91F36F20] px-2.5 py-1 text-[#91F36E]">
+                    Live
+                  </Label>
+                </div>
+                <Button
+                  variant="quiet-SM"
+                  className="w-full rounded-full justify-center gap-2"
+                  leftIcon={VideoCamera}
+                >
+                  Watch Stream
+                </Button>
+              </div>
+            </div>
             <div className="flex flex-col gap-2.5 px-5 pt-5 pb-[60px] font-bold">
+              <>
+                <Label className="text-white lg:text-xl md:text-lg">
+                  Location
+                </Label>
+                <Label className="text-white text-sm">
+                  {currentSchedule?.live_stream_url}
+                  {currentSchedule?.format === "in-person" ? location : ``}
+                </Label>
+              </>
               {currentSchedule?.description && (
-                <RenderHTMLString htmlString={currentSchedule?.description} />
+                <>
+                  <Label className="text-white lg:text-xl md:text-lg">
+                    Description
+                  </Label>
+                  <RenderHTMLString htmlString={currentSchedule?.description} />
+                </>
               )}
             </div>
             <div className="flex gap-2.5 px-5 items-center">
