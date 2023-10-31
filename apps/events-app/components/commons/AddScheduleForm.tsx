@@ -852,7 +852,8 @@ export default function AddScheduleForm({
                         </div>
                       </div>
                       <div className="w-full" ref={sectionRefs[3]}>
-                        {selectedEventFormat === "in-person" && (
+                        {(form.getValues("format") === "in-person" ||
+                          selectedEventFormat === "new") && (
                           <>
                             <h2 className="text-2xl opacity-80">Location</h2>
                             <div className="flex flex-col items-start gap-5 self-stretch w-full pt-5">
@@ -906,8 +907,7 @@ export default function AddScheduleForm({
                             )}
                           />
                         </div> */}
-                          {(selectedEventFormat === "online" ||
-                            eventSpace?.format === "online") && (
+                          {form.getValues("format") === "online" && (
                             <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
                               <FormField
                                 control={form.control}
@@ -930,43 +930,6 @@ export default function AddScheduleForm({
                               />
                             </div>
                           )}
-                          {selectedEventFormat === "new" &&
-                            eventSpace?.format === "in-person" && (
-                              <>
-                                <h2 className="text-2xl opacity-80">
-                                  Location
-                                </h2>
-                                <div className="flex flex-col items-start gap-5 self-stretch w-full pt-5">
-                                  <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                                    <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                                      Select Location
-                                    </Label>
-                                    <select
-                                      onChange={(e) =>
-                                        setLocationId(e.target.value)
-                                      }
-                                      title="location"
-                                      value={locationId}
-                                      className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
-                                    >
-                                      {savedLocations.length === 0 && (
-                                        <option value="">
-                                          No saved locations
-                                        </option>
-                                      )}
-                                      {savedLocations?.map((location: any) => (
-                                        <option
-                                          key={location.id}
-                                          value={location.id}
-                                        >
-                                          {location.name}
-                                        </option>
-                                      ))}
-                                    </select>
-                                  </div>
-                                </div>
-                              </>
-                            )}
                         </div>
                       </div>
 
