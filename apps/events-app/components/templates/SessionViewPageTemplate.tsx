@@ -85,19 +85,44 @@ export default function SessionViewPageTemplate({
       event_space_id as string
     );
 
-    const filter: ScheduleDetailstype[] = response.filter((schedule) =>
-      isUpcoming
-        ? stringToDateObject(schedule.start_date).getTime() >=
-          new Date().setHours(0, 0, 0, 0)
-        : stringToDateObject(schedule.start_date).getTime() <
-          new Date().setHours(0, 0, 0, 0)
-    );
+    const isUpcomingEvent = (schedule: ScheduleDetailstype) => {
+      console.log(schedule, "isUpcoming");
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
 
-    setFilteredSchedules(filter);
+      const startDate = stringToDateObject(schedule.start_date);
+      const endDate = stringToDateObject(schedule.real_end_date);
 
-    setFilteredSchedules(filter);
+      // For non-recurring events:
+      if (
+        !schedule.schedule_frequency ||
+        schedule.schedule_frequency === "once"
+      ) {
+        const [hours, minutes] = schedule.start_time.split(":").map(Number);
+        startDate.setHours(hours, minutes, 0, 0);
 
+        return isUpcoming ? startDate >= today : startDate < today;
+      }
+      // For recurring events:
+      if (
+        schedule.schedule_frequency === "everyday" ||
+        schedule.schedule_frequency === "weekly"
+      ) {
+        if (isUpcoming) {
+          // Upcoming filter
+          return endDate >= today; // It's upcoming if the end date is today or in the future.
+        } else {
+          // Past filter
+          // It's past if the start date is before today, but it's also upcoming if end date hasn't passed yet.
+          // So, it will appear in both categories.
+          return startDate < today;
+        }
+      }
+    };
+
+    const filter: ScheduleDetailstype[] = response.filter(isUpcomingEvent);
     setSchedules(response);
+    setFilteredSchedules(filter);
     setIsLoading(false);
   };
 
