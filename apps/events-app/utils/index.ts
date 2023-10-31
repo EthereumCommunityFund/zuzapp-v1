@@ -95,7 +95,7 @@ export const sortGroupedSchedulesByStartTime = (groupedSchedules: Record<string,
 }
 
 
-export const sortSchedulesByStartTime = (schedules: ScheduleDetailstype[]): ScheduleDetailstype[] => {
+export const sortSchedulesByStartTime = (schedules: any): any => {
   if (!schedules) {
     return []
   }

@@ -255,7 +255,7 @@ export default function TrackDetailsPageTemplate(props: any) {
               {schedules && eventSpace && (
                 <>
                   {currentSchedules.map(
-                    (schedule, idx) =>
+                    (schedule: ScheduleDetailstype, idx: number) =>
                       schedule.track_id === trackItem?.id && (
                         <UserFacingTrack
                           key={idx}

@@ -85,7 +85,7 @@ export default function ScheduleItemCard() {
     <div className="w-full">
       {schedules && (
         <div className="flex flex-col gap-[10px] w-full">
-          {sortedSchedules.map((schedule) => (
+          {sortedSchedules.map((schedule: ScheduleDetailstype) => (
             <div className="flex flex-col items-center justify-between gap-[10px]">
               <div
                 onClick={() =>
