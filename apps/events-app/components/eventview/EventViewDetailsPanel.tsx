@@ -42,8 +42,8 @@ export default function EventViewDetailsPanel(props: IEventViewDetailsPanel) {
   const [imgUrls, setImgUrls] = useState<string[]>();
   const [locationName, setLocationName] = useState<string>();
   const [locationAddress, setLocationAddress] = useState<string>();
-  const organizers = allOrganizers.filter(organizer => organizer.role === 'organizer');
-  const speakers = allOrganizers.filter(organizer => organizer.role === 'speaker');
+  const organizers = allOrganizers.filter((organizer) => organizer.role === 'organizer');
+  const speakers = allOrganizers.filter((organizer) => organizer.role === 'speaker');
 
   useEffect(() => {
     if (social_links) setSocialLinks(JSON.parse(social_links));
@@ -65,7 +65,6 @@ export default function EventViewDetailsPanel(props: IEventViewDetailsPanel) {
       // setLocationAddress(eventSpace.eventspacelocation[0]);
     }
   }, [social_links, extra_links, eventSpace, imgUrls]);
-
 
   return (
     <div className="flex flex-col pt-5 pb-10 gap-5 md:min-w-[450px] lg:min-w-[25%] lg:px-0 sm:px-3">
@@ -113,9 +112,7 @@ export default function EventViewDetailsPanel(props: IEventViewDetailsPanel) {
                     <HiMicrophone className="text-2xl" />
                     <h2>Speakers</h2>
                   </div>
-                  <div className="flex flex-wrap gap-[6px] md:flex-row sm:flex-col">
-                    {speakers.map((organizer: OrganizerType) => organizer.role === 'speaker' && <Speaker title={organizer.name} />)}
-                  </div>
+                  <div className="flex flex-wrap gap-[6px] md:flex-row">{speakers.map((organizer: OrganizerType) => organizer.role === 'speaker' && <Speaker title={organizer.name} />)}</div>
                 </div>
               </div>
             )}
@@ -147,7 +144,7 @@ export default function EventViewDetailsPanel(props: IEventViewDetailsPanel) {
                   <Label className="text-sm font-light opacity-70">{locationAddress}</Label>
                 </div>
                 {/* {imgUrls && <Image width={260} height={148} src={imgUrls[0]} alt={''} className={`rounded-xl ${profile ? `blur-none` : `blur`} h-[148px]`} />} */}
-                {imgUrls && <Image src={imgUrls[0]} width={150} height={50} alt="No Images" className="h-[88px] rounded-lg" loading='lazy' />}
+                {imgUrls && <Image src={imgUrls[0]} width={150} height={50} alt="No Images" className="h-[88px] rounded-lg" loading="lazy" />}
               </div>
             )}
           </div>
