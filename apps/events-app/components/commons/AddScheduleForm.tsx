@@ -1,65 +1,47 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
 
-import Button from "@/components/ui/buttons/Button";
-import { HiArrowLeft, HiArrowRight } from "react-icons/hi";
-import DetailsBar from "@/components/detailsbar";
+import Button from '@/components/ui/buttons/Button';
+import { HiArrowLeft, HiArrowRight } from 'react-icons/hi';
+import DetailsBar from '@/components/detailsbar';
 
-import { CgClose } from "react-icons/cg";
-import { FaCircleArrowDown, FaCircleArrowUp } from "react-icons/fa6";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { useForm } from "react-hook-form";
-import { useEffect, useRef, useState } from "react";
-import FormTitle from "@/components/ui/labels/form-title";
-import InputFieldDark from "@/components/ui/inputFieldDark";
-import {
-  EventSpaceDetailsType,
-  InputFieldType,
-  LocationUpdateRequestBody,
-  TrackUpdateRequestBody,
-} from "@/types";
-import TextEditor from "@/components/ui/TextEditor";
-import { Label } from "@/components/ui/label";
-import SwitchButton from "@/components/ui/buttons/SwitchButton";
-import { GoXCircle } from "react-icons/go";
-import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
-import { Database } from "@/database.types";
-import CustomDatePicker from "@/components/ui/DatePicker";
-import { useRouter } from "next/router";
-import {
-  fetchLocationsByEventSpace,
-  createSchedule,
-  fetchAllTags,
-  fetchAllSpeakers,
-} from "@/controllers";
-import { useQuery, useMutation } from "react-query";
-import { fetchEventSpaceById } from "@/services/fetchEventSpaceDetails";
-import dayjs, { Dayjs } from "dayjs";
-import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { TimePicker } from "@mui/x-date-pickers/TimePicker";
+import { CgClose } from 'react-icons/cg';
+import { FaCircleArrowDown, FaCircleArrowUp } from 'react-icons/fa6';
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { useForm } from 'react-hook-form';
+import { useEffect, useRef, useState } from 'react';
+import FormTitle from '@/components/ui/labels/form-title';
+import InputFieldDark from '@/components/ui/inputFieldDark';
+import { EventSpaceDetailsType, InputFieldType, LocationUpdateRequestBody, TrackUpdateRequestBody } from '@/types';
+import TextEditor from '@/components/ui/TextEditor';
+import { Label } from '@/components/ui/label';
+import SwitchButton from '@/components/ui/buttons/SwitchButton';
+import { GoXCircle } from 'react-icons/go';
+import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
+import { Database } from '@/database.types';
+import CustomDatePicker from '@/components/ui/DatePicker';
+import { useRouter } from 'next/router';
+import { fetchLocationsByEventSpace, createSchedule, fetchAllTags, fetchAllSpeakers } from '@/controllers';
+import { useQuery, useMutation } from 'react-query';
+import { fetchEventSpaceById } from '@/services/fetchEventSpaceDetails';
+import dayjs, { Dayjs } from 'dayjs';
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 
-import TextField from "@mui/material/TextField";
-import Autocomplete from "@mui/material/Autocomplete";
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
 
-import { Loader } from "@/components/ui/Loader";
-import { toast } from "@/components/ui/use-toast";
-import { BsFillTicketFill } from "react-icons/bs";
-import { sessionNavBarDetails } from "@/constant/addschedulenavbar";
-import { sessionFrequency } from "@/constant/scheduleconstants";
-import { convertDateToString, fromTurkeyToUTC, toTurkeyTime } from "@/utils";
-import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { X } from "lucide-react";
+import { Loader } from '@/components/ui/Loader';
+import { toast } from '@/components/ui/use-toast';
+import { BsFillTicketFill } from 'react-icons/bs';
+import { sessionNavBarDetails } from '@/constant/addschedulenavbar';
+import { sessionFrequency } from '@/constant/scheduleconstants';
+import { convertDateToString, fromTurkeyToUTC, toTurkeyTime } from '@/utils';
+import * as DialogPrimitive from '@radix-ui/react-dialog';
+import { X } from 'lucide-react';
 
 dayjs.extend(isSameOrAfter);
 
@@ -81,14 +63,7 @@ interface IAddScheduleForm {
   updateIsLoading?: (newState: boolean) => void;
 }
 
-export default function AddScheduleForm({
-  isQuickAccess,
-  trackId,
-  event_space_id,
-  isFromEventView,
-  track_title,
-  updateIsLoading,
-}: IAddScheduleForm) {
+export default function AddScheduleForm({ isQuickAccess, trackId, event_space_id, isFromEventView, track_title, updateIsLoading }: IAddScheduleForm) {
   const router = useRouter();
   const { quickAccess } = router.query;
 
@@ -97,72 +72,66 @@ export default function AddScheduleForm({
   const [optionTags, setOptionTags] = useState<TagItemProp[]>([]);
   const [loading, setIsLoading] = useState<boolean>(false);
   const [tags, setTags] = useState<string[]>([]);
-  const [tagItem, setTagItem] = useState<TagItemProp>({ name: "" });
+  const [tagItem, setTagItem] = useState<TagItemProp>({ name: '' });
   const [eventItem, setEventItem] = useState({
-    name: "",
-    role: "speaker",
+    name: '',
+    role: 'speaker',
   });
   const [organizers, setOrganizers] = useState<any>([]);
-  const [frequency, setFrequency] = useState<"once" | "everyday" | "weekly">(
-    "once"
-  );
-  const [savedLocations, setSavedLocations] = useState<
-    LocationUpdateRequestBody[]
-  >([]);
-  const [locationId, setLocationId] = useState<string>("");
-  const [experienceLevel, setExperienceLevel] = useState<string>("");
-  const [eventCategory, setEventCategory] = useState<string>("");
+  const [frequency, setFrequency] = useState<'once' | 'everyday' | 'weekly'>('once');
+  const [savedLocations, setSavedLocations] = useState<LocationUpdateRequestBody[]>([]);
+  const [locationId, setLocationId] = useState<string>('');
+  const [experienceLevel, setExperienceLevel] = useState<string>('');
+  const [eventCategory, setEventCategory] = useState<string>('');
 
   const [rsvpAmount, setRsvpAmount] = useState<number>(1);
   const handleChangeSwitch = () => {
     setIsAllDay((prev) => !prev);
   };
-  const [startTime, setStartTime] = useState(dayjs().startOf("day"));
-  const [endTime, setEndTime] = useState(dayjs().endOf("day"));
+  const [startTime, setStartTime] = useState(dayjs().startOf('day'));
+  const [endTime, setEndTime] = useState(dayjs().endOf('day'));
   const [scheduleAdded, setScheduleAdded] = useState(false);
   const [isLimit, setIsLimit] = useState(false);
-  const [selectedTrackId, setSelectedTrackId] = useState<string>(
-    trackId as string
-  );
+  const [selectedTrackId, setSelectedTrackId] = useState<string>(trackId as string);
   const [optionalOrganizers, setOptionalOrganizers] = useState<any>([]);
-  const [selectedEventFormat, setSelectedEventFormat] = useState<string>("new");
+  const [selectedEventFormat, setSelectedEventFormat] = useState<string>('new');
 
   const formSchema = z.object({
     name: z.string().min(2, {
-      message: "Session name is required.",
+      message: 'Session name is required.',
     }),
-    format: z.enum(["in-person", "online"], {
-      required_error: "You need to select a format.",
+    format: z.enum(['in-person', 'online'], {
+      required_error: 'You need to select a format.',
     }),
     date: z
       .date({
-        required_error: "You need to select a valid date for this Session.",
-        invalid_type_error: "You need to select a valid date for this Session.",
+        required_error: 'You need to select a valid date for this Session.',
+        invalid_type_error: 'You need to select a valid date for this Session.',
       })
       .refine(
         (date) => {
           if (date) {
-            const today = dayjs();
+            const today = dayjs().startOf('day');
             const selectedDate = dayjs(date);
-            return selectedDate.isAfter(today, "day");
+            return selectedDate.isSameOrAfter(today);
           }
           return false;
         },
         {
-          message: "You cannot create a session in the past",
+          message: 'You need to select a date that is today or in the future.',
         }
       ),
     end_date: z
       .date({
-        required_error: "You need to select a valid date for this event.",
-        invalid_type_error: "You need to select a valid date for this event.",
+        required_error: 'You need to select a valid date for this event.',
+        invalid_type_error: 'You need to select a valid date for this event.',
       })
       .optional(),
     description: z.string().min(10, {
-      message: "Description is required and must be a minimum of 10 characters",
+      message: 'Description is required and must be a minimum of 10 characters',
     }),
-    video_call_link: z.string().optional().or(z.literal("")),
-    live_stream_url: z.string().optional().or(z.literal("")),
+    video_call_link: z.string().optional().or(z.literal('')),
+    live_stream_url: z.string().optional().or(z.literal('')),
   });
 
   const {
@@ -170,14 +139,14 @@ export default function AddScheduleForm({
     isLoading,
     isError,
   } = useQuery<EventSpaceDetailsType, Error>(
-    ["currentEventSpace", event_space_id], // Query key
+    ['currentEventSpace', event_space_id], // Query key
     () => fetchEventSpaceById(event_space_id as string), // Query function
     {
       enabled: !!event_space_id, // Only execute the query if event_space_id is available
     }
   );
 
-  const [eventType, setEventType] = useState("");
+  const [eventType, setEventType] = useState('');
 
   const handleLimitRSVP = () => {
     setIsLimit(!isLimit);
@@ -186,35 +155,32 @@ export default function AddScheduleForm({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
+      name: '',
       format: eventSpace?.format,
       date: undefined,
       end_date: undefined,
-      description: "",
-      video_call_link: "",
-      live_stream_url: "",
+      description: '',
+      video_call_link: '',
+      live_stream_url: '',
     },
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    if (
-      values.format !== "in-person" &&
-      (!values.live_stream_url || values.live_stream_url === "")
-    ) {
-      form.setError("live_stream_url", {
-        message: "Live stream link is required for online events",
+    if (values.format !== 'in-person' && (!values.live_stream_url || values.live_stream_url === '')) {
+      form.setError('live_stream_url', {
+        message: 'Live stream link is required for online events',
       });
       return;
     }
-    if (values.format === "in-person" && locationId === "") {
+    if (values.format === 'in-person' && locationId === '') {
       toast({
-        title: "Error",
-        description: "Location is required for in-person events",
-        variant: "destructive",
+        title: 'Error',
+        description: 'Location is required for in-person events',
+        variant: 'destructive',
       });
       return;
     }
-    if (frequency === "everyday" || frequency === "weekly") {
+    if (frequency === 'everyday' || frequency === 'weekly') {
       // const endDate = values.endate;
       // const startDate = values.date;
       // if (endDate.isBefore(startDate)) {
@@ -228,18 +194,8 @@ export default function AddScheduleForm({
       event_space_id: event_space_id as string,
       start_time: startTime as unknown as Date,
       end_time: endTime as unknown as Date,
-      event_type:
-        eventType.length > 0
-          ? [eventType]
-          : eventSpace?.event_type?.[0]
-          ? [eventSpace?.event_type[0]]
-          : [eventSpace?.event_type || "Meetup"],
-      experience_level:
-        experienceLevel.length > 0
-          ? [experienceLevel]
-          : eventSpace?.experience_level?.[0]
-          ? [eventSpace?.experience_level[0]]
-          : [eventSpace?.experience_level || "Beginner"],
+      event_type: eventType.length > 0 ? [eventType] : eventSpace?.event_type?.[0] ? [eventSpace?.event_type[0]] : [eventSpace?.event_type || 'Meetup'],
+      experience_level: experienceLevel.length > 0 ? [experienceLevel] : eventSpace?.experience_level?.[0] ? [eventSpace?.experience_level[0]] : [eventSpace?.experience_level || 'Beginner'],
       tags: tags,
       schedule_frequency: frequency,
       organizers,
@@ -247,66 +203,47 @@ export default function AddScheduleForm({
       limit_rsvp: isLimit,
       date: convertDateToString(values.date as Date),
       end_date: convertDateToString(values.end_date as Date),
-      ...(eventSpace?.event_space_type === "tracks" && {
+      ...(eventSpace?.event_space_type === 'tracks' && {
         track_id: selectedTrackId ? selectedTrackId : (trackId as string),
       }),
       ...(isLimit ? { rsvp_amount: rsvpAmount } : {}),
     };
 
-    const additionalPayload = locationId
-      ? { ...basePayload, location_id: locationId }
-      : basePayload;
+    const additionalPayload = locationId ? { ...basePayload, location_id: locationId } : basePayload;
 
     const payload = {
       ...values,
       ...additionalPayload,
-      video_call_link:
-        values.video_call_link === ""
-          ? "https://youtube.com"
-          : values.video_call_link,
-      live_stream_url:
-        values.live_stream_url === ""
-          ? "https://youtube.com"
-          : values.live_stream_url,
+      video_call_link: values.video_call_link === '' ? 'https://youtube.com' : values.video_call_link,
+      live_stream_url: values.live_stream_url === '' ? 'https://youtube.com' : values.live_stream_url,
     };
-    console.log("payload in addschedule:", payload);
+    console.log('payload in addschedule:', payload);
     setIsLoading(true);
     try {
-      const result = await createSchedule(
-        payload as any,
-        event_space_id as string
-      );
+      const result = await createSchedule(payload as any, event_space_id as string);
       setScheduleAdded(true);
       toast({
-        title: "Session created successfully",
+        title: 'Session created successfully',
       });
     } catch (error: any) {
       console.log(error);
       toast({
-        title: "Error",
+        title: 'Error',
         description: error?.response.data?.error,
-        variant: "destructive",
+        variant: 'destructive',
       });
     } finally {
       setIsLoading(false);
     }
   }
 
-  const sectionRefs = [
-    useRef(null),
-    useRef(null),
-    useRef(null),
-    useRef(null),
-    useRef(null),
-    useRef(null),
-    useRef(null),
-  ];
+  const sectionRefs = [useRef(null), useRef(null), useRef(null), useRef(null), useRef(null), useRef(null), useRef(null)];
 
   const scrollToRef = (ref: React.RefObject<HTMLDivElement>) => {
     if (ref.current) {
       window.scrollTo({
         top: ref.current.offsetTop,
-        behavior: "smooth",
+        behavior: 'smooth',
       });
     }
   };
@@ -321,10 +258,7 @@ export default function AddScheduleForm({
   };
 
   const handleRemoveOrganizer = (index: number) => {
-    const updatedItems = [
-      ...organizers.slice(0, index),
-      ...organizers.slice(index + 1),
-    ];
+    const updatedItems = [...organizers.slice(0, index), ...organizers.slice(index + 1)];
     setOrganizers(updatedItems);
   };
 
@@ -352,9 +286,7 @@ export default function AddScheduleForm({
   useEffect(() => {
     const fetchLocationDetails = async () => {
       try {
-        const result = await fetchLocationsByEventSpace(
-          event_space_id as string
-        );
+        const result = await fetchLocationsByEventSpace(event_space_id as string);
         setSavedLocations(result?.data?.data);
         setLocationId(result.data.data[0].id);
       } catch (error) {
@@ -391,9 +323,9 @@ export default function AddScheduleForm({
     const firstError = Object.values(form.formState.errors)[0];
     if (firstError) {
       toast({
-        title: "Error",
+        title: 'Error',
         description: firstError?.message,
-        variant: "destructive",
+        variant: 'destructive',
       });
     }
   }, [form.formState.errors]);
@@ -402,16 +334,14 @@ export default function AddScheduleForm({
     updateIsLoading && updateIsLoading(true);
     try {
       router.push({
-        pathname: router.pathname.startsWith(`/dashboard/eventview/about`)
-          ? `/dashboard/eventview/allschedules`
-          : router.pathname,
+        pathname: router.pathname.startsWith(`/dashboard/eventview/about`) ? `/dashboard/eventview/allschedules` : router.pathname,
         query: {
           event_space_id: event_space_id,
           trackId: trackId,
         },
       });
     } catch (error) {
-      console.error("Error redirecting schedulelists", error);
+      console.error('Error redirecting schedulelists', error);
     }
   };
 
@@ -426,7 +356,7 @@ export default function AddScheduleForm({
         },
       });
     } catch (error) {
-      console.error("Error fetching space details", error);
+      console.error('Error fetching space details', error);
     }
   };
 
@@ -435,11 +365,7 @@ export default function AddScheduleForm({
   }
 
   return (
-    <div
-      className={`flex items-start gap-[60px] ${
-        !isFromEventView ? `md:px-10 px-2.5 py-5` : ``
-      }  w-full`}
-    >
+    <div className={`flex items-start gap-[60px] ${!isFromEventView ? `md:px-10 px-2.5 py-5` : ``}  w-full`}>
       {!isFromEventView && (
         <div className="lg:flex hidden flex-col pt-3 rounded-s-xl opacity-70 w-[300px] gap-5 fixed">
           <div className="flex gap-[10px] pl-3 items-center font-semibold text-2xl">
@@ -448,28 +374,16 @@ export default function AddScheduleForm({
           <div className="flex flex-col gap-3 text-xl">
             {sessionNavBarDetails.map((item, index) => {
               return (
-                <div
-                  key={index}
-                  className="rounded-xl flex flex-col py-2 gap-1 hover:cursor-pointer w-[230px] hover:bg-[#292929] duration-200"
-                  onClick={() => scrollToRef(sectionRefs[index])}
-                >
-                  <h2 className="px-3.5 hover: cursor-pointer font-semibold">
-                    {item.name}
-                  </h2>
-                  <h3 className="px-3.5 hover: cursor-pointer text-xs font-light opacity-60">
-                    {item.name}
-                  </h3>
+                <div key={index} className="rounded-xl flex flex-col py-2 gap-1 hover:cursor-pointer w-[230px] hover:bg-[#292929] duration-200" onClick={() => scrollToRef(sectionRefs[index])}>
+                  <h2 className="px-3.5 hover: cursor-pointer font-semibold">{item.name}</h2>
+                  <h3 className="px-3.5 hover: cursor-pointer text-xs font-light opacity-60">{item.name}</h3>
                 </div>
               );
             })}
           </div>
         </div>
       )}
-      <div
-        className={`flex flex-col items-start gap-[17px] ${
-          !isFromEventView ? `lg:ml-[300px]` : ``
-        } w-full`}
-      >
+      <div className={`flex flex-col items-start gap-[17px] ${!isFromEventView ? `lg:ml-[300px]` : ``} w-full`}>
         {!isFromEventView ? (
           <div className="flex items-center gap-[17px]">
             <Button
@@ -482,50 +396,28 @@ export default function AddScheduleForm({
             </Button>
             <div className="flex flex-col gap-[10px]">
               {isQuickAccess || quickAccess ? (
-                <span className="text-lg items-start font-semibold opacity-70">
-                  You are adding a session in quick access
-                </span>
+                <span className="text-lg items-start font-semibold opacity-70">You are adding a session in quick access</span>
               ) : (
-                <span className="text-2xl items-start font-bold">
-                  {track_title}
-                </span>
+                <span className="text-2xl items-start font-bold">{track_title}</span>
               )}
             </div>
           </div>
         ) : (
           <></>
         )}
-        <div
-          className={`flex ${
-            !isFromEventView
-              ? `py-5 px-4 border-borderPrimary bg-componentPrimary border`
-              : ``
-          }  flex-col items-center gap-8 rounded-2xl text-white w-full`}
-        >
+        <div className={`flex ${!isFromEventView ? `py-5 px-4 border-borderPrimary bg-componentPrimary border` : ``}  flex-col items-center gap-8 rounded-2xl text-white w-full`}>
           <div className="flex flex-col items-center gap-[34px] w-full">
             <div className="flex flex-col py-5 items-center gap-[10px] w-full">
               {scheduleAdded ? (
                 <div className="flex flex-col items-center">
-                  <h3 className="font-bold text-xl">
-                    Your Session Has Been Added
-                  </h3>
+                  <h3 className="font-bold text-xl">Your Session Has Been Added</h3>
                   <Button
-                    onClick={
-                      isFromEventView
-                        ? handleEnterEventViewSessions
-                        : handleEnterSessions
-                    }
+                    onClick={isFromEventView ? handleEnterEventViewSessions : handleEnterSessions}
                     variant="primary"
                     className="mt-8 bg-[#67DBFF]/20 text-[#67DBFF] rounded-full"
                     leftIcon={HiArrowRight}
                   >
-                    {isFromEventView ? (
-                      <DialogPrimitive.Close>
-                        Go to Sessions
-                      </DialogPrimitive.Close>
-                    ) : (
-                      `Go to Sessions`
-                    )}
+                    {isFromEventView ? <DialogPrimitive.Close>Go to Sessions</DialogPrimitive.Close> : `Go to Sessions`}
                   </Button>
                 </div>
               ) : (
@@ -541,44 +433,26 @@ export default function AddScheduleForm({
                     )}
                   </div>
                   <Form {...form}>
-                    <form
-                      onSubmit={form.handleSubmit(onSubmitWithEnter)}
-                      className="space-y-10 w-full"
-                    >
+                    <form onSubmit={form.handleSubmit(onSubmitWithEnter)} className="space-y-10 w-full">
                       {eventSpace?.format && (
                         <FormField
                           control={form.control}
                           name="format"
                           render={({ field }) => (
                             <FormItem className="space-y-3">
-                              <FormLabel
-                                className="text-2xl opacity-80"
-                                ref={sectionRefs[0]}
-                              >
+                              <FormLabel className="text-2xl opacity-80" ref={sectionRefs[0]}>
                                 Session Format
                               </FormLabel>
-                              <FormDescription>
-                                The format has been inherited from the event
-                                space.
-                              </FormDescription>
+                              <FormDescription>The format has been inherited from the event space.</FormDescription>
                               <FormControl>
-                                <RadioGroup
-                                  onValueChange={(value) => (
-                                    field.onChange(value),
-                                    handleEventFormatChange(value)
-                                  )}
-                                  defaultValue={eventSpace?.format}
-                                  className="flex flex-col md:flex-row"
-                                >
+                                <RadioGroup onValueChange={(value) => (field.onChange(value), handleEventFormatChange(value))} defaultValue={eventSpace?.format} className="flex flex-col md:flex-row">
                                   <FormItem className="flex items-center space-x-3 space-y-0 p-3 hover:bg-btnPrimaryGreen/20 rounded-md focus:bg-btnPrimaryGreen/20">
                                     <FormControl>
                                       <RadioGroupItem value="in-person" />
                                     </FormControl>
                                     <FormLabel className="font-semibold text-white/60 text-base">
                                       In-Person
-                                      <span className="text-xs block">
-                                        This is a physical event
-                                      </span>
+                                      <span className="text-xs block">This is a physical event</span>
                                     </FormLabel>
                                   </FormItem>
                                   <FormItem className="flex items-center space-x-3 space-y-0 p-3 hover:bg-btnPrimaryGreen/20 rounded-md">
@@ -587,9 +461,7 @@ export default function AddScheduleForm({
                                     </FormControl>
                                     <FormLabel className="font-semibold text-white/60 text-base ">
                                       Online
-                                      <span className="text-xs block">
-                                        Specifically Online Event
-                                      </span>
+                                      <span className="text-xs block">Specifically Online Event</span>
                                     </FormLabel>
                                   </FormItem>
                                 </RadioGroup>
@@ -604,15 +476,9 @@ export default function AddScheduleForm({
                         name="name"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                              Session Name{" "}
-                            </FormLabel>
+                            <FormLabel className="text-lg font-semibold leading-[1.2] text-white self-stretch">Session Name </FormLabel>
                             <FormControl>
-                              <InputFieldDark
-                                type={InputFieldType.Primary}
-                                placeholder={"Enter a name for your event"}
-                                {...field}
-                              />
+                              <InputFieldDark type={InputFieldType.Primary} placeholder={'Enter a name for your event'} {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -621,9 +487,7 @@ export default function AddScheduleForm({
                       {isQuickAccess ||
                         (quickAccess && (
                           <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                            <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                              Select Track
-                            </Label>
+                            <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select Track</Label>
                             <select
                               onChange={handleTrackSelect}
                               title="Track List"
@@ -648,13 +512,8 @@ export default function AddScheduleForm({
                             <FormItem ref={sectionRefs[1]}>
                               <FormControl>
                                 <div className="flex flex-col gap-[10px]">
-                                  <Label className="text-2xl opacity-80">
-                                    Session Description
-                                  </Label>
-                                  <TextEditor
-                                    value={field.value}
-                                    onChange={field.onChange}
-                                  />
+                                  <Label className="text-2xl opacity-80">Session Description</Label>
+                                  <TextEditor value={field.value} onChange={field.onChange} />
                                 </div>
                               </FormControl>
                               <FormMessage />
@@ -663,45 +522,27 @@ export default function AddScheduleForm({
                         />
                       </div>
                       <div className="w-full" ref={sectionRefs[2]}>
-                        <Label className="text-2xl opacity-80">
-                          Session Date & Times
-                        </Label>
+                        <Label className="text-2xl opacity-80">Session Date & Times</Label>
                         <div className="flex flex-col items-start gap-5 self-stretch w-full pt-5">
                           <div className="flex gap-5">
-                            <SwitchButton
-                              value={isAllDay}
-                              onClick={handleChangeSwitch}
-                            />
-                            <span className="text-lg opacity-70 self-stretch">
-                              All Day
-                            </span>
+                            <SwitchButton value={isAllDay} onClick={handleChangeSwitch} />
+                            <span className="text-lg opacity-70 self-stretch">All Day</span>
                           </div>
                           <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                            <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                              Select Session Frequency
-                            </Label>
+                            <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select Session Frequency</Label>
                             <select
                               onChange={handleFrequencySelect}
                               value={frequency}
                               className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
                               title="frequency"
                             >
-                              <option
-                                className="bg-componentPrimary origin-top-right rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
-                                value="once"
-                              >
+                              <option className="bg-componentPrimary origin-top-right rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" value="once">
                                 Once
                               </option>
-                              <option
-                                className="bg-componentPrimary origin-top-right rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
-                                value="everyday"
-                              >
+                              <option className="bg-componentPrimary origin-top-right rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" value="everyday">
                                 Everyday
                               </option>
-                              <option
-                                className="bg-componentPrimary origin-top-right rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
-                                value="weekly"
-                              >
+                              <option className="bg-componentPrimary origin-top-right rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" value="weekly">
                                 Weekly
                               </option>
                             </select>
@@ -712,29 +553,18 @@ export default function AddScheduleForm({
                               name="date"
                               render={({ field }) => (
                                 <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                                  <span className="text-lg opacity-70 self-stretch">
-                                    Start Date
-                                  </span>
+                                  <span className="text-lg opacity-70 self-stretch">Start Date</span>
 
-                                  <CustomDatePicker
-                                    defaultDate={undefined}
-                                    selectedDate={field.value}
-                                    handleDateChange={field.onChange}
-                                    {...field}
-                                  />
+                                  <CustomDatePicker defaultDate={undefined} selectedDate={field.value} handleDateChange={field.onChange} {...field} />
 
-                                  <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">
-                                    Click & Select or type in a date
-                                  </h3>
+                                  <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">Click & Select or type in a date</h3>
                                   <FormMessage />
                                 </div>
                               )}
                             />
                             {!isAllDay && (
                               <>
-                                <LocalizationProvider
-                                  dateAdapter={AdapterDayjs}
-                                >
+                                <LocalizationProvider dateAdapter={AdapterDayjs}>
                                   <div className="flex justify-between gap-10 text-white w-full">
                                     <TimePicker
                                       label="Start Time"
@@ -746,26 +576,26 @@ export default function AddScheduleForm({
                                       }}
                                       sx={{
                                         input: {
-                                          color: "white",
+                                          color: 'white',
                                         },
                                         label: {
-                                          color: "white",
+                                          color: 'white',
                                         },
                                         svg: {
-                                          color: "white", // change the icon color
+                                          color: 'white', // change the icon color
                                         },
-                                        backgroundColor: "#242727",
-                                        color: "white",
-                                        borderRadius: "8px",
-                                        width: "100%",
+                                        backgroundColor: '#242727',
+                                        color: 'white',
+                                        borderRadius: '8px',
+                                        width: '100%',
                                         // borderColor: "white",
                                         // borderWidth: "1px",
-                                        border: "1px solid #1A1A1A",
+                                        border: '1px solid #1A1A1A',
                                       }}
                                       slotProps={{
                                         popper: {
                                           sx: {
-                                            pointerEvents: "auto",
+                                            pointerEvents: 'auto',
                                           },
                                         },
                                       }}
@@ -780,66 +610,51 @@ export default function AddScheduleForm({
                                       }}
                                       sx={{
                                         input: {
-                                          color: "white",
+                                          color: 'white',
                                         },
                                         label: {
-                                          color: "white",
+                                          color: 'white',
                                         },
                                         svg: {
-                                          color: "white", // change the icon color
+                                          color: 'white', // change the icon color
                                         },
-                                        backgroundColor: "#242727",
-                                        color: "white",
-                                        borderRadius: "8px",
-                                        width: "100%",
+                                        backgroundColor: '#242727',
+                                        color: 'white',
+                                        borderRadius: '8px',
+                                        width: '100%',
                                         // borderColor: "white",
                                         // borderWidth: "1px",
-                                        border: "1px solid #1A1A1A",
+                                        border: '1px solid #1A1A1A',
                                       }}
                                       slotProps={{
                                         popper: {
                                           sx: {
-                                            pointerEvents: "auto",
+                                            pointerEvents: 'auto',
                                           },
                                         },
                                       }}
                                     />
                                   </div>
                                   <div className="w-full flex flex-col gap-2">
-                                    <Label className="text-[#FFDD87] md:text-base sm:text-sm">
-                                      Times here will temporarily only be set to
-                                      the Istanbul timezone
-                                    </Label>
-                                    <Label className="md:text-sm sm:text-xs">
-                                      (Dynamic timezones will be added soon)
-                                    </Label>
+                                    <Label className="text-[#FFDD87] md:text-base sm:text-sm">Times here will temporarily only be set to the Istanbul timezone</Label>
+                                    <Label className="md:text-sm sm:text-xs">(Dynamic timezones will be added soon)</Label>
                                   </div>
                                 </LocalizationProvider>
                               </>
                             )}
                           </div>
-                          {(frequency === sessionFrequency.WEEKLY ||
-                            frequency === sessionFrequency.EVERYDAY) && (
+                          {(frequency === sessionFrequency.WEEKLY || frequency === sessionFrequency.EVERYDAY) && (
                             <div className="flex flex-col items-center gap-[30px] self-stretch w-full">
                               <FormField
                                 control={form.control}
                                 name="end_date"
                                 render={({ field }) => (
                                   <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                                    <span className="text-lg opacity-70 self-stretch">
-                                      End Date
-                                    </span>
+                                    <span className="text-lg opacity-70 self-stretch">End Date</span>
 
-                                    <CustomDatePicker
-                                      defaultDate={undefined}
-                                      selectedDate={field.value || null}
-                                      handleDateChange={field.onChange}
-                                      {...field}
-                                    />
+                                    <CustomDatePicker defaultDate={undefined} selectedDate={field.value || null} handleDateChange={field.onChange} {...field} />
 
-                                    <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">
-                                      Click & Select or type in a date
-                                    </h3>
+                                    <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">Click & Select or type in a date</h3>
                                     <FormMessage />
                                   </div>
                                 )}
@@ -850,30 +665,21 @@ export default function AddScheduleForm({
                         </div>
                       </div>
                       <div className="w-full" ref={sectionRefs[3]}>
-                        {selectedEventFormat === "in-person" && (
+                        {selectedEventFormat === 'in-person' && (
                           <>
                             <h2 className="text-2xl opacity-80">Location</h2>
                             <div className="flex flex-col items-start gap-5 self-stretch w-full pt-5">
                               <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                                <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                                  Select Location
-                                </Label>
+                                <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select Location</Label>
                                 <select
-                                  onChange={(e) =>
-                                    setLocationId(e.target.value)
-                                  }
+                                  onChange={(e) => setLocationId(e.target.value)}
                                   title="location"
                                   value={locationId}
                                   className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
                                 >
-                                  {savedLocations.length === 0 && (
-                                    <option value="">No saved locations</option>
-                                  )}
+                                  {savedLocations.length === 0 && <option value="">No saved locations</option>}
                                   {savedLocations?.map((location: any) => (
-                                    <option
-                                      key={location.id}
-                                      value={location.id}
-                                    >
+                                    <option key={location.id} value={location.id}>
                                       {location.name}
                                     </option>
                                   ))}
@@ -904,23 +710,16 @@ export default function AddScheduleForm({
                             )}
                           />
                         </div> */}
-                          {(selectedEventFormat === "online" ||
-                            eventSpace?.format === "online") && (
+                          {(selectedEventFormat === 'online' || eventSpace?.format === 'online') && (
                             <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
                               <FormField
                                 control={form.control}
                                 name="live_stream_url"
                                 render={({ field }) => (
                                   <FormItem>
-                                    <FormLabel className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                                      Live Stream Link
-                                    </FormLabel>
+                                    <FormLabel className="text-lg font-semibold leading-[1.2] text-white self-stretch">Live Stream Link</FormLabel>
                                     <FormControl>
-                                      <InputFieldDark
-                                        type={InputFieldType.Link}
-                                        placeholder={"Type URL"}
-                                        {...field}
-                                      />
+                                      <InputFieldDark type={InputFieldType.Link} placeholder={'Type URL'} {...field} />
                                     </FormControl>
                                     <FormMessage />
                                   </FormItem>
@@ -928,62 +727,44 @@ export default function AddScheduleForm({
                               />
                             </div>
                           )}
-                          {selectedEventFormat === "new" &&
-                            eventSpace?.format === "in-person" && (
-                              <>
-                                <h2 className="text-2xl opacity-80">
-                                  Location
-                                </h2>
-                                <div className="flex flex-col items-start gap-5 self-stretch w-full pt-5">
-                                  <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                                    <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                                      Select Location
-                                    </Label>
-                                    <select
-                                      onChange={(e) =>
-                                        setLocationId(e.target.value)
-                                      }
-                                      title="location"
-                                      value={locationId}
-                                      className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
-                                    >
-                                      {savedLocations.length === 0 && (
-                                        <option value="">
-                                          No saved locations
-                                        </option>
-                                      )}
-                                      {savedLocations?.map((location: any) => (
-                                        <option
-                                          key={location.id}
-                                          value={location.id}
-                                        >
-                                          {location.name}
-                                        </option>
-                                      ))}
-                                    </select>
-                                  </div>
+                          {selectedEventFormat === 'new' && eventSpace?.format === 'in-person' && (
+                            <>
+                              <h2 className="text-2xl opacity-80">Location</h2>
+                              <div className="flex flex-col items-start gap-5 self-stretch w-full pt-5">
+                                <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
+                                  <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select Location</Label>
+                                  <select
+                                    onChange={(e) => setLocationId(e.target.value)}
+                                    title="location"
+                                    value={locationId}
+                                    className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
+                                  >
+                                    {savedLocations.length === 0 && <option value="">No saved locations</option>}
+                                    {savedLocations?.map((location: any) => (
+                                      <option key={location.id} value={location.id}>
+                                        {location.name}
+                                      </option>
+                                    ))}
+                                  </select>
                                 </div>
-                              </>
-                            )}
+                              </div>
+                            </>
+                          )}
                         </div>
                       </div>
 
                       <div className="w-full" ref={sectionRefs[4]}>
-                        <Label className="text-2xl opacity-80 font-semibold">
-                          Roles
-                        </Label>
+                        <Label className="text-2xl opacity-80 font-semibold">Roles</Label>
                         <div className="flex flex-col gap-6 items-start pt-5">
                           <div className="flex flex-col gap-6 w-full">
                             <div className="flex items-end gap-6 self-stretch">
                               <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                                <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                                  Enter Name
-                                </h2>
+                                <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">Enter Name</h2>
                                 <div className="flex w-full text-white outline-none rounded-lg pr-3 pl-2.5 bg-inputField gap-2.5 border border-white/10 border-opacity-10 items-center">
                                   <Autocomplete
                                     {...defaultSpeakers}
                                     id="controlled-demo"
-                                    sx={{ color: "black", width: "100%" }}
+                                    sx={{ color: 'black', width: '100%' }}
                                     color="black"
                                     value={eventItem}
                                     onChange={(event: any, newValue) => {
@@ -1004,21 +785,21 @@ export default function AddScheduleForm({
                                     slotProps={{
                                       paper: {
                                         sx: {
-                                          color: "white",
-                                          backgroundColor: "#242727",
-                                          pointerEvents: "auto",
+                                          color: 'white',
+                                          backgroundColor: '#242727',
+                                          pointerEvents: 'auto',
                                         },
                                       },
                                     }}
                                     renderInput={(params) => (
                                       <TextField
                                         sx={{
-                                          color: "white",
+                                          color: 'white',
                                           input: {
-                                            color: "white",
+                                            color: 'white',
                                           },
                                           label: {
-                                            color: "white",
+                                            color: 'white',
                                           },
                                         }}
                                         {...params}
@@ -1041,9 +822,7 @@ export default function AddScheduleForm({
                               /> */}
                               </div>
                               <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                                <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                                  Select Role
-                                </h2>
+                                <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select Role</h2>
                                 <select
                                   onChange={(e) =>
                                     setEventItem({
@@ -1057,18 +836,16 @@ export default function AddScheduleForm({
                                 >
                                   <option value="organizer">Organizer</option>
                                   <option value="speaker">Speaker</option>
-                                  <option value="facilitator">
-                                    Facilitator
-                                  </option>
+                                  <option value="facilitator">Facilitator</option>
                                 </select>
                               </div>
                             </div>
                             <Button
                               type="button"
                               onClick={() => {
-                                if (eventItem.name === "") return;
+                                if (eventItem.name === '') return;
                                 setOrganizers([...organizers, eventItem]);
-                                setEventItem({ name: "", role: "speaker" });
+                                setEventItem({ name: '', role: 'speaker' });
                               }}
                               variant="quiet"
                               className="flex gap-2.5 w-full text-base font-semibold text-white items-center rounded-full py-1 justify-center duration-200"
@@ -1078,54 +855,29 @@ export default function AddScheduleForm({
                             </Button>
 
                             <div className="flex flex-wrap gap-2.5">
-                              {organizers?.map(
-                                (organizer: any, index: number) => (
-                                  <div
-                                    key={index}
-                                    className="flex gap-2.5 items-center rounded-[8px] px-2 py-1.5 bg-white bg-opacity-10"
-                                  >
-                                    <button
-                                      type="button"
-                                      className="flex gap-2.5 items-center"
-                                    >
-                                      <GoXCircle
-                                        onClick={() =>
-                                          handleRemoveOrganizer(index)
-                                        }
-                                        className="top-0.5 left-0.5 w-4 h-4"
-                                      />
-                                      <span className="lg:text-lg sm:text-sm font-semibold text-white">
-                                        {organizer.name}
-                                      </span>
-                                    </button>
-                                  </div>
-                                )
-                              )}
+                              {organizers?.map((organizer: any, index: number) => (
+                                <div key={index} className="flex gap-2.5 items-center rounded-[8px] px-2 py-1.5 bg-white bg-opacity-10">
+                                  <button type="button" className="flex gap-2.5 items-center">
+                                    <GoXCircle onClick={() => handleRemoveOrganizer(index)} className="top-0.5 left-0.5 w-4 h-4" />
+                                    <span className="lg:text-lg sm:text-sm font-semibold text-white">{organizer.name}</span>
+                                  </button>
+                                </div>
+                              ))}
                             </div>
                           </div>
                         </div>
                       </div>
-                      <div
-                        className="w-full flex flex-col gap-6"
-                        ref={sectionRefs[5]}
-                      >
-                        <Label className="text-2xl opacity-80 font-bold">
-                          Session Labels
-                        </Label>
+                      <div className="w-full flex flex-col gap-6" ref={sectionRefs[5]}>
+                        <Label className="text-2xl opacity-80 font-bold">Session Labels</Label>
                         <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                          <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                            Select Event Category
-                          </Label>
+                          <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select Event Category</Label>
                           <select
                             onChange={(e) => setEventCategory(e.target.value)}
                             value={eventCategory}
                             title="category"
                             className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
                           >
-                            {eventSpace?.event_type?.length === 0 ||
-                              (eventSpace?.event_type === null && (
-                                <option value="">No saved categories</option>
-                              ))}
+                            {eventSpace?.event_type?.length === 0 || (eventSpace?.event_type === null && <option value="">No saved categories</option>)}
                             {eventSpace?.event_type?.map((category) => (
                               <option key={category} value={category}>
                                 {category}
@@ -1134,9 +886,7 @@ export default function AddScheduleForm({
                           </select>
                         </div>
                         <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                          <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                            Select Experience Level
-                          </Label>
+                          <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select Experience Level</Label>
                           {/* <InputFieldDark type={InputFieldType.Option} placeholder={'Beginner'} /> */}
 
                           <select
@@ -1145,12 +895,7 @@ export default function AddScheduleForm({
                             title="category"
                             className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
                           >
-                            {eventSpace?.experience_level?.length === 0 ||
-                              (eventSpace?.experience_level === null && (
-                                <option value="">
-                                  No saved experience levels
-                                </option>
-                              ))}
+                            {eventSpace?.experience_level?.length === 0 || (eventSpace?.experience_level === null && <option value="">No saved experience levels</option>)}
                             {eventSpace?.experience_level?.map((category) => (
                               <option key={category} value={category}>
                                 {category}
@@ -1160,14 +905,12 @@ export default function AddScheduleForm({
                         </div>
                         <div className="flex flex-col items-start gap-6">
                           <div className="flex flex-col gap-[14px] items-start w-full">
-                            <Label className="text-lg font-semibold text-white self-stretch">
-                              Add Tags
-                            </Label>
+                            <Label className="text-lg font-semibold text-white self-stretch">Add Tags</Label>
                             <div className="flex w-full text-white outline-none rounded-lg pr-3 pl-2.5 bg-inputField gap-2.5 border border-white/10 border-opacity-10 items-center">
                               <Autocomplete
                                 {...defaultProps}
                                 id="controlled-demo"
-                                sx={{ color: "black", width: "100%" }}
+                                sx={{ color: 'black', width: '100%' }}
                                 color="black"
                                 value={tagItem}
                                 onChange={(event: any, newValue) => {
@@ -1181,21 +924,21 @@ export default function AddScheduleForm({
                                 slotProps={{
                                   paper: {
                                     sx: {
-                                      color: "white",
-                                      backgroundColor: "#242727",
-                                      pointerEvents: "auto",
+                                      color: 'white',
+                                      backgroundColor: '#242727',
+                                      pointerEvents: 'auto',
                                     },
                                   },
                                 }}
                                 renderInput={(params) => (
                                   <TextField
                                     sx={{
-                                      color: "white",
+                                      color: 'white',
                                       input: {
-                                        color: "white",
+                                        color: 'white',
                                       },
                                       label: {
-                                        color: "white",
+                                        color: 'white',
                                       },
                                     }}
                                     {...params}
@@ -1207,9 +950,9 @@ export default function AddScheduleForm({
                               <button
                                 type="button"
                                 onClick={() => {
-                                  if (tagItem.name === "") return;
+                                  if (tagItem.name === '') return;
                                   setTags([...tags, tagItem.name]);
-                                  setTagItem({ name: "" });
+                                  setTagItem({ name: '' });
                                 }}
                                 className="flex gap-2.5 text-lg font-normal leading-[1.2] text-white items-center rounded-[8px] px-2 py-1 bg-componentPrimary bg-opacity-10"
                               >
@@ -1218,21 +961,10 @@ export default function AddScheduleForm({
                             </div>
                             <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5">
                               {tags?.map((tag, index) => (
-                                <div
-                                  key={index}
-                                  className="flex w-full items-center rounded-[8px] px-2 py-1.5 bg-white bg-opacity-10"
-                                >
-                                  <button
-                                    type="button"
-                                    className="flex gap-2.5 items-center"
-                                  >
-                                    <GoXCircle
-                                      onClick={() => handleRemoveTag(index)}
-                                      className="top-0.5 left-0.5 w-4 h-4"
-                                    />
-                                    <span className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                                      {tag}
-                                    </span>
+                                <div key={index} className="flex w-full items-center rounded-[8px] px-2 py-1.5 bg-white bg-opacity-10">
+                                  <button type="button" className="flex gap-2.5 items-center">
+                                    <GoXCircle onClick={() => handleRemoveTag(index)} className="top-0.5 left-0.5 w-4 h-4" />
+                                    <span className="text-lg font-semibold leading-[1.2] text-white self-stretch">{tag}</span>
                                   </button>
                                 </div>
                               ))}
@@ -1245,29 +977,18 @@ export default function AddScheduleForm({
                         <Label className="text-2xl opacity-80">Advanced</Label>
                         <div className="flex flex-col items-center gap-5 pt-5">
                           <div className="flex items-center gap-5 self-stretch">
-                            <SwitchButton
-                              value={isLimit}
-                              onClick={handleLimitRSVP}
-                            />
-                            <span className="flex-1 text-base font-semibold leading-[1.2]">
-                              Limit RSVPs
-                            </span>
+                            <SwitchButton value={isLimit} onClick={handleLimitRSVP} />
+                            <span className="flex-1 text-base font-semibold leading-[1.2]">Limit RSVPs</span>
                           </div>
                           {isLimit && (
                             <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                              <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                                Select an Amount
-                              </Label>
+                              <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select an Amount</Label>
                               <input
                                 type="number"
                                 min="1"
                                 className="bg-gray-600 w-full outline-none px-4 rounded-md py-2"
-                                placeholder={"50"}
-                                onChange={(e) =>
-                                  setRsvpAmount(
-                                    e.target.value as unknown as number
-                                  )
-                                }
+                                placeholder={'50'}
+                                onChange={(e) => setRsvpAmount(e.target.value as unknown as number)}
                               />
                             </div>
                           )}
@@ -1286,7 +1007,7 @@ export default function AddScheduleForm({
                             disabled={loading}
                             onClick={() => form.handleSubmit(onSubmit)()}
                           >
-                            <span>{loading ? "Adding" : "Add Session"}</span>
+                            <span>{loading ? 'Adding' : 'Add Session'}</span>
                           </Button>
                         </div>
                       </div>
@@ -1317,14 +1038,9 @@ export const getServerSideProps = async (ctx: any) => {
     };
 
   // get profile from session
-  const { data: profile, error } = await supabase
-    .from("profile")
-    .select("*")
-    .eq("uuid", session.user.id);
+  const { data: profile, error } = await supabase.from('profile').select('*').eq('uuid', session.user.id);
 
-  const locationsResult = await fetchLocationsByEventSpace(
-    ctx.query.event_space_id
-  );
+  const locationsResult = await fetchLocationsByEventSpace(ctx.query.event_space_id);
   const tagsResult = await fetchAllTags();
   const organizersResult = await fetchAllSpeakers();
 
