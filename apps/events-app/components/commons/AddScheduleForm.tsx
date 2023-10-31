@@ -714,6 +714,16 @@ export default function AddScheduleForm({
                                     pointerEvents: "auto",
                                   },
                                 },
+                                digitalClockItem: {
+                                  sx: {
+                                    pointerEvents: "auto",
+                                  },
+                                },
+                                mobilePaper: {
+                                  sx: {
+                                    pointerEvents: "auto",
+                                  },
+                                },
                               }}
                             />
                             <TimePicker
