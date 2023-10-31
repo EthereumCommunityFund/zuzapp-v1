@@ -17,7 +17,11 @@ import { Listbox, Transition } from "@headlessui/react";
 
 import ToggleSwitch from "../commons/ToggleSwitch";
 import { TbChevronDown } from "react-icons/tb";
-import { stringToDateObject, toTurkeyTime } from "@/utils";
+import {
+  sortGroupedSchedulesByStartTime,
+  stringToDateObject,
+  toTurkeyTime,
+} from "@/utils";
 
 interface ISessionViewPageTemplate {
   event_space_id: string;
@@ -218,7 +222,6 @@ export default function SessionViewPageTemplate({
     if (lastTrackRef.current) {
       observer.observe(lastTrackRef.current);
     }
-
     return () => {
       if (lastTrackRef.current) {
         observer.unobserve(lastTrackRef.current);
@@ -226,14 +229,9 @@ export default function SessionViewPageTemplate({
     };
   }, [lastTrackRef]);
 
-  // Function to convert "HH:mm" format to total minutes
-  const timeToMinutes = (time: string) => {
-    const [hours, minutes] = time.split(":").map(Number);
-    return hours * 60 + minutes;
-  };
   console.log(filteredSchedules, "filtered schedules");
 
-  const groupedSchedules: Record<string, ScheduleDetailstype[]> = {};
+  let groupedSchedules: Record<string, ScheduleDetailstype[]> = {};
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -291,28 +289,10 @@ export default function SessionViewPageTemplate({
     }
   }
 
-  let chosenSchedules = isUpcoming ? upcomingSchedules : pastSchedules;
+  groupedSchedules = isUpcoming ? upcomingSchedules : pastSchedules;
   // Now, pastSchedules contains all the past events and upcomingSchedules contains the upcoming ones.
 
-  // Now, sort the schedules within each group based on start_time
-  Object.keys(chosenSchedules).forEach((formattedDate) => {
-    chosenSchedules[formattedDate].sort((a, b) => {
-      const timeA = timeToMinutes(a.start_time);
-      const timeB = timeToMinutes(b.start_time);
-      return timeA - timeB;
-    });
-  });
-
-  // Now, sort the schedules within each group based on start_time
-  Object.keys(chosenSchedules).forEach((formattedDate) => {
-    chosenSchedules[formattedDate].sort((a, b) => {
-      const timeA = new Date(a.start_time).getTime();
-      const timeB = new Date(b.start_time).getTime();
-      return timeA - timeB;
-    });
-  });
-
-  console.log(chosenSchedules, "grouped schedules");
+  let chosenSchedules = sortGroupedSchedulesByStartTime(groupedSchedules);
 
   return (
     <>
