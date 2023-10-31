@@ -115,7 +115,7 @@ export default function EventViewNavigation() {
               </ul>
             </div>
             {isAuthenticated ? (
-              router.pathname.includes("dashboard/eventview/about") &&
+              router.pathname.includes("/dashboard/eventview/about") &&
               eventSpace?.creator_id === user.id && (
                 <Dialog>
                   <DialogTrigger asChild>

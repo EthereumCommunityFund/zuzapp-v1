@@ -225,11 +225,11 @@ export default function EventViewScheduleViewTemplate({
                 </DialogTrigger>
                 <DialogContent className="lg:h-4/5 w-full h-screen lg:w-3/5 overflow-y-auto">
                   <EditScheduleForm
-                    title="Update"
                     isQuickAccess={true}
                     scheduleId={scheduleId as string}
                     trackId={trackId as string}
-                    creatorId={creatorId}
+                    isFromEventView={true}
+                    event_space_id={event_space_id}
                   />
                 </DialogContent>
               </Dialog>
@@ -263,8 +263,9 @@ export default function EventViewScheduleViewTemplate({
               <Button
                 variant="primary"
                 size="lg"
-                className={`rounded-2xl justify-center ${rsvpUpdated ? "animate-rsvp" : ""
-                  }`}
+                className={`rounded-2xl justify-center ${
+                  rsvpUpdated ? "animate-rsvp" : ""
+                }`}
                 leftIcon={BsFillTicketFill}
                 onClick={handleRsvpAction}
                 disabled={
@@ -276,10 +277,10 @@ export default function EventViewScheduleViewTemplate({
                 {currentSchedule?.rsvp_amount === 0
                   ? "No Rsvp Available"
                   : hasRsvpd
-                    ? "Cancel RSVP"
-                    : isRsvpFullOnLoad
-                      ? "RSVP Full"
-                      : "RSVP Session"}
+                  ? "Cancel RSVP"
+                  : isRsvpFullOnLoad
+                  ? "RSVP Full"
+                  : "RSVP Session"}
               </Button>
             </div>
             {/* <Button variant="red" className="rounded-xl w-fit" onClick={handleDeleteSchedule}>

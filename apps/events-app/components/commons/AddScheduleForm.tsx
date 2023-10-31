@@ -90,6 +90,7 @@ export default function AddScheduleForm({
   updateIsLoading,
 }: IAddScheduleForm) {
   const router = useRouter();
+  const { quickAccess } = router.query;
 
   const [isAllDay, setIsAllDay] = useState<boolean>(false);
 
@@ -421,7 +422,7 @@ export default function AddScheduleForm({
         query: {
           event_space_id: event_space_id,
           track_title: track_title,
-          trackId: isQuickAccess ? selectedTrackId : trackId,
+          trackId: isQuickAccess || quickAccess ? selectedTrackId : trackId,
         },
       });
     } catch (error) {
@@ -480,7 +481,7 @@ export default function AddScheduleForm({
               Back
             </Button>
             <div className="flex flex-col gap-[10px]">
-              {isQuickAccess ? (
+              {isQuickAccess || quickAccess ? (
                 <span className="text-lg items-start font-semibold opacity-70">
                   You are adding a session in quick access
                 </span>
@@ -617,27 +618,28 @@ export default function AddScheduleForm({
                           </FormItem>
                         )}
                       />
-                      {isQuickAccess && (
-                        <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                          <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                            Select Track
-                          </Label>
-                          <select
-                            onChange={handleTrackSelect}
-                            title="Track List"
-                            value={selectedTrackId}
-                            defaultValue={selectedTrackId}
-                            className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
-                          >
-                            <option value="">Select Track</option>
-                            {eventSpace?.tracks.map((track: any) => (
-                              <option key={track.id} value={track.id}>
-                                {track.name}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-                      )}
+                      {isQuickAccess ||
+                        (quickAccess && (
+                          <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
+                            <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
+                              Select Track
+                            </Label>
+                            <select
+                              onChange={handleTrackSelect}
+                              title="Track List"
+                              value={selectedTrackId}
+                              defaultValue={selectedTrackId}
+                              className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
+                            >
+                              <option value="">Select Track</option>
+                              {eventSpace?.tracks.map((track: any) => (
+                                <option key={track.id} value={track.id}>
+                                  {track.name}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                        ))}
                       <div className="w-full">
                         <FormField
                           control={form.control}
