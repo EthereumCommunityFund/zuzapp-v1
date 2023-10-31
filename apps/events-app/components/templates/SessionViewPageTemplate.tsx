@@ -103,18 +103,14 @@ export default function SessionViewPageTemplate({
 
         return isUpcoming ? startDate >= today : startDate < today;
       }
-      // For recurring events:
+
       if (
         schedule.schedule_frequency === "everyday" ||
         schedule.schedule_frequency === "weekly"
       ) {
         if (isUpcoming) {
-          // Upcoming filter
           return endDate >= today; // It's upcoming if the end date is today or in the future.
         } else {
-          // Past filter
-          // It's past if the start date is before today, but it's also upcoming if end date hasn't passed yet.
-          // So, it will appear in both categories.
           return startDate < today;
         }
       }
