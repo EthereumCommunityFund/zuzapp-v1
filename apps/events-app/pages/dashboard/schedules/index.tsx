@@ -6,10 +6,12 @@ import { Loader } from '@/components/ui/Loader';
 
 import SessionViewPageTemplate from '@/components/templates/SessionViewPageTemplate';
 import { toast } from '@/components/ui/use-toast';
+import { useGlobalContext } from '@/context/GlobalContext';
 
 export default function EventViewTracksAlleSchedulesPage() {
   const event_space_id = '873f2ae3-bcab-4a30-8b99-cb5e011a9db0';
-
+  const { profile, isAuthenticated } = useGlobalContext();
+  console.log('isAuthenticated', isAuthenticated, profile);
   const {
     data: eventSpace,
     isLoading,
@@ -42,6 +44,7 @@ export default function EventViewTracksAlleSchedulesPage() {
         <SessionViewPageTemplate
           event_space_id={event_space_id}
           eventSpace={eventSpace}
+          isLoggedIn={!isAuthenticated}
         />
       }
     </>

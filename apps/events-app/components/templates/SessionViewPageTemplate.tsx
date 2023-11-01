@@ -9,7 +9,7 @@ import { BiPlusCircle } from "react-icons/bi";
 import { QueryClient, useQuery } from "react-query";
 import { EventSpaceDetailsType } from "@/types";
 import { Loader } from "@/components/ui/Loader";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import fetchSchedulesByEvenSpaceId from "@/services/fetchScheduleByEventSpace";
 import AddScheduleForm from "@/components/commons/AddScheduleForm";
 import { useGlobalContext } from "@/context/GlobalContext";
@@ -23,17 +23,22 @@ import {
   toTurkeyTime,
 } from "@/utils";
 import { toast } from "../ui/use-toast";
+import Image from "next/image";
+import { useUserPassportContext } from "@/context/PassportContext";
+import { Label } from "../ui/label";
 
 interface ISessionViewPageTemplate {
   event_space_id: string;
   trackId?: string;
   eventSpace: EventSpaceDetailsType;
+  isLoggedIn: boolean;
 }
 
 export default function SessionViewPageTemplate({
   event_space_id,
   trackId,
   eventSpace,
+  isLoggedIn,
 }: ISessionViewPageTemplate) {
   const router = useRouter();
   const [filteredSchedules, setFilteredSchedules] = useState<
@@ -43,6 +48,7 @@ export default function SessionViewPageTemplate({
   const [isUpcoming, setIsUpcoming] = useState<boolean>(true);
   const [selectedTracks, setSelectedTracks] = useState<any[]>([]);
   const { isAuthenticated, user } = useGlobalContext();
+  const { signIn } = useUserPassportContext();
 
   const handleItemClick = (scheduleId: string, trackId?: string) => {
     router.push({
@@ -95,11 +101,11 @@ export default function SessionViewPageTemplate({
     const filteredSchedules =
       selectedTrackIds.length > 0
         ? schedules.filter((schedule) => {
-            console.log(schedule, "selected track ids");
-            return (
-              schedule.track_id && selectedTrackIds.includes(schedule.track_id)
-            );
-          })
+          console.log(schedule, "selected track ids");
+          return (
+            schedule.track_id && selectedTrackIds.includes(schedule.track_id)
+          );
+        })
         : schedules;
     return filteredSchedules;
   };
@@ -355,11 +361,10 @@ export default function SessionViewPageTemplate({
                       {({ selected }) => (
                         <>
                           <span
-                            className={`relative block truncate rounded-2xl py-2 cursor-pointer px-2 w-full hover:bg-itemHover ${
-                              selected
-                                ? "font-medium bg-slate-700"
-                                : "font-normal"
-                            }`}
+                            className={`relative block truncate rounded-2xl py-2 cursor-pointer px-2 w-full hover:bg-itemHover ${selected
+                              ? "font-medium bg-slate-700"
+                              : "font-normal"
+                              }`}
                           >
                             {item.name.charAt(0).toUpperCase() +
                               item.name.slice(1)}
@@ -374,6 +379,26 @@ export default function SessionViewPageTemplate({
           </div>
         </div>
       </div>
+      <Dialog open={isLoggedIn}>
+        <DialogContent className="sm:max-w-[425px] h-1/3 md:max-w-none w-[600px] text-white">
+          <DialogHeader>
+            <DialogTitle className="text-2xl">
+              Log in with your ZuPass
+            </DialogTitle>
+            <DialogDescription className="text-xl font-bold">
+              You need to log in with you passport to continue!!!
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="pt-5 text-2xl">
+            <Button variant="quiet" className="w-full flex gap-3 items-center justify-center rounded-3xl h-auto bg-dark text-sm md:text-base" onClick={signIn}>
+              <Label className="flex items-center text-lg">
+                <Image src="/images/zaluza blackandwhite.png" width={20} height={20} alt="Passport" className="mr-2" />
+                Connect Passport
+              </Label>
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

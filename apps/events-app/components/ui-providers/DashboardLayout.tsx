@@ -38,13 +38,13 @@ export const DashboardProvider = ({
 
   if (!router.pathname.startsWith("/dashboard"))
     return (
-      <div className="bg-[#222222] text-white relative min-h-screen">
+      <div className="bg-pagePrimary text-white relative min-h-screen">
         {children}
       </div>
     );
   if (router.pathname === "/dashboard/user-profile")
     return (
-      <div className="bg-[#222222] text-white">
+      <div className="bg-pagePrimary text-white">
         <DashboardHeader />
         <div className="mt-16 relative">
           <div className="h-[90vh] mx-auto relative ">{children}</div>
@@ -53,7 +53,7 @@ export const DashboardProvider = ({
     );
   return (
     <>
-      <div className="lg:flex relative bg-[#222222] text-white">
+      <div className="lg:flex relative bg-pagePrimary text-white">
         {!checkIfCurrentRouteIsInEventViewRoutes() ? (
           <DashboardNavigation />
         ) : (

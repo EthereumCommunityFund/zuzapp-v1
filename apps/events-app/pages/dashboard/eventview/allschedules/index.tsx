@@ -9,11 +9,13 @@ import SessionViewPageTemplate from '@/components/templates/SessionViewPageTempl
 import { useRouter } from 'next/router';
 import useEventDetails from '@/hooks/useCurrentEventSpace';
 import { Loader } from '@/components/ui/Loader';
+import { useGlobalContext } from '@/context/GlobalContext';
 
 export default function EventViewTracksAlleSchedulesPage() {
   const router = useRouter();
   const { event_space_id } = router.query;
   const { eventSpace, isLoading } = useEventDetails();
+  const { profile, isAuthenticated } = useGlobalContext();
 
   if (isLoading) {
     return (
@@ -27,6 +29,7 @@ export default function EventViewTracksAlleSchedulesPage() {
         <SessionViewPageTemplate
           event_space_id={event_space_id as string}
           eventSpace={eventSpace}
+          isLoggedIn={!isAuthenticated}
         />
       }
     </div>
