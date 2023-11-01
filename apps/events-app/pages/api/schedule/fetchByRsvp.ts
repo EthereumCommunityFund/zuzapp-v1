@@ -36,6 +36,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         .from("schedule")
         .select(`
             *,
+            track: track!id (*),
             scheduletags: scheduletags!id (tags: tags!id (*)),
             schedulespeakerrole: schedulespeakerrole!id (role, speaker: speaker!id (name))
         `)
@@ -67,6 +68,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 name: speakerObj.speaker.name,
                 role: speakerObj.role,
             })),
+            trackName: item.track?.name,
         };
 
         //@ts-ignore

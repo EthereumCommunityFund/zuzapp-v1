@@ -61,6 +61,7 @@ const MyApp = ({
       "eventSpaces",
       "invitedSpaces",
       // "publishedEventSpaces",
+      ["allSchedules", event_space_id],
       ["currentEventSpace", event_space_id],
       ["trackDetails", event_space_id],
     ];

@@ -22,11 +22,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const { data, error } = await supabase
         .from("schedule")
         .select(`
-            *,
-            scheduletags: scheduletags!id (tags: tags!id (*)),
-            schedulespeakerrole: schedulespeakerrole!id (role, speaker: speaker!id (name))
-            editlogs: editlogs!schedule_id (*, user: profile!uuid (username))
-        `)
+        *,
+        track: track!id (*),
+        scheduletags: scheduletags!id (tags: tags!id (*)),
+        schedulespeakerrole: schedulespeakerrole!id (role, speaker: speaker!id (name)),
+        editlogs: editlogs!schedule_id (*, user: profile!uuid (username))
+    `)
         .eq("event_space_id", id)
         .order('start_date', { ascending: true });
 
@@ -73,6 +74,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 name: speakerObj.speaker.name,
                 role: speakerObj.role,
             })),
+            trackName: item.track?.name,
         };
 
         //@ts-ignore

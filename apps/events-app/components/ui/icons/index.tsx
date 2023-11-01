@@ -12,6 +12,7 @@ import ArrowRight from './ArrowRight';
 import Guilded from './Guilded';
 import GithubLogo from './GithubLogo';
 import ArrowTopRightOnSquare from './ArrowTopRightOnSquare';
+import XCircle from './XCircle';
 
 export {
   ArrowCircleRight,
@@ -27,5 +28,6 @@ export {
   ArrowRight,
   Guilded,
   GithubLogo,
-  ArrowTopRightOnSquare
+  ArrowTopRightOnSquare,
+  XCircle
 };
