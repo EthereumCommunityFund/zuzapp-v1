@@ -740,6 +740,7 @@ export default function AddScheduleForm({
                                     </Label>
                                   </div>
                                 </LocalizationProvider>
+                                <style>{customTimePickerInputStyle}</style>
                               </>
                             )}
                           </div>
