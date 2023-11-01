@@ -8,7 +8,11 @@ import { useRouter } from "next/router";
 import { Loader } from "../ui/Loader";
 import useEventDetails from "@/hooks/useCurrentEventSpace";
 import fetchSchedulesByEvenSpaceId from "@/services/fetchScheduleByEventSpace";
-import { stringToDateFormated, toTurkeyTime } from "@/utils";
+import {
+  sortSchedulesByStartTime,
+  stringToDateFormated,
+  toTurkeyTime,
+} from "@/utils";
 
 type IdProp = {
   id: string;
@@ -57,11 +61,12 @@ export default function TrackScheduleItemCard() {
     return <Loader />;
   }
 
+  let sortedSchedules = sortSchedulesByStartTime(schedules);
   return (
     <div className="w-full">
       {schedules && (
         <div className="flex flex-col gap-[10px] w-full">
-          {schedules.map((schedule) => (
+          {sortedSchedules.map((schedule: ScheduleDetailstype) => (
             <div className="flex flex-col items-center justify-between gap-[10px]">
               <div
                 onClick={() =>
@@ -87,7 +92,7 @@ export default function TrackScheduleItemCard() {
                       <span className="flex items-center p-1 gap-1 rounded-[10px] opacity-60 bg-[#FFFFFF10] white-space-nowrap overflow-hidden text-ellipsis">
                         <BiTimeFive size={30} />
                         <span className="ml-2 text-xs md:text-sm ">
-                          {toTurkeyTime(schedule?.start_time).format("H:mm")} -{" "}
+                          {schedule?.start_time} -{" "}
                           {toTurkeyTime(schedule?.end_time).format("H:mm")}
                         </span>
                       </span>
