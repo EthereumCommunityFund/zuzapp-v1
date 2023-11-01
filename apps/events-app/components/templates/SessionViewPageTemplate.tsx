@@ -44,7 +44,7 @@ export default function SessionViewPageTemplate({
   const [isUpcoming, setIsUpcoming] = useState<boolean>(true);
   const [selectedTracks, setSelectedTracks] = useState<any[]>([]);
 
-  const groupedEvents = schedules?.forEach((schedule) => {});
+  const groupedEvents = schedules?.forEach((schedule) => { });
   const { isAuthenticated, user } = useGlobalContext();
   const handleItemClick = (scheduleId: string, trackId?: string) => {
     router.push({
@@ -173,9 +173,9 @@ export default function SessionViewPageTemplate({
     const finalFilteredSchedules =
       selectedTrackIds.length > 0
         ? filteredByDate.filter(
-            (schedule) =>
-              schedule.track_id && selectedTrackIds.includes(schedule.track_id)
-          )
+          (schedule) =>
+            schedule.track_id && selectedTrackIds.includes(schedule.track_id)
+        )
         : filteredByDate;
 
     setFilteredSchedules(finalFilteredSchedules);
@@ -188,17 +188,17 @@ export default function SessionViewPageTemplate({
     const filter: ScheduleDetailstype[] = schedules.filter((schedule) =>
       isUpcoming
         ? stringToDateObject(schedule.start_date).getTime() >
-          new Date().getTime()
+        new Date().getTime()
         : stringToDateObject(schedule.start_date).getTime() <
-          new Date().getTime()
+        new Date().getTime()
     );
 
     const filteredByTracks =
       selectedTrackIds.length > 0
         ? filter.filter(
-            (schedule) =>
-              schedule.track_id && selectedTrackIds.includes(schedule.track_id)
-          )
+          (schedule) =>
+            schedule.track_id && selectedTrackIds.includes(schedule.track_id)
+        )
         : filter;
     setFilteredSchedules(filteredByTracks);
     setSelectedTracks(newSelectedTracks);
@@ -208,26 +208,26 @@ export default function SessionViewPageTemplate({
     if (isLoading) {
       fetchSchedules();
     }
-  }, [isLoading, selectedTracks, isUpcoming]);
+  }, [isLoading]);
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-        }
-      },
-      { threshold: 1 }
-    );
+  // useEffect(() => {
+  //   const observer = new IntersectionObserver(
+  //     (entries) => {
+  //       if (entries[0].isIntersecting) {
+  //       }
+  //     },
+  //     { threshold: 1 }
+  //   );
 
-    if (lastTrackRef.current) {
-      observer.observe(lastTrackRef.current);
-    }
-    return () => {
-      if (lastTrackRef.current) {
-        observer.unobserve(lastTrackRef.current);
-      }
-    };
-  }, [lastTrackRef]);
+  //   if (lastTrackRef.current) {
+  //     observer.observe(lastTrackRef.current);
+  //   }
+  //   return () => {
+  //     if (lastTrackRef.current) {
+  //       observer.unobserve(lastTrackRef.current);
+  //     }
+  //   };
+  // }, [lastTrackRef]);
 
   console.log(filteredSchedules, "filtered schedules");
 
@@ -432,11 +432,10 @@ export default function SessionViewPageTemplate({
                       {({ selected }) => (
                         <>
                           <span
-                            className={`relative block truncate rounded-2xl py-2 cursor-pointer px-2 w-full hover:bg-itemHover ${
-                              selected
+                            className={`relative block truncate rounded-2xl py-2 cursor-pointer px-2 w-full hover:bg-itemHover ${selected
                                 ? "font-medium bg-slate-700"
                                 : "font-normal"
-                            }`}
+                              }`}
                           >
                             {item.name.charAt(0).toUpperCase() +
                               item.name.slice(1)}
