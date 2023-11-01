@@ -9,7 +9,7 @@ import { BiPlusCircle } from "react-icons/bi";
 import { QueryClient, useQuery } from "react-query";
 import { EventSpaceDetailsType } from "@/types";
 import { Loader } from "@/components/ui/Loader";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import fetchSchedulesByEvenSpaceId from "@/services/fetchScheduleByEventSpace";
 import AddScheduleForm from "@/components/commons/AddScheduleForm";
 import { useGlobalContext } from "@/context/GlobalContext";
@@ -24,19 +24,16 @@ import {
 } from "@/utils";
 import { toast } from "../ui/use-toast";
 
-
 interface ISessionViewPageTemplate {
   event_space_id: string;
   trackId?: string;
   eventSpace: EventSpaceDetailsType;
-  isLoggedIn: boolean;
 }
 
 export default function SessionViewPageTemplate({
   event_space_id,
   trackId,
   eventSpace,
-
 }: ISessionViewPageTemplate) {
   const router = useRouter();
   const [filteredSchedules, setFilteredSchedules] = useState<
@@ -46,7 +43,6 @@ export default function SessionViewPageTemplate({
   const [isUpcoming, setIsUpcoming] = useState<boolean>(true);
   const [selectedTracks, setSelectedTracks] = useState<any[]>([]);
   const { isAuthenticated, user } = useGlobalContext();
-
 
   const handleItemClick = (scheduleId: string, trackId?: string) => {
     router.push({
@@ -360,8 +356,8 @@ export default function SessionViewPageTemplate({
                         <>
                           <span
                             className={`relative block truncate rounded-2xl py-2 cursor-pointer px-2 w-full hover:bg-itemHover ${selected
-                              ? "font-medium bg-slate-700"
-                              : "font-normal"
+                                ? "font-medium bg-slate-700"
+                                : "font-normal"
                               }`}
                           >
                             {item.name.charAt(0).toUpperCase() +
@@ -377,7 +373,6 @@ export default function SessionViewPageTemplate({
           </div>
         </div>
       </div>
-
     </>
   );
 }
