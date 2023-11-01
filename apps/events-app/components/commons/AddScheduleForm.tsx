@@ -1,67 +1,47 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
+import * as DialogPrimitive from '@radix-ui/react-dialog';
 
-import Button from "@/components/ui/buttons/Button";
-import { HiArrowLeft, HiArrowRight } from "react-icons/hi";
-import DetailsBar from "@/components/detailsbar";
+import Button from '@/components/ui/buttons/Button';
+import { HiArrowLeft, HiArrowRight } from 'react-icons/hi';
 
-import { CgClose } from "react-icons/cg";
-import { FaCircleArrowDown, FaCircleArrowUp } from "react-icons/fa6";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { useForm } from "react-hook-form";
-import { useEffect, useRef, useState } from "react";
-import FormTitle from "@/components/ui/labels/form-title";
-import InputFieldDark from "@/components/ui/inputFieldDark";
-import {
-  EventSpaceDetailsType,
-  InputFieldType,
-  LocationUpdateRequestBody,
-  TrackUpdateRequestBody,
-} from "@/types";
-import TextEditor from "@/components/ui/TextEditor";
-import { Label } from "@/components/ui/label";
-import SwitchButton from "@/components/ui/buttons/SwitchButton";
-import { GoXCircle } from "react-icons/go";
-import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
-import { Database } from "@/database.types";
-import CustomDatePicker from "@/components/ui/DatePicker";
-import { useRouter } from "next/router";
-import {
-  fetchLocationsByEventSpace,
-  createSchedule,
-  fetchAllTags,
-  fetchAllSpeakers,
-} from "@/controllers";
-import { useQuery, useMutation } from "react-query";
-import { fetchEventSpaceById } from "@/services/fetchEventSpaceDetails";
-import dayjs, { Dayjs } from "dayjs";
-import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { TimePicker } from "@mui/x-date-pickers/TimePicker";
+import { CgClose } from 'react-icons/cg';
+import { FaCircleArrowDown, FaCircleArrowUp } from 'react-icons/fa6';
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { useForm } from 'react-hook-form';
+import { useState, useEffect, useRef } from 'react';
+import FormTitle from '@/components/ui/labels/form-title';
+import InputFieldDark from '@/components/ui/inputFieldDark';
+import { EventSpaceDetailsType, InputFieldType, LocationUpdateRequestBody, ScheduleUpdateRequestBody } from '@/types';
+import TextEditor from '@/components/ui/TextEditor';
+import { Label } from '@/components/ui/label';
+import SwitchButton from '@/components/ui/buttons/SwitchButton';
+import { GoXCircle } from 'react-icons/go';
+import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
+import { Database } from '@/database.types';
+import CustomDatePicker from '@/components/ui/DatePicker';
+import { useRouter } from 'next/router';
+import { fetchLocationsByEventSpace, fetchAllTags, fetchScheduleByID, updateSchedule, createSchedule, fetchAllSpeakers } from '@/controllers';
+import { useQuery } from 'react-query';
+import { fetchEventSpaceById } from '@/services/fetchEventSpaceDetails';
+import dayjs, { Dayjs } from 'dayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+// import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 
-import TextField from "@mui/material/TextField";
-import Autocomplete from "@mui/material/Autocomplete";
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
+import { toast } from '@/components/ui/use-toast';
+import { Loader } from '../ui/Loader';
+import { Dialog } from '@radix-ui/react-dialog';
 
-import { Loader } from "@/components/ui/Loader";
-import { toast } from "@/components/ui/use-toast";
-import { BsFillTicketFill } from "react-icons/bs";
-import { sessionNavBarDetails } from "@/constant/addschedulenavbar";
-import { sessionFrequency } from "@/constant/scheduleconstants";
-import { convertDateToString, fromTurkeyToUTC, toTurkeyTime } from "@/utils";
-import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { X } from "lucide-react";
-
-dayjs.extend(isSameOrAfter);
+import { X } from 'lucide-react';
+import { sessionFrequency } from '@/constant/scheduleconstants';
+import { convertDateToString, fromTurkeyToUTC, stringToDateObject, toTurkeyTime } from '@/utils';
+import { TimePicker } from 'antd';
+import { BsFillTicketFill } from 'react-icons/bs';
+import { sessionNavBarDetails } from '@/constant/addschedulenavbar';
 
 type Organizer = {
   name: string;
@@ -97,10 +77,10 @@ export default function AddScheduleForm({
   const [optionTags, setOptionTags] = useState<TagItemProp[]>([]);
   const [loading, setIsLoading] = useState<boolean>(false);
   const [tags, setTags] = useState<string[]>([]);
-  const [tagItem, setTagItem] = useState<TagItemProp>({ name: "" });
+  const [tagItem, setTagItem] = useState<TagItemProp>({ name: '' });
   const [eventItem, setEventItem] = useState({
-    name: "",
-    role: "speaker",
+    name: '',
+    role: 'speaker',
   });
   const [organizers, setOrganizers] = useState<any>([]);
   const [frequency, setFrequency] = useState<"once" | "everyday" | "weekly">(
@@ -117,19 +97,17 @@ export default function AddScheduleForm({
   const handleChangeSwitch = () => {
     setIsAllDay((prev) => !prev);
   };
-  const [startTime, setStartTime] = useState(dayjs().startOf("day"));
-  const [endTime, setEndTime] = useState(dayjs().endOf("day"));
+  const [startTime, setStartTime] = useState(dayjs().startOf('day'));
+  const [endTime, setEndTime] = useState(dayjs().endOf('day'));
   const [scheduleAdded, setScheduleAdded] = useState(false);
   const [isLimit, setIsLimit] = useState(false);
-  const [selectedTrackId, setSelectedTrackId] = useState<string>(
-    trackId as string
-  );
+  const [selectedTrackId, setSelectedTrackId] = useState<string>(trackId as string);
   const [optionalOrganizers, setOptionalOrganizers] = useState<any>([]);
-  const [selectedEventFormat, setSelectedEventFormat] = useState<string>("new");
+  const [selectedEventFormat, setSelectedEventFormat] = useState<string>('new');
 
   const formSchema = z.object({
     name: z.string().min(2, {
-      message: "Session name is required.",
+      message: 'Session name is required.',
     }),
     format: z
       .enum(["in-person", "online"], {
@@ -156,15 +134,15 @@ export default function AddScheduleForm({
       ),
     end_date: z
       .date({
-        required_error: "You need to select a valid date for this event.",
-        invalid_type_error: "You need to select a valid date for this event.",
+        required_error: 'You need to select a valid date for this event.',
+        invalid_type_error: 'You need to select a valid date for this event.',
       })
       .optional(),
     description: z.string().min(10, {
       message: "Description is required and must be a minimum of 10 characters",
     }),
-    video_call_link: z.string().optional().or(z.literal("")),
-    live_stream_url: z.string().optional().or(z.literal("")),
+    video_call_link: z.string().optional().or(z.literal('')),
+    live_stream_url: z.string().optional().or(z.literal('')),
   });
 
   const {
@@ -172,14 +150,14 @@ export default function AddScheduleForm({
     isLoading,
     isError,
   } = useQuery<EventSpaceDetailsType, Error>(
-    ["currentEventSpace", event_space_id], // Query key
+    ['currentEventSpace', event_space_id], // Query key
     () => fetchEventSpaceById(event_space_id as string), // Query function
     {
       enabled: !!event_space_id, // Only execute the query if event_space_id is available
     }
   );
 
-  const [eventType, setEventType] = useState("");
+  const [eventType, setEventType] = useState('');
 
   const handleLimitRSVP = () => {
     setIsLimit(!isLimit);
@@ -209,11 +187,11 @@ export default function AddScheduleForm({
       });
       return;
     }
-    if (values.format === "in-person" && locationId === "") {
+    if (values.format === 'in-person' && locationId === '') {
       toast({
-        title: "Error",
-        description: "Location is required for in-person events",
-        variant: "destructive",
+        title: 'Error',
+        description: 'Location is required for in-person events',
+        variant: 'destructive',
       });
       return;
     }
@@ -231,18 +209,8 @@ export default function AddScheduleForm({
       event_space_id: event_space_id as string,
       start_time: startTime as unknown as Date,
       end_time: endTime as unknown as Date,
-      event_type:
-        eventType.length > 0
-          ? [eventType]
-          : eventSpace?.event_type?.[0]
-          ? [eventSpace?.event_type[0]]
-          : [eventSpace?.event_type || "Meetup"],
-      experience_level:
-        experienceLevel.length > 0
-          ? [experienceLevel]
-          : eventSpace?.experience_level?.[0]
-          ? [eventSpace?.experience_level[0]]
-          : [eventSpace?.experience_level || "Beginner"],
+      event_type: eventType.length > 0 ? [eventType] : eventSpace?.event_type?.[0] ? [eventSpace?.event_type[0]] : [eventSpace?.event_type || 'Meetup'],
+      experience_level: experienceLevel.length > 0 ? [experienceLevel] : eventSpace?.experience_level?.[0] ? [eventSpace?.experience_level[0]] : [eventSpace?.experience_level || 'Beginner'],
       tags: tags,
       schedule_frequency: frequency,
       organizers,
@@ -263,14 +231,8 @@ export default function AddScheduleForm({
     const payload = {
       ...values,
       ...additionalPayload,
-      video_call_link:
-        values.video_call_link === ""
-          ? "https://youtube.com"
-          : values.video_call_link,
-      live_stream_url:
-        values.live_stream_url === ""
-          ? "https://youtube.com"
-          : values.live_stream_url,
+      video_call_link: values.video_call_link === '' ? 'https://youtube.com' : values.video_call_link,
+      live_stream_url: values.live_stream_url === '' ? 'https://youtube.com' : values.live_stream_url,
     };
     console.log("payload in addschedule:", payload);
     setIsLoading(true);
@@ -286,9 +248,9 @@ export default function AddScheduleForm({
     } catch (error: any) {
       console.log(error);
       toast({
-        title: "Error",
+        title: 'Error',
         description: error?.response.data?.error,
-        variant: "destructive",
+        variant: 'destructive',
       });
     } finally {
       setIsLoading(false);
@@ -355,9 +317,7 @@ export default function AddScheduleForm({
   useEffect(() => {
     const fetchLocationDetails = async () => {
       try {
-        const result = await fetchLocationsByEventSpace(
-          event_space_id as string
-        );
+        const result = await fetchLocationsByEventSpace(event_space_id as string);
         setSavedLocations(result?.data?.data);
         setLocationId(result.data.data[0].id);
       } catch (error) {
@@ -394,9 +354,9 @@ export default function AddScheduleForm({
     const firstError = Object.values(form.formState.errors)[0];
     if (firstError) {
       toast({
-        title: "Error",
+        title: 'Error',
         description: firstError?.message,
-        variant: "destructive",
+        variant: 'destructive',
       });
     }
   }, [form.formState.errors]);
@@ -405,16 +365,14 @@ export default function AddScheduleForm({
     updateIsLoading && updateIsLoading(true);
     try {
       router.push({
-        pathname: router.pathname.startsWith(`/dashboard/eventview/about`)
-          ? `/dashboard/eventview/allschedules`
-          : router.pathname,
+        pathname: router.pathname.startsWith(`/dashboard/eventview/about`) ? `/dashboard/eventview/allschedules` : router.pathname,
         query: {
           event_space_id: event_space_id,
           trackId: trackId,
         },
       });
     } catch (error) {
-      console.error("Error redirecting schedulelists", error);
+      console.error('Error redirecting schedulelists', error);
     }
   };
 
@@ -433,15 +391,20 @@ export default function AddScheduleForm({
     }
   };
 
+  const customTimePickerInputStyle = `
+  .custom-time-picker.ant-picker .ant-picker-input input {
+    color: #FFFFFF !important; 
+  }
+`;
+
   if (isLoading) {
     return <Loader />;
   }
 
   return (
     <div
-      className={`flex items-start gap-[60px] ${
-        !isFromEventView ? `md:px-10 px-2.5 py-5` : ``
-      }  w-full`}
+      className={`flex items-start gap-[60px] ${!isFromEventView ? `md:px-10 px-2.5 py-5` : ``
+        }  w-full`}
     >
       {!isFromEventView && (
         <div className="lg:flex hidden flex-col pt-3 rounded-s-xl opacity-70 w-[300px] gap-5 fixed">
@@ -469,9 +432,8 @@ export default function AddScheduleForm({
         </div>
       )}
       <div
-        className={`flex flex-col items-start gap-[17px] ${
-          !isFromEventView ? `lg:ml-[300px]` : ``
-        } w-full`}
+        className={`flex flex-col items-start gap-[17px] ${!isFromEventView ? `lg:ml-[300px]` : ``
+          } w-full`}
       >
         {!isFromEventView ? (
           <div className="flex items-center gap-[17px]">
@@ -499,11 +461,10 @@ export default function AddScheduleForm({
           <></>
         )}
         <div
-          className={`flex ${
-            !isFromEventView
-              ? `py-5 px-4 border-borderPrimary bg-componentPrimary border`
-              : ``
-          }  flex-col items-center gap-8 rounded-2xl text-white w-full`}
+          className={`flex ${!isFromEventView
+            ? `py-5 px-4 border-borderPrimary bg-componentPrimary border`
+            : ``
+            }  flex-col items-center gap-8 rounded-2xl text-white w-full`}
         >
           <div className="flex flex-col items-center gap-[34px] w-full">
             <div className="flex flex-col py-5 items-center gap-[10px] w-full">
@@ -621,27 +582,29 @@ export default function AddScheduleForm({
                           </FormItem>
                         )}
                       />
-                      {(isQuickAccess || quickAccess) && (
-                        <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                          <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                            Select Track
-                          </Label>
-                          <select
-                            onChange={handleTrackSelect}
-                            title="Track List"
-                            value={selectedTrackId}
-                            defaultValue={selectedTrackId}
-                            className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
-                          >
-                            <option value="">Select Track</option>
-                            {eventSpace?.tracks.map((track: any) => (
-                              <option key={track.id} value={track.id}>
-                                {track.name}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-                      )}
+                      {
+                        (isQuickAccess || quickAccess) && (
+                          <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
+                            <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
+                              Select Track
+                            </Label>
+                            <select
+                              onChange={handleTrackSelect}
+                              title="Track List"
+                              value={selectedTrackId}
+                              defaultValue={selectedTrackId}
+                              className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
+                            >
+                              <option value="">Select Track</option>
+                              {eventSpace?.tracks.map((track: any) => (
+                                <option key={track.id} value={track.id}>
+                                  {track.name}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                        )
+                      }
                       <div className="w-full">
                         <FormField
                           control={form.control}
@@ -739,71 +702,31 @@ export default function AddScheduleForm({
                                 >
                                   <div className="flex justify-between gap-10 text-white w-full">
                                     <TimePicker
-                                      label="Start Time"
+                                      placeholder="Select Start Time"
+                                      size="large"
+                                      format="h:mm a"
                                       value={toTurkeyTime(startTime)}
-                                      className="w-full text-white outline-none rounded-lg pr-3 pl-2.5 bg-inputField items-center border border-white/10 border-opacity-10"
-                                      onChange={(newValue: any) => {
+                                      className="custom-time-picker w-full bg-inputField focus-visible:outline-none hover:outline-none border border-borderPrimary hover:border-borderSecondary"
+                                      popupStyle={{
+                                        pointerEvents: 'auto',
+                                      }}
+                                      onSelect={(newValue: any) => {
                                         let _time = fromTurkeyToUTC(newValue);
                                         setStartTime(_time);
                                       }}
-                                      sx={{
-                                        input: {
-                                          color: "white",
-                                        },
-                                        label: {
-                                          color: "white",
-                                        },
-                                        svg: {
-                                          color: "white", // change the icon color
-                                        },
-                                        backgroundColor: "#242727",
-                                        color: "white",
-                                        borderRadius: "8px",
-                                        width: "100%",
-                                        // borderColor: "white",
-                                        // borderWidth: "1px",
-                                        border: "1px solid #1A1A1A",
-                                      }}
-                                      slotProps={{
-                                        popper: {
-                                          sx: {
-                                            pointerEvents: "auto",
-                                          },
-                                        },
-                                      }}
                                     />
                                     <TimePicker
-                                      label="End Time"
+                                      placeholder="Select End Time"
+                                      size="large"
+                                      format="h:mm a"
                                       value={toTurkeyTime(endTime)}
-                                      className="w-full text-white outline-none rounded-lg pr-3 pl-2.5 bg-inputField items-center border border-white/10 border-opacity-10"
-                                      onChange={(newValue: any) => {
+                                      className="custom-time-picker w-full bg-inputField focus-visible:outline-none hover:outline-none border border-borderPrimary hover:border-borderSecondary"
+                                      popupStyle={{
+                                        pointerEvents: 'auto',
+                                      }}
+                                      onSelect={(newValue: any) => {
                                         let _time = fromTurkeyToUTC(newValue);
                                         setEndTime(_time);
-                                      }}
-                                      sx={{
-                                        input: {
-                                          color: "white",
-                                        },
-                                        label: {
-                                          color: "white",
-                                        },
-                                        svg: {
-                                          color: "white", // change the icon color
-                                        },
-                                        backgroundColor: "#242727",
-                                        color: "white",
-                                        borderRadius: "8px",
-                                        width: "100%",
-                                        // borderColor: "white",
-                                        // borderWidth: "1px",
-                                        border: "1px solid #1A1A1A",
-                                      }}
-                                      slotProps={{
-                                        popper: {
-                                          sx: {
-                                            pointerEvents: "auto",
-                                          },
-                                        },
                                       }}
                                     />
                                   </div>
@@ -822,69 +745,69 @@ export default function AddScheduleForm({
                           </div>
                           {(frequency === sessionFrequency.WEEKLY ||
                             frequency === sessionFrequency.EVERYDAY) && (
-                            <div className="flex flex-col items-center gap-[30px] self-stretch w-full">
-                              <FormField
-                                control={form.control}
-                                name="end_date"
-                                render={({ field }) => (
-                                  <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                                    <span className="text-lg opacity-70 self-stretch">
-                                      End Date
-                                    </span>
+                              <div className="flex flex-col items-center gap-[30px] self-stretch w-full">
+                                <FormField
+                                  control={form.control}
+                                  name="end_date"
+                                  render={({ field }) => (
+                                    <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
+                                      <span className="text-lg opacity-70 self-stretch">
+                                        End Date
+                                      </span>
 
-                                    <CustomDatePicker
-                                      defaultDate={undefined}
-                                      selectedDate={field.value || null}
-                                      handleDateChange={field.onChange}
-                                      {...field}
-                                    />
+                                      <CustomDatePicker
+                                        defaultDate={undefined}
+                                        selectedDate={field.value || null}
+                                        handleDateChange={field.onChange}
+                                        {...field}
+                                      />
 
-                                    <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">
-                                      Click & Select or type in a date
-                                    </h3>
-                                    <FormMessage />
-                                  </div>
-                                )}
-                              />
-                            </div>
-                          )}
+                                      <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">
+                                        Click & Select or type in a date
+                                      </h3>
+                                      <FormMessage />
+                                    </div>
+                                  )}
+                                />
+                              </div>
+                            )}
                           <line></line>
                         </div>
                       </div>
                       <div className="w-full" ref={sectionRefs[3]}>
                         {(form.getValues("format") === "in-person" ||
                           selectedEventFormat === "new") && (
-                          <>
-                            <h2 className="text-2xl opacity-80">Location</h2>
-                            <div className="flex flex-col items-start gap-5 self-stretch w-full pt-5">
-                              <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                                <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                                  Select Location
-                                </Label>
-                                <select
-                                  onChange={(e) =>
-                                    setLocationId(e.target.value)
-                                  }
-                                  title="location"
-                                  value={locationId}
-                                  className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
-                                >
-                                  {savedLocations.length === 0 && (
-                                    <option value="">No saved locations</option>
-                                  )}
-                                  {savedLocations?.map((location: any) => (
-                                    <option
-                                      key={location.id}
-                                      value={location.id}
-                                    >
-                                      {location.name}
-                                    </option>
-                                  ))}
-                                </select>
+                            <>
+                              <h2 className="text-2xl opacity-80">Location</h2>
+                              <div className="flex flex-col items-start gap-5 self-stretch w-full pt-5">
+                                <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
+                                  <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">
+                                    Select Location
+                                  </Label>
+                                  <select
+                                    onChange={(e) =>
+                                      setLocationId(e.target.value)
+                                    }
+                                    title="location"
+                                    value={locationId}
+                                    className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
+                                  >
+                                    {savedLocations.length === 0 && (
+                                      <option value="">No saved locations</option>
+                                    )}
+                                    {savedLocations?.map((location: any) => (
+                                      <option
+                                        key={location.id}
+                                        value={location.id}
+                                      >
+                                        {location.name}
+                                      </option>
+                                    ))}
+                                  </select>
+                                </div>
                               </div>
-                            </div>
-                          </>
-                        )}
+                            </>
+                          )}
                         <div className="flex flex-col items-start gap-5 self-stretch w-full pt-5">
                           {/* <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
                           <FormField
@@ -1004,7 +927,7 @@ export default function AddScheduleForm({
                                 }
                                 placeholder={'Enter the name'}
                               /> */}
-                              </div>
+                              </div >
                               <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
                                 <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">
                                   Select Role
@@ -1027,7 +950,7 @@ export default function AddScheduleForm({
                                   </option>
                                 </select>
                               </div>
-                            </div>
+                            </div >
                             <Button
                               type="button"
                               onClick={() => {
@@ -1067,9 +990,9 @@ export default function AddScheduleForm({
                                 )
                               )}
                             </div>
-                          </div>
-                        </div>
-                      </div>
+                          </div >
+                        </div >
+                      </div >
                       <div
                         className="w-full flex flex-col gap-6"
                         ref={sectionRefs[5]}
@@ -1255,15 +1178,16 @@ export default function AddScheduleForm({
                           </Button>
                         </div>
                       </div>
-                    </form>
-                  </Form>
+                    </form >
+                  </Form >
                 </>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+              )
+              }
+            </div >
+          </div >
+        </div >
+      </div >
+    </div >
   );
 }
 
@@ -1282,14 +1206,9 @@ export const getServerSideProps = async (ctx: any) => {
     };
 
   // get profile from session
-  const { data: profile, error } = await supabase
-    .from("profile")
-    .select("*")
-    .eq("uuid", session.user.id);
+  const { data: profile, error } = await supabase.from('profile').select('*').eq('uuid', session.user.id);
 
-  const locationsResult = await fetchLocationsByEventSpace(
-    ctx.query.event_space_id
-  );
+  const locationsResult = await fetchLocationsByEventSpace(ctx.query.event_space_id);
   const tagsResult = await fetchAllTags();
   const organizersResult = await fetchAllSpeakers();
 

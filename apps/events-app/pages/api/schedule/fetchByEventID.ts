@@ -6,6 +6,7 @@ import { logToFile } from "../../../utils/logger";
 import { validateUUID } from "../../../validators";
 import { Database } from "@/database.types";
 import { QueryWithID } from "@/types";
+import { timeToMinutes } from "@/utils";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const supabase = createPagesServerClient<Database>({ req, res });
@@ -21,11 +22,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const { data, error } = await supabase
         .from("schedule")
         .select(`
-            *,
-            scheduletags: scheduletags!id (tags: tags!id (*)),
-            schedulespeakerrole: schedulespeakerrole!id (role, speaker: speaker!id (name))
-            editlogs: editlogs!schedule_id (*, user: profile!uuid (username))
-        `)
+        *,
+        track: track!id (*),
+        scheduletags: scheduletags!id (tags: tags!id (*)),
+        schedulespeakerrole: schedulespeakerrole!id (role, speaker: speaker!id (name)),
+        editlogs: editlogs!schedule_id (*, user: profile!uuid (username))
+    `)
         .eq("event_space_id", id)
         .order('start_date', { ascending: true });
 
@@ -42,33 +44,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     console.log(data, "data")
 
-    // data.sort((a, b) => {
-    //     // Sorting by date first
+    // Sort the data based on date and just the time portion of start_time
+    // data.sort((a: any, b: any) => {
     //     if (a.start_date < b.start_date) return -1;
     //     if (a.start_date > b.start_date) return 1;
-
-    //     // Helper function to get the time in Turkey (after adding 3 hours)
-    //     const getTurkeyTimeInMinutes = (dateTimeStr: string, a) => {
-    //         console.log(a.name)
-    //         const [datePart, timePart] = dateTimeStr.split("T");
-    //         const [hour, minute] = timePart.split(":").map(Number);
-
-
-
-    //         let adjustedHour = hour + 3;
-    //         if (adjustedHour >= 24) adjustedHour -= 24;
-
-    //         console.log(adjustedHour, 'adjusted hour')
-
-    //         return adjustedHour * 60 + minute;
-    //     };
-
-    //     const timeA = getTurkeyTimeInMinutes(a.start_time, a);
-    //     const timeB = getTurkeyTimeInMinutes(b.start_time, a);
-
+    //     const timeA = timeToMinutes(a.start_time);
+    //     const timeB = timeToMinutes(b.start_time);
     //     return timeA - timeB;
     // });
-
 
 
 
@@ -91,6 +74,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 name: speakerObj.speaker.name,
                 role: speakerObj.role,
             })),
+            trackName: item.track?.name,
         };
 
         //@ts-ignore

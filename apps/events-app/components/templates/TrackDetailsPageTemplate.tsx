@@ -55,6 +55,7 @@ import { fetchAllSpeakers } from "@/controllers";
 import { DialogOverlay } from "@radix-ui/react-dialog";
 import { useGlobalContext } from "@/context/GlobalContext";
 import Image from "next/image";
+import { sortSchedulesByStartTime } from "@/utils";
 
 interface ITrackDetailsPageTemplate {
   trackItem: TrackType;
@@ -76,13 +77,14 @@ export default function TrackDetailsPageTemplate(props: any) {
   // const handlePageChange = (page: number) => {
   //   setCurrentPage(page);
   // };
-  const totalSchedules = schedules ? schedules.length : 0;
+  let totalSchedules = schedules ? schedules.length : 0;
+
+  let currentSchedules = sortSchedulesByStartTime(
+    schedules as ScheduleDetailstype[]
+  );
 
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, totalSchedules);
-  const currentSchedules = schedules
-    ? schedules.slice(startIndex, endIndex)
-    : [];
 
   const updateIsLoading = (newState: boolean) => {
     setIsLoading(newState);
@@ -252,7 +254,7 @@ export default function TrackDetailsPageTemplate(props: any) {
               {schedules && eventSpace && (
                 <>
                   {currentSchedules.map(
-                    (schedule, idx) =>
+                    (schedule: ScheduleDetailstype, idx: number) =>
                       schedule.track_id === trackItem?.id && (
                         <UserFacingTrack
                           key={idx}

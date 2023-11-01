@@ -8,7 +8,7 @@ import { useRouter } from 'next/router';
 import { Loader } from '../ui/Loader';
 import useEventDetails from '@/hooks/useCurrentEventSpace';
 import fetchSchedulesByEvenSpaceId from '@/services/fetchScheduleByEventSpace';
-import { stringToDateFormated, toTurkeyTime } from '@/utils';
+import { sortSchedulesByStartTime, stringToDateFormated, toTurkeyTime } from '@/utils';
 
 type IdProp = {
   id: string;
@@ -55,11 +55,12 @@ export default function TrackScheduleItemCard() {
     return <Loader />;
   }
 
+  let sortedSchedules = sortSchedulesByStartTime(schedules);
   return (
     <div className="w-full">
       {schedules && (
         <div className="flex flex-col gap-[10px] w-full">
-          {schedules.map((schedule) => (
+          {sortedSchedules.map((schedule: ScheduleDetailstype) => (
             <div className="flex flex-col items-center justify-between gap-[10px]">
               <div
                 onClick={() => handleEnterSchedule(schedule.id, schedule.track_id as string)}

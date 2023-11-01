@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 import EventDataTime from "./labels/event-data-time";
 
 import React from "react";
-import useTrackDetails from "@/hooks/useTrackDetails";
 import { Loader } from "./Loader";
 import useTrack from "@/hooks/useTrack";
 import { toast } from "@/components/ui/use-toast";
@@ -38,7 +37,7 @@ const UserFacingTrack: React.ForwardRefRenderFunction<
   IUserFacingTrack
 > = (props, ref) => {
   const { scheduleData, onClick } = props;
-  const { trackDetails, isLoading } = useTrack(scheduleData.track_id as string);
+  // const { trackDetails, isLoading } = useTrack(scheduleData.track_id as string);
   // const date = convertToTurkeyTimeAsDate(scheduleData.date);
   let date = stringToDateObject(scheduleData.start_date as string);
   const month = getMonthFromDate(date);
@@ -147,9 +146,7 @@ const UserFacingTrack: React.ForwardRefRenderFunction<
                   scheduleData.schedule_frequency === "weekly") && (
                   <span className="text-[#b29457]">RECURRING</span>
                 )}
-              <span>
-                {isLoading ? <Loader /> : trackDetails?.name || "TRACK"}
-              </span>
+              <span>scheduleData.track.name</span>
             </div>
             <span className="font-semibold md:text-lg">
               {scheduleData.name}
@@ -217,9 +214,7 @@ const UserFacingTrack: React.ForwardRefRenderFunction<
                   scheduleData.schedule_frequency === "weekly") && (
                   <span className="text-[#b29457]">RECURRING</span>
                 )}
-              <span>
-                {isLoading ? <Loader /> : trackDetails?.name || "TRACK"}
-              </span>
+              <span>scheduleData.track.name</span>
             </div>
 
             <span className="font-semibold md:text-lg">
