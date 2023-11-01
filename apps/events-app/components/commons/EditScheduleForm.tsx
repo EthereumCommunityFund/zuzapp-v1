@@ -48,7 +48,7 @@ import { fetchEventSpaceById } from "@/services/fetchEventSpaceDetails";
 import dayjs, { Dayjs } from "dayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { TimePicker } from "@mui/x-date-pickers/TimePicker";
+// import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
@@ -66,6 +66,7 @@ import {
   stringToDateObject,
   toTurkeyTime,
 } from "@/utils";
+import { TimePicker } from "antd";
 
 type Organizer = {
   name: string;
@@ -661,6 +662,38 @@ export default function EditScheduleForm({
                           <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <div className="flex justify-between gap-10 text-white w-full">
                               <TimePicker
+                                placeholder="Select Start Time"
+                                size="large"
+                                value={toTurkeyTime(schedule?.start_time)}
+                                className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
+                                popupStyle={{
+                                  pointerEvents: "auto",
+                                }}
+                                onSelect={(newValue: any) => {
+                                  let _time = fromTurkeyToUTC(newValue);
+                                  setSchedule({
+                                    ...schedule,
+                                    start_time: _time as string,
+                                  });
+                                }}
+                              />
+                              <TimePicker
+                                placeholder="Select End Time"
+                                size="large"
+                                value={toTurkeyTime(schedule.end_time)}
+                                className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
+                                popupStyle={{
+                                  pointerEvents: "auto",
+                                }}
+                                onSelect={(newValue: any) => {
+                                  let _time = fromTurkeyToUTC(newValue);
+                                  setSchedule({
+                                    ...schedule,
+                                    end_time: _time as string,
+                                  });
+                                }}
+                              />
+                              {/* <TimePicker
                                 label="Start Time"
                                 // slotProps={{ textField: { color: 'white' }}}
                                 value={
@@ -704,8 +737,8 @@ export default function EditScheduleForm({
                                     },
                                   },
                                 }}
-                              />
-                              <TimePicker
+                              /> */}
+                              {/* <TimePicker
                                 label="End Time"
                                 value={
                                   toTurkeyTime(
@@ -747,7 +780,7 @@ export default function EditScheduleForm({
                                     },
                                   },
                                 }}
-                              />
+                              /> */}
                             </div>
                             <div className="w-full flex flex-col gap-2">
                               <Label className="text-[#FFDD87] md:text-base sm:text-sm">

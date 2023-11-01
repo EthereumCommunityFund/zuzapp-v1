@@ -48,7 +48,7 @@ import { fetchEventSpaceById } from "@/services/fetchEventSpaceDetails";
 import dayjs, { Dayjs } from "dayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { TimePicker } from "@mui/x-date-pickers/TimePicker";
+// import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
@@ -64,6 +64,7 @@ import {
   stringToDateObject,
   toTurkeyTime,
 } from "@/utils";
+import { TimePicker } from "antd";
 
 type Organizer = {
   name: string;
@@ -681,83 +682,31 @@ export default function AddScheduleForm({
                     {!isAllDay && (
                       <>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
-                          <div className="flex justify-between gap-10 text-white w-full">
+                          <div className="flex justify-between gap-10 w-full">
                             <TimePicker
-                              label="Start Time"
+                              placeholder="Select Start Time"
+                              size="large"
                               value={toTurkeyTime(startTime)}
-                              className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
-                              onChange={(newValue: any) => {
+                              className="w-full bg-inputField focus-visible:outline-none hover:outline-none border border-borderPrimary hover:border-borderSecondary"
+                              popupStyle={{
+                                pointerEvents: "auto",
+                              }}
+                              onSelect={(newValue: any) => {
                                 let _time = fromTurkeyToUTC(newValue);
                                 setStartTime(_time);
                               }}
-                              sx={{
-                                input: {
-                                  color: "white",
-                                },
-                                label: {
-                                  color: "white",
-                                },
-                                svg: {
-                                  color: "white", // change the icon color
-                                },
-                                backgroundColor: "#242727",
-                                color: "white",
-                                borderRadius: "8px",
-                                width: "100%",
-                                // borderColor: "white",
-                                // borderWidth: "1px",
-                                border: "1px solid #1A1A1A",
-                              }}
-                              slotProps={{
-                                popper: {
-                                  sx: {
-                                    pointerEvents: "auto",
-                                  },
-                                },
-                                digitalClockItem: {
-                                  sx: {
-                                    pointerEvents: "auto",
-                                  },
-                                },
-                                mobilePaper: {
-                                  sx: {
-                                    pointerEvents: "auto",
-                                  },
-                                },
-                              }}
                             />
                             <TimePicker
-                              label="End Time"
+                              placeholder="Select End Time"
+                              size="large"
                               value={toTurkeyTime(endTime)}
-                              className="flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
-                              onChange={(newValue: any) => {
+                              className="w-full bg-inputField focus-visible:outline-none hover:outline-none border border-borderPrimary hover:border-borderSecondary"
+                              popupStyle={{
+                                pointerEvents: "auto",
+                              }}
+                              onSelect={(newValue: any) => {
                                 let _time = fromTurkeyToUTC(newValue);
                                 setEndTime(_time);
-                              }}
-                              sx={{
-                                input: {
-                                  color: "white",
-                                },
-                                label: {
-                                  color: "white",
-                                },
-                                svg: {
-                                  color: "white", // change the icon color
-                                },
-                                backgroundColor: "#242727",
-                                color: "white",
-                                borderRadius: "8px",
-                                width: "100%",
-                                // borderColor: "white",
-                                // borderWidth: "1px",
-                                border: "1px solid #1A1A1A",
-                              }}
-                              slotProps={{
-                                popper: {
-                                  sx: {
-                                    pointerEvents: "auto",
-                                  },
-                                },
                               }}
                             />
                           </div>
