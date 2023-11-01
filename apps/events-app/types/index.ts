@@ -126,6 +126,7 @@ export type ScheduleDetailstype = {
     name: string;
     role: string;
   }[];
+  track: TrackType
 };
 export type ScheduleUpdateRequestBody = {
   editlogs: any;

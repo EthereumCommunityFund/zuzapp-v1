@@ -146,7 +146,7 @@ const UserFacingTrack: React.ForwardRefRenderFunction<
                   scheduleData.schedule_frequency === "weekly") && (
                   <span className="text-[#b29457]">RECURRING</span>
                 )}
-              <span>scheduleData.track.name</span>
+              <span>{scheduleData.track.name}</span>
             </div>
             <span className="font-semibold md:text-lg">
               {scheduleData.name}
@@ -214,7 +214,7 @@ const UserFacingTrack: React.ForwardRefRenderFunction<
                   scheduleData.schedule_frequency === "weekly") && (
                   <span className="text-[#b29457]">RECURRING</span>
                 )}
-              <span>scheduleData.track.name</span>
+              <span>{scheduleData.track.name}</span>
             </div>
 
             <span className="font-semibold md:text-lg">

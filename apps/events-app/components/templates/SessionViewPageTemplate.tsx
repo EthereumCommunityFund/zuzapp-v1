@@ -6,7 +6,7 @@ import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/router";
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import { BiPlusCircle } from "react-icons/bi";
-import { QueryClient } from "react-query";
+import { QueryClient, useQuery } from "react-query";
 import { EventSpaceDetailsType } from "@/types";
 import { Loader } from "@/components/ui/Loader";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
@@ -22,6 +22,7 @@ import {
   stringToDateObject,
   toTurkeyTime,
 } from "@/utils";
+import { toast } from "../ui/use-toast";
 
 interface ISessionViewPageTemplate {
   event_space_id: string;
@@ -35,17 +36,14 @@ export default function SessionViewPageTemplate({
   eventSpace,
 }: ISessionViewPageTemplate) {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [schedules, setSchedules] = useState<ScheduleDetailstype[]>([]);
   const [filteredSchedules, setFilteredSchedules] = useState<
     ScheduleDetailstype[]
   >([]);
   const lastTrackRef = useRef<HTMLDivElement>(null);
   const [isUpcoming, setIsUpcoming] = useState<boolean>(true);
   const [selectedTracks, setSelectedTracks] = useState<any[]>([]);
-
-  const groupedEvents = schedules?.forEach((schedule) => {});
   const { isAuthenticated, user } = useGlobalContext();
+
   const handleItemClick = (scheduleId: string, trackId?: string) => {
     router.push({
       pathname: `/dashboard/eventview/allschedules/schedule`,
@@ -53,42 +51,11 @@ export default function SessionViewPageTemplate({
     });
   };
 
-  const updateIsLoading = (newState: boolean) => {
-    setIsLoading(newState);
-  };
-
-  // const filterEventsByTime = (events: ScheduleDetailstype[], isUpcoming: boolean): ScheduleDetailstype[] => {
-  //   const nowInIstanbul = toTurkeyTime(new Date()); // Ensure current time is in Istanbul time zone
-  //   return events.filter((event) => {
-  //     let eventStartDate = new Date(convertToTurkeyTimeAsDate(event.date));
-  //     const eventEndDate = new Date(convertToTurkeyTimeAsDate(event.end_date));
-  //     let isEventInFuture = false;
-
-  //     if (event.schedule_frequency) {
-  //       do {
-  //         if (eventStartDate >= nowInIstanbul) {
-  //           isEventInFuture = true;
-  //           break;
-  //         }
-  //         if (event.schedule_frequency === 'everyday') {
-  //           eventStartDate.setDate(eventStartDate.getDate() + 1);
-  //         } else if (event.schedule_frequency === 'weekly') {
-  //           eventStartDate.setDate(eventStartDate.getDate() + 7);
-  //         }
-  //       } while (eventStartDate <= eventEndDate);
-  //     } else {
-  //       isEventInFuture = eventStartDate >= nowInIstanbul;
-  //     }
-
-  //     return isUpcoming ? isEventInFuture : !isEventInFuture;
-  //   });
-  // };
-
-  const fetchSchedules = async () => {
-    const response: ScheduleDetailstype[] = await fetchSchedulesByEvenSpaceId(
-      event_space_id as string
-    );
-
+  const sortByUpcoming = (
+    schedules: ScheduleDetailstype[] | undefined,
+    isUpcoming: boolean
+  ): ScheduleDetailstype[] => {
+    if (!schedules) return [];
     const isUpcomingEvent = (schedule: ScheduleDetailstype) => {
       console.log(schedule, "isUpcoming");
       const today = new Date();
@@ -119,96 +86,32 @@ export default function SessionViewPageTemplate({
         }
       }
     };
-
-    const filter: ScheduleDetailstype[] = response.filter(isUpcomingEvent);
-    setSchedules(response);
-    setFilteredSchedules(filter);
-    setIsLoading(false);
+    const filter: ScheduleDetailstype[] = schedules.filter(isUpcomingEvent);
+    return filter;
   };
 
-  const handleIsUpcoming = (newFilter: boolean) => {
-    setIsLoading(true);
-    // Extract track IDs from selectedTracks
+  const filterByTrack = (schedules: ScheduleDetailstype[]) => {
     const selectedTrackIds = selectedTracks.map((item) => item.id);
-    // Determine whether to filter for upcoming or past events
-    const isUpcomingEvent = (schedule: ScheduleDetailstype) => {
-      console.log(schedule, "isUpcoming");
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-
-      const startDate = stringToDateObject(schedule.start_date);
-      const endDate = stringToDateObject(schedule.real_end_date);
-
-      // For non-recurring events:
-      if (
-        !schedule.schedule_frequency ||
-        schedule.schedule_frequency === "once"
-      ) {
-        const [hours, minutes] = schedule.start_time.split(":").map(Number);
-        startDate.setHours(hours, minutes, 0, 0);
-
-        return newFilter ? startDate >= today : startDate < today;
-      }
-      // For recurring events:
-      if (
-        schedule.schedule_frequency === "everyday" ||
-        schedule.schedule_frequency === "weekly"
-      ) {
-        if (newFilter) {
-          // Upcoming filter
-          return endDate >= today; // It's upcoming if the end date is today or in the future.
-        } else {
-          // Past filter
-          // It's past if the start date is before today, but it's also upcoming if end date hasn't passed yet.
-          // So, it will appear in both categories.
-          return startDate < today;
-        }
-      }
-    };
-
-    // Apply the upcoming/past filter
-    const filteredByDate = schedules.filter(isUpcomingEvent);
-
-    // If any tracks are selected, further filter by those tracks
-    const finalFilteredSchedules =
+    const filteredSchedules =
       selectedTrackIds.length > 0
-        ? filteredByDate.filter(
-            (schedule) =>
+        ? schedules.filter((schedule) => {
+            console.log(schedule, "selected track ids");
+            return (
               schedule.track_id && selectedTrackIds.includes(schedule.track_id)
-          )
-        : filteredByDate;
-
-    setFilteredSchedules(finalFilteredSchedules);
-    setIsUpcoming(newFilter);
-    setIsLoading(false);
+            );
+          })
+        : schedules;
+    return filteredSchedules;
   };
 
   const handleTrackSelect = (newSelectedTracks: any[]) => {
-    const selectedTrackIds = newSelectedTracks.map((item) => item.id);
-    const filter: ScheduleDetailstype[] = schedules.filter((schedule) =>
-      isUpcoming
-        ? stringToDateObject(schedule.start_date).getTime() >
-          new Date().getTime()
-        : stringToDateObject(schedule.start_date).getTime() <
-          new Date().getTime()
-    );
-
-    const filteredByTracks =
-      selectedTrackIds.length > 0
-        ? filter.filter(
-            (schedule) =>
-              schedule.track_id && selectedTrackIds.includes(schedule.track_id)
-          )
-        : filter;
-    setFilteredSchedules(filteredByTracks);
+    console.log(newSelectedTracks, "new selected tracks");
     setSelectedTracks(newSelectedTracks);
+    return;
   };
-
-  useEffect(() => {
-    if (isLoading) {
-      fetchSchedules();
-    }
-  }, [isLoading, selectedTracks, isUpcoming]);
+  const handleIsUpcoming = (newFilter: boolean) => {
+    setIsUpcoming(newFilter);
+  };
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -229,16 +132,36 @@ export default function SessionViewPageTemplate({
     };
   }, [lastTrackRef]);
 
-  console.log(filteredSchedules, "filtered schedules");
+  const {
+    data: schedules,
+    isLoading,
+    isError,
+  } = useQuery<ScheduleDetailstype[], Error>(
+    ["allSchedules", event_space_id], // Query key
+    () => fetchSchedulesByEvenSpaceId(event_space_id as string),
+    {
+      onSuccess: (data) => {
+        // setSchedules(data);
+      },
+      onError: (error) => {
+        console.log(error, "error loading events");
+        toast({
+          title: "Error",
+          description: "Error loading  Sessions",
+          variant: "destructive",
+        });
+      },
+    }
+  );
 
+  let sortedSchedules = sortByUpcoming(schedules, isUpcoming);
+  sortedSchedules = filterByTrack(sortedSchedules);
   let groupedSchedules: Record<string, ScheduleDetailstype[]> = {};
-
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  filteredSchedules.forEach((schedule) => {
+  sortedSchedules.forEach((schedule) => {
     let isFirstEvent = true;
-
     let date = stringToDateObject(schedule.start_date as string);
     const end_date = stringToDateObject(schedule.real_end_date as string);
     const frequency = schedule.schedule_frequency;
@@ -324,7 +247,7 @@ export default function SessionViewPageTemplate({
                           title={"Add"}
                           isQuickAccess={true}
                           trackId={trackId as string}
-                          updateIsLoading={updateIsLoading}
+                          // updateIsLoading={updateIsLoading}
                           event_space_id={event_space_id as string}
                         />
                       </DialogContent>
