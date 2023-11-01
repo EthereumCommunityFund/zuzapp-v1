@@ -164,8 +164,8 @@ export default function EventViewScheduleViewTemplate({ event_space_id, schedule
             <div className="flex justify-between mt-4">
               {' '}
               {/* Tracks and Edit Button */}
-              <Button variant="ghost" className="text-base font-semibold text-white/30" leftIcon={HiArrowLeft} onClick={handleBackToSchedule}>
-                Back to Sessions
+              <Button variant="ghost" size="lg" className="font-semibold text-white/30 hover:bg-white/10 rounded-3xl" leftIcon={HiArrowLeft} onClick={handleBackToSchedule}>
+                <span className="text-sm">Back to Sessions</span>
               </Button>
               <Dialog>
                 <DialogTrigger asChild>
@@ -220,24 +220,25 @@ export default function EventViewScheduleViewTemplate({ event_space_id, schedule
                 <TimeAgo date={mostRecentEditLog?.edited_at} />
               </span>
             </div>
-            {/* <div className="flex flex-col gap-2 px-5 cursor-pointer">
+            <div className="flex flex-col gap-2 px-5 cursor-pointer">
               <span onClick={toggleLogs} className="font-medium text-sm text-gray-400 cursor-pointer">
                 {showLogs ? 'Hide' : 'View'} All Edits:{' '}
               </span>
-              <div className={`items-center gap-2 ${showLogs ? 'flex' : 'hidden'}`}>
+              <div className={`items-start gap-2 ${showLogs ? 'flex flex-col' : 'hidden'}`}>
                 {currentSchedule?.editlogs.slice(1, -1).map((log: { edited_at: string | number | Date; user: { username: any } }) => {
                   const minutesAgo = <TimeAgo date={log?.edited_at} />;
+                  console.log(currentSchedule?.editlogs)
                   return (
                     <div className="">
-                      <span className="font-bold inline-block mr-2">{editorUsername}</span>
+                      <span className="font-bold inline-block mr-2">{log.user.username}</span>
                       <span className="font-medium text-sm text-gray-400">
-                        <TimeAgo date={mostRecentEditLog?.edited_at} />
+                        <TimeAgo date={log?.edited_at} />
                       </span>
                     </div>
                   );
                 })}
               </div>
-            </div> */}
+            </div>
           </div>
         </div>
       </div>

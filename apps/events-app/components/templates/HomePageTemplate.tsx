@@ -138,17 +138,17 @@ export default function HomePageTemplate() {
 
   return (
     <div className="md:w-5/6 w-[95%] mx-auto">
-      <div className="mt-10 relative w-full border border-white/10 rounded-2xl">
+      <div className="lg:mt-10 mt-48 relative w-full border border-white/10 rounded-2xl">
         <div className="">
           <CustomCarousel slides={slides as unknown as string[]} curr={currentSlide} setCurr={setCurrentSlide}>
             <div className="absolute top-0 left-0 px-8 slider_md:px-14 py-14 max-w-[650px] ml-4 mt-4">
               <h1 className="font-bold font-inter text-left text-3xl md:text-5xl mb-5">{slideData[currentSlide].title}</h1>
               <p className="text-left mb-4 max-w-[650px]font-inter text-gray-200 text-md">{slideData[currentSlide].description}</p>
               {isAuthenticated ? (
-                <div className="md:flex gap-2 items-center">
+                <div className="md:flex gap-2 mb-3 items-center">
                   {slideData[currentSlide].ctas.map((cta, index) => (
-                    <Link href={cta.ctaLink} target="_blank" rel="noopener noreferrer">
-                      <Button size="lg" variant="primaryGreen" className={`${cta.twClassNames} rounded-full w-full slider_md:w-auto my-2.5 text-xl justify-center text-white font-inter font-semibold`}>
+                    <Link key={index} href={cta.ctaLink} target="_blank" rel="noopener noreferrer">
+                      <Button size="lg" variant="primaryGreen" className={`${cta.twClassNames} rounded-full w-full slider_md:w-auto my-1.5 text-xl justify-center text-white font-inter font-semibold`}>
                         {cta.ctaText}
                       </Button>
                     </Link>
