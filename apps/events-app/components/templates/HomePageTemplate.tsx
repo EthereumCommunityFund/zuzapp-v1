@@ -159,7 +159,7 @@ export default function HomePageTemplate() {
                   <DialogTrigger asChild>
                     <div className="md:flex gap-2 items-center">
                       {slideData[currentSlide].ctas.map((cta, index) => (
-                        <Link href={cta.ctaLink} target="_blank" rel="noopener noreferrer">
+                        <Link key={index} href={cta.ctaLink} target="_blank" rel="noopener noreferrer">
                           <Button
                             size="lg"
                             variant="primaryGreen"
