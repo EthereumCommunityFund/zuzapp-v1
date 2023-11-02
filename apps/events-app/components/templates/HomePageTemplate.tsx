@@ -15,7 +15,7 @@ import { arrayFromLength } from '@/lib/helper';
 import { EventTemplateSkeleton } from '../commons/EventTemplateSkeleton';
 import { HomePageTemplateSkeleton } from '../commons/HomePageTemplateSkeleton';
 import { useEventSpace, useEventSpaces } from '@/context/EventSpaceContext';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Input } from '../ui/input';
 import { ArrowCircleLeft, ArrowCircleRight, ArrowLeft } from '../ui/icons';
 import { updateUsername } from '@/controllers/profile.controllers';
@@ -26,6 +26,8 @@ import { truncateString } from '@/utils';
 import { error } from 'console';
 import { toast } from '../ui/use-toast';
 import { Label } from '../ui/label';
+import { HostUrls } from '@/constant/hostUrls';
+import { fetchEventSpace } from '@/controllers';
 
 interface DialogContent {
   title: string;
@@ -54,28 +56,54 @@ export default function HomePageTemplate() {
       query: { event_space_id: event_space_id },
     });
   };
+  const testEventId = `7aa90b9a-456e-4852-bfad-ed247513b28f`;
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [eventSpaces, setEventSpaces] = useState<EventSpaceDetailsType[]>();
 
-  const {
-    data: eventSpaces,
-    isLoading,
-    isError,
-  } = useQuery<EventSpaceDetailsType[], Error>(
-    ['publishedEventSpaces'], // Query key
-    () => fetchPublishedEventSpaces({ page: 1, limit: 10 }),
-    {
-      onSuccess: (data) => {
-        setEventSpaceList(data);
-      },
-      onError: (error) => {
-        console.log(error, 'error loading events');
-        toast({
-          title: 'Error',
-          description: 'Error loading Published Events',
-          variant: 'destructive',
-        });
-      },
+  // const {
+  //   data: eventSpaces,
+  //   isLoading,
+  //   isError,
+  // } = useQuery<EventSpaceDetailsType[], Error>(
+  //   ['publishedEventSpaces'], // Query key
+  //   () => fetchPublishedEventSpaces({ page: 1, limit: 10 }),
+  //   {
+  //     onSuccess: (data) => {
+  //       setEventSpaceList(data);
+  //     },
+  //     onError: (error) => {
+  //       console.log(error, 'error loading events');
+  //       toast({
+  //         title: 'Error',
+  //         description: 'Error loading Published Events',
+  //         variant: 'destructive',
+  //       });
+  //     },
+  //   }
+  // );
+  const fetchEventSpaceById = async (id: string) => {
+    const response = await fetchEventSpace(id);
+    const data = await response?.data?.data;
+    setEventSpaceList(data);
+    setEventSpaces([data]);
+  };
+
+  const fetchEventSpaces = async () => {
+    const response: EventSpaceDetailsType[] = await fetchPublishedEventSpaces({ page: 1, limit: 10 });
+
+    setEventSpaceList(response);
+    setEventSpaces(response);
+  }
+
+  useEffect(() => {
+    const hostUrl = window.location.origin;
+    if (hostUrl === HostUrls.TEST) {
+      fetchEventSpaceById(testEventId)
+    } else if (hostUrl === HostUrls.LIVE) {
+      fetchEventSpaces();
     }
-  );
+    setIsLoading(false);
+  }, []);
 
   function formatDate(dateString: string | number | Date) {
     const date = new Date(dateString);
@@ -200,7 +228,7 @@ export default function HomePageTemplate() {
             </div>
           )}
           {eventSpaces &&
-            eventSpaces?.map((event, index) => (
+            eventSpaces.map((event, index) => (
               <div
                 key={index}
                 className="flex flex-col md:flex-row md:justify-between md:items-center border border-white/10 bg-componentPrimary hover:bg-itemHover rounded-2xl px-2 md:px-2 py-3 mt-5 duration-200"
