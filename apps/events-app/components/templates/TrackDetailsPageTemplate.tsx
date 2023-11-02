@@ -85,7 +85,6 @@ export default function TrackDetailsPageTemplate(props: any) {
 
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, totalSchedules);
-  currentSchedules = schedules ? schedules.slice(startIndex, endIndex) : [];
 
   const updateIsLoading = (newState: boolean) => {
     setIsLoading(newState);
@@ -237,11 +236,11 @@ export default function TrackDetailsPageTemplate(props: any) {
               </DialogTrigger>
               <DialogContent className="lg:w-3/5 lg:h-4/5 overflow-y-auto">
                 <AddScheduleForm
-                  title={"Add"}
                   isQuickAccess={false}
                   trackId={trackId as string}
                   updateIsLoading={updateIsLoading}
                   event_space_id={event_space_id as string}
+                  isFromEventView={true}
                 />
               </DialogContent>
             </Dialog>
