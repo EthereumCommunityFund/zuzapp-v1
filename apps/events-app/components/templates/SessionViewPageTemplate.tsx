@@ -76,9 +76,9 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
     const filteredSchedules =
       selectedTrackIds.length > 0
         ? schedules.filter((schedule) => {
-            console.log(schedule, 'selected track ids');
-            return schedule.track_id && selectedTrackIds.includes(schedule.track_id);
-          })
+          console.log(schedule, 'selected track ids');
+          return schedule.track_id && selectedTrackIds.includes(schedule.track_id);
+        })
         : schedules;
     return filteredSchedules;
   };
