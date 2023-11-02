@@ -57,7 +57,9 @@ const CustomDatePicker: React.FC<DatePickerProps> = ({
           const month = date.getMonth() + 1;
           const year = date.getFullYear();
           const dateString = `${year}-${month}-${day}`;
-          const dateObject: Date = new Date(dateString);
+          // const dateObject2: Date = new Date(dateString);
+          const dateObject = new Date(year, month - 1, day); // Month is 0-indexed in JavaScript Date constructor
+          // console.log(dateObject, "date object", dateObject2);
           setStartDate(dateObject);
           handleDateChange(dateObject);
         }}

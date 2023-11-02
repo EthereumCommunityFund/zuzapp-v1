@@ -66,15 +66,6 @@ export default function ScheduleItemCard() {
     }).format(date);
   }
 
-  function formatTime(dateString: string | number | Date) {
-    const date = new Date(dateString);
-    return new Intl.DateTimeFormat("en-US", {
-      hour: "numeric",
-      minute: "numeric",
-      hour12: true,
-    }).format(date);
-  }
-
   if (isLoading) {
     return <Loader />;
   }
