@@ -36,7 +36,7 @@ export default function EventViewDetailsPanel(props: IEventViewDetailsPanel) {
     social_links,
     extra_links,
   } = eventSpace;
-  const { profile } = useGlobalContext();
+  const { isAuthenticated } = useGlobalContext();
   const [socialLinks, setSocialLinks] = useState<IEventLink[] | undefined>();
   const [extraLinks, setExtraLinks] = useState<IEventLink[] | undefined>();
   const [imgUrls, setImgUrls] = useState<string[]>();
@@ -140,11 +140,11 @@ export default function EventViewDetailsPanel(props: IEventViewDetailsPanel) {
                   <Label className="text-xl">Location</Label>
                 </div>
                 <div className="flex flex-col gap-[6px]">
-                  <Label className="text-md">{profile ? locationName : `Apply to See Address`}</Label>
-                  <Label className="text-sm font-light opacity-70">{locationAddress}</Label>
+                  <Label className="text-md">{isAuthenticated ? locationName : `Apply to See Address`}</Label>
+                  <Label className="text-sm font-light opacity-70">{isAuthenticated ? locationAddress : ``}</Label>
                 </div>
                 {/* {imgUrls && <Image width={260} height={148} src={imgUrls[0]} alt={''} className={`rounded-xl ${profile ? `blur-none` : `blur`} h-[148px]`} />} */}
-                {imgUrls && <Image src={imgUrls[0]} width={150} height={50} alt="No Images" className="h-[88px] rounded-lg" loading="lazy" />}
+                {imgUrls && isAuthenticated && <Image src={imgUrls[0]} width={150} height={50} alt="No Images" className="h-[88px] rounded-lg" loading="lazy" />}
               </div>
             )}
           </div>

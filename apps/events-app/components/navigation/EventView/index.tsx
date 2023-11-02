@@ -65,42 +65,29 @@ export default function EventViewNavigation() {
       </div>
       {/* Overlay that can close the dashboard menu */}
       <div
-        className={`md:hidden fixed inset-0 bg-black/10 z-10 ${
-          dashboardOpen ? "block" : "hidden"
-        }`}
+        className={`md:hidden fixed inset-0 bg-black/10 z-10 ${dashboardOpen ? "block" : "hidden"
+          }`}
         onClick={handleClick}
       ></div>
       <nav
-        className={`z-50 lg:w-[250px] w-full fixed flex flex-col lg:h-screen border-r border-r-gray-800 bg-pagePrimary lg:py-10 lg:pl-10 md:text-base text-[12px] transition-transform duration-300 ${
-          dashboardOpen && "open"
-        }`}
+        className={`z-50 lg:w-[250px] w-full mt-[4.3rem] lg:mt-0 sticky top-5 backdrop-blur-3xl lg:fixed flex flex-col lg:h-screen border-r border-r-gray-800 lg:py-10 lg:pl-10 md:text-base text-[12px] transition-transform duration-300 ${dashboardOpen && 'open'
+          }`}
       >
         <div className="flex-1 flex flex-col ml-5 lg:ml-0 gap-5 max-w-max">
           <div className="lg:mt-10 flex-1">
-            <Button
-              size="lg"
-              variant="quiet-SM"
-              className="lg:pb-8 md:pb-4 sm:pb-2 opacity-80"
-              leftIcon={ArrowCircleLeft}
-              onClick={handleBackToEvents}
-            >
+            <Button size="lg" variant="quiet-SM" className="lg:mb-8 md:mb-4 sm:mb-2 opacity-80 hover:bg-white/10 rounded-3xl mt-2" leftIcon={ArrowCircleLeft} onClick={handleBackToEvents}>
               <span className="text-sm opacity-70">Back to Events</span>
             </Button>
-            <div className="flex flex-col gap-3.5 lg:pb-10 md:pb-1">
-              <span className="font-normal text-sm md:hidden lg:contents sm:hidden">
-                Navigate Event
-              </span>
+            <div className="flex flex-col gap-3.5 lg:pb-10 md:pb-1 mt-[-15px]">
+              <span className="font-normal text-sm md:hidden lg:contents sm:hidden">Navigate Event</span>
               <ul className="space-y-5 lg:block flex gap-2.5 lg:gap-0 items-end overflow-x-auto">
                 {routes.map(
                   (route, index) =>
                     route.name && (
                       <li
                         key={index}
-                        className={`flex flex-nowrap items-center font-medium text-sm cursor-pointer space-x-2 py-2 px-3 lg:rounded-xl md:hover:border-b duration-200 ${
-                          router.pathname.includes(route.path)
-                            ? "lg:bg-white/10 sm:border-b sm:border-white/80 lg:border-0"
-                            : "opacity-60 lg:hover:bg-white/20"
-                        }`}
+                        className={`flex flex-nowrap items-center font-medium text-sm cursor-pointer space-x-2 py-2 px-3 lg:rounded-xl md:hover:border-b lg:hover:border-0 duration-200 ${router.pathname.includes(route.path) ? 'lg:bg-white/10 sm:border-b-[2px] sm:border-white/80 lg:border-0' : 'opacity-60 lg:hover:bg-white/20'
+                          }`}
                       >
                         {route.icon && <route.icon size={25} />}
                         <Link

@@ -1,24 +1,28 @@
-import Image from 'next/image';
+import Image from "next/image";
 
-import Button from '@/components/ui/buttons/Button';
-import { useGlobalContext } from '@/context/GlobalContext';
-import { useUserPassportContext } from '@/context/PassportContext';
-import Link from 'next/link';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { dashboardRoutes } from '@/components/navigation/Dashboard/routes';
-import { useRouter } from 'next/router';
-import { RxAvatar } from 'react-icons/rx';
-import IconButton from '@/components/ui/buttons/IconButton';
-import { HiMenuAlt1 } from 'react-icons/hi';
-import { XCircle } from '@/components/ui/icons';
-import { useState } from 'react';
-import { navBarRoutes } from '@/constant/routes';
-import { FaCog } from 'react-icons/fa';
-import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
-import { Database } from '@/database.types';
-import MyProfileButton from './MyProfileButton';
+import Button from "@/components/ui/buttons/Button";
+import { useGlobalContext } from "@/context/GlobalContext";
+import { useUserPassportContext } from "@/context/PassportContext";
+import Link from "next/link";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { dashboardRoutes } from "@/components/navigation/Dashboard/routes";
+import { useRouter } from "next/router";
+import { RxAvatar } from "react-icons/rx";
+import IconButton from "@/components/ui/buttons/IconButton";
+import { HiMenuAlt1 } from "react-icons/hi";
+import { XCircle } from "@/components/ui/icons";
+import { useState } from "react";
+import { navBarRoutes } from "@/constant/routes";
+import { FaCog } from "react-icons/fa";
+import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
+import { Database } from "@/database.types";
+import MyProfileButton from "./MyProfileButton";
 import CreateEventSpace from "@/components/navigation/Header/CreateEventSpace";
-import { Label } from '@/components/ui/label';
+import { Label } from "@/components/ui/label";
 
 export default function DashboardHeader() {
   const { signIn } = useUserPassportContext();
@@ -27,7 +31,7 @@ export default function DashboardHeader() {
 
   const routes = navBarRoutes;
 
-  console.log('isAuthenticated', isAuthenticated, profile);
+  console.log("isAuthenticated", isAuthenticated, profile);
 
   const [dashboardOpen, setDashboardOpen] = useState<boolean>(false);
   const [isAlert, setIsAlert] = useState<boolean>(true);
@@ -38,7 +42,7 @@ export default function DashboardHeader() {
 
   const handleAlert = () => {
     setIsAlert(false);
-  }
+  };
 
   return (
     <div className="fixed top-0 left-0 w-full z-50 border-b border-white/10">
@@ -73,7 +77,9 @@ export default function DashboardHeader() {
                     key={route.path}
                     onClick={handleClick}
                     className={`flex items-center space-x-2 py-1 px-3 hover:bg-white/20 hover:text-white/40 rounded-3xl ${
-                      router.pathname === route.path ? "bg-white/20 text-white" : "text-white/40"
+                      router.pathname === route.path
+                        ? "bg-white/20 text-white"
+                        : "text-white/40"
                     }`}
                   >
                     {route.icon && <route.icon size={30} />}
@@ -111,40 +117,68 @@ export default function DashboardHeader() {
         {/*</div>*/}
         <div>
           {isAuthenticated && profile ? (
-              <div className="flex items-center gap-3">
-                <CreateEventSpace />
-                <MyProfileButton
-                    className=""
-                    userName={profile.username ? profile.username : `My Profile`}
-                />
-              </div>
+            <div className="flex items-center gap-3">
+              <CreateEventSpace />
+              <MyProfileButton
+                className=""
+                userName={profile.username ? profile.username : `My Profile`}
+              />
+            </div>
           ) : (
             // <Button leftIcon={User} variant="quiet" className="space-x-2 rounded-full">
             // </Button>
             <Popover>
-              <PopoverTrigger className="flex space-x-2 items-center rounded-3xl px-5 py-2 h-full bg-dark text-sm md:text-base" onClick={signIn}>
-                <Image src="/images/zaluza blackandwhite.png" width={20} height={20} alt="Passport" className="mr-2" />
+              <PopoverTrigger
+                className="flex space-x-2 items-center rounded-3xl px-5 py-2 h-full bg-dark text-sm md:text-base"
+                onClick={signIn}
+              >
+                <Image
+                  src="/images/zaluza blackandwhite.png"
+                  width={20}
+                  height={20}
+                  alt="Passport"
+                  className="mr-2"
+                />
                 Connect <span className="hidden md:inline"> Passport</span>
               </PopoverTrigger>
               <PopoverContent className="bg-[#2B2D2DE5] mt-5 mr-5 rounded-2xl w-80">
                 <div className="w-full flex flex-col items-center">
-                  <Image src="/images/small-icon.png" alt="Avatar" width={100} height={25} />
-                  <p className="text-white/50 font-light text-xs mt-2">POWERED BY OXPARC WITH ZERO-KNOWLEDGE</p>
-                  <div className="my-5 font-semibold text-sm">{!isAuthenticated ? <p>Confirming on Zupass...</p> : <p className="font-bold text-primary">Connected!</p>}</div>
+                  <Image
+                    src="/images/small-icon.png"
+                    alt="Avatar"
+                    width={100}
+                    height={25}
+                  />
+                  <p className="text-white/50 font-light text-xs mt-2">
+                    POWERED BY OXPARC WITH ZERO-KNOWLEDGE
+                  </p>
+                  <div className="my-5 font-semibold text-sm">
+                    {!isAuthenticated ? (
+                      <p>Confirming on Zupass...</p>
+                    ) : (
+                      <p className="font-bold text-primary">Connected!</p>
+                    )}
+                  </div>
                 </div>
               </PopoverContent>
             </Popover>
           )}
         </div>
       </header>
-      {router.pathname === `/dashboard/home` && isAlert &&
-      <div className='flex justify-between w-full bg-[#7D432C] hover:bg-[#7D432C] text-[#FF956B] items-center'>
-        <Label className='md:px-2 px-1 sm:py-2 lg:py-0'>
-        Note: as the app is still in beta, there will be bugs and constant fixes. We ask residents to hold on adding or editing sessions. Thank you!
-        </Label>
-        <IconButton variant='ghost' className='text-[#FF956B]' icon={XCircle} onClick={handleAlert}/>
-      </div>
-          }
+      {router.pathname === `/dashboard/home` && isAlert && (
+        <div className="flex justify-between w-full bg-[#7D432C] hover:bg-[#7D432C] text-[#FF956B] items-center">
+          <Label className="md:px-2 px-1 sm:py-2 lg:py-0">
+            Note: The app is still in Beta. Maintenance happens IST 2:00am to
+            6:00am. Thank you!
+          </Label>
+          <IconButton
+            variant="ghost"
+            className="text-[#FF956B]"
+            icon={XCircle}
+            onClick={handleAlert}
+          />
+        </div>
+      )}
     </div>
   );
 }

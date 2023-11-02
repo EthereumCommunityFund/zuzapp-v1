@@ -112,6 +112,22 @@ export function UserPassportContextProvider({
   // Once we have the UUID, fetch the user data from Passport.
   const logInUser = async (user: User) => {
     let pcdStr = "adfaf";
+    const { scheduleName, trackId, event_space_id, scheduleId } = router.query;
+    let query: string = "";
+    switch (router.pathname) {
+      case '/dashboard/home':
+        query = "firstLogin=true";
+        break;
+      case '/dashboard/eventview/tracks/track/schedule':
+        query = `scheduleName=${scheduleName}&trackId=${trackId}&event_space_id=${event_space_id}&scheduleId=${scheduleId}`;
+        break;
+      case '/dashboard/eventview/allschedules/schedule':
+        query = `scheduleId=${scheduleId}&trackId=${trackId}&event_space_id=${event_space_id}`;
+        break;
+      default:
+        query = ``;
+        break;
+    }
 
     try {
       await axiosInstance.post("/api/auth/authenticate", {
@@ -119,8 +135,8 @@ export function UserPassportContextProvider({
         ...user,
       });
       router.push({
-        pathname: "/dashboard/home",
-        query: "firstLogin=true",
+        pathname: router.pathname,
+        query: query,
       });
     } catch (error) {
       console.log(error, "new error");
