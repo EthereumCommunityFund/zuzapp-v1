@@ -97,7 +97,7 @@ export default function HomePageTemplate() {
 
   useEffect(() => {
     const hostUrl = window.location.origin;
-    if (hostUrl === HostUrls.LIVE) {
+    if (hostUrl === HostUrls.PROD) {
       fetchEventSpaces();
     } else {
       fetchEventSpaceById(testEventId);
