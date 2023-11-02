@@ -21,25 +21,26 @@ export default function DashboardNavigation() {
   const { isAuthenticated, user } = useGlobalContext();
   const [markdownContent, setMarkdownContent] = useState<string>('');
   const url = `/zuzalu/Zuzalu_Mission.md`;
+  const zuzaluLink = `https://zuzalu.notion.site/Zuzalu-s-Mission-and-Vision-28d0dfaf60c043ab8bb1943f493a225f`;
 
   const router = useRouter();
   const handleClick = () => {
     setDashboardOpen(!dashboardOpen);
   };
 
-  useEffect(() => {
-    const fetchMarkdownContent = async () => {
-      try {
-        const response = await fetch(url);
-        const content = await response.text();
-        setMarkdownContent(content);
-      } catch (error) {
-        console.error('Error fetching Markdown content:', error);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchMarkdownContent = async () => {
+  //     try {
+  //       const response = await fetch(url);
+  //       const content = await response.text();
+  //       setMarkdownContent(content);
+  //     } catch (error) {
+  //       console.error('Error fetching Markdown content:', error);
+  //     }
+  //   };
 
-    fetchMarkdownContent();
-  }, [url]);
+  //   fetchMarkdownContent();
+  // }, [url]);
 
   return (
     <>
@@ -100,7 +101,8 @@ export default function DashboardNavigation() {
           <div className="mt-5 py-[15px] px-[13px] gap-3.5 flex flex-col rounded-2xl bg-[#2B2D2D] w-[240px]">
             <Label className="text-white text-xl">Zuzalu</Label>
             <Label className="text-white/70 text-xs font-normal">Foster a global network of communities to advance humanity by creating playgrounds at the intersection of free and open technology, science, heath and social innovation</Label>
-            <Dialog>
+            <Button variant='quiet' className="rounded-2xl tracking-wide justify-center" onClick={() => window.open(zuzaluLink, '_blank')}>Learn About Zuzalu</Button>
+            {/* <Dialog>
               <DialogTrigger asChild>
                 <Button variant='quiet' className="rounded-2xl tracking-wide justify-center" >Learn About Zuzalu</Button>
               </DialogTrigger>
@@ -111,7 +113,7 @@ export default function DashboardNavigation() {
                   </DialogTitle>
                   <hr className='bg-grayBackground' />
                   <DialogDescription className="text-white">
-                    {/* <RenderHTMLString htmlString={markdownContent} /> */}
+                    {/* <RenderHTMLString htmlString={markdownContent} /> 
                     <ReactMarkdown className={'overflow-x-auto h-[500px]'}>{markdownContent}</ReactMarkdown>
                   </DialogDescription>
                 </DialogHeader>
@@ -119,10 +121,10 @@ export default function DashboardNavigation() {
                   <Button size='sm' className='rounded-full w-10 h-10'><X /></Button>
                 </DialogPrimitive.Close>
               </DialogContent>
-            </Dialog>
+            </Dialog> */}
           </div>
         </div>
-      </nav>
+      </nav >
     </>
   );
 }
