@@ -17,7 +17,7 @@ export default function EventViewHeader(props: IEventViewHeader) {
         }
       >
         <div className="sm:flex sm:flex-row items-center gap-5 sm:justify-left w-full sm:py-3 sm:px-3 md:px-0">
-          <Image src={imgPath} className="rounded-xl" width={90} height={90} alt="event" loading='lazy' />
+          <Image src={imgPath} className="rounded-xl" width={90} height={90} alt="event" loading="lazy" />
           <div className="flex flex-col gap-2 w-3/4">
             <h2 className="font-bold text-2xl z-50">{name}</h2>
             <span className="opacity-70 text-[15px] lg:flex sm:hidden">{tagline}</span>

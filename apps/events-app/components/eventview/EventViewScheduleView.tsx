@@ -25,6 +25,8 @@ import { deleteScheduleById } from '@/services/deleteSchedule';
 import { Label } from '../ui/label';
 import { toTurkeyTime } from '@/utils';
 import { FiEdit } from 'react-icons/fi';
+import { useGlobalContext } from '@/context/GlobalContext';
+import { useUserPassportContext } from '@/context/PassportContext';
 interface IEventViewScheduleViewTemplate {
   event_space_id: string;
   scheduleId: string;
@@ -42,6 +44,7 @@ export default function EventViewScheduleViewTemplate({ event_space_id, schedule
   const [showLogs, setShowLogs] = useState(false);
 
   const trackItem = eventSpace?.tracks.find((trackItem) => trackItem.id === trackId);
+  const { isAuthenticated, user } = useGlobalContext();
 
   const handleBackToSchedule = () => {
     router.push({
@@ -102,7 +105,8 @@ export default function EventViewScheduleViewTemplate({ event_space_id, schedule
   const editorUsername = mostRecentEditLog?.user?.username;
   const creatorUsername = currentSchedule?.editlogs[0]?.user?.username;
   const creatorId = currentSchedule?.editlogs[0]?.editor_id;
-  const [locatin, setLocation] = useState<string>('');
+  const [location, setLocation] = useState<string>('');
+  const { signIn } = useUserPassportContext();
   useEffect(() => {
     if (currentSchedule) {
       if (currentSchedule.rsvp_amount === currentSchedule.current_rsvp_no) {
@@ -117,30 +121,31 @@ export default function EventViewScheduleViewTemplate({ event_space_id, schedule
     }
   }, [currentSchedule]);
 
-  const handleDeleteSchedule = async () => {
-    if (!scheduleId) return;
+  // const handleDeleteSchedule = async () => {
+  //   if (!scheduleId) return;
 
-    setIsLoading(true);
-    try {
-      await deleteScheduleById(scheduleId as string, event_space_id as string);
-      toast({
-        title: 'session deleted successfully',
-      });
-      router.push({
-        pathname: `/dashboard/eventview/allschedules`,
-        query: {
-          event_space_id,
-        },
-      });
-    } catch (error) {
-      console.error('Error deleting the schedule', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  //   setIsLoading(true);
+  //   try {
+  //     await deleteScheduleById(scheduleId as string, event_space_id as string);
+  //     toast({
+  //       title: 'session deleted successfully',
+  //     });
+  //     router.push({
+  //       pathname: `/dashboard/eventview/allschedules`,
+  //       query: {
+  //         event_space_id,
+  //       },
+  //     });
+  //   } catch (error) {
+  //     console.error('Error deleting the schedule', error);
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
   useEffect(() => {
-    checkIfUserHasRsvpd();
-  }, []);
+    if (isAuthenticated)
+      checkIfUserHasRsvpd();
+  }, [isAuthenticated]);
 
   const startTime = currentSchedule && toTurkeyTime(currentSchedule.start_time).format('H:mm');
 
@@ -164,14 +169,16 @@ export default function EventViewScheduleViewTemplate({ event_space_id, schedule
             <div className="flex justify-between mt-4">
               {' '}
               {/* Tracks and Edit Button */}
-              <Button variant="ghost" className="text-base font-semibold text-white/30" leftIcon={HiArrowLeft} onClick={handleBackToSchedule}>
-                Back to Sessions
+              <Button variant="ghost" size="lg" className="font-semibold text-white/30 hover:bg-white/10 rounded-3xl" leftIcon={HiArrowLeft} onClick={handleBackToSchedule}>
+                <span className="text-sm">Back to Sessions</span>
               </Button>
               <Dialog>
                 <DialogTrigger asChild>
-                  <Button variant="quiet" className="rounded-3xl p-2 px-3 text-base" leftIcon={FiEdit}>
-                    <span className="px-1">Edit</span>
-                  </Button>
+                  {isAuthenticated &&
+                    <Button variant="quiet" className="rounded-3xl p-2 px-3 text-base" leftIcon={FiEdit}>
+                      <Label className="px-1">Edit</Label>
+                    </Button>
+                  }
                 </DialogTrigger>
                 <DialogContent className="lg:h-4/5 w-full h-screen lg:w-3/5 overflow-y-auto">
                   <EditScheduleForm title="Update" isQuickAccess={true} scheduleId={scheduleId as string} trackId={trackId as string} creatorId={creatorId} />
@@ -199,10 +206,15 @@ export default function EventViewScheduleViewTemplate({ event_space_id, schedule
                 size="lg"
                 className={`rounded-2xl justify-center ${rsvpUpdated ? 'animate-rsvp' : ''}`}
                 leftIcon={BsFillTicketFill}
-                onClick={handleRsvpAction}
+                onClick={isAuthenticated ? handleRsvpAction : signIn}
                 disabled={isRsvpFullOnLoad || currentSchedule?.rsvp_amount === 0 || (isRsvpFullOnLoad && !hasRsvpd)}
               >
-                {currentSchedule?.rsvp_amount === 0 ? 'No Rsvp Available' : hasRsvpd ? 'Cancel RSVP' : isRsvpFullOnLoad ? 'RSVP Full' : 'RSVP Session'}
+                {isAuthenticated ?
+                  <>
+                    {currentSchedule?.rsvp_amount === 0 ? 'No Rsvp Available' : hasRsvpd ? 'Cancel RSVP' : isRsvpFullOnLoad ? 'RSVP Full' : 'RSVP Session'}
+                  </> :
+                  'Login to RSVP'
+                }
               </Button>
             </div>
             {/* <Button variant="red" className="rounded-xl w-fit" onClick={handleDeleteSchedule}>
@@ -220,24 +232,25 @@ export default function EventViewScheduleViewTemplate({ event_space_id, schedule
                 <TimeAgo date={mostRecentEditLog?.edited_at} />
               </span>
             </div>
-            {/* <div className="flex flex-col gap-2 px-5 cursor-pointer">
+            <div className="flex flex-col gap-2 px-5 cursor-pointer">
               <span onClick={toggleLogs} className="font-medium text-sm text-gray-400 cursor-pointer">
                 {showLogs ? 'Hide' : 'View'} All Edits:{' '}
               </span>
-              <div className={`items-center gap-2 ${showLogs ? 'flex' : 'hidden'}`}>
+              <div className={`items-start gap-2 ${showLogs ? 'flex flex-col' : 'hidden'}`}>
                 {currentSchedule?.editlogs.slice(1, -1).map((log: { edited_at: string | number | Date; user: { username: any } }) => {
                   const minutesAgo = <TimeAgo date={log?.edited_at} />;
+                  console.log(currentSchedule?.editlogs)
                   return (
                     <div className="">
-                      <span className="font-bold inline-block mr-2">{editorUsername}</span>
+                      <span className="font-bold inline-block mr-2">{log.user.username}</span>
                       <span className="font-medium text-sm text-gray-400">
-                        <TimeAgo date={mostRecentEditLog?.edited_at} />
+                        <TimeAgo date={log?.edited_at} />
                       </span>
                     </div>
                   );
                 })}
               </div>
-            </div> */}
+            </div>
           </div>
         </div>
       </div>
