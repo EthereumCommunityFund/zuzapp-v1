@@ -331,7 +331,7 @@ export default function EditScheduleForm({
       location_id: schedule.location_id,
       organizers: updatedOrganizers,
       video_call_link: schedule.video_call_link,
-      live_stream_url: schedule.live_stream_url,
+      // live_stream_url: schedule.live_stream_url,
       all_day: schedule.all_day,
       track_id: trackId,
       limit_rsvp: schedule.limit_rsvp,
@@ -514,9 +514,8 @@ export default function EditScheduleForm({
   }
   return (
     <div
-      className={`flex items-start gap-8 ${
-        isFromEventView ? `flex-col` : `flex-row`
-      } w-full`}
+      className={`flex items-start gap-8 ${isFromEventView ? `flex-col` : `flex-row`
+        } w-full`}
     >
       {!isFromEventView && (
         <div className="lg:flex hidden flex-col pt-3 rounded-s-xl opacity-70 w-[300px] gap-5 fixed">
@@ -545,16 +544,14 @@ export default function EditScheduleForm({
       )}
 
       <div
-        className={`flex flex-col items-start gap-[17px] ${
-          isFromEventView ? `` : `lg:ml-[300px]`
-        } w-full`}
+        className={`flex flex-col items-start gap-[17px] ${isFromEventView ? `` : `lg:ml-[300px]`
+          } w-full`}
       >
         <div
-          className={`flex flex-col items-center gap-8 rounded-2xl py-5 ${
-            isFromEventView
+          className={`flex flex-col items-center gap-8 rounded-2xl py-5 ${isFromEventView
               ? `border-none`
               : `px-4 border border-white/10 bg-componentPrimary`
-          }   text-white w-full`}
+            }   text-white w-full`}
         >
           <div className="flex flex-col items-center gap-[34px] w-full max-w-[1000px]">
             {scheduleUpdated ? (
@@ -806,33 +803,33 @@ export default function EditScheduleForm({
                         {(schedule?.schedule_frequency ===
                           sessionFrequency.WEEKLY ||
                           schedule?.schedule_frequency ===
-                            sessionFrequency.EVERYDAY) && (
-                          <div className="flex flex-col items-center gap-[30px] self-stretch w-full">
-                            <FormField
-                              control={form.control}
-                              name="end_date"
-                              render={({ field }) => (
-                                <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
-                                  <span className="text-lg opacity-70 self-stretch">
-                                    End Date
-                                  </span>
+                          sessionFrequency.EVERYDAY) && (
+                            <div className="flex flex-col items-center gap-[30px] self-stretch w-full">
+                              <FormField
+                                control={form.control}
+                                name="end_date"
+                                render={({ field }) => (
+                                  <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
+                                    <span className="text-lg opacity-70 self-stretch">
+                                      End Date
+                                    </span>
 
-                                  <CustomDatePicker
-                                    defaultDate={undefined}
-                                    selectedDate={field.value || null}
-                                    handleDateChange={field.onChange}
-                                    {...field}
-                                  />
+                                    <CustomDatePicker
+                                      defaultDate={undefined}
+                                      selectedDate={field.value || null}
+                                      handleDateChange={field.onChange}
+                                      {...field}
+                                    />
 
-                                  <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">
-                                    Click & Select or type in a date
-                                  </h3>
-                                  <FormMessage />
-                                </div>
-                              )}
-                            />
-                          </div>
-                        )}
+                                    <h3 className="opacity-70 h-3 font-normal text-[10px] leading-3">
+                                      Click & Select or type in a date
+                                    </h3>
+                                    <FormMessage />
+                                  </div>
+                                )}
+                              />
+                            </div>
+                          )}
                         <line></line>
                       </div>
                     </div>
