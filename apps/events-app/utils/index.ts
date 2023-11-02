@@ -95,23 +95,34 @@ export const sortGroupedSchedulesByStartTime = (groupedSchedules: Record<string,
 }
 
 
-export const sortSchedulesByStartTime = (schedules: any): any => {
+export const sortSchedulesByStartTime = (schedules: ScheduleDetailstype[] | undefined) => {
+
   if (!schedules) {
-    return []
+    return [];
   }
+
   schedules.sort((a: any, b: any) => {
-    if (a.start_date < b.start_date) return -1;
-    if (a.start_date > b.start_date) return 1;
+    const dateA = parseDateString(a.start_date);
+    const dateB = parseDateString(b.start_date);
+    if (dateA < dateB) return -1;
+    if (dateA > dateB) return 1;
     const timeA = timeToMinutes(a.start_time);
     const timeB = timeToMinutes(b.start_time);
     return timeA - timeB;
   });
 
+  console.log(schedules, "sorted schedules");
+  return schedules;
+};
+
+const parseDateString = (dateString: string) => {
+  const [year, month, day] = dateString.split('-').map(num => parseInt(num, 10));
+  const date = new Date(2000, 0, 1);
+  date.setFullYear(2000 + year, month - 1, day);
+  return date;
+};
 
 
-  console.log(schedules, "sorted schedules")
-  return schedules
-}
 
 
 function getRandomElement<T>(array: T[]): T {
