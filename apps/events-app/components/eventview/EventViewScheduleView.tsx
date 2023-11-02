@@ -181,7 +181,13 @@ export default function EventViewScheduleViewTemplate({ event_space_id, schedule
                   }
                 </DialogTrigger>
                 <DialogContent className="lg:h-4/5 w-full h-screen lg:w-3/5 overflow-y-auto">
-                  <EditScheduleForm title="Update" isQuickAccess={true} scheduleId={scheduleId as string} trackId={trackId as string} creatorId={creatorId} />
+                  <EditScheduleForm
+                    isQuickAccess={true}
+                    scheduleId={scheduleId as string}
+                    trackId={trackId as string}
+                    isFromEventView={true}
+                    event_space_id={event_space_id}
+                  />
                 </DialogContent>
               </Dialog>
             </div>
@@ -204,7 +210,8 @@ export default function EventViewScheduleViewTemplate({ event_space_id, schedule
               <Button
                 variant="primary"
                 size="lg"
-                className={`rounded-2xl justify-center ${rsvpUpdated ? 'animate-rsvp' : ''}`}
+                className={`rounded-2xl justify-center ${rsvpUpdated ? "animate-rsvp" : ""
+                  }`}
                 leftIcon={BsFillTicketFill}
                 onClick={isAuthenticated ? handleRsvpAction : signIn}
                 disabled={isRsvpFullOnLoad || currentSchedule?.rsvp_amount === 0 || (isRsvpFullOnLoad && !hasRsvpd)}
