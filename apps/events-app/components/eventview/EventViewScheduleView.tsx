@@ -199,7 +199,7 @@ export default function EventViewScheduleViewTemplate({ event_space_id, schedule
                 <Label className="text-sm">{trackItem?.name?.toLocaleUpperCase()}</Label>
                 <div className="flex gap-2 items-center">
                   {startTime && endTime && <EventDataTime iconSize={15} startTime={startTime} endTime={endTime} />}
-                  {currentSchedule?.date && <EventDataDate startDate={new Date(currentSchedule.date).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })} />}
+                  {currentSchedule?.start_time && <EventDataDate startDate={new Date(currentSchedule.start_time).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })} />}
                 </div>
                 <Label className="text-3xl font-bold">{currentSchedule?.name}</Label>
                 {currentSchedule?.organizers && <div className="flex flex-wrap gap-[6px] ">{currentSchedule?.organizers?.map((organizer) => <Speaker title={organizer.name} />)}</div>}
