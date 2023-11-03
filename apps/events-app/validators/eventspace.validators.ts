@@ -16,7 +16,7 @@ const eventspace_update_schema = Joi.object({
   tagline: Joi.string().allow(''),
   social_links: Joi.string().uri().when('format', {
     is: Joi.valid('online'),
-    then: Joi.required(),
+    then: Joi.optional(),
     otherwise: Joi.optional(),
   }),
   extra_links: Joi.string().allow(''),

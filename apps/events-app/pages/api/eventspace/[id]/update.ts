@@ -45,6 +45,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         mainLocationId = locationData[0].id;
     }
 
+    console.log(mainLocationId)
+
+
+
     const updates = {
         ...data,
         start_date: formatTimestamp(data.start_date),
@@ -52,10 +56,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     };
 
     const { data: eventData, error: eventUpdateError } = await supabase
-        .from('EventSpace')
+        .from('eventspace')
         .update({ ...updates, main_location_id: mainLocationId })
         .eq('id', id)
         .single();
+
+
+    console.log(eventData, eventUpdateError)
 
     if (eventUpdateError) {
         logToFile("server error", eventUpdateError.message, eventUpdateError.code, req.body.user.email)
