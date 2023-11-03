@@ -92,7 +92,7 @@ export default function HomePageTemplate() {
     setTestEventSpace(testSpace);
     setEventSpaceList(response);
     setEventSpaces(response);
-  }
+  };
 
   useEffect(() => {
     const hostUrl = window.location.origin;
@@ -255,13 +255,19 @@ export default function HomePageTemplate() {
             ))}
         </div>
       </div>
-      {hostUrl !== HostUrls.PROD && testEventSpace &&
+      {hostUrl !== HostUrls.TEST && testEventSpace && (
         <div>
           <Label className="text-xl md:text-4xl">Test Events</Label>
           <div className="flex flex-col md:flex-row md:justify-between md:items-center border border-white/10 bg-componentPrimary hover:bg-itemHover rounded-2xl px-2 md:px-2 py-3 mt-5 duration-200">
             <div className="flex flex-col md:flex-row md:space-x-3 md:items-center">
               <div>
-                <img src={testEventSpace.image_url ? testEventSpace.image_url : `/images/black-img.png`} className="rounded-xl w-full md:max-w-[180px] md:max-h-[180px]" alt="Event" width={150} height={150} />
+                <img
+                  src={testEventSpace.image_url ? testEventSpace.image_url : `/images/black-img.png`}
+                  className="rounded-xl w-full md:max-w-[180px] md:max-h-[180px]"
+                  alt="Event"
+                  width={150}
+                  height={150}
+                />
               </div>
               <div className="space-y-2 space-x-0 mt-2 md:mt-0">
                 <h4 className="text-2xl font-semibold">{testEventSpace.name}</h4>
@@ -277,13 +283,17 @@ export default function HomePageTemplate() {
               </div>
             </div>
             <div className="mt-3 md:mt-0 lg:mr-2">
-              <Button size="lg" className="rounded-full w-full flex items-center justify-center font-semibold md:w-auto bg-white/10" onClick={() => testEventSpace.id && handleButtonClick(testEventSpace.id)}>
+              <Button
+                size="lg"
+                className="rounded-full w-full flex items-center justify-center font-semibold md:w-auto bg-white/10"
+                onClick={() => testEventSpace.id && handleButtonClick(testEventSpace.id)}
+              >
                 View Event
               </Button>
             </div>
           </div>
         </div>
-      }
+      )}
       {profile && firstLogin && !profile.username && (
         <Dialog open={true}>
           <DialogContent className="w-96 sm:max-w-xl p-6">
