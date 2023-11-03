@@ -116,14 +116,14 @@ export default function HomePageTemplate() {
         'Join us for a two-week popup village where the leading innovators in crypto, AI, governance, decentralized science, and culture unite in the heart of Istanbul to co-work, break downsiloes, and have fun',
       ctas: [
         {
-          ctaText: 'Apply to Waitlist',
-          ctaLink: 'https://app.tripsha.com/trip/64ff3a6eb4b6950008dee4f8/book',
+          ctaText: 'Manage your Ticket',
+          ctaLink: 'https://app.tripsha.com/trip/64ff3a6eb4b6950008dee4f8/',
           action: 'apply',
           twClassNames: 'bg-[#769270] hover:bg-[#92B68B]',
         },
         {
           ctaText: 'About ZuConnect',
-          ctaLink: 'https://app.skiff.com/docs/686afeda-6dd6-4e45-bd9c-025da5ab7af2#/APhdwcKl0ybzpGeElvYgLL3+IXTf+8vm5OMl+s/1P0=',
+          ctaLink: 'https://wiki.zuzalu.city',
           action: 'about',
           twClassNames: 'bg-white/20 hover:bg-white/30',
         },
@@ -255,7 +255,7 @@ export default function HomePageTemplate() {
             ))}
         </div>
       </div>
-      {hostUrl !== HostUrls.TEST && testEventSpace && (
+      {hostUrl !== HostUrls.PROD && testEventSpace && (
         <div>
           <Label className="text-xl md:text-4xl">Test Events</Label>
           <div className="flex flex-col md:flex-row md:justify-between md:items-center border border-white/10 bg-componentPrimary hover:bg-itemHover rounded-2xl px-2 md:px-2 py-3 mt-5 duration-200">
