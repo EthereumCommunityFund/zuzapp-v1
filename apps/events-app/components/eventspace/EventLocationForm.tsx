@@ -21,6 +21,7 @@ import { Switch } from '../ui/switch';
 import { LocationCreateRequestBody } from '@/types';
 import { toast } from '../ui/use-toast';
 import SwitchButton from '../ui/buttons/SwitchButton';
+import { Label } from '../ui/label';
 
 const locationFormSchema = z.object({
   name: z
@@ -99,7 +100,7 @@ export default function EventLocationForm({ setIsLocationForm }: { setIsLocation
       <form
         // onSubmit={handleCreateEventLocation}
         onSubmit={form.handleSubmit(onSubmit)}
-        className="flex flex-col p-5 rounded-[10px] border items-start	gap-[30px] self-stretch border-opacity-10 bg-[#2B2E2E]"
+        className="flex flex-col p-5 rounded-[10px] border border-borderPrimary items-start gap-[30px] w-full bg-[#2B2E2E]"
       >
         {/* <FormField
           control={form.control}
@@ -117,12 +118,13 @@ export default function EventLocationForm({ setIsLocationForm }: { setIsLocation
             </FormItem>
           )}
         /> */}
+        <Label className='text-xl text-white/70'>Adding a new space</Label>
         <FormField
           control={form.control}
           name="name"
           render={({ field }) => (
             <FormItem className="w-full">
-              <FormLabel className="text-lg">Location Name </FormLabel>
+              <FormLabel className="text-lg">Space Name</FormLabel>
               <FormControl>
                 <Input className="bg-inputField" placeholder={'Name of this location'} {...field} />
               </FormControl>
@@ -160,10 +162,10 @@ export default function EventLocationForm({ setIsLocationForm }: { setIsLocation
           control={form.control}
           name="description"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className='w-full'>
               <FormControl>
                 <div className="flex flex-col gap-[10px]">
-                  <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">Location Description</h2>
+                  <Label className="text-lg font-semibold leading-[1.2] text-white">Location Description</Label>
                   <TextEditor value={field.value} onChange={field.onChange} />
                 </div>
               </FormControl>
