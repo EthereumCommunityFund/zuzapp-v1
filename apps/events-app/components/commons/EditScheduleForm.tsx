@@ -145,12 +145,21 @@ export default function EditScheduleForm({ isQuickAccess, scheduleId, trackId, e
       toast({
         title: 'session deleted successfully',
       });
-      router.push({
-        pathname: `/dashboard/eventview/allschedules`,
-        query: {
-          event_space_id,
-        },
-      });
+      isFromEventView ?
+        router.push({
+          pathname: `/dashboard/eventview/allschedules`,
+          query: {
+            event_space_id,
+          },
+        }) :
+        router.push({
+          pathname: `/dashboard/events/space/schedules`,
+          query: {
+            event_space_id: event_space_id,
+            track_title: track_title,
+            trackId: isQuickAccess ? schedule.track_id : trackId,
+          },
+        })
     } catch (error) {
       console.error('Error deleting the schedule', error);
     } finally {
