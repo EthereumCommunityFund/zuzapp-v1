@@ -17,7 +17,7 @@ import EventViewDetailsPanel from '@/components/eventview/EventViewDetailsPanel'
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import TimeAgo from 'react-timeago';
 import { cancelUserRsvpBySchedule, checkUserRsvpBySchedule, rsvpSchedule } from '@/controllers';
-import { ScheduleUpdateRequestBody } from '@/types';
+import { ScheduleUpdateRequestBody, TrackType, TrackUpdateRequestBody } from '@/types';
 import EditScheduleForm from '@/components/commons/EditScheduleForm';
 import fetchScheduleById from '@/services/fetchScheduleById';
 import { toast } from '@/components/ui/use-toast';
@@ -27,6 +27,7 @@ import { toTurkeyTime } from '@/utils';
 import { FiEdit } from 'react-icons/fi';
 import { useGlobalContext } from '@/context/GlobalContext';
 import { useUserPassportContext } from '@/context/PassportContext';
+import EventDataDate from '../ui/labels/event-data-date';
 interface IEventViewScheduleViewTemplate {
   event_space_id: string;
   scheduleId: string;
@@ -43,7 +44,7 @@ export default function EventViewScheduleViewTemplate({ event_space_id, schedule
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [showLogs, setShowLogs] = useState(false);
 
-  const trackItem = eventSpace?.tracks.find((trackItem) => trackItem.id === trackId);
+  const trackItem = eventSpace?.tracks.find((trackItem: TrackUpdateRequestBody) => trackItem.id === trackId);
   const { isAuthenticated, user } = useGlobalContext();
 
   const handleBackToSchedule = () => {
@@ -195,9 +196,12 @@ export default function EventViewScheduleViewTemplate({ event_space_id, schedule
               {' '}
               {/* Schedule Info */}
               <div className="flex flex-col gap-2.5 p-5 pt-0.5">
-                <span className="text-sm">{trackItem?.name?.toLocaleUpperCase()}</span>
-                <div className="flex items-start">{startTime && endTime && <EventDataTime iconSize={15} startTime={startTime} endTime={endTime} />}</div>
-                <h2 className="text-3xl font-bold">{currentSchedule?.name}</h2>
+                <Label className="text-sm">{trackItem?.name?.toLocaleUpperCase()}</Label>
+                <div className="flex gap-2 items-center">
+                  {startTime && endTime && <EventDataTime iconSize={15} startTime={startTime} endTime={endTime} />}
+                  {currentSchedule?.date && <EventDataDate startDate={new Date(currentSchedule.date).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })} />}
+                </div>
+                <Label className="text-3xl font-bold">{currentSchedule?.name}</Label>
                 {currentSchedule?.organizers && <div className="flex flex-wrap gap-[6px] ">{currentSchedule?.organizers?.map((organizer) => <Speaker title={organizer.name} />)}</div>}
 
                 <div>
