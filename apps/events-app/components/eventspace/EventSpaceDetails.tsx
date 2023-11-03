@@ -3,7 +3,12 @@ import * as z from "zod";
 
 import { useEffect, useRef, useState } from "react";
 
-import { EventSpaceDetailsType, InputFieldType } from "@/types";
+import {
+  EventSpaceDetailsType,
+  EventSpaceStatusUpdateRequestBody,
+  EventSpaceUpdateRequestBody,
+  InputFieldType,
+} from "@/types";
 import EventLinks from "./EventLinks";
 import { FaCircleArrowUp } from "react-icons/fa6";
 import InputFieldDark from "../ui/inputFieldDark";
@@ -208,7 +213,10 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({
 
     try {
       setIsLoading(true);
-      const result = await updateEventSpace(event_space_id as string, payload);
+      const result = await updateEventSpace(
+        event_space_id as string,
+        payload as EventSpaceUpdateRequestBody
+      );
       setDetailsUpdated(true);
       queryClient.invalidateQueries({ queryKey: ["currentEventSpace"] });
       toast({

@@ -130,27 +130,27 @@ function getRandomElement<T>(array: T[]): T {
   return array[randomIndex];
 }
 
-export const generateRandomEventSpaceUpdateData = (id: string, event_space_type: 'tracks' | 'schedules'): EventSpaceUpdateRequestBody => {
-  const formats = ['in-person', 'online'];
-  const statuses = ['draft', 'published', 'archived'];
-  const eventTypes = ['General', 'Special', 'Workshop', 'Seminar'];
-  const experienceLevels = ['beginner', 'intermediate', 'advanced'];
+// export const generateRandomEventSpaceUpdateData = (id: string, event_space_type: 'tracks' | 'schedules'): EventSpaceUpdateRequestBody => {
+//   const formats = ['in-person', 'online'];
+//   const statuses = ['draft', 'published', 'archived'];
+//   const eventTypes = ['General', 'Special', 'Workshop', 'Seminar'];
+//   const experienceLevels = ['beginner', 'intermediate', 'advanced'];
 
-  return {
-    id,
-    name: `Sample Event ${getRandomInt(1, 100)}`,
-    event_space_type: event_space_type,
-    start_date: (Date.now() - getRandomInt(1, 5) * 24 * 60 * 60 * 1000) as unknown as Date, // Random date within the last 5 days
-    end_date: (Date.now() + getRandomInt(1, 5) * 24 * 60 * 60 * 1000) as unknown as Date, // Random date within the next 5 days
-    description: `Random event description ${getRandomInt(1, 1000)}`,
-    // @ts-ignore
-    format: 'in-person',
-    event_type: [getRandomElement(eventTypes)],
-    experience_level: [getRandomElement(experienceLevels)],
-    status: 'draft',
-    image_url: 'http:imag',
-  };
-};
+//   return {
+//     id,
+//     name: `Sample Event ${getRandomInt(1, 100)}`,
+//     event_space_type: event_space_type,
+//     start_date: (Date.now() - getRandomInt(1, 5) * 24 * 60 * 60 * 1000) as unknown as Date, // Random date within the last 5 days
+//     end_date: (Date.now() + getRandomInt(1, 5) * 24 * 60 * 60 * 1000) as unknown as Date, // Random date within the next 5 days
+//     description: `Random event description ${getRandomInt(1, 1000)}`,
+//     // @ts-ignore
+//     format: 'in-person',
+//     event_type: [getRandomElement(eventTypes)],
+//     experience_level: [getRandomElement(experienceLevels)],
+//     status: 'draft',
+//     image_url: 'http:imag',
+//   };
+// };
 
 export const truncateString = (string: string, charLength: number, withEllipses: boolean = true): string => {
   const truncated: string = string?.substring(0, charLength);

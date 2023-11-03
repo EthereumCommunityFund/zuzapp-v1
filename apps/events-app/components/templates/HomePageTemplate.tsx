@@ -36,6 +36,7 @@ import { toast } from "../ui/use-toast";
 import { Label } from "../ui/label";
 import { HostUrls } from "@/constant/hostUrls";
 import { fetchEventSpace } from "@/controllers";
+import { fetchEventSpaceById } from "@/services/fetchEventSpaceDetails";
 
 interface DialogContent {
   title: string;
@@ -68,6 +69,8 @@ export default function HomePageTemplate() {
   const testEventId = `7aa90b9a-456e-4852-bfad-ed247513b28f`;
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [eventSpaces, setEventSpaces] = useState<EventSpaceDetailsType[]>();
+  const [testEventSpace, setTestEventSpace] = useState<EventSpaceDetailsType>();
+  const [hostUrl, setHostUrl] = useState<string>();
 
   // const {
   //   data: eventSpaces,
@@ -90,33 +93,24 @@ export default function HomePageTemplate() {
   //     },
   //   }
   // );
-  const fetchEventSpaceById = async (id: string) => {
-    setIsLoading(true);
-    const response = await fetchEventSpace(id);
-    const data = await response?.data?.data;
-    setEventSpaceList(data);
-    setEventSpaces([data]);
-    setIsLoading(false);
-  };
 
-  const fetchEventSpaces = async () => {
+  const fetchEventSpaces = async (id: string) => {
     const response: EventSpaceDetailsType[] = await fetchPublishedEventSpaces({
       page: 1,
       limit: 10,
     });
+    const testSpace: EventSpaceDetailsType = await fetchEventSpaceById(id);
 
+    setTestEventSpace(testSpace);
     setEventSpaceList(response);
     setEventSpaces(response);
+    setIsLoading(false);
   };
 
   useEffect(() => {
     const hostUrl = window.location.origin;
-    if (hostUrl === HostUrls.PROD) {
-      fetchEventSpaces();
-    } else {
-      fetchEventSpaceById(testEventId);
-    }
-    setIsLoading(false);
+    setHostUrl(hostUrl);
+    fetchEventSpaces(testEventId);
   }, []);
 
   function formatDate(dateString: string | number | Date) {
@@ -134,15 +128,14 @@ export default function HomePageTemplate() {
         "Join us for a two-week popup village where the leading innovators in crypto, AI, governance, decentralized science, and culture unite in the heart of Istanbul to co-work, break downsiloes, and have fun",
       ctas: [
         {
-          ctaText: "Apply to Waitlist",
-          ctaLink: "https://app.tripsha.com/trip/64ff3a6eb4b6950008dee4f8/book",
+          ctaText: "Manage your Ticket",
+          ctaLink: "https://app.tripsha.com/trip/64ff3a6eb4b6950008dee4f8/",
           action: "apply",
           twClassNames: "bg-[#769270] hover:bg-[#92B68B]",
         },
         {
           ctaText: "About ZuConnect",
-          ctaLink:
-            "https://app.skiff.com/docs/686afeda-6dd6-4e45-bd9c-025da5ab7af2#/APhdwcKl0ybzpGeElvYgLL3+IXTf+8vm5OMl+s/1P0=",
+          ctaLink: "https://wiki.zuzalu.city",
           action: "about",
           twClassNames: "bg-white/20 hover:bg-white/30",
         },
@@ -269,7 +262,7 @@ export default function HomePageTemplate() {
           </CustomCarousel>
         </div>
       </div>
-      <div className="mt-10">
+      <div className="mt-10 pb-5">
         <Label className="text-xl md:text-4xl">Events</Label>
         <div className="mt-3">
           {isLoading && (
@@ -330,6 +323,58 @@ export default function HomePageTemplate() {
             ))}
         </div>
       </div>
+      {hostUrl !== HostUrls.PROD && testEventSpace && (
+        <div>
+          <Label className="text-xl md:text-4xl">Test Events</Label>
+          <div className="flex flex-col md:flex-row md:justify-between md:items-center border border-white/10 bg-componentPrimary hover:bg-itemHover rounded-2xl px-2 md:px-2 py-3 mt-5 duration-200">
+            <div className="flex flex-col md:flex-row md:space-x-3 md:items-center">
+              <div>
+                <img
+                  src={
+                    testEventSpace.image_url
+                      ? testEventSpace.image_url
+                      : `/images/black-img.png`
+                  }
+                  className="rounded-xl w-full md:max-w-[180px] md:max-h-[180px]"
+                  alt="Event"
+                  width={150}
+                  height={150}
+                />
+              </div>
+              <div className="space-y-2 space-x-0 mt-2 md:mt-0">
+                <h4 className="text-2xl font-semibold">
+                  {testEventSpace.name}
+                </h4>
+                <h2 className="text-base font-normal opacity-70 font-inter">
+                  {truncateString(testEventSpace.tagline, 40)}
+                </h2>
+                <div className="flex gap-2 flex-wrap">
+                  <p className="flex items-center text-xs text-white/60 bg-white/10 rounded-xl py-2 px-3 w-fit font-normal">
+                    <BsCalendar2Fill className="mr-2 text-sm md:text-base" />{" "}
+                    {formatDate(testEventSpace?.start_date)} -{" "}
+                    {formatDate(testEventSpace?.end_date)}
+                  </p>
+                  <p className="flex items-center text-xs text-white/60 bg-white/10 rounded-xl py-2 px-3 w-fit font-normal">
+                    <HiLockClosed className="mr-2 text-sm md:text-base" />{" "}
+                    Resident Only
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="mt-3 md:mt-0 lg:mr-2">
+              <Button
+                size="lg"
+                className="rounded-full w-full flex items-center justify-center font-semibold md:w-auto bg-white/10"
+                onClick={() =>
+                  testEventSpace.id && handleButtonClick(testEventSpace.id)
+                }
+              >
+                View Event
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
       {profile && firstLogin && !profile.username && (
         <Dialog open={true}>
           <DialogContent className="w-96 sm:max-w-xl p-6">
