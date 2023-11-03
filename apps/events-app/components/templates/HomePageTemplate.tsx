@@ -92,7 +92,7 @@ export default function HomePageTemplate() {
     setTestEventSpace(testSpace);
     setEventSpaceList(response);
     setEventSpaces(response);
-  }
+  };
 
   useEffect(() => {
     const hostUrl = window.location.origin;
@@ -116,14 +116,14 @@ export default function HomePageTemplate() {
         'Join us for a two-week popup village where the leading innovators in crypto, AI, governance, decentralized science, and culture unite in the heart of Istanbul to co-work, break downsiloes, and have fun',
       ctas: [
         {
-          ctaText: 'Apply to Waitlist',
-          ctaLink: 'https://app.tripsha.com/trip/64ff3a6eb4b6950008dee4f8/book',
+          ctaText: 'Manage your Ticket',
+          ctaLink: 'https://app.tripsha.com/trip/64ff3a6eb4b6950008dee4f8/',
           action: 'apply',
           twClassNames: 'bg-[#769270] hover:bg-[#92B68B]',
         },
         {
           ctaText: 'About ZuConnect',
-          ctaLink: 'https://app.skiff.com/docs/686afeda-6dd6-4e45-bd9c-025da5ab7af2#/APhdwcKl0ybzpGeElvYgLL3+IXTf+8vm5OMl+s/1P0=',
+          ctaLink: 'https://wiki.zuzalu.city',
           action: 'about',
           twClassNames: 'bg-white/20 hover:bg-white/30',
         },
@@ -255,13 +255,19 @@ export default function HomePageTemplate() {
             ))}
         </div>
       </div>
-      {hostUrl !== HostUrls.PROD && testEventSpace &&
+      {hostUrl !== HostUrls.PROD && testEventSpace && (
         <div>
           <Label className="text-xl md:text-4xl">Test Events</Label>
           <div className="flex flex-col md:flex-row md:justify-between md:items-center border border-white/10 bg-componentPrimary hover:bg-itemHover rounded-2xl px-2 md:px-2 py-3 mt-5 duration-200">
             <div className="flex flex-col md:flex-row md:space-x-3 md:items-center">
               <div>
-                <img src={testEventSpace.image_url ? testEventSpace.image_url : `/images/black-img.png`} className="rounded-xl w-full md:max-w-[180px] md:max-h-[180px]" alt="Event" width={150} height={150} />
+                <img
+                  src={testEventSpace.image_url ? testEventSpace.image_url : `/images/black-img.png`}
+                  className="rounded-xl w-full md:max-w-[180px] md:max-h-[180px]"
+                  alt="Event"
+                  width={150}
+                  height={150}
+                />
               </div>
               <div className="space-y-2 space-x-0 mt-2 md:mt-0">
                 <h4 className="text-2xl font-semibold">{testEventSpace.name}</h4>
@@ -277,13 +283,17 @@ export default function HomePageTemplate() {
               </div>
             </div>
             <div className="mt-3 md:mt-0 lg:mr-2">
-              <Button size="lg" className="rounded-full w-full flex items-center justify-center font-semibold md:w-auto bg-white/10" onClick={() => testEventSpace.id && handleButtonClick(testEventSpace.id)}>
+              <Button
+                size="lg"
+                className="rounded-full w-full flex items-center justify-center font-semibold md:w-auto bg-white/10"
+                onClick={() => testEventSpace.id && handleButtonClick(testEventSpace.id)}
+              >
                 View Event
               </Button>
             </div>
           </div>
         </div>
-      }
+      )}
       {profile && firstLogin && !profile.username && (
         <Dialog open={true}>
           <DialogContent className="w-96 sm:max-w-xl p-6">
