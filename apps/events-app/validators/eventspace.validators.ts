@@ -3,6 +3,7 @@ import { EventSpaceCreateRequestBody, EventSpaceStatusUpdateRequestBody, EventSp
 
 
 const location_schema = Joi.object({
+  id: Joi.string().uuid().optional(),
   name: Joi.string().required(),
   description: Joi.string().required(),
   address: Joi.string().required(),

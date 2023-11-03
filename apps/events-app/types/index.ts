@@ -21,6 +21,7 @@ export type EventSpaceUpdateRequestBody = {
 };
 
 export type MainLocationType = {
+  id?: string;
   name: string;
   description: string;
   address: string;
