@@ -95,11 +95,11 @@ export default function SessionViewPageTemplate({
     const filteredSchedules =
       selectedTrackIds.length > 0
         ? schedules.filter((schedule) => {
-            // console.log(schedule, "selected track ids");
-            return (
-              schedule.track_id && selectedTrackIds.includes(schedule.track_id)
-            );
-          })
+          // console.log(schedule, "selected track ids");
+          return (
+            schedule.track_id && selectedTrackIds.includes(schedule.track_id)
+          );
+        })
         : schedules;
     return filteredSchedules;
   };
@@ -113,24 +113,24 @@ export default function SessionViewPageTemplate({
     setIsUpcoming(newFilter);
   };
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-        }
-      },
-      { threshold: 1 }
-    );
+  // useEffect(() => {
+  //   const observer = new IntersectionObserver(
+  //     (entries) => {
+  //       if (entries[0].isIntersecting) {
+  //       }
+  //     },
+  //     { threshold: 1 }
+  //   );
 
-    if (lastTrackRef.current) {
-      observer.observe(lastTrackRef.current);
-    }
-    return () => {
-      if (lastTrackRef.current) {
-        observer.unobserve(lastTrackRef.current);
-      }
-    };
-  }, [lastTrackRef]);
+  //   if (lastTrackRef.current) {
+  //     observer.observe(lastTrackRef.current);
+  //   }
+  //   return () => {
+  //     if (lastTrackRef.current) {
+  //       observer.unobserve(lastTrackRef.current);
+  //     }
+  //   };
+  // }, [lastTrackRef]);
 
   const {
     data: schedules,
@@ -244,9 +244,9 @@ export default function SessionViewPageTemplate({
                     {
                       <DialogContent className="lg:w-3/5 lg:h-4/5 overflow-y-auto">
                         <AddScheduleForm
-                          title={"Add"}
                           isQuickAccess={true}
                           trackId={trackId as string}
+                          isFromEventView={true}
                           // updateIsLoading={updateIsLoading}
                           event_space_id={event_space_id as string}
                         />
@@ -355,11 +355,10 @@ export default function SessionViewPageTemplate({
                       {({ selected }) => (
                         <>
                           <span
-                            className={`relative block truncate rounded-2xl py-2 cursor-pointer px-2 w-full hover:bg-itemHover ${
-                              selected
+                            className={`relative block truncate rounded-2xl py-2 cursor-pointer px-2 w-full hover:bg-itemHover ${selected
                                 ? "font-medium bg-slate-700"
                                 : "font-normal"
-                            }`}
+                              }`}
                           >
                             {item.name.charAt(0).toUpperCase() +
                               item.name.slice(1)}
