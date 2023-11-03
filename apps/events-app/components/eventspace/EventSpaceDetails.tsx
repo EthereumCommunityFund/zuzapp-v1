@@ -32,6 +32,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import { eventDetailsList } from '@/constant/eventdetails';
 import { Loader } from '../ui/Loader';
+import { Label } from '../ui/label';
 dayjs.extend(isSameOrAfter);
 
 interface EventSpaceDetailsProps {
@@ -373,14 +374,14 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace, handl
                     </div>
                     <div className="flex flex-col gap-[34px]" ref={sectionRefs[3]}>
                       <div className="flex flex-col gap-2.5">
-                        <h2 className="h-6 opacity-70 font-bold text-xl leading-6">Manage Event Categories & Labels</h2>
-                        <span className="opacity-70 h-[18px] font-normal text-[13px] leading-[18.2px] tracking-[0.13px] self-stretch">
+                        <Label className="h-6 opacity-70 font-bold text-xl leading-6">Manage Event Categories & Labels</Label>
+                        <Label className="opacity-70 h-[18px] font-normal text-[13px] leading-[18.2px] tracking-[0.13px]">
                           These will be shared as attributes by subsequent Tracks & Sessions you create.
-                        </span>
+                        </Label>
                       </div>
 
                       <div className="flex flex-col gap-6">
-                        <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">Add Event Types</h2>
+                        <Label className="text-lg font-semibold text-white">Add Event Types</Label>
                         <div className="flex space-x-3 items-center">
                           <InputFieldDark
                             type={InputFieldType.Primary}
@@ -404,14 +405,14 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace, handl
                             <div key={eventCategory} className="flex gap-2.5 items-center rounded-[8px] px-2 py-1.5 bg-white bg-opacity-10">
                               <button type="button" className="flex gap-2.5 items-center">
                                 <GoXCircleFill onClick={() => handleRemoveEventType(index)} className="top-0.5 left-0.5 w-4 h-4" />
-                                <span className="text-lg font-semibold leading-[1.2] text-white self-stretch">{eventCategory}</span>
+                                <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">{eventCategory}</Label>
                               </button>
                             </div>
                           ))}
                         </div>
                       </div>
                       <div className="flex flex-col gap-6">
-                        <span className="text-lg font-semibold leading-[1.2] text-white self-stretch">Experience Levels</span>
+                        <Label className="text-lg font-semibold text-white">Experience Levels</Label>
                         <div className="flex space-x-3 items-center">
                           <InputFieldDark
                             type={InputFieldType.Primary}
@@ -419,16 +420,14 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace, handl
                             onChange={(e) => setExperienceItem((e.target as HTMLInputElement).value)}
                             placeholder={'Beginner, Intermediate, Advanced, etc'}
                           />
-                          <div>
-                            <IconButton
-                              variant="dark"
-                              className="rounded-full"
-                              icon={RxPlus}
-                              onClick={() => {
-                                addExperienceLevels(experienceItem);
-                              }}
-                            ></IconButton>
-                          </div>
+                          <IconButton
+                            variant="dark"
+                            className="rounded-full"
+                            icon={RxPlus}
+                            onClick={() => {
+                              addExperienceLevels(experienceItem);
+                            }}
+                          />
                         </div>
                         <div className="flex place-content-start items-start flex-wrap gap-2.5">
                           {experienceLevels?.map((experience, index) => (
@@ -440,6 +439,10 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace, handl
                             </div>
                           ))}
                         </div>
+                      </div>
+                      <hr className='border border-borderPrimary' />
+                      <div>
+
                       </div>
                     </div>
                     <div className="flex justify-center pt-8">
@@ -455,9 +458,7 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace, handl
                           leftIcon={FaCircleArrowUp}
                         >
                           {isLoading && (
-                            <div className="">
-                              <Loader />
-                            </div>
+                            <Loader />
                           )}
                           <span>Save Edit</span>
                         </Button>

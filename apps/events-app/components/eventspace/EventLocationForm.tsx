@@ -101,22 +101,22 @@ export default function EventLocationForm({ setIsLocationForm }: { setIsLocation
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex flex-col p-5 rounded-[10px] border items-start	gap-[30px] self-stretch border-opacity-10 bg-[#2B2E2E]"
       >
-        <FormField
+        {/* <FormField
           control={form.control}
           name="is_main_location"
           render={({ field }) => (
             <FormItem className="flex flex-row items-center rounded-lg p-3 shadow-sm space-x-3 space-y-0">
               <FormControl>
-                {/* <Switch
+                <Switch
                   checked={field.value}
                   onCheckedChange={field.onChange}
-                /> */}
+                />
                 <SwitchButton value={field.value} onClick={field.onChange} />
               </FormControl>
               <FormLabel className="m-0">Main Location</FormLabel>
             </FormItem>
           )}
-        />
+        /> */}
         <FormField
           control={form.control}
           name="name"
