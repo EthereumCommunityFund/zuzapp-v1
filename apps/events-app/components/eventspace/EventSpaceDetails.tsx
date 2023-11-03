@@ -33,6 +33,10 @@ import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import { eventDetailsList } from '@/constant/eventdetails';
 import { Loader } from '../ui/Loader';
 import { Label } from '../ui/label';
+import DragAndDrop from '../ui/dragDrop';
+import { Input } from '../ui/input';
+import Image from 'next/image';
+import EditionButtons from '../ui/buttons/EditionButtons';
 dayjs.extend(isSameOrAfter);
 
 interface EventSpaceDetailsProps {
@@ -57,6 +61,18 @@ const formSchema = z.object({
   }),
   description: z.string().min(40, {
     message: 'Description is required and is a minimum of 40 characters',
+  }),
+  locationName: z.string().min(2, {
+    message: 'Main Location Name is required',
+  }),
+  locationAddress: z.string().min(2, {
+    message: 'Main Location Address is required',
+  }),
+  locationCapacity: z.number().min(0, {
+    message: 'Main Location Capacity is required',
+  }),
+  locationDescription: z.string().min(2, {
+    message: 'Main Location Description is a minimum of 40 characters',
   }),
 });
 
@@ -91,6 +107,11 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace, handl
     otherLinks: [],
     selectedOption: 'facebook',
     selectedOtherOption: '',
+  });
+
+  const [locationPayloads, setLocationPayloads] = useState({
+    image_urls: [],
+    event_space_id: event_space_id as string,
   });
 
   const sectionRefs = [useRef(null), useRef(null), useRef(null), useRef(null), useRef(null)];
@@ -198,6 +219,11 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace, handl
     }
     setExperienceLevels([...experienceLevels, experienceLevelData]);
     setExperienceItem('');
+  };
+
+  const handleRemoveImage = (index: number) => {
+    const updatedItems = [...locationPayloads.image_urls.slice(0, index), ...locationPayloads.image_urls.slice(index + 1)];
+    setLocationPayloads({ ...locationPayloads, image_urls: updatedItems });
   };
 
   useEffect(() => {
@@ -441,8 +467,84 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace, handl
                         </div>
                       </div>
                       <hr className='border border-borderPrimary' />
-                      <div>
+                      <div className='flex flex-col gap-8'>
+                        <div className='flex flex-col gap-2'>
+                          <Label className='text-2xl font-bold text-white/70'>Main Address</Label>
+                          <Label className='text-sm text-white/70'>Enter the details of the main location for the event</Label>
+                        </div>
+                        <FormField
+                          control={form.control}
+                          name="locationName"
+                          render={({ field }) => (
+                            <FormItem className="w-full">
+                              <FormLabel className="text-lg">Location Name</FormLabel>
+                              <FormControl>
+                                <Input className="bg-inputField" placeholder={'Name of this location'} {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name="locationAddress"
+                          render={({ field }) => (
+                            <FormItem className="w-full">
+                              <FormLabel className="text-lg">Address </FormLabel>
+                              <FormControl>
+                                <Input className="bg-inputField" placeholder={'Type the address'} {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name="locationCapacity"
+                          render={({ field }) => (
+                            <FormItem className="w-full">
+                              <FormLabel className="text-lg">Capacity</FormLabel>
+                              <FormControl>
+                                <Input type="number" min="1" className="bg-inputField" placeholder={'Enter a number'} {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name="locationDescription"
+                          render={({ field }) => (
+                            <FormItem className='w-full'>
+                              <FormControl>
+                                <div className="flex flex-col gap-[10px]">
+                                  <Label className="text-lg font-semibold text-white">Location Description</Label>
+                                  <TextEditor value={field.value} onChange={field.onChange} />
+                                </div>
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
 
+                        <div className="space-y-2 w-full">
+                          <Label className="text-lg font-semibold text-white">Location Media</Label>
+                          <DragAndDrop payload={locationPayloads} setPayload={setLocationPayloads} title={`Select Main Location Image`} />
+                          <Label className='text-xs text-white/50'>We recommend using at least a 2160x1080px</Label>
+                        </div>
+                        {locationPayloads.image_urls.length == 0 && <p className="text-sm text-btnRed">Select at least one image</p>}
+                        {locationPayloads.image_urls.length > 0 && (
+                          <div className="flex gap-5">
+                            {locationPayloads.image_urls.map((source, index) => (
+                              <div className="w-full" key={index}>
+                                <div className="rounded-[10px] w-[130px] h-[100px] bg-pagePrimary relative">
+                                  <IconButton variant="dark" className="rounded-full absolute z-10 right-[-5px] top-[-5px]" onClick={() => handleRemoveImage(index)} icon={CgClose} />
+                                  <Image src={source} alt="Main Location Image" fill className="object-contain" />
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
                       </div>
                     </div>
                     <div className="flex justify-center pt-8">
@@ -474,8 +576,8 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace, handl
           </div>
           {/* <EventLocation /> */}
         </div>
-      </div>
-    </div>
+      </div >
+    </div >
   );
 };
 export default EventSpaceDetails;

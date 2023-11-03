@@ -165,7 +165,7 @@ export default function EventLocationForm({ setIsLocationForm }: { setIsLocation
             <FormItem className='w-full'>
               <FormControl>
                 <div className="flex flex-col gap-[10px]">
-                  <Label className="text-lg font-semibold leading-[1.2] text-white">Location Description</Label>
+                  <Label className="text-lg font-semibold text-white">Space Description</Label>
                   <TextEditor value={field.value} onChange={field.onChange} />
                 </div>
               </FormControl>
@@ -173,10 +173,11 @@ export default function EventLocationForm({ setIsLocationForm }: { setIsLocation
             </FormItem>
           )}
         />
-        <div className="flex flex-col items-center gap-[10px] self-stretch">
-          <InputFieldLabel name="Location Media" />
+
+        <div className="space-y-2 w-full">
+          <Label className="text-lg font-semibold text-white ">Space Media</Label>
           <DragAndDrop payload={payload} setPayload={setPayload} />
-          {/* <EventDeatilsDescription1 name="We recommend using at least a 2160x1080px" /> */}
+          <Label className='text-xs text-white/50'>We recommend using at least a 2160x1080px</Label>
         </div>
         {payload.image_urls.length == 0 && <p className="text-sm text-btnRed">Select at least one image</p>}
         {payload.image_urls.length > 0 && (
@@ -195,8 +196,8 @@ export default function EventLocationForm({ setIsLocationForm }: { setIsLocation
         <EditionButtons
           switchDialogue={switchDialogue}
           type={'location'}
-          leftButtonName={'Discard This Location'}
-          rightButtonName={'Add This Location'}
+          leftButtonName={'Discard This Space'}
+          rightButtonName={'Add This Space'}
           leftButtonIcon={CgClose}
           rightButtonIcon={FaCircleArrowUp}
           isLoading={requestIsLoading}
