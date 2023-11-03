@@ -23,6 +23,9 @@ import {
   toTurkeyTime,
 } from "@/utils";
 import { toast } from "../ui/use-toast";
+import { Label } from "../ui/label";
+import { Switch } from "../ui/switch";
+import SwitchButton from "../ui/buttons/SwitchButton";
 
 interface ISessionViewPageTemplate {
   event_space_id: string;
@@ -43,6 +46,7 @@ export default function SessionViewPageTemplate({
   const [isUpcoming, setIsUpcoming] = useState<boolean>(true);
   const [selectedTracks, setSelectedTracks] = useState<any[]>([]);
   const { isAuthenticated, user } = useGlobalContext();
+  const [isMyRSVP, setIsMyRSVP] = useState<boolean>(false);
 
   const handleItemClick = (scheduleId: string, trackId?: string) => {
     router.push({
@@ -302,9 +306,15 @@ export default function SessionViewPageTemplate({
           </div>
         </div>
         <div className="lg:w-1/4 sm:w-full lg:pt-24 lg:flex-col gap-5 lg:fixed lg:right-0 min-w-fit lg:mr-10 lg:mt-[-100px]">
-          <h2 className="p-3.5 gap-[10px] font-bold text-xl sm:hidden lg:flex">
+          <Label className="p-3.5 gap-[10px] font-bold text-xl sm:hidden lg:flex pb-4 border-b border-borderPrimary">
             Sessions: Sort & Filter
-          </h2>
+          </Label>
+          {isAuthenticated &&
+            <div className="flex gap-5 py-5">
+              <SwitchButton value={isMyRSVP} onClick={() => setIsMyRSVP(!isMyRSVP)} />
+              <Label className="text-base">Show my RSVPs</Label>
+            </div>
+          }
           <ToggleSwitch
             isUpcoming={isUpcoming}
             handleIsUpcoming={handleIsUpcoming}
@@ -356,8 +366,8 @@ export default function SessionViewPageTemplate({
                         <>
                           <span
                             className={`relative block truncate rounded-2xl py-2 cursor-pointer px-2 w-full hover:bg-itemHover ${selected
-                                ? "font-medium bg-slate-700"
-                                : "font-normal"
+                              ? "font-medium bg-slate-700"
+                              : "font-normal"
                               }`}
                           >
                             {item.name.charAt(0).toUpperCase() +
