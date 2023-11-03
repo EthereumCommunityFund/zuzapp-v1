@@ -29,8 +29,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const { main_location } = data;
     //@ts-ignore
     delete data.main_location; // Remove the location from the main event space data object
-    let mainLocationId: string;
-    // If a main location is provided, insert it into the Location table
+    let mainLocationId: string = ""
+
+
     if (main_location) {
         const { data: locationData, error: locationInsertError } = await supabase
             .from('eventspacelocation')
@@ -44,16 +45,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         mainLocationId = locationData[0].id;
     }
 
-    // Now, update the EventSpace with the new location id if available
     const updates = {
         ...data,
         start_date: formatTimestamp(data.start_date),
         end_date: formatTimestamp(data.end_date),
     };
-
-    // if (mainLocationId) {
-    //     updates['main_location_id'] = mainLocationId; // Add the main location id to the updates if available
-    // }
 
     const { data: eventData, error: eventUpdateError } = await supabase
         .from('EventSpace')
