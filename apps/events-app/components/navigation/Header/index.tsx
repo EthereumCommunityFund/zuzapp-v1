@@ -15,7 +15,7 @@ import { RxAvatar } from "react-icons/rx";
 import IconButton from "@/components/ui/buttons/IconButton";
 import { HiMenuAlt1 } from "react-icons/hi";
 import { XCircle } from "@/components/ui/icons";
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import { navBarRoutes } from "@/constant/routes";
 import { FaCog } from "react-icons/fa";
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
@@ -23,11 +23,24 @@ import { Database } from "@/database.types";
 import MyProfileButton from "./MyProfileButton";
 import CreateEventSpace from "@/components/navigation/Header/CreateEventSpace";
 import { Label } from "@/components/ui/label";
+import { useClickAway } from "@uidotdev/usehooks";
 
 export default function DashboardHeader() {
   const { signIn } = useUserPassportContext();
   const { isAuthenticated, user, profile } = useGlobalContext();
   const router = useRouter();
+
+  const containerRef = useClickAway(() => {
+      setDashboardOpen(false);
+  });
+
+  const toggleNavigation = () => {
+    setDashboardOpen((prev) => !prev);
+  };
+
+  useEffect(() => {
+    setDashboardOpen(false);
+  }, []);
 
   const routes = navBarRoutes;
 
@@ -45,10 +58,11 @@ export default function DashboardHeader() {
   };
 
   return (
-    <div className="fixed top-0 left-0 w-full z-50 border-b border-white/10">
+    <div ref={containerRef} className="fixed top-0 left-0 w-full z-50 border-b border-white/10">
       <header className="w-full py-3 px-5 md:px-8 flex sm:justify-between justify-end items-center bg-[#2F3232] ">
         <div className="flex gap-2 w-[265px]">
           <IconButton
+            ref={toggleNavigation}
             onClick={handleClick}
             variant="dark"
             className=" rounded-full lg:hidden z-50 bg-componentPrimary border-none hover:b-- duration-200"

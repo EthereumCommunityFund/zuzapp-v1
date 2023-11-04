@@ -144,8 +144,7 @@ export default function EventViewScheduleViewTemplate({ event_space_id, schedule
   //   }
   // };
   useEffect(() => {
-    if (isAuthenticated)
-      checkIfUserHasRsvpd();
+    if (isAuthenticated) checkIfUserHasRsvpd();
   }, [isAuthenticated]);
 
   const startTime = currentSchedule && toTurkeyTime(currentSchedule.start_time).format('H:mm');
@@ -164,9 +163,9 @@ export default function EventViewScheduleViewTemplate({ event_space_id, schedule
       <div className="flex flex-col sm:w-full">
         <EventViewHeader imgPath={eventSpace?.image_url as string} name={eventSpace?.name as string} tagline={eventSpace?.tagline as string} />
         <div className="md:p-5 sm:p-0 gap-[30px] max-w-[1200px] h-full">
-          <div className="flex flex-col gap-[10px] p-2.5 bg-componentPrimary rounded-2xl lg:w-[750px] lg:overflow-auto">
+          <div className="flex flex-col gap-[10px] p-2.5 bg-componentPrimary lg:rounded-2xl lg:w-[750px] lg:overflow-auto">
+            {' '}
             {/* flex flex-col gap-[10px] p-2.5 bg-componentPrimary rounded-2xl */}
-
             <div className="flex justify-between mt-4">
               {' '}
               {/* Tracks and Edit Button */}
@@ -175,20 +174,14 @@ export default function EventViewScheduleViewTemplate({ event_space_id, schedule
               </Button>
               <Dialog>
                 <DialogTrigger asChild>
-                  {isAuthenticated &&
+                  {isAuthenticated && (
                     <Button variant="quiet" className="rounded-3xl p-2 px-3 text-base" leftIcon={FiEdit}>
                       <Label className="px-1">Edit</Label>
                     </Button>
-                  }
+                  )}
                 </DialogTrigger>
                 <DialogContent className="lg:h-4/5 w-full h-screen lg:w-3/5 overflow-y-auto">
-                  <EditScheduleForm
-                    isQuickAccess={true}
-                    scheduleId={scheduleId as string}
-                    trackId={trackId as string}
-                    isFromEventView={true}
-                    event_space_id={event_space_id}
-                  />
+                  <EditScheduleForm isQuickAccess={true} scheduleId={scheduleId as string} trackId={trackId as string} isFromEventView={true} event_space_id={event_space_id} />
                 </DialogContent>
               </Dialog>
             </div>
@@ -214,18 +207,12 @@ export default function EventViewScheduleViewTemplate({ event_space_id, schedule
               <Button
                 variant="primary"
                 size="lg"
-                className={`rounded-2xl justify-center ${rsvpUpdated ? "animate-rsvp" : ""
-                  }`}
+                className={`rounded-2xl justify-center ${rsvpUpdated ? 'animate-rsvp' : ''}`}
                 leftIcon={BsFillTicketFill}
                 onClick={isAuthenticated ? handleRsvpAction : signIn}
                 disabled={isRsvpFullOnLoad || currentSchedule?.rsvp_amount === 0 || (isRsvpFullOnLoad && !hasRsvpd)}
               >
-                {isAuthenticated ?
-                  <>
-                    {currentSchedule?.rsvp_amount === 0 ? 'No Rsvp Available' : hasRsvpd ? 'Cancel RSVP' : isRsvpFullOnLoad ? 'RSVP Full' : 'RSVP Session'}
-                  </> :
-                  'Login to RSVP'
-                }
+                {isAuthenticated ? <>{currentSchedule?.rsvp_amount === 0 ? 'No Rsvp Available' : hasRsvpd ? 'Cancel RSVP' : isRsvpFullOnLoad ? 'RSVP Full' : 'RSVP Session'}</> : 'Login to RSVP'}
               </Button>
             </div>
             {/* <Button variant="red" className="rounded-xl w-fit" onClick={handleDeleteSchedule}>
@@ -250,7 +237,7 @@ export default function EventViewScheduleViewTemplate({ event_space_id, schedule
               <div className={`items-start gap-2 ${showLogs ? 'flex flex-col' : 'hidden'}`}>
                 {currentSchedule?.editlogs.slice(1, -1).map((log: { edited_at: string | number | Date; user: { username: any } }) => {
                   const minutesAgo = <TimeAgo date={log?.edited_at} />;
-                  console.log(currentSchedule?.editlogs)
+                  console.log(currentSchedule?.editlogs);
                   return (
                     <div className="">
                       <span className="font-bold inline-block mr-2">{log.user.username}</span>

@@ -65,7 +65,7 @@ export default function EventViewDetailsPanel(props: IEventViewDetailsPanel) {
       // setLocationAddress(eventSpace.eventspacelocation[0]);
     }
   }, [social_links, extra_links, eventSpace, imgUrls]);
-
+console.log(locationName, 'Location-Name-234344')
   return (
     <div className="flex flex-col pt-5 pb-10 gap-5 md:min-w-[450px] lg:min-w-[25%] lg:px-0 sm:px-3">
       <div className="pb-10 gap-2.5">

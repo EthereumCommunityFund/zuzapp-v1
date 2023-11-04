@@ -25,18 +25,23 @@ import {
   toTurkeyTime,
 } from "@/utils";
 import dayjs from "dayjs";
+import {Label} from "@/components/ui/label";
+import {useGlobalContext} from "@/context/GlobalContext";
+import LocationMarker from "./icons/LocationMarker";
+import { HiLocationMarker } from "react-icons/hi";
 
 interface IUserFacingTrack {
   scheduleId?: string;
   scheduleData: ScheduleDetailstype;
   onClick: () => void;
+  eventSpace: any;
 }
 
 const UserFacingTrack: React.ForwardRefRenderFunction<
   HTMLDivElement,
   IUserFacingTrack
 > = (props, ref) => {
-  const { scheduleData, onClick } = props;
+  const { scheduleData, onClick, eventSpace } = props;
   // const { trackDetails, isLoading } = useTrack(scheduleData.track_id as string);
   // const date = convertToTurkeyTimeAsDate(scheduleData.date);
   let date = stringToDateObject(scheduleData.start_date as string);
@@ -50,6 +55,18 @@ const UserFacingTrack: React.ForwardRefRenderFunction<
   const endTime = toTurkeyTime(scheduleData.end_time).format("H:mm");
   const [hasRsvpd, setHasRsvpd] = useState<boolean>(false);
   const [isRsvpFullOnLoad, setIsRsvpFullOnLoad] = useState<boolean>(false);
+  const [locationName, setLocationName] = useState<string>();
+  const { isAuthenticated } = useGlobalContext();
+
+
+  console.log("scheduleDatawnewk", scheduleData)
+  useEffect(() => {
+    eventSpace.eventspacelocation.forEach((spaceLocation: { id: string; name: React.SetStateAction<string | undefined>; }) => {
+      if (spaceLocation.id === scheduleData?.location_id) {
+        setLocationName(spaceLocation.name);
+      }
+    });
+  },[eventSpace]);
 
   const handleRsvpAction = async (e: React.MouseEvent<HTMLButtonElement>) => {
     try {
@@ -216,10 +233,13 @@ const UserFacingTrack: React.ForwardRefRenderFunction<
                 )}
               <span>{scheduleData.track.name}</span>
             </div>
-
             <span className="font-semibold md:text-lg">
               {scheduleData.name}
             </span>
+            <div className="flex gap-[6px] items-center py-2">
+              <HiLocationMarker size={15}/>
+              <Label className="text-sm font-light text-white/60">{isAuthenticated ? locationName : `Apply to See Address`}</Label>
+            </div>
             <div className="flex gap-2.5 md:flex-row sm:flex-col w-fit">
               {scheduleData.schedule_frequency !== "once" && (
                 <></>
