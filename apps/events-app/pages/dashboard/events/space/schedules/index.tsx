@@ -102,7 +102,7 @@ export default function SchedulesDashboardPage() {
     }).format(date);
   }
   return (
-    <div className="pt-10">
+    <div className="pt-10 lg:pt-0">
       <div className="flex flex-col items-start gap-10 px-5 self-stretch pb-[60px] lg:px-20">
         <div className="w-full flex flex-col justify-start items-start relative p-0 gap-[30px] rounded-0">
           <div className="flex w-full justify-between items-center flex-1 flex-grow-0">

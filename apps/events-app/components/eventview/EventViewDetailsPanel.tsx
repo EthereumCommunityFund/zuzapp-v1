@@ -65,7 +65,7 @@ export default function EventViewDetailsPanel(props: IEventViewDetailsPanel) {
       // setLocationAddress(eventSpace.eventspacelocation[0]);
     }
   }, [social_links, extra_links, eventSpace, imgUrls]);
-
+  console.log(locationName, 'Location-Name-234344');
   return (
     <div className="flex flex-col pt-5 pb-10 gap-5 md:min-w-[450px] lg:min-w-[25%] lg:px-0 sm:px-3">
       <div className="pb-10 gap-2.5">
@@ -136,7 +136,7 @@ export default function EventViewDetailsPanel(props: IEventViewDetailsPanel) {
             {schedule && (
               <div className="flex flex-col pt-2.5 pb-2.5 gap-5 lg:mt-[-20px]">
                 <div className="flex gap-2 items-center text-gray-300">
-                  <LocationMarker />
+                  <HiLocationMarker />
                   <Label className="text-xl">Location</Label>
                 </div>
                 <div className="flex flex-col gap-[6px]">
