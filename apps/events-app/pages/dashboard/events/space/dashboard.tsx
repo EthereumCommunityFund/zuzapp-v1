@@ -137,7 +137,7 @@ export default function EventSpaceDashboard(props: IProps) {
   }
 
   return (
-    <div className="flex flex-col flex-1 items-center gap-[10px] self-stretch w-full ">
+    <div className="flex flex-col flex-1 items-center gap-[10px] self-stretch w-full">
       <div className="flex flex-col items-center gap-5 flex-1 w-full">
         {
           <div className="xl:w-4/5 w-full md:w-[90%] px-2.5">

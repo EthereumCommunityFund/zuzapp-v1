@@ -1,13 +1,13 @@
-import { useRouter } from "next/router";
-import dayjs, { Dayjs } from "dayjs";
-import utc from "dayjs/plugin/utc";
-import timezone from "dayjs/plugin/timezone";
+import { useRouter } from 'next/router';
+import dayjs, { Dayjs } from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
 
-import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 
-import EditScheduleForm from "@/components/commons/EditScheduleForm";
-import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
-import { Database } from "@/database.types";
+import EditScheduleForm from '@/components/commons/EditScheduleForm';
+import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
+import { Database } from '@/database.types';
 dayjs.extend(isSameOrAfter);
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -19,13 +19,7 @@ export default function UpdateSchedulePage() {
   return (
     <>
       {trackId && scheduleId && event_space_id && (
-        <EditScheduleForm
-          isQuickAccess={false}
-          trackId={trackId as string}
-          scheduleId={scheduleId as string}
-          event_space_id={event_space_id as string}
-          isFromEventView={false}
-        />
+        <EditScheduleForm isQuickAccess={false} trackId={trackId as string} scheduleId={scheduleId as string} event_space_id={event_space_id as string} isFromEventView={false} creatorId={''} />
       )}
     </>
   );

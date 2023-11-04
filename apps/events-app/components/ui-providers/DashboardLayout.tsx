@@ -51,7 +51,7 @@ export const DashboardProvider = ({ children, props }: { children: React.ReactNo
             {checkIfCurrentRouteIsInDashboardRoutes() ? (
               <>
                 <SubHeader />
-                <div className="flex-1 mx-auto pt-10 lg:px-10 relative top-20">{children}</div>
+                <div className="mt-40 lg:mt-0 flex-1 mx-auto pt-10 lg:px-10 relative top-20">{children}</div>
               </>
             ) : (
               <div

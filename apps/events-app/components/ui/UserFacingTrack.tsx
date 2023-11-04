@@ -1,9 +1,9 @@
-import { TbTicket } from "react-icons/tb";
-import Speaker from "./Speaker";
-import EventDataDate from "./labels/event-data-date";
-import { ScheduleDetailstype } from "@/types";
-import { useEffect, useState } from "react";
-import EventDataTime from "./labels/event-data-time";
+import { TbTicket } from 'react-icons/tb';
+import Speaker from './Speaker';
+import EventDataDate from './labels/event-data-date';
+import { EventSpaceDetailsType, ScheduleDetailstype } from '@/types';
+import { useEffect, useState } from 'react';
+import EventDataTime from './labels/event-data-time';
 
 import React from "react";
 import { Loader } from "./Loader";
@@ -28,18 +28,17 @@ import dayjs from "dayjs";
 import { Label } from "./label";
 import { HiLocationMarker } from "react-icons/hi";
 import useCurrentEventSpace from "@/hooks/useCurrentEventSpace";
+import { useGlobalContext } from '@/context/GlobalContext';
 
 interface IUserFacingTrack {
   scheduleId?: string;
   scheduleData: ScheduleDetailstype;
   onClick: () => void;
+  eventSpace: EventSpaceDetailsType;
 }
 
-const UserFacingTrack: React.ForwardRefRenderFunction<
-  HTMLDivElement,
-  IUserFacingTrack
-> = (props, ref) => {
-  const { scheduleData, onClick } = props;
+const UserFacingTrack: React.ForwardRefRenderFunction<HTMLDivElement, IUserFacingTrack> = (props, ref) => {
+  const { scheduleData, onClick, eventSpace } = props;
   // const { trackDetails, isLoading } = useTrack(scheduleData.track_id as string);
   // const date = convertToTurkeyTimeAsDate(scheduleData.date);
   let date = stringToDateObject(scheduleData.start_date as string);
@@ -50,56 +49,59 @@ const UserFacingTrack: React.ForwardRefRenderFunction<
   let endDate = stringToDateObject(scheduleData.real_end_date as string);
 
   const startTime = scheduleData.start_time;
-  const endTime = toTurkeyTime(scheduleData.end_time).format("H:mm");
+  const endTime = toTurkeyTime(scheduleData.end_time).format('H:mm');
   const [hasRsvpd, setHasRsvpd] = useState<boolean>(false);
   const [isRsvpFullOnLoad, setIsRsvpFullOnLoad] = useState<boolean>(false);
-  const [location, setLocation] = useState<string>();
-  const { eventSpace } = useCurrentEventSpace();
+  const [locationName, setLocationName] = useState<string>();
+  const { isAuthenticated } = useGlobalContext();
+
+  console.log('scheduleData', scheduleData);
+  useEffect(() => {
+    (eventSpace.eventspacelocation ?? []).forEach((spaceLocation) => {
+      if (spaceLocation.id === scheduleData?.location_id) {
+        setLocationName(spaceLocation.name);
+      }
+    });
+  }, [eventSpace]);
 
   const handleRsvpAction = async (e: React.MouseEvent<HTMLButtonElement>) => {
     try {
       e.stopPropagation();
       if (scheduleData?.rsvp_amount === 0) {
         toast({
-          title: "Error",
-          description: "No RSVPs available",
-          variant: "destructive",
+          title: 'Error',
+          description: 'No RSVPs available',
+          variant: 'destructive',
         });
       } else if (hasRsvpd) {
-        const result = await cancelUserRsvpBySchedule(
-          scheduleData.id as string,
-          scheduleData.event_space_id as string
-        );
+        const result = await cancelUserRsvpBySchedule(scheduleData.id as string, scheduleData.event_space_id as string);
         if (result.status === StatusCodes.OK) {
           setHasRsvpd(false);
           toast({
-            title: "RSVP cancelled successfully",
+            title: 'RSVP cancelled successfully',
           });
         } else if (result.status === StatusCodes.INTERNAL_SERVER_ERROR) {
           toast({
-            title: "Server Error",
-            variant: "destructive",
+            title: 'Server Error',
+            variant: 'destructive',
           });
         }
       } else {
-        const result = await rsvpSchedule(
-          scheduleData.id as string,
-          scheduleData.event_space_id as string
-        );
+        const result = await rsvpSchedule(scheduleData.id as string, scheduleData.event_space_id as string);
         if (result.status === StatusCodes.OK) {
           setHasRsvpd(true);
           toast({
-            title: "RSVPed successfully",
+            title: 'RSVPed successfully',
           });
         } else if (result.status === StatusCodes.INTERNAL_SERVER_ERROR) {
           toast({
-            title: "Server Error",
-            variant: "destructive",
+            title: 'Server Error',
+            variant: 'destructive',
           });
         } else if (result.status === StatusCodes.BAD_REQUEST) {
           toast({
-            title: "RSVP limit has been reached for this schedule",
-            variant: "destructive",
+            title: 'RSVP limit has been reached for this schedule',
+            variant: 'destructive',
           });
         }
       }
@@ -110,10 +112,7 @@ const UserFacingTrack: React.ForwardRefRenderFunction<
 
   const checkIfUserHasRsvpd = async () => {
     try {
-      const result = await checkUserRsvpBySchedule(
-        scheduleData.id as string,
-        scheduleData.event_space_id as string
-      );
+      const result = await checkUserRsvpBySchedule(scheduleData.id as string, scheduleData.event_space_id as string);
       const hasRsvp = result?.data?.hasRSVPed;
       setHasRsvpd(hasRsvp);
     } catch (error) {
@@ -125,7 +124,7 @@ const UserFacingTrack: React.ForwardRefRenderFunction<
     if (scheduleData) {
       eventSpace?.eventspacelocation?.forEach((spaceLocation) => {
         if (spaceLocation.id === scheduleData?.location_id) {
-          setLocation(spaceLocation.name);
+          setLocationName(spaceLocation.name);
         }
       });
       if (scheduleData.rsvp_amount === scheduleData.current_rsvp_no) {
@@ -142,25 +141,15 @@ const UserFacingTrack: React.ForwardRefRenderFunction<
   }, []);
 
   return scheduleData && scheduleData.repeating ? (
-    <div
-      ref={ref}
-      onClick={onClick}
-      className="flex flex-col gap-3  cursor-pointer"
-    >
+    <div ref={ref} onClick={onClick} className="flex flex-col gap-3  cursor-pointer">
       <div className="flex flex-col rounded-2xl">
         <div className="flex gap-1 justify-between border-2 border-[#444646] md:p-2 sm:p-2 rounded-2xl bg-userFacingItem hover:bg-[#434646] duration-200">
           <div className="flex flex-col gap-2.5 w-3/4 ml-2">
             <div className="flex gap-2.5 text-xs font-inter font-normal uppercase">
-              {scheduleData &&
-                (scheduleData.schedule_frequency === "everyday" ||
-                  scheduleData.schedule_frequency === "weekly") && (
-                  <span className="text-[#b29457]">RECURRING</span>
-                )}
+              {scheduleData && (scheduleData.schedule_frequency === 'everyday' || scheduleData.schedule_frequency === 'weekly') && <span className="text-[#b29457]">RECURRING</span>}
               <span>{scheduleData.track.name}</span>
             </div>
-            <span className="font-semibold md:text-lg">
-              {scheduleData.name}
-            </span>
+            <span className="font-semibold md:text-lg">{scheduleData.name}</span>
             <div className="flex gap-2.5 md:flex-row sm:flex-col w-fit">
               <EventDataTime startTime={startTime} endTime={endTime} />
             </div>
@@ -231,21 +220,17 @@ const UserFacingTrack: React.ForwardRefRenderFunction<
             {
               location &&
               <Label className="font-semibold md:text-lg">
-                <HiLocationMarker size={18} /> {location}
+                <HiLocationMarker size={18} /> {locationName}
               </Label>
             }
             <div className="flex gap-2.5 md:flex-row sm:flex-col w-fit">
-              {scheduleData.schedule_frequency !== "once" && (
+              {scheduleData.schedule_frequency !== 'once' && (
                 <></>
                 // <EventDataDate startDate={startDate} endDate={endDate} />
               )}
               <EventDataTime startTime={startTime} endTime={endTime} />
             </div>
-            <div className="flex gap-[3px] flex-wrap">
-              {scheduleData.organizers?.map((organizer) => (
-                <Speaker title={organizer.name} />
-              ))}
-            </div>
+            <div className="flex gap-[3px] flex-wrap">{scheduleData.organizers?.map((organizer) => <Speaker title={organizer.name} />)}</div>
           </div>
           <div>
             <Tooltip.Provider delayDuration={500} skipDelayDuration={200}>
