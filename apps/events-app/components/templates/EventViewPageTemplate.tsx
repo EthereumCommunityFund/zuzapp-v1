@@ -67,7 +67,7 @@ export default function EventViewPageTemplate({ eventSpace, user }: { eventSpace
           {' '}
           {/* Information */}
           <div className="rounded-xl p-5">
-            <Image src={eventSpace.image_url} className="w-full lg:pb-5 rounded-2xl" alt="About Zuzalu" height={600} width={1000} loading='lazy' />
+            <Image src={eventSpace.image_url} className="w-full lg:pb-5 rounded-2xl" alt="About Zuzalu" height={600} width={1000} loading="lazy" />
           </div>
           <div className="flex flex-col gap-2.5 pb-5 lg:mt-[-30px] border-b-2 border-white/10 w-full md:pt-5 px-5">
             <div className="items-center justify-between w-full pb-5 sm:flex-col sm:gap-3 sm:flex md:flex md:flex-row">
@@ -166,14 +166,14 @@ export default function EventViewPageTemplate({ eventSpace, user }: { eventSpace
           {eventSpace.format === 'in-person' && (
             <div className="flex flex-col pt-2.5 pb-2.5 gap-5 mt-[-20px]">
               <div className="flex gap-2 items-center text-gray-300">
-                <LocationMarker />
+                <HiLocationMarker />
                 <Label className="text-xl">Location</Label>
               </div>
               <div className="flex flex-col gap-[6px]">
                 <Label className="text-lg">{user ? locationName : `Apply to See Address`}</Label>
                 <Label className={`rounded-xl text-sm opacity-70  ${user ? `blur-none` : `blur`}`}>{user && locationAddress}</Label>
               </div>
-              {imgUrls && user && <Image width={260} height={148} src={imgUrls[0]} alt={''} className={`rounded-xl h-[148px] ${user ? `blur-none` : `blur`}`} loading='lazy' />}
+              {imgUrls && user && <Image width={260} height={148} src={imgUrls[0]} alt={''} className={`rounded-xl h-[148px] ${user ? `blur-none` : `blur`}`} loading="lazy" />}
             </div>
           )}
         </div>
