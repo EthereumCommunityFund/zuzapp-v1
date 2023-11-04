@@ -17,6 +17,16 @@ export type EventSpaceUpdateRequestBody = {
   experience_level?: string[];
   eventspacelocation?: LocationType[];
   image_url: string;
+  main_location: MainLocationType
+};
+
+export type MainLocationType = {
+  id?: string;
+  name: string;
+  description: string;
+  address: string;
+  capacity: number;
+  image_urls: string[];
 };
 
 export type EventSpaceStatusUpdateRequestBody = {
