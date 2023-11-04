@@ -92,13 +92,13 @@ export default function HomePageTemplate() {
     setTestEventSpace(testSpace);
     setEventSpaceList(response);
     setEventSpaces(response);
+    setIsLoading(false);
   };
 
   useEffect(() => {
     const hostUrl = window.location.origin;
     setHostUrl(hostUrl);
     fetchEventSpaces(testEventId);
-    setIsLoading(false);
   }, []);
 
   function formatDate(dateString: string | number | Date) {
