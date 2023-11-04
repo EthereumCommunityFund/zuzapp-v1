@@ -3,7 +3,7 @@ import * as z from 'zod';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 
 import Button from '@/components/ui/buttons/Button';
-import {HiArrowLeft, HiArrowRight, HiXCircle} from 'react-icons/hi';
+import { HiArrowLeft, HiArrowRight, HiXCircle } from 'react-icons/hi';
 
 import { CgClose } from 'react-icons/cg';
 import { FaCircleArrowDown, FaCircleArrowUp } from 'react-icons/fa6';
@@ -43,14 +43,7 @@ import { convertDateToString, convertToTurkeyTimeAsDate, fromTurkeyToUTC, string
 import { BsFillTicketFill } from 'react-icons/bs';
 import { sessionNavBarDetails } from '@/constant/addschedulenavbar';
 import { TimePicker } from 'antd';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription, DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 
 type Organizer = {
   name: string;
@@ -472,7 +465,7 @@ export default function EditScheduleForm({ isQuickAccess, scheduleId, trackId, e
       )}
 
       <div className={`flex flex-col items-start gap-[17px] ${isFromEventView ? `` : `lg:ml-[300px]`} w-full`}>
-        <Button
+        {/* <Button
             className="rounded-[40px] py-2.5 px-3.5 bg-bgPrimary border-none hover:bg-[#363636] duration-200 text-textSecondary hover:text-textSecondary"
             size="lg"
             leftIcon={HiArrowLeft}
@@ -487,27 +480,18 @@ export default function EditScheduleForm({ isQuickAccess, scheduleId, trackId, e
             }}
         >
           Back
-        </Button>
+        </Button> */}
         <Dialog open={dialog} onOpenChange={(open) => setDialog(open)}>
           <DialogContent className="sm:max-w-[425px] h-auto rounded-2xl">
             <DialogHeader>
               <DialogTitle>Discard edit?</DialogTitle>
-              <DialogDescription className="text-sm font-bold">
-                You can choose to save your edit or discard your edit before
-                going back.
-              </DialogDescription>
+              <DialogDescription className="text-sm font-bold">You can choose to save your edit or discard your edit before going back.</DialogDescription>
               <DialogFooter className="pt-5">
                 <div className="flex justify-between items-center">
-                  <button
-                      onClick={form.handleSubmit(onSubmit)}
-                      className="py-2.5 px-3.5 flex items-center gap-1 rounded-[20px] bg-emerald-800"
-                  >
+                  <button onClick={form.handleSubmit(onSubmit)} className="py-2.5 px-3.5 flex items-center gap-1 rounded-[20px] bg-emerald-800">
                     <span>Save edit</span>
                   </button>
-                  <button
-                      onClick={() => router.back()}
-                      className="py-2.5 px-3.5 flex items-center gap-1 text-[#FF5E5E] rounded-[20px] bg-[#EB5757]/20"
-                  >
+                  <button onClick={() => router.back()} className="py-2.5 px-3.5 flex items-center gap-1 text-[#FF5E5E] rounded-[20px] bg-[#EB5757]/20">
                     <HiXCircle />
                     <span>Discard edit</span>
                   </button>
