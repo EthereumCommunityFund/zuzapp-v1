@@ -28,6 +28,8 @@ import { FiEdit } from 'react-icons/fi';
 import { useGlobalContext } from '@/context/GlobalContext';
 import { useUserPassportContext } from '@/context/PassportContext';
 import EventDataDate from '../ui/labels/event-data-date';
+import fetchSpaceInvites from '@/services/fetchSpaceInvites';
+import { fetchProfile } from '@/controllers/profile.controllers';
 interface IEventViewScheduleViewTemplate {
   event_space_id: string;
   scheduleId: string;
@@ -120,43 +122,48 @@ export default function EventViewScheduleViewTemplate({ event_space_id, schedule
         if (spaceLocation.id === currentSchedule.location_id) setLocation(spaceLocation.name);
       });
     }
+    console.log(eventSpace, 'currentevent');
   }, [currentSchedule]);
 
-  // const handleDeleteSchedule = async () => {
-  //   if (!scheduleId) return;
+  const { data: invites, isLoading: isInvitesLoading } = useQuery(
+    ['inviteDetails'], // Query key
+    () => fetchSpaceInvites(event_space_id as string), // Query function
+    {
+      enabled: !!event_space_id,
+      refetchOnWindowFocus: false,
+      refetchOnMount: true,
+      refetchOnReconnect: true,
+    }
+  );
+  const [userId, setUserId] = useState();
 
-  //   setIsLoading(true);
-  //   try {
-  //     await deleteScheduleById(scheduleId as string, event_space_id as string);
-  //     toast({
-  //       title: 'session deleted successfully',
-  //     });
-  //     router.push({
-  //       pathname: `/dashboard/eventview/allschedules`,
-  //       query: {
-  //         event_space_id,
-  //       },
-  //     });
-  //   } catch (error) {
-  //     console.error('Error deleting the schedule', error);
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
+  const fetchUserProfile = async () => {
+    const response = await fetchProfile();
+    const userdata = response?.data?.data;
+    setUserId(userdata?.uuid);
+  };
+
+  useEffect(() => {
+    fetchUserProfile();
+    console.log(invites, 'invites');
+  });
+
   useEffect(() => {
     if (isAuthenticated) checkIfUserHasRsvpd();
   }, [isAuthenticated]);
 
+  const canEdit = creatorId === userId || invites?.some((invite: { invitee_id: string; status: string }) => invite.invitee_id === userId && invite.status === 'accepted');
   const startTime = currentSchedule && toTurkeyTime(currentSchedule.start_time).format('H:mm');
 
   const endTime = currentSchedule && toTurkeyTime(currentSchedule.end_time).format('H:mm');
 
-  if (isLoading) {
-    return <Loader />;
-  }
   const toggleLogs = () => {
     setShowLogs(!showLogs);
   };
+
+  if (isLoading) {
+    return <Loader />;
+  }
 
   return (
     <div className="flex gap-4 lg:flex-row sm:flex-col">
@@ -174,14 +181,14 @@ export default function EventViewScheduleViewTemplate({ event_space_id, schedule
               </Button>
               <Dialog>
                 <DialogTrigger asChild>
-                  {isAuthenticated && (
+                  {isAuthenticated && canEdit && (
                     <Button variant="quiet" className="rounded-3xl p-2 px-3 text-base" leftIcon={FiEdit}>
                       <Label className="px-1">Edit</Label>
                     </Button>
                   )}
                 </DialogTrigger>
                 <DialogContent className="lg:h-4/5 w-full h-screen lg:w-3/5 overflow-y-auto">
-                  <EditScheduleForm isQuickAccess={true} scheduleId={scheduleId as string} trackId={trackId as string} isFromEventView={true} event_space_id={event_space_id} />
+                  <EditScheduleForm isQuickAccess={true} scheduleId={scheduleId as string} trackId={trackId as string} isFromEventView={true} event_space_id={event_space_id} creatorId={creatorId} />
                 </DialogContent>
               </Dialog>
             </div>
