@@ -1,42 +1,34 @@
-import { useUserPassportContext } from "@/context/PassportContext";
-import Button from "../ui/buttons/Button";
-import Image from "next/image";
-import Link from "next/link";
-import { BsCalendar2Fill } from "react-icons/bs";
-import { HiLockClosed } from "react-icons/hi";
-import { useGlobalContext } from "@/context/GlobalContext";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "../ui/dialog";
-import { useRouter } from "next/router";
-import { EventSpaceDetailsType, EventTypes } from "@/types";
-import { useQuery } from "react-query";
-import { fetchPublishedEventSpaces } from "@/services/fetchPublishedEvents";
-import { Loader } from "../ui/Loader";
-import { arrayFromLength } from "@/lib/helper";
-import { EventTemplateSkeleton } from "../commons/EventTemplateSkeleton";
-import { HomePageTemplateSkeleton } from "../commons/HomePageTemplateSkeleton";
-import { useEventSpace, useEventSpaces } from "@/context/EventSpaceContext";
-import { useEffect, useState } from "react";
-import { Input } from "../ui/input";
-import { ArrowCircleLeft, ArrowCircleRight, ArrowLeft } from "../ui/icons";
-import { updateUsername } from "@/controllers/profile.controllers";
-import banner1 from "@/public/images/zuconnectbanner.png";
-import banner2 from "@/public/images/playbook.png";
-import CustomCarousel from "../ui/CustomCarousel";
-import { truncateString } from "@/utils";
-import { error } from "console";
-import { toast } from "../ui/use-toast";
-import { Label } from "../ui/label";
-import { HostUrls } from "@/constant/hostUrls";
-import { fetchEventSpace } from "@/controllers";
-import { fetchEventSpaceById } from "@/services/fetchEventSpaceDetails";
+import { useUserPassportContext } from '@/context/PassportContext';
+import Button from '../ui/buttons/Button';
+import Image from 'next/image';
+import Link from 'next/link';
+import { BsCalendar2Fill } from 'react-icons/bs';
+import { HiLockClosed } from 'react-icons/hi';
+import { useGlobalContext } from '@/context/GlobalContext';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
+import { useRouter } from 'next/router';
+import { EventSpaceDetailsType, EventTypes } from '@/types';
+import { useQuery } from 'react-query';
+import { fetchPublishedEventSpaces } from '@/services/fetchPublishedEvents';
+import { Loader } from '../ui/Loader';
+import { arrayFromLength } from '@/lib/helper';
+import { EventTemplateSkeleton } from '../commons/EventTemplateSkeleton';
+import { HomePageTemplateSkeleton } from '../commons/HomePageTemplateSkeleton';
+import { useEventSpace, useEventSpaces } from '@/context/EventSpaceContext';
+import { useEffect, useState } from 'react';
+import { Input } from '../ui/input';
+import { ArrowCircleLeft, ArrowCircleRight, ArrowLeft } from '../ui/icons';
+import { updateUsername } from '@/controllers/profile.controllers';
+import banner1 from '@/public/images/zuconnectbanner.png';
+import banner2 from '@/public/images/playbook.png';
+import CustomCarousel from '../ui/CustomCarousel';
+import { truncateString } from '@/utils';
+import { error } from 'console';
+import { toast } from '../ui/use-toast';
+import { Label } from '../ui/label';
+import { HostUrls } from '@/constant/hostUrls';
+import { fetchEventSpace } from '@/controllers';
+import { fetchEventSpaceById } from '@/services/fetchEventSpaceDetails';
 
 interface DialogContent {
   title: string;
@@ -95,10 +87,7 @@ export default function HomePageTemplate() {
   // );
 
   const fetchEventSpaces = async (id: string) => {
-    const response: EventSpaceDetailsType[] = await fetchPublishedEventSpaces({
-      page: 1,
-      limit: 10,
-    });
+    const response: EventSpaceDetailsType[] = await fetchPublishedEventSpaces({ page: 1, limit: 10 });
     const testSpace: EventSpaceDetailsType = await fetchEventSpaceById(id);
 
     setTestEventSpace(testSpace);

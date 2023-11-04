@@ -3,7 +3,7 @@ import * as z from 'zod';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 
 import Button from '@/components/ui/buttons/Button';
-import { HiArrowLeft, HiArrowRight } from 'react-icons/hi';
+import { HiArrowLeft, HiArrowRight, HiXCircle } from 'react-icons/hi';
 
 import { CgClose } from 'react-icons/cg';
 import { FaCircleArrowDown, FaCircleArrowUp } from 'react-icons/fa6';
@@ -43,6 +43,7 @@ import { convertDateToString, convertToTurkeyTimeAsDate, fromTurkeyToUTC, string
 import { BsFillTicketFill } from 'react-icons/bs';
 import { sessionNavBarDetails } from '@/constant/addschedulenavbar';
 import { TimePicker } from 'antd';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 
 type Organizer = {
   name: string;
@@ -60,10 +61,11 @@ interface IEditScheduleForm {
   track_title?: string;
   event_space_id: string;
   isFromEventView: boolean;
+  creatorId: string;
   updateIsLoading?: (newState: boolean) => void;
 }
 
-export default function EditScheduleForm({ isQuickAccess, scheduleId, trackId, event_space_id, isFromEventView, updateIsLoading }: IEditScheduleForm) {
+export default function EditScheduleForm({ isQuickAccess, creatorId, scheduleId, trackId, event_space_id, isFromEventView, updateIsLoading }: IEditScheduleForm) {
   const router = useRouter();
 
   const [userId, setUserId] = useState();
@@ -116,6 +118,7 @@ export default function EditScheduleForm({ isQuickAccess, scheduleId, trackId, e
   const [frequency, setFrequency] = useState<'once' | 'everyday' | 'weekly'>('once');
   const [savedLocations, setSavedLocations] = useState<LocationUpdateRequestBody[]>([]);
   const [locationId, setLocationId] = useState('');
+  const [dialog, setDialog] = useState(false);
 
   const handleChangeSwitch = () => {
     setSchedule({ ...schedule, all_day: !schedule.all_day });
@@ -463,6 +466,41 @@ export default function EditScheduleForm({ isQuickAccess, scheduleId, trackId, e
       )}
 
       <div className={`flex flex-col items-start gap-[17px] ${isFromEventView ? `` : `lg:ml-[300px]`} w-full`}>
+        {/* <Button
+            className="rounded-[40px] py-2.5 px-3.5 bg-bgPrimary border-none hover:bg-[#363636] duration-200 text-textSecondary hover:text-textSecondary"
+            size="lg"
+            leftIcon={HiArrowLeft}
+            onClick={() => {
+              const isFormDirty = form.formState.isDirty;
+              console.log(isFormDirty);
+              if (isFormDirty) {
+                setDialog(true)
+              } else {
+                router.back()
+              }
+            }}
+        >
+          Back
+        </Button> */}
+        <Dialog open={dialog} onOpenChange={(open) => setDialog(open)}>
+          <DialogContent className="sm:max-w-[425px] h-auto rounded-2xl">
+            <DialogHeader>
+              <DialogTitle>Discard edit?</DialogTitle>
+              <DialogDescription className="text-sm font-bold">You can choose to save your edit or discard your edit before going back.</DialogDescription>
+              <DialogFooter className="pt-5">
+                <div className="flex justify-between items-center">
+                  <button onClick={form.handleSubmit(onSubmit)} className="py-2.5 px-3.5 flex items-center gap-1 rounded-[20px] bg-emerald-800">
+                    <span>Save edit</span>
+                  </button>
+                  <button onClick={() => router.back()} className="py-2.5 px-3.5 flex items-center gap-1 text-[#FF5E5E] rounded-[20px] bg-[#EB5757]/20">
+                    <HiXCircle />
+                    <span>Discard edit</span>
+                  </button>
+                </div>
+              </DialogFooter>
+            </DialogHeader>
+          </DialogContent>
+        </Dialog>
         <div className={`flex flex-col items-center gap-8 rounded-2xl py-5 ${isFromEventView ? `border-none` : `px-4 border border-white/10 bg-componentPrimary`}   text-white w-full`}>
           <div className="flex flex-col items-center gap-[34px] w-full max-w-[1000px]">
             {scheduleUpdated ? (
@@ -1032,9 +1070,14 @@ export default function EditScheduleForm({ isQuickAccess, scheduleId, trackId, e
                     </div>
                   </form>
                 </Form>
-                <Button variant="red" className="rounded-full w-full lg:w-1/2 flex justify-center" size="lg" onClick={handleDeleteSchedule} disabled={loading}>
+                {/* <Button variant="red" className="rounded-full w-full lg:w-1/2 flex justify-center" size="lg" onClick={handleDeleteSchedule} disabled={loading}>
                   {loading ? 'Deleting...' : 'Delete'}
-                </Button>
+                </Button> */}
+                {(!isFromEventView || (isFromEventView && creatorId === userId)) && (
+                  <Button variant="red" className="rounded-full w-full lg:w-1/2 flex justify-center" size="lg" onClick={handleDeleteSchedule} disabled={loading}>
+                    {loading ? 'Deleting...' : 'Delete'}
+                  </Button>
+                )}
               </>
             )}
           </div>

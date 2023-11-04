@@ -107,8 +107,6 @@ const EventSpaceSettings = () => {
     }
   };
 
-
-
   return (
     <>
       <div className="flex flex-col mx-auto py-5 px-4 gap-8 rounded-2xl bg-[#2E3131] w-full md:w-[600px]">
@@ -193,7 +191,7 @@ const EventSpaceSettings = () => {
                   <button className="py-2.5 px-3.5 flex items-center gap-1 rounded-[20px] bg-white/20">
                     <span>Cancel</span>
                   </button>
-                  <button onClick={handleDeleteEventSpace} className="py-2.5 px-3.5 flex items-center gap-1 text-[#FF5E5E] rounded-[20px] bg-[#EB5757]/20">
+                  <button onClick={handleDeleteEventSpace} className="py-2.5 px-3.5 flex items-center gap-1 text-[#FF5E5E] rounded-[20px] bg-[#EB5757]/20" disabled>
                     <HiXCircle />
                     <span>Delete</span>
                   </button>

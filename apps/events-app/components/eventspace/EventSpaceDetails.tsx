@@ -28,22 +28,28 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import EventLocation from "./EventLocation";
 import { GoXCircleFill } from "react-icons/go";
 // import { experienceLevels } from "@/constant/experienceelevels";
-import CustomDatePicker from "../ui/DatePicker";
-import { useRouter } from "next/router";
-import { updateEventSpace } from "@/controllers";
-import { useQueryClient } from "react-query";
-import Button from "../ui/buttons/Button";
-import Link from "next/link";
-import { HiArrowLeft, HiArrowRight, HiCalendar } from "react-icons/hi";
-import { EventBanner } from "./EventBanner";
-import IconButton from "../ui/buttons/IconButton";
-import { RxPlus } from "react-icons/rx";
-import { toast } from "../ui/use-toast";
-import { add } from "libsodium-wrappers";
-import dayjs, { Dayjs } from "dayjs";
-import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
-import { eventDetailsList } from "@/constant/eventdetails";
-import { Loader } from "../ui/Loader";
+import CustomDatePicker from '../ui/DatePicker';
+import { useRouter } from 'next/router';
+import { updateEventSpace } from '@/controllers';
+import { useQueryClient } from 'react-query';
+import Button from '../ui/buttons/Button';
+import Link from 'next/link';
+import { HiArrowLeft, HiArrowRight, HiCalendar } from 'react-icons/hi';
+import { EventBanner } from './EventBanner';
+import IconButton from '../ui/buttons/IconButton';
+import { RxPlus } from 'react-icons/rx';
+import { toast } from '../ui/use-toast';
+import { add } from 'libsodium-wrappers';
+import dayjs, { Dayjs } from 'dayjs';
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
+import { eventDetailsList } from '@/constant/eventdetails';
+import { Loader } from '../ui/Loader';
+import { Label } from '../ui/label';
+import DragAndDrop from '../ui/dragDrop';
+import { Input } from '../ui/input';
+import Image from 'next/image';
+import EditionButtons from '../ui/buttons/EditionButtons';
+import { CgClose } from "react-icons/cg";
 dayjs.extend(isSameOrAfter);
 
 interface EventSpaceDetailsProps {
@@ -68,6 +74,18 @@ const formSchema = z.object({
   }),
   description: z.string().min(40, {
     message: "Description is required and is a minimum of 40 characters",
+  }),
+  locationName: z.string().min(2, {
+    message: 'Main Location Name is required',
+  }),
+  locationAddress: z.string().min(2, {
+    message: 'Main Location Address is required',
+  }),
+  locationCapacity: z.number().min(0, {
+    message: 'Main Location Capacity is required',
+  }),
+  locationDescription: z.string().min(2, {
+    message: 'Main Location Description is a minimum of 40 characters',
   }),
 });
 
@@ -134,13 +152,12 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({
     selectedOtherOption: "",
   });
 
-  const sectionRefs = [
-    useRef(null),
-    useRef(null),
-    useRef(null),
-    useRef(null),
-    useRef(null),
-  ];
+  const [locationPayloads, setLocationPayloads] = useState({
+    image_urls: [],
+    event_space_id: event_space_id as string,
+  });
+
+  const sectionRefs = [useRef(null), useRef(null), useRef(null), useRef(null), useRef(null)];
 
   const scrollToRef = (ref: React.RefObject<HTMLDivElement>) => {
     if (ref.current) {
@@ -215,7 +232,7 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({
       setIsLoading(true);
       const result = await updateEventSpace(
         event_space_id as string,
-        payload as EventSpaceUpdateRequestBody
+        payload as unknown as EventSpaceUpdateRequestBody
       );
       setDetailsUpdated(true);
       queryClient.invalidateQueries({ queryKey: ["currentEventSpace"] });
@@ -260,6 +277,11 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({
     }
     setExperienceLevels([...experienceLevels, experienceLevelData]);
     setExperienceItem("");
+  };
+
+  const handleRemoveImage = (index: number) => {
+    const updatedItems = [...locationPayloads.image_urls.slice(0, index), ...locationPayloads.image_urls.slice(index + 1)];
+    setLocationPayloads({ ...locationPayloads, image_urls: updatedItems });
   };
 
   useEffect(() => {
@@ -524,19 +546,14 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({
                       ref={sectionRefs[3]}
                     >
                       <div className="flex flex-col gap-2.5">
-                        <h2 className="h-6 opacity-70 font-bold text-xl leading-6">
-                          Manage Event Categories & Labels
-                        </h2>
-                        <span className="opacity-70 h-[18px] font-normal text-[13px] leading-[18.2px] tracking-[0.13px] self-stretch">
-                          These will be shared as attributes by subsequent
-                          Tracks & Sessions you create.
-                        </span>
+                        <Label className="h-6 opacity-70 font-bold text-xl leading-6">Manage Event Categories & Labels</Label>
+                        <Label className="opacity-70 h-[18px] font-normal text-[13px] leading-[18.2px] tracking-[0.13px]">
+                          These will be shared as attributes by subsequent Tracks & Sessions you create.
+                        </Label>
                       </div>
 
                       <div className="flex flex-col gap-6">
-                        <h2 className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                          Add Event Types
-                        </h2>
+                        <Label className="text-lg font-semibold text-white">Add Event Types</Label>
                         <div className="flex space-x-3 items-center">
                           <InputFieldDark
                             type={InputFieldType.Primary}
@@ -559,30 +576,17 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({
                         </div>
                         <div className="flex items-start flex-wrap gap-2.5">
                           {eventType?.map((eventCategory, index) => (
-                            <div
-                              key={eventCategory}
-                              className="flex gap-2.5 items-center rounded-[8px] px-2 py-1.5 bg-white bg-opacity-10"
-                            >
-                              <button
-                                type="button"
-                                className="flex gap-2.5 items-center"
-                              >
-                                <GoXCircleFill
-                                  onClick={() => handleRemoveEventType(index)}
-                                  className="top-0.5 left-0.5 w-4 h-4"
-                                />
-                                <span className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                                  {eventCategory}
-                                </span>
+                            <div key={eventCategory} className="flex gap-2.5 items-center rounded-[8px] px-2 py-1.5 bg-white bg-opacity-10">
+                              <button type="button" className="flex gap-2.5 items-center">
+                                <GoXCircleFill onClick={() => handleRemoveEventType(index)} className="top-0.5 left-0.5 w-4 h-4" />
+                                <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">{eventCategory}</Label>
                               </button>
                             </div>
                           ))}
                         </div>
                       </div>
                       <div className="flex flex-col gap-6">
-                        <span className="text-lg font-semibold leading-[1.2] text-white self-stretch">
-                          Experience Levels
-                        </span>
+                        <Label className="text-lg font-semibold text-white">Experience Levels</Label>
                         <div className="flex space-x-3 items-center">
                           <InputFieldDark
                             type={InputFieldType.Primary}
@@ -596,16 +600,14 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({
                               "Beginner, Intermediate, Advanced, etc"
                             }
                           />
-                          <div>
-                            <IconButton
-                              variant="dark"
-                              className="rounded-full"
-                              icon={RxPlus}
-                              onClick={() => {
-                                addExperienceLevels(experienceItem);
-                              }}
-                            ></IconButton>
-                          </div>
+                          <IconButton
+                            variant="dark"
+                            className="rounded-full"
+                            icon={RxPlus}
+                            onClick={() => {
+                              addExperienceLevels(experienceItem);
+                            }}
+                          />
                         </div>
                         <div className="flex place-content-start items-start flex-wrap gap-2.5">
                           {experienceLevels?.map((experience, index) => (
@@ -631,6 +633,86 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({
                           ))}
                         </div>
                       </div>
+                      <hr className='border border-borderPrimary' />
+                      <div className='flex flex-col gap-8'>
+                        <div className='flex flex-col gap-2'>
+                          <Label className='text-2xl font-bold text-white/70'>Main Address</Label>
+                          <Label className='text-sm text-white/70'>Enter the details of the main location for the event</Label>
+                        </div>
+                        <FormField
+                          control={form.control}
+                          name="locationName"
+                          render={({ field }) => (
+                            <FormItem className="w-full">
+                              <FormLabel className="text-lg">Location Name</FormLabel>
+                              <FormControl>
+                                <Input className="bg-inputField" placeholder={'Name of this location'} {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name="locationAddress"
+                          render={({ field }) => (
+                            <FormItem className="w-full">
+                              <FormLabel className="text-lg">Address </FormLabel>
+                              <FormControl>
+                                <Input className="bg-inputField" placeholder={'Type the address'} {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name="locationCapacity"
+                          render={({ field }) => (
+                            <FormItem className="w-full">
+                              <FormLabel className="text-lg">Capacity</FormLabel>
+                              <FormControl>
+                                <Input type="number" min="1" className="bg-inputField" placeholder={'Enter a number'} {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name="locationDescription"
+                          render={({ field }) => (
+                            <FormItem className='w-full'>
+                              <FormControl>
+                                <div className="flex flex-col gap-[10px]">
+                                  <Label className="text-lg font-semibold text-white">Location Description</Label>
+                                  <TextEditor value={field.value} onChange={field.onChange} />
+                                </div>
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+
+                        <div className="space-y-2 w-full">
+                          <Label className="text-lg font-semibold text-white">Location Media</Label>
+                          <DragAndDrop payload={locationPayloads} setPayload={setLocationPayloads} title={`Select Main Location Image`} />
+                          <Label className='text-xs text-white/50'>We recommend using at least a 2160x1080px</Label>
+                        </div>
+                        {locationPayloads.image_urls.length == 0 && <p className="text-sm text-btnRed">Select at least one image</p>}
+                        {locationPayloads.image_urls.length > 0 && (
+                          <div className="flex gap-5">
+                            {locationPayloads.image_urls.map((source, index) => (
+                              <div className="w-full" key={index}>
+                                <div className="rounded-[10px] w-[130px] h-[100px] bg-pagePrimary relative">
+                                  <IconButton variant="dark" className="rounded-full absolute z-10 right-[-5px] top-[-5px]" onClick={() => handleRemoveImage(index)} icon={CgClose} />
+                                  <Image src={source} alt="Main Location Image" fill className="object-contain" />
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
                     </div>
                     <div className="flex justify-center pt-8">
                       <div className="flex flex-col lg:flex-row gap-[30px] w-full">
@@ -645,9 +727,7 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({
                           leftIcon={FaCircleArrowUp}
                         >
                           {isLoading && (
-                            <div className="">
-                              <Loader />
-                            </div>
+                            <Loader />
                           )}
                           <span>Save Edit</span>
                         </Button>
@@ -663,8 +743,8 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({
           </div>
           {/* <EventLocation /> */}
         </div>
-      </div>
-    </div>
+      </div >
+    </div >
   );
 };
 export default EventSpaceDetails;
