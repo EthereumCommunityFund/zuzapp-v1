@@ -61,10 +61,11 @@ interface IEditScheduleForm {
   track_title?: string;
   event_space_id: string;
   isFromEventView: boolean;
+  creatorId: string;
   updateIsLoading?: (newState: boolean) => void;
 }
 
-export default function EditScheduleForm({ isQuickAccess, scheduleId, trackId, event_space_id, isFromEventView, updateIsLoading }: IEditScheduleForm) {
+export default function EditScheduleForm({ isQuickAccess, creatorId, scheduleId, trackId, event_space_id, isFromEventView, updateIsLoading }: IEditScheduleForm) {
   const router = useRouter();
 
   const [userId, setUserId] = useState();
@@ -1069,9 +1070,14 @@ export default function EditScheduleForm({ isQuickAccess, scheduleId, trackId, e
                     </div>
                   </form>
                 </Form>
-                <Button variant="red" className="rounded-full w-full lg:w-1/2 flex justify-center" size="lg" onClick={handleDeleteSchedule} disabled={loading}>
+                {/* <Button variant="red" className="rounded-full w-full lg:w-1/2 flex justify-center" size="lg" onClick={handleDeleteSchedule} disabled={loading}>
                   {loading ? 'Deleting...' : 'Delete'}
-                </Button>
+                </Button> */}
+                {(!isFromEventView || (isFromEventView && creatorId === userId)) && (
+                  <Button variant="red" className="rounded-full w-full lg:w-1/2 flex justify-center" size="lg" onClick={handleDeleteSchedule} disabled={loading}>
+                    {loading ? 'Deleting...' : 'Delete'}
+                  </Button>
+                )}
               </>
             )}
           </div>
