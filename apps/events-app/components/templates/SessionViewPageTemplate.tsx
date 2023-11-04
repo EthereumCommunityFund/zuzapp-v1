@@ -26,6 +26,7 @@ import { toast } from "../ui/use-toast";
 import { Label } from "../ui/label";
 import { Switch } from "../ui/switch";
 import SwitchButton from "../ui/buttons/SwitchButton";
+import { fetchSchedulesByUserRsvp } from "@/controllers";
 
 interface ISessionViewPageTemplate {
   event_space_id: string;
@@ -47,6 +48,7 @@ export default function SessionViewPageTemplate({
   const [selectedTracks, setSelectedTracks] = useState<any[]>([]);
   const { isAuthenticated, user } = useGlobalContext();
   const [isMyRSVP, setIsMyRSVP] = useState<boolean>(false);
+  const [groupedMyRSVPs, setGroupedMyRSVPs] = useState<Record<string, ScheduleDetailstype[]>>();
 
   const handleItemClick = (scheduleId: string, trackId?: string) => {
     router.push({
@@ -157,6 +159,44 @@ export default function SessionViewPageTemplate({
       },
     }
   );
+  const groupingSchedules = (allSchedules: ScheduleDetailstype[], groupedSchedules: Record<string, ScheduleDetailstype[]>) => {
+    allSchedules.forEach((schedule) => {
+      let isFirstEvent = true;
+      let date = stringToDateObject(schedule.start_date as string);
+      const end_date = stringToDateObject(schedule.real_end_date as string);
+      const frequency = schedule.schedule_frequency;
+
+      do {
+        const formattedDate = date.toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        });
+
+        const newSchedule = {
+          ...schedule,
+          repeating:
+            !isFirstEvent && (frequency === "everyday" || frequency === "weekly"),
+        } as ScheduleDetailstype & { repeating: boolean };
+
+        if (!groupedSchedules[formattedDate]) {
+          groupedSchedules[formattedDate] = [];
+        }
+
+        groupedSchedules[formattedDate].push(newSchedule);
+
+        if (frequency === "everyday") {
+          date.setDate(date.getDate() + 1);
+        } else if (frequency === "weekly") {
+          date.setDate(date.getDate() + 7);
+        } else {
+          break;
+        }
+
+        isFirstEvent = false;
+      } while (date <= end_date);
+    });
+  }
 
   let sortedSchedules = sortByUpcoming(schedules, isUpcoming);
   sortedSchedules = filterByTrack(sortedSchedules);
@@ -164,42 +204,7 @@ export default function SessionViewPageTemplate({
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  sortedSchedules.forEach((schedule) => {
-    let isFirstEvent = true;
-    let date = stringToDateObject(schedule.start_date as string);
-    const end_date = stringToDateObject(schedule.real_end_date as string);
-    const frequency = schedule.schedule_frequency;
-
-    do {
-      const formattedDate = date.toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      });
-
-      const newSchedule = {
-        ...schedule,
-        repeating:
-          !isFirstEvent && (frequency === "everyday" || frequency === "weekly"),
-      } as ScheduleDetailstype & { repeating: boolean };
-
-      if (!groupedSchedules[formattedDate]) {
-        groupedSchedules[formattedDate] = [];
-      }
-
-      groupedSchedules[formattedDate].push(newSchedule);
-
-      if (frequency === "everyday") {
-        date.setDate(date.getDate() + 1);
-      } else if (frequency === "weekly") {
-        date.setDate(date.getDate() + 7);
-      } else {
-        break;
-      }
-
-      isFirstEvent = false;
-    } while (date <= end_date);
-  });
+  groupingSchedules(sortedSchedules, groupedSchedules);
 
   // Now, let's categorize them into "past" and "upcoming"
 
@@ -220,6 +225,15 @@ export default function SessionViewPageTemplate({
   // Now, pastSchedules contains all the past events and upcomingSchedules contains the upcoming ones.
 
   let chosenSchedules = sortGroupedSchedulesByStartTime(groupedSchedules);
+
+  const handleShowMyRSVPs = async () => {
+    const result = await fetchSchedulesByUserRsvp();
+    const myRSVPs: ScheduleDetailstype[] = result.data.data;
+    let groupedSchedules: Record<string, ScheduleDetailstype[]> = {};
+    groupingSchedules(myRSVPs, groupedSchedules);
+    setGroupedMyRSVPs(groupedSchedules);
+    setIsMyRSVP((prev) => !prev);
+  }
 
   return (
     <>
@@ -265,39 +279,74 @@ export default function SessionViewPageTemplate({
                 <div className="p-0 gap-[10px] flex flex-col overflow-hidden rounded-[10px] pb-36">
                   {schedules && eventSpace && (
                     <>
-                      {Object.keys(chosenSchedules).map((date, idx) => {
-                        return (
-                          <>
-                            <div
-                              key={idx}
-                              className="text-center border-b-2 p-3 mt-10 border-borderPrimary"
-                            >
-                              <span className="text-lg font-normal w-full">
-                                {new Date(date).toLocaleDateString("en-US", {
-                                  year: "numeric",
-                                  month: "long",
-                                  day: "numeric",
-                                })}
-                              </span>
-                            </div>
-                            {groupedSchedules[date].map((schedule, idx) => {
-                              return (
-                                <UserFacingTrack
-                                  key={idx}
-                                  scheduleId={schedule.id}
-                                  scheduleData={schedule}
-                                  onClick={() =>
-                                    handleItemClick(
-                                      schedule.id,
-                                      schedule.track_id as string
-                                    )
-                                  }
-                                />
-                              );
-                            })}
-                          </>
-                        );
-                      })}
+                      {isMyRSVP ?
+                        groupedMyRSVPs && Object.keys(groupedMyRSVPs).map((date, idx) => {
+                          return (
+                            <>
+                              <div
+                                key={idx}
+                                className="text-center border-b-2 p-3 mt-10 border-borderPrimary"
+                              >
+                                <span className="text-lg font-normal w-full">
+                                  {new Date(date).toLocaleDateString("en-US", {
+                                    year: "numeric",
+                                    month: "long",
+                                    day: "numeric",
+                                  })}
+                                </span>
+                              </div>
+                              {groupedMyRSVPs[date].map((schedule, idx) => {
+                                return (
+                                  <UserFacingTrack
+                                    key={idx}
+                                    scheduleId={schedule.id}
+                                    scheduleData={schedule}
+                                    onClick={() =>
+                                      handleItemClick(
+                                        schedule.id,
+                                        schedule.track_id as string
+                                      )
+                                    }
+                                  />
+                                );
+                              })}
+                            </>
+                          );
+                        }) :
+                        Object.keys(chosenSchedules).map((date, idx) => {
+                          return (
+                            <>
+                              <div
+                                key={idx}
+                                className="text-center border-b-2 p-3 mt-10 border-borderPrimary"
+                              >
+                                <span className="text-lg font-normal w-full">
+                                  {new Date(date).toLocaleDateString("en-US", {
+                                    year: "numeric",
+                                    month: "long",
+                                    day: "numeric",
+                                  })}
+                                </span>
+                              </div>
+                              {groupedSchedules[date].map((schedule, idx) => {
+                                return (
+                                  <UserFacingTrack
+                                    key={idx}
+                                    scheduleId={schedule.id}
+                                    scheduleData={schedule}
+                                    onClick={() =>
+                                      handleItemClick(
+                                        schedule.id,
+                                        schedule.track_id as string
+                                      )
+                                    }
+                                  />
+                                );
+                              })}
+                            </>
+                          );
+                        })
+                      }
                     </>
                   )}
                 </div>
@@ -311,7 +360,7 @@ export default function SessionViewPageTemplate({
           </Label>
           {isAuthenticated &&
             <div className="flex gap-5 py-5">
-              <SwitchButton value={isMyRSVP} onClick={() => setIsMyRSVP(!isMyRSVP)} />
+              <SwitchButton value={isMyRSVP} onClick={handleShowMyRSVPs} />
               <Label className="text-base">Show my RSVPs</Label>
             </div>
           }
