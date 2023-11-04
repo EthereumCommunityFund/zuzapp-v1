@@ -234,13 +234,7 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
                         return (
                           <>
                             <div key={idx} className="text-center border-b-2 p-3 mt-10 border-borderPrimary">
-                              <span className="text-lg font-normal w-full">
-                                {new Date(date).toLocaleDateString('en-US', {
-                                  year: 'numeric',
-                                  month: 'long',
-                                  day: 'numeric',
-                                })}
-                              </span>
+                              <span className="text-lg font-normal w-full">{new Date(date).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}</span>
                             </div>
                             {groupedSchedules[date].map((schedule, idx) => {
                               return (
