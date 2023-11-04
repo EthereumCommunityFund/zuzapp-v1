@@ -18,7 +18,7 @@ export default function Zapps() {
   }
 
   return (
-    <div className="flex flex-col lg:p-0 sm:p-5 h-auto">
+    <div className="flex flex-col lg:p-0 sm:p-5 h-auto mt-32 lg:mt-0">
       {/* Zapps Header */}
       <div className="flex flex-col gap-5 py-8">
         <Label className="text-[31px] font-semibold">Zapps</Label>

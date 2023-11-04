@@ -99,7 +99,6 @@ export default function HomePageTemplate() {
     const hostUrl = window.location.origin;
     setHostUrl(hostUrl);
     fetchEventSpaces(testEventId);
-
   }, []);
 
   function formatDate(dateString: string | number | Date) {

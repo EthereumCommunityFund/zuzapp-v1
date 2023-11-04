@@ -1,19 +1,19 @@
-import EventViewHeader from "@/components/eventview/EventViewHeader";
-import UserFacingTrack from "@/components/ui/UserFacingTrack";
-import Button from "@/components/ui/buttons/Button";
-import { ScheduleDetailstype } from "@/types";
-import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
-import { useRouter } from "next/router";
-import React, { Fragment, useEffect, useRef, useState } from "react";
-import { BiPlusCircle } from "react-icons/bi";
-import { QueryClient, useQuery } from "react-query";
-import { EventSpaceDetailsType } from "@/types";
-import { Loader } from "@/components/ui/Loader";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import fetchSchedulesByEvenSpaceId from "@/services/fetchScheduleByEventSpace";
-import AddScheduleForm from "@/components/commons/AddScheduleForm";
-import { useGlobalContext } from "@/context/GlobalContext";
-import { Listbox, Transition } from "@headlessui/react";
+import EventViewHeader from '@/components/eventview/EventViewHeader';
+import UserFacingTrack from '@/components/ui/UserFacingTrack';
+import Button from '@/components/ui/buttons/Button';
+import { ScheduleDetailstype } from '@/types';
+import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
+import { useRouter } from 'next/router';
+import React, { Fragment, useEffect, useRef, useState } from 'react';
+import { BiPlusCircle } from 'react-icons/bi';
+import { QueryClient, useQuery } from 'react-query';
+import { EventSpaceDetailsType } from '@/types';
+import { Loader } from '@/components/ui/Loader';
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import fetchSchedulesByEvenSpaceId from '@/services/fetchScheduleByEventSpace';
+import AddScheduleForm from '@/components/commons/AddScheduleForm';
+import { useGlobalContext } from '@/context/GlobalContext';
+import { Listbox, Transition } from '@headlessui/react';
 
 import ToggleSwitch from "../commons/ToggleSwitch";
 import { TbChevronDown } from "react-icons/tb";
@@ -34,15 +34,9 @@ interface ISessionViewPageTemplate {
   eventSpace: EventSpaceDetailsType;
 }
 
-export default function SessionViewPageTemplate({
-  event_space_id,
-  trackId,
-  eventSpace,
-}: ISessionViewPageTemplate) {
+export default function SessionViewPageTemplate({ event_space_id, trackId, eventSpace }: ISessionViewPageTemplate) {
   const router = useRouter();
-  const [filteredSchedules, setFilteredSchedules] = useState<
-    ScheduleDetailstype[]
-  >([]);
+  const [filteredSchedules, setFilteredSchedules] = useState<ScheduleDetailstype[]>([]);
   const lastTrackRef = useRef<HTMLDivElement>(null);
   const [isUpcoming, setIsUpcoming] = useState<boolean>(true);
   const [selectedTracks, setSelectedTracks] = useState<any[]>([]);
@@ -57,10 +51,7 @@ export default function SessionViewPageTemplate({
     });
   };
 
-  const sortByUpcoming = (
-    schedules: ScheduleDetailstype[] | undefined,
-    isUpcoming: boolean
-  ): ScheduleDetailstype[] => {
+  const sortByUpcoming = (schedules: ScheduleDetailstype[] | undefined, isUpcoming: boolean): ScheduleDetailstype[] => {
     if (!schedules) return [];
     const isUpcomingEvent = (schedule: ScheduleDetailstype) => {
       // console.log(schedule, 'isUpcoming');
@@ -71,20 +62,14 @@ export default function SessionViewPageTemplate({
       const endDate = stringToDateObject(schedule.real_end_date);
 
       // For non-recurring events:
-      if (
-        !schedule.schedule_frequency ||
-        schedule.schedule_frequency === "once"
-      ) {
-        const [hours, minutes] = schedule.start_time.split(":").map(Number);
+      if (!schedule.schedule_frequency || schedule.schedule_frequency === 'once') {
+        const [hours, minutes] = schedule.start_time.split(':').map(Number);
         startDate.setHours(hours, minutes, 0, 0);
 
         return isUpcoming ? startDate >= today : startDate < today;
       }
 
-      if (
-        schedule.schedule_frequency === "everyday" ||
-        schedule.schedule_frequency === "weekly"
-      ) {
+      if (schedule.schedule_frequency === 'everyday' || schedule.schedule_frequency === 'weekly') {
         if (isUpcoming) {
           return endDate >= today; // It's upcoming if the end date is today or in the future.
         } else {
@@ -102,9 +87,7 @@ export default function SessionViewPageTemplate({
       selectedTrackIds.length > 0
         ? schedules.filter((schedule) => {
           // console.log(schedule, "selected track ids");
-          return (
-            schedule.track_id && selectedTrackIds.includes(schedule.track_id)
-          );
+          return schedule.track_id && selectedTrackIds.includes(schedule.track_id);
         })
         : schedules;
     return filteredSchedules;
@@ -143,18 +126,18 @@ export default function SessionViewPageTemplate({
     isLoading,
     isError,
   } = useQuery<ScheduleDetailstype[], Error>(
-    ["allSchedules", event_space_id], // Query key
+    ['allSchedules', event_space_id], // Query key
     () => fetchSchedulesByEvenSpaceId(event_space_id as string),
     {
       onSuccess: (data) => {
         // setSchedules(data);
       },
       onError: (error) => {
-        console.log(error, "error loading events");
+        console.log(error, 'error loading events');
         toast({
-          title: "Error",
-          description: "Error loading  Sessions",
-          variant: "destructive",
+          title: 'Error',
+          description: 'Error loading  Sessions',
+          variant: 'destructive',
         });
       },
     }
@@ -239,23 +222,14 @@ export default function SessionViewPageTemplate({
     <>
       <div className="flex gap-4 lg:flex-row lg:mt-0 pb-24 lg:py-0 sm:pt-3 sm:px-3 sm:flex-col-reverse lg:bg-pagePrimary md:bg-componentPrimary">
         <div className="flex flex-col lg:w-2/3 sm:w-full pb-30 lg:pb-0 gap-5">
-          <EventViewHeader
-            imgPath={eventSpace?.image_url as string}
-            name={eventSpace?.name as string}
-            tagline={eventSpace?.tagline as string}
-          />
+          <EventViewHeader imgPath={eventSpace?.image_url as string} name={eventSpace?.name as string} tagline={eventSpace?.tagline as string} />
           <div className="flex flex-col gap-2.5 lg:px-1 md:px-1">
-            <div className="bg-componentPrimary rounded-2xl lg:px-2 lg:pt-8">
+            <div className="pt-2 bg-componentPrimary rounded-2xl lg:px-2 lg:pt-8">
               {isAuthenticated && (
                 <div className="px-4">
                   <Dialog>
                     <DialogTrigger asChild>
-                      <Button
-                        variant="blue"
-                        size="lg"
-                        className="rounded-full sm:w-full lg:w-fit justify-center"
-                        leftIcon={BiPlusCircle}
-                      >
+                      <Button variant="blue" size="lg" className="rounded-full sm:w-full lg:w-fit justify-center" leftIcon={BiPlusCircle}>
                         Add a Session
                       </Button>
                     </DialogTrigger>
@@ -276,7 +250,7 @@ export default function SessionViewPageTemplate({
               {isLoading ? (
                 <Loader />
               ) : (
-                <div className="p-0 gap-[10px] flex flex-col overflow-hidden rounded-[10px] pb-36">
+                <div className="p-0 gap-[10px] flex flex-col overflow-hidden rounded-[10px] pb-36 cursor-pointer">
                   {schedules && eventSpace && (
                     <>
                       {isMyRSVP ?
@@ -307,6 +281,7 @@ export default function SessionViewPageTemplate({
                                         schedule.track_id as string
                                       )
                                     }
+                                    eventSpace={eventSpace}
                                   />
                                 );
                               })}
@@ -340,6 +315,7 @@ export default function SessionViewPageTemplate({
                                         schedule.track_id as string
                                       )
                                     }
+                                    eventSpace={eventSpace}
                                   />
                                 );
                               })}
@@ -369,27 +345,16 @@ export default function SessionViewPageTemplate({
             handleIsUpcoming={handleIsUpcoming}
           />
           <div className="flex lg:flex-col md:flex-row sm:flex-col w-full p-2.5 md:gap-5 sm:gap-3 text-sm">
-            <Listbox
-              as={"div"}
-              className={"w-full relative"}
-              value={selectedTracks}
-              multiple
-              onChange={(newSelectedTracks) =>
-                handleTrackSelect(newSelectedTracks)
-              }
-            >
+            <Listbox as={'div'} className={'w-full relative'} value={selectedTracks} multiple onChange={(newSelectedTracks) => handleTrackSelect(newSelectedTracks)}>
               <Listbox.Button
                 className={
-                  "relative w-full inline-flex justify-between item-center cursor-pointer bg-trackItemHover border border-borderSecondary py-2 px-2 shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm rounded-xl"
+                  'relative w-full inline-flex justify-between item-center cursor-pointer bg-trackItemHover border border-borderSecondary py-2 px-2 shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm rounded-xl'
                 }
               >
                 <div className="flex gap-2 items-center font-semibold pl-2">
                   <span>Select Tracks</span>
                 </div>
-                <TbChevronDown
-                  className="h-5 w-5 text-gray-40 font-extrabold"
-                  aria-hidden="true"
-                />
+                <TbChevronDown className="h-5 w-5 text-gray-40 font-extrabold" aria-hidden="true" />
               </Listbox.Button>
               <Transition
                 as={Fragment}
@@ -400,17 +365,9 @@ export default function SessionViewPageTemplate({
                 leaveFrom="transform opacity-100 scale-100"
                 leaveTo="transform opacity-0 scale-95"
               >
-                <Listbox.Options
-                  className={
-                    "absolute right-0 z-10 mt-2 w-full pb-2 bg-componentPrimary origin-top-right rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
-                  }
-                >
+                <Listbox.Options className={'absolute right-0 z-10 mt-2 w-full pb-2 bg-componentPrimary origin-top-right rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'}>
                   {eventSpace.tracks.map((item, idx) => (
-                    <Listbox.Option
-                      key={idx}
-                      value={item}
-                      className={"block pt-2 px-2 text-sm"}
-                    >
+                    <Listbox.Option key={idx} value={item} className={'block pt-2 px-2 text-sm'}>
                       {({ selected }) => (
                         <>
                           <span
