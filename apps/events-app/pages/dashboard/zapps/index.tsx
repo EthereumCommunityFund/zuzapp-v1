@@ -16,6 +16,8 @@ export default function Zapps() {
   const handleItemClick = (path: string) => {
     window.open(path, '_blank');
   }
+  const zuzaluCommunityLink = `https://www.guilded.gg/i/2ye81nw2`;
+  const zuzaluGithubLink = `https://github.com/EthereumCommunityFund/zuzapp-v1`;
 
   return (
     <div className="flex flex-col lg:p-0 sm:p-5 h-auto mt-32 lg:mt-0">
@@ -102,11 +104,11 @@ export default function Zapps() {
           <Label className="text-lg opacity-40">Co-build with us!</Label>
         </div>
         <div className="flex gap-[30px]">
-          <Button variant="quiet" className="rounded-[58px]" leftIcon={Guilded}>Guilded Community</Button>
-          <Button variant="quiet" className="rounded-[58px]" leftIcon={GithubLogo}>Zuzalu Github</Button>
+          <Button variant="quiet" className="rounded-[58px]" leftIcon={Guilded} onClick={() => handleItemClick(zuzaluCommunityLink)}>Guilded Community</Button>
+          <Button variant="quiet" className="rounded-[58px]" leftIcon={GithubLogo} onClick={() => handleItemClick(zuzaluGithubLink)}>Zuzalu Github</Button>
         </div>
       </div>
-    </div>
+    </div >
   );
 }
 
