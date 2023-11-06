@@ -21,8 +21,8 @@ const updateLocation = async (supabase: SupabaseClient, location: MainLocationTy
     // Insert new location
     const { data, error } = await supabase
       .from('location')
-      .insert({ ...location })
-      .single();
+      .insert({ name: location.name, description: location.description, address: location.address, capacity: location.capacity, image_urls: location.image_urls }).select("*")
+
     return { data, error };
   }
 };
@@ -58,10 +58,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   // Update or Insert Location
   if (main_location) {
-    console.log('Main location data:', main_location);
+    console.log('Main location data:', main_location, req.body);
+
 
     const { data: locationData, error: locationError } = await updateLocation(supabase, main_location);
 
+    console.log(locationData, locationError)
     if (locationError || !locationData) {
       //@ts-ignore
       logToFile('server error', locationError.message, locationError.code, req.body.user.email);
