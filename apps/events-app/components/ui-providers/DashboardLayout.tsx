@@ -42,7 +42,7 @@ export const DashboardProvider = ({ children, props }: { children: React.ReactNo
     );
   return (
     <>
-      <div className="lg:flex relative bg-[#222222] text-white h-[100vh] overflow-auto">
+      <div className={`lg:flex relative bg-[#222222] text-white h-[100vh] ${router.pathname === `/dashboard/zapps` ? `overflow-hidden` : ``}`}>
         {!checkIfCurrentRouteIsInEventViewRoutes() ? <DashboardNavigation /> : <EventViewNavigation />}
         <DashboardHeader />
 
@@ -55,11 +55,10 @@ export const DashboardProvider = ({ children, props }: { children: React.ReactNo
               </>
             ) : (
               <div
-                className={`flex-1 mx-auto lg:px-10 pt-2.5 lg:pt-0 relative lg:top-5 bg-pagePrimary ${
-                  router.pathname !== '/dashboard/home' && router.pathname !== '/dashboard/schedules' && router.pathname !== '/dashboard/zapps' && router.pathname !== '/dashboard/resources'
-                    ? 'top-20'
-                    : ''
-                }`}
+                className={`flex-1 mx-auto lg:px-10 pt-2.5 lg:pt-0 relative lg:top-5 bg-pagePrimary ${router.pathname !== '/dashboard/home' && router.pathname !== '/dashboard/schedules' && router.pathname !== '/dashboard/zapps' && router.pathname !== '/dashboard/resources'
+                  ? 'top-20'
+                  : ''
+                  }`}
               >
                 {children}
               </div>
