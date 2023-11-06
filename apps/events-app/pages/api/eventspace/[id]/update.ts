@@ -16,6 +16,8 @@ const updateLocation = async (supabase: SupabaseClient, location: MainLocationTy
       .update({ name: location.name, description: location.description, address: location.address, capacity: location.capacity, image_urls: location.image_urls })
       .eq('id', location.id)
       .select('*');
+
+
     return { data, error };
   } else {
     // Insert new location
@@ -28,9 +30,11 @@ const updateLocation = async (supabase: SupabaseClient, location: MainLocationTy
 };
 
 const updateEventSpace = async (supabase: SupabaseClient, id: string, updates: any) => {
+
+  console.log("updates ", updates)
   const { data, error } = await supabase.from('eventspace').update(updates).eq('id', id).single();
 
-  console.log(data, error);
+  // console.log(data, error, "datas");
   return { data, error };
 };
 
@@ -58,9 +62,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   // Update or Insert Location
   if (main_location) {
-    console.log('Main location data:', main_location, req.body);
-
-
+    // console.log('Main location data:', main_location, req.body);
     const { data: locationData, error: locationError } = await updateLocation(supabase, main_location);
 
     console.log(locationData, locationError)
@@ -70,9 +72,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       return res.status(500).send('Internal server error during location operation');
     }
     //@ts-ignore
-    mainLocationId = locationData.id;
+    mainLocationId = locationData[0].id;
   }
 
+  console.log(mainLocationId)
+
+  // return;
   // Prepare updates for the event space
   const updates = {
     ...data,
@@ -81,14 +86,19 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     ...(mainLocationId && { main_location_id: mainLocationId }),
   };
 
+  // console.log(updates, "updates")
+
+
   // Update Event Space
   const { data: eventData, error: eventUpdateError } = await updateEventSpace(supabase, id, updates);
+
 
   if (eventUpdateError) {
     logToFile('server error', eventUpdateError.message, eventUpdateError.code, req.body.user.email);
     return res.status(500).send('Internal server error during event space update');
   }
 
+  console.log(eventData, "datas")
   // Respond with success and the updated data
   return res.status(200).json({
     message: 'Event space updated successfully',
