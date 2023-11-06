@@ -17,7 +17,7 @@ export type EventSpaceUpdateRequestBody = {
   experience_level?: string[];
   eventspacelocation?: LocationType[];
   image_url: string;
-  main_location: MainLocationType
+  main_location: MainLocationType;
 };
 
 export type MainLocationType = {
@@ -57,6 +57,8 @@ export type EventSpaceDetailsType = {
   image_url: string;
   tracks: TrackUpdateRequestBody[];
   schedules: ScheduleDetailstype[];
+  main_location: MainLocationType;
+  main_location_id: string;
 };
 export type LocationType = {
   id?: string;
@@ -136,7 +138,7 @@ export type ScheduleDetailstype = {
     name: string;
     role: string;
   }[];
-  track: TrackType
+  track: TrackType;
 };
 export type ScheduleUpdateRequestBody = {
   editlogs: any;

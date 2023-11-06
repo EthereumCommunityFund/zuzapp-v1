@@ -9,7 +9,7 @@ import { FaCircleArrowUp } from 'react-icons/fa6';
 import InputFieldDark from '../ui/inputFieldDark';
 import TextEditor from '../ui/TextEditor';
 import { useForm } from 'react-hook-form';
-
+import { Loader } from '../ui/Loader';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import EventLocation from './EventLocation';
@@ -30,7 +30,6 @@ import { add } from 'libsodium-wrappers';
 import dayjs, { Dayjs } from 'dayjs';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import { eventDetailsList } from '@/constant/eventdetails';
-import { Loader } from '../ui/Loader';
 import { Label } from '../ui/label';
 import DragAndDrop from '../ui/dragDrop';
 import { Input } from '../ui/input';
@@ -42,6 +41,7 @@ dayjs.extend(isSameOrAfter);
 interface EventSpaceDetailsProps {
   eventSpace: EventSpaceDetailsType;
   handleGoBack: () => void;
+  isLoadingEvent: boolean;
 }
 
 const formSchema = z.object({
@@ -76,8 +76,25 @@ const formSchema = z.object({
   }),
 });
 
-const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace, handleGoBack }) => {
-  const { name, event_space_type, status, start_date, end_date, description, format, event_type, experience_level, eventspacelocation, tagline, social_links, extra_links, image_url } = eventSpace;
+const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace, handleGoBack, isLoadingEvent }) => {
+  const {
+    name,
+    event_space_type,
+    status,
+    start_date,
+    end_date,
+    description,
+    format,
+    event_type,
+    experience_level,
+    eventspacelocation,
+    tagline,
+    social_links,
+    extra_links,
+    image_url,
+    main_location,
+    main_location_id,
+  } = eventSpace;
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
@@ -94,7 +111,7 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace, handl
   const [experienceItem, setExperienceItem] = useState('');
   const { event_space_id } = router.query;
   const [detailsUpdated, setDetailsUpdated] = useState(false);
-  // const [mainLocation, setMainLocation] = useState(main_location);
+  const [mainLocation, setMainLocation] = useState(main_location);
 
   interface SocialMediaFormState {
     socialMediaLinks: { label: string; link: string }[];
@@ -102,7 +119,10 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace, handl
     selectedOption: string;
     selectedOtherOption: string;
   }
-
+  interface LocationPayloadsState {
+    image_urls: string[];
+    event_space_id: string;
+  }
   const [formData, setFormData] = useState<SocialMediaFormState>({
     socialMediaLinks: [],
     otherLinks: [],
@@ -110,9 +130,9 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace, handl
     selectedOtherOption: '',
   });
 
-  const [locationPayloads, setLocationPayloads] = useState({
+  const [locationPayloads, setLocationPayloads] = useState<LocationPayloadsState>({
     image_urls: [],
-    event_space_id: event_space_id as string,
+    event_space_id: eventSpace.id,
   });
 
   const sectionRefs = [useRef(null), useRef(null), useRef(null), useRef(null), useRef(null)];
@@ -125,6 +145,10 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace, handl
       });
     }
   };
+
+  useEffect(() => {
+    console.log(eventSpace, 'eventSpace');
+  }, []);
 
   const handleRemoveEventType = (index: number) => {
     const updatedItems = [...eventType.slice(0, index), ...eventType.slice(index + 1)];
@@ -148,6 +172,10 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace, handl
       start_date: start_date !== undefined && start_date !== null ? new Date(start_date) : new Date(),
       end_date: end_date !== undefined && end_date !== null ? new Date(end_date) : new Date(),
       description: description,
+      locationName: main_location?.name || '',
+      locationAddress: main_location?.address || '',
+      locationCapacity: main_location?.capacity || 0,
+      locationDescription: main_location?.description || '',
     },
   });
 
@@ -162,6 +190,7 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace, handl
     }
 
     const mainLocation: MainLocationType = {
+      id: main_location_id,
       name: values.locationName,
       address: values.locationAddress,
       capacity: values.locationCapacity,
@@ -244,6 +273,15 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace, handl
     const updatedItems = [...locationPayloads.image_urls.slice(0, index), ...locationPayloads.image_urls.slice(index + 1)];
     setLocationPayloads({ ...locationPayloads, image_urls: updatedItems });
   };
+  useEffect(() => {
+    // Check if the main_location has image_urls and they are not already in locationPayloads
+    if (main_location?.image_urls?.length > 0 && locationPayloads.image_urls.length === 0) {
+      setLocationPayloads((prevState) => ({
+        ...prevState,
+        image_urls: main_location.image_urls,
+      }));
+    }
+  }, [main_location, locationPayloads.image_urls.length]);
 
   useEffect(() => {
     //get the first item from the errors object
@@ -256,7 +294,9 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace, handl
       });
     }
   }, [form.formState.errors]);
-
+  if (isLoadingEvent) {
+    return <Loader />;
+  }
   return (
     <div className="flex flex-col w-full items-center gap-[10px] bg-componentPrimary lg:bg-transparent self-stretch">
       <div className="flex items-start gap-8 self-stretch ">
@@ -517,19 +557,6 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace, handl
                             </FormItem>
                           )}
                         />
-                        {/* <FormField
-                          control={form.control}
-                          name="locationCapacity"
-                          render={({ field }) => (
-                            <FormItem className="w-full">
-                              <FormLabel className="text-lg">Capacity</FormLabel>
-                              <FormControl>
-                                <Input type="number" min="1" className="bg-inputField" placeholder={'Enter a number'} {...field} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        /> */}
                         <FormField
                           control={form.control}
                           name="locationCapacity"
