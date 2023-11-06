@@ -1,11 +1,14 @@
 
 
 import { NextApiResponse } from 'next';
-import { EventSpaceUpdateRequestBody, LocationType } from '@/types';
+import { EventSpaceUpdateRequestBody, LocationType, ScheduleDetailstype } from '@/types';
 import dayjs, { Dayjs } from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
+
+
+// date function
 export const formatTimestamp = (date: Date) => {
   return new Date(date).toISOString() as string
 };
@@ -20,9 +23,6 @@ export const convertDateToString = (date: Date) => {
 
   const dateString: string = `${year}-${month}-${day}`;  // e.g., "2023-11-01"
   return dateString
-
-
-
 }
 
 
@@ -46,7 +46,6 @@ export const convertToTurkeyTimeAsDate = (utcTimestamp: any) => {
   return new Date(turkeyTime.year(), turkeyTime.month(), turkeyTime.date());
 };
 
-// Separate functions to get month and day
 
 
 export const getMonthFromDate = (date: any) => {
@@ -58,8 +57,6 @@ export const getDayFromDate = (date: any) => {
 
 };
 
-
-
 export const stringToDateFormated = (string: any): string => {
   return dayjs(string).format('MMMM-YYYY-DD');
 };
@@ -68,32 +65,69 @@ export const stringToDateObject = (string: string) => {
   return dayjs(string).toDate()
 }
 
+export const timeToMinutes = (time: string) => {
+  const [hours, minutes] = time.split(":").map(Number);
+  return hours * 60 + minutes;
+};
 
 export const toTurkeyTimestampWithDefaultTime = (date: any): any => {
   return dayjs(date).tz("Europe/Istanbul").startOf('day').toDate()
 };
+
+
 function getRandomInt(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
+// date functions
+
+export const sortGroupedSchedulesByStartTime = (groupedSchedules: Record<string, ScheduleDetailstype[]>): Record<string, ScheduleDetailstype[]> => {
+  Object.keys(groupedSchedules).forEach((formattedDate: string) => {
+    groupedSchedules[formattedDate].sort((a: any, b: any) => {
+      const timeA = timeToMinutes(a.start_time);
+      const timeB = timeToMinutes(b.start_time);
+      return timeA - timeB;
+    });
+  });
+
+
+  return groupedSchedules
+
+}
+
+
+export const sortSchedulesByStartTime = (schedules: ScheduleDetailstype[] | undefined) => {
+
+  if (!schedules) {
+    return [];
+  }
+
+  schedules.sort((a: any, b: any) => {
+    const dateA = parseDateString(a.start_date);
+    const dateB = parseDateString(b.start_date);
+    if (dateA < dateB) return -1;
+    if (dateA > dateB) return 1;
+    const timeA = timeToMinutes(a.start_time);
+    const timeB = timeToMinutes(b.start_time);
+    return timeA - timeB;
+  });
+
+  console.log(schedules, "sorted schedules");
+  return schedules;
+};
+
+const parseDateString = (dateString: string) => {
+  const [year, month, day] = dateString.split('-').map(num => parseInt(num, 10));
+  const date = new Date(2000, 0, 1);
+  date.setFullYear(2000 + year, month - 1, day);
+  return date;
+};
+
+
+
 
 function getRandomElement<T>(array: T[]): T {
   const randomIndex = getRandomInt(0, array.length - 1);
   return array[randomIndex];
-}
-
-function generateRandomLocation(): LocationType {
-  const locationNames = ['Location A', 'Location B', 'Location C', 'Location D'];
-  const addresses = ['123 Main St', '456 Side St', '789 Back St', '101 High St'];
-  const descriptions = ['Great place!', 'Cozy and comfortable', 'Spacious and bright', 'Central location'];
-
-  return {
-    name: getRandomElement(locationNames),
-    description: getRandomElement(descriptions),
-    is_main_location: Math.random() < 0.5,
-    address: getRandomElement(addresses),
-    capacity: getRandomInt(50, 200),
-    image_urls: [`https://example.com/image${getRandomInt(1, 5)}.jpg`],
-  };
 }
 
 export const generateRandomEventSpaceUpdateData = (id: string, event_space_type: 'tracks' | 'schedules'): EventSpaceUpdateRequestBody => {

@@ -46,24 +46,10 @@ const formSchema = z.object({
   format: z.enum(['in-person', 'online'], {
     required_error: 'You need to select an event type.',
   }),
-  start_date: z
-    .date({
-      required_error: 'You need to select a valid date for this event.',
-      invalid_type_error: 'You need to select a valid date for this event.',
-    })
-    .refine(
-      (date) => {
-        if (date) {
-          const today = dayjs();
-          const selectedDate = dayjs(date);
-          return selectedDate.isSameOrAfter(today, 'day');
-        }
-        return false;
-      },
-      {
-        message: 'You cannot create an event in the past.',
-      }
-    ),
+  start_date: z.date({
+    required_error: 'You need to select a valid date for this event.',
+    invalid_type_error: 'You need to select a valid date for this event.',
+  }),
   end_date: z.date({
     required_error: 'You need to select a valid date for this event.',
     invalid_type_error: 'You need to select a valid date for this event.',
@@ -212,7 +198,6 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace, handl
     setExperienceLevels([...experienceLevels, experienceLevelData]);
     setExperienceItem('');
   };
-
 
   useEffect(() => {
     //get the first item from the errors object

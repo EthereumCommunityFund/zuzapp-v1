@@ -1,10 +1,10 @@
-import EventSpacesTemplate from "@/components/templates/events/EventSpacesTemplate";
-import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
-import { useEffect, useState } from "react";
-import { fetchUserEventSpaces } from "../../../services/eventSpaceService";
-import { EventSpaceDetailsType } from "@/types";
-import { useQuery } from "react-query";
-import { fetchInvitedEvents } from "@/services/fetchInvitedEvents";
+import EventSpacesTemplate from '@/components/templates/events/EventSpacesTemplate';
+import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
+import { useEffect, useState } from 'react';
+import { fetchUserEventSpaces } from '../../../services/eventSpaceService';
+import { EventSpaceDetailsType } from '@/types';
+import { useQuery } from 'react-query';
+import { fetchInvitedEvents } from '@/services/fetchInvitedEvents';
 
 export default function MyEventSpacesPage() {
   const {
@@ -12,23 +12,21 @@ export default function MyEventSpacesPage() {
     isLoading,
     isError,
   } = useQuery<EventSpaceDetailsType[], Error>(
-    ["eventSpaces"], // Query key
+    ['eventSpaces'], // Query key
     () => {
       return fetchUserEventSpaces({ page: 1, limit: 10 });
     },
 
     {
-      onSuccess: (data) => {
-      },
+      onSuccess: (data) => {},
     }
   );
 
-  const { data: invitedSpaces } = useQuery<EventSpaceDetailsType[], Error>(
-    ["invitedSpaces"], // Query key
+  const { data: invitedSpaces, isLoading: invitedSpacesLoading } = useQuery<EventSpaceDetailsType[], Error>(
+    ['invitedSpaces'], // Query key
     () => fetchInvitedEvents({ limit: 10, page: 1 }),
     {
-      onSuccess: (data) => {
-      },
+      onSuccess: (data) => {},
     }
   );
 
@@ -37,13 +35,7 @@ export default function MyEventSpacesPage() {
   }
   return (
     <div className="flex gap-[10px] flex-1 items-center self-stretch font-inter">
-      {
-        <EventSpacesTemplate
-          eventSpaces={eventSpaces}
-          invitedSpaces={invitedSpaces}
-          isLoading={isLoading}
-        />
-      }
+      {<EventSpacesTemplate eventSpaces={eventSpaces} invitedSpaces={invitedSpaces} isLoading={isLoading} invitedSpacesLoading={invitedSpacesLoading} />}
     </div>
   );
 }

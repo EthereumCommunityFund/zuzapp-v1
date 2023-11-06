@@ -108,14 +108,15 @@ export default function CustomCarousel({ autoSlide = false, autoSlideInterval = 
         className={`flex h-full lg:flex-col transition-transform ease-out duration-500`}
         style={windowWidth <= 640 ? { transform: `translateX(-${curr * 100}%)` } : { transform: `translateY(-${curr * 100}%)` }}
       >
-        {slides.map((img) => (
-          <img className="object-cover w-full h-full" src={img} alt="" style={{ pointerEvents: 'none' }} />
+        {slides.map((img, idx) => (
+          <img key={idx} className="object-cover w-full h-full" src={img} alt="" style={{ pointerEvents: 'none' }} />
         ))}
       </div>
 
       <div className="absolute left-[40%] slider_md:left-4 top-[95%] slider_md:top-1/2 transform -translate-y-1/2 flex slider_md:flex-col items-center gap-3 bg-white/10 p-2 rounded-2xl z-20">
         {slides.map((_, i) => (
           <button
+            key={i}
             onClick={() => setCurr(i)}
             style={{ cursor: 'pointer' }}
             className={`w-3 h-3 bg-white transition-all rounded-2xl cursor-pointer transform ${curr === i ? 'slider_md:scale-125 border-2 border-white' : 'bg-opacity-50'}cursor-pointer`}

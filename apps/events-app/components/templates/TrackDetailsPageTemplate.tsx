@@ -32,6 +32,7 @@ import { fetchAllSpeakers } from '@/controllers';
 import { DialogOverlay } from '@radix-ui/react-dialog';
 import { useGlobalContext } from '@/context/GlobalContext';
 import Image from 'next/image';
+import { sortSchedulesByStartTime } from '@/utils';
 
 interface ITrackDetailsPageTemplate {
   trackItem: TrackType;
@@ -53,11 +54,12 @@ export default function TrackDetailsPageTemplate(props: any) {
   // const handlePageChange = (page: number) => {
   //   setCurrentPage(page);
   // };
-  const totalSchedules = schedules ? schedules.length : 0;
+  let totalSchedules = schedules ? schedules.length : 0;
+
+  let currentSchedules = sortSchedulesByStartTime(schedules as ScheduleDetailstype[]);
 
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, totalSchedules);
-  const currentSchedules = schedules ? schedules.slice(startIndex, endIndex) : [];
 
   const updateIsLoading = (newState: boolean) => {
     setIsLoading(newState);
@@ -81,7 +83,6 @@ export default function TrackDetailsPageTemplate(props: any) {
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
-
 
   const fetchSchedules = async () => {
     const response: ScheduleDetailstype[] = await fetchSchedulesByTrackId(trackId as string);
@@ -144,7 +145,7 @@ export default function TrackDetailsPageTemplate(props: any) {
             <div className="flex flex-col gap-[10px] p-2">
               {' '}
               {/* Track Info */}
-              <Image src={trackItem?.image as string} alt="track image" className="lg:h-[496px] md:h-full rounded-[10px]" layout="responsive" width={100} height={100} loading='lazy' />
+              <Image src={trackItem?.image as string} alt="track image" className="lg:h-[496px] md:h-full rounded-[10px]" layout="responsive" width={100} height={100} loading="lazy" />
               <div className="flex flex-col gap-[10px] p-2.5">
                 {' '}
                 {/* Tracks Name */}
@@ -166,7 +167,7 @@ export default function TrackDetailsPageTemplate(props: any) {
                 </Button>
               </DialogTrigger>
               <DialogContent className="lg:w-3/5 lg:h-4/5 overflow-y-auto">
-                <AddScheduleForm title={'Add'} isQuickAccess={false} trackId={trackId as string} updateIsLoading={updateIsLoading} event_space_id={event_space_id as string} />
+                <AddScheduleForm isQuickAccess={false} trackId={trackId as string} updateIsLoading={updateIsLoading} event_space_id={event_space_id as string} isFromEventView={true} />
               </DialogContent>
             </Dialog>
           )}
@@ -179,9 +180,9 @@ export default function TrackDetailsPageTemplate(props: any) {
               {schedules && eventSpace && (
                 <>
                   {currentSchedules.map(
-                    (schedule, idx) =>
+                    (schedule: ScheduleDetailstype, idx: number) =>
                       schedule.track_id === trackItem?.id && (
-                        <UserFacingTrack key={idx} scheduleData={schedule} onClick={() => handleItemClick(schedule.name, trackItem?.id, eventSpace.id, schedule.id)} />
+                        <UserFacingTrack key={idx} scheduleData={schedule} eventSpace={eventSpace} onClick={() => handleItemClick(schedule.name, trackItem?.id, eventSpace.id, schedule.id)} />
                       )
                   )}
                   {totalSchedules > ITEMS_PER_PAGE && <Pagination currentPage={currentPage} totalItems={schedules.length} itemsPerPage={ITEMS_PER_PAGE} onPageChange={handlePageChange} />}

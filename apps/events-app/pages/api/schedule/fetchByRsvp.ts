@@ -6,6 +6,7 @@ import { logToFile } from "../../../utils/logger";
 import { validateUUID } from "../../../validators";
 import { Database } from "@/database.types";
 import { QueryWithUserID } from "@/types"; // Update types to get user ID from query
+import { timeToMinutes } from "@/utils";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const supabase = createPagesServerClient<Database>({ req, res });
@@ -35,6 +36,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         .from("schedule")
         .select(`
             *,
+            track: track!id (*),
             scheduletags: scheduletags!id (tags: tags!id (*)),
             schedulespeakerrole: schedulespeakerrole!id (role, speaker: speaker!id (name))
         `)
@@ -47,14 +49,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     // Sort the data based on date and just the time portion of start_time
-    data.sort((a, b) => {
-        if (a.start_date < b.start_date) return -1;
-        if (a.start_date > b.start_date) return 1;
-
-        const timeA = new Date(a.start_time).getUTCHours() * 60 + new Date(a.start_time).getUTCMinutes();
-        const timeB = new Date(b.start_time).getUTCHours() * 60 + new Date(b.start_time).getUTCMinutes();
-        return timeA - timeB;
-    });
+    // Sort the data based on date and just the time portion of start_time
+    // data.sort((a: any, b: any) => {
+    //     if (a.start_date < b.start_date) return -1;
+    //     if (a.start_date > b.start_date) return 1;
+    //     const timeA = timeToMinutes(a.start_time);
+    //     const timeB = timeToMinutes(b.start_time);
+    //     return timeA - timeB;
+    // });
 
     let response: any = [];
 
@@ -66,6 +68,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 name: speakerObj.speaker.name,
                 role: speakerObj.role,
             })),
+            trackName: item.track?.name,
         };
 
         //@ts-ignore

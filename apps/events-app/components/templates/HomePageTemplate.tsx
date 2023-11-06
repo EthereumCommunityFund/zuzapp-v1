@@ -15,7 +15,7 @@ import { arrayFromLength } from '@/lib/helper';
 import { EventTemplateSkeleton } from '../commons/EventTemplateSkeleton';
 import { HomePageTemplateSkeleton } from '../commons/HomePageTemplateSkeleton';
 import { useEventSpace, useEventSpaces } from '@/context/EventSpaceContext';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Input } from '../ui/input';
 import { ArrowCircleLeft, ArrowCircleRight, ArrowLeft } from '../ui/icons';
 import { updateUsername } from '@/controllers/profile.controllers';
@@ -26,6 +26,9 @@ import { truncateString } from '@/utils';
 import { error } from 'console';
 import { toast } from '../ui/use-toast';
 import { Label } from '../ui/label';
+import { HostUrls } from '@/constant/hostUrls';
+import { fetchEventSpace } from '@/controllers';
+import { fetchEventSpaceById } from '@/services/fetchEventSpaceDetails';
 
 interface DialogContent {
   title: string;
@@ -54,28 +57,49 @@ export default function HomePageTemplate() {
       query: { event_space_id: event_space_id },
     });
   };
+  const testEventId = `7aa90b9a-456e-4852-bfad-ed247513b28f`;
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [eventSpaces, setEventSpaces] = useState<EventSpaceDetailsType[]>();
+  const [testEventSpace, setTestEventSpace] = useState<EventSpaceDetailsType>();
+  const [hostUrl, setHostUrl] = useState<string>();
 
-  const {
-    data: eventSpaces,
-    isLoading,
-    isError,
-  } = useQuery<EventSpaceDetailsType[], Error>(
-    ['publishedEventSpaces'], // Query key
-    () => fetchPublishedEventSpaces({ page: 1, limit: 10 }),
-    {
-      onSuccess: (data) => {
-        setEventSpaceList(data);
-      },
-      onError: (error) => {
-        console.log(error, 'error loading events');
-        toast({
-          title: 'Error',
-          description: 'Error loading Published Events',
-          variant: 'destructive',
-        });
-      },
-    }
-  );
+  // const {
+  //   data: eventSpaces,
+  //   isLoading,
+  //   isError,
+  // } = useQuery<EventSpaceDetailsType[], Error>(
+  //   ['publishedEventSpaces'], // Query key
+  //   () => fetchPublishedEventSpaces({ page: 1, limit: 10 }),
+  //   {
+  //     onSuccess: (data) => {
+  //       setEventSpaceList(data);
+  //     },
+  //     onError: (error) => {
+  //       console.log(error, 'error loading events');
+  //       toast({
+  //         title: 'Error',
+  //         description: 'Error loading Published Events',
+  //         variant: 'destructive',
+  //       });
+  //     },
+  //   }
+  // );
+
+  const fetchEventSpaces = async (id: string) => {
+    const response: EventSpaceDetailsType[] = await fetchPublishedEventSpaces({ page: 1, limit: 10 });
+    const testSpace: EventSpaceDetailsType = await fetchEventSpaceById(id);
+
+    setTestEventSpace(testSpace);
+    setEventSpaceList(response);
+    setEventSpaces(response);
+    setIsLoading(false);
+  };
+
+  useEffect(() => {
+    const hostUrl = window.location.origin;
+    setHostUrl(hostUrl);
+    fetchEventSpaces(testEventId);
+  }, []);
 
   function formatDate(dateString: string | number | Date) {
     const date = new Date(dateString);
@@ -92,14 +116,14 @@ export default function HomePageTemplate() {
         'Join us for a two-week popup village where the leading innovators in crypto, AI, governance, decentralized science, and culture unite in the heart of Istanbul to co-work, break downsiloes, and have fun',
       ctas: [
         {
-          ctaText: 'Apply to Waitlist',
-          ctaLink: 'https://app.tripsha.com/trip/64ff3a6eb4b6950008dee4f8/book',
+          ctaText: 'Manage your Ticket',
+          ctaLink: 'https://app.tripsha.com/trip/64ff3a6eb4b6950008dee4f8/',
           action: 'apply',
           twClassNames: 'bg-[#769270] hover:bg-[#92B68B]',
         },
         {
           ctaText: 'About ZuConnect',
-          ctaLink: 'https://app.skiff.com/docs/686afeda-6dd6-4e45-bd9c-025da5ab7af2#/APhdwcKl0ybzpGeElvYgLL3+IXTf+8vm5OMl+s/1P0=',
+          ctaLink: 'https://wiki.zuzalu.city',
           action: 'about',
           twClassNames: 'bg-white/20 hover:bg-white/30',
         },
@@ -138,17 +162,17 @@ export default function HomePageTemplate() {
 
   return (
     <div className="md:w-5/6 w-[95%] mx-auto">
-      <div className="mt-10 relative w-full border border-white/10 rounded-2xl">
+      <div className="lg:mt-10 mt-48 relative w-full border border-white/10 rounded-2xl">
         <div className="">
           <CustomCarousel slides={slides as unknown as string[]} curr={currentSlide} setCurr={setCurrentSlide}>
             <div className="absolute top-0 left-0 px-8 slider_md:px-14 py-14 max-w-[650px] ml-4 mt-4">
               <h1 className="font-bold font-inter text-left text-3xl md:text-5xl mb-5">{slideData[currentSlide].title}</h1>
               <p className="text-left mb-4 max-w-[650px]font-inter text-gray-200 text-md">{slideData[currentSlide].description}</p>
               {isAuthenticated ? (
-                <div className="md:flex gap-2 items-center">
+                <div className="md:flex gap-2 mb-3 items-center">
                   {slideData[currentSlide].ctas.map((cta, index) => (
-                    <Link href={cta.ctaLink} target="_blank" rel="noopener noreferrer">
-                      <Button size="lg" variant="primaryGreen" className={`${cta.twClassNames} rounded-full w-full slider_md:w-auto my-2.5 text-xl justify-center text-white font-inter font-semibold`}>
+                    <Link key={index} href={cta.ctaLink} target="_blank" rel="noopener noreferrer">
+                      <Button size="lg" variant="primaryGreen" className={`${cta.twClassNames} rounded-full w-full slider_md:w-auto my-1.5 text-xl justify-center text-white font-inter font-semibold`}>
                         {cta.ctaText}
                       </Button>
                     </Link>
@@ -159,7 +183,7 @@ export default function HomePageTemplate() {
                   <DialogTrigger asChild>
                     <div className="md:flex gap-2 items-center">
                       {slideData[currentSlide].ctas.map((cta, index) => (
-                        <Link href={cta.ctaLink} target="_blank" rel="noopener noreferrer">
+                        <Link key={index} href={cta.ctaLink} target="_blank" rel="noopener noreferrer">
                           <Button
                             size="lg"
                             variant="primaryGreen"
@@ -189,7 +213,7 @@ export default function HomePageTemplate() {
           </CustomCarousel>
         </div>
       </div>
-      <div className="mt-10">
+      <div className="mt-10 pb-5">
         <Label className="text-xl md:text-4xl">Events</Label>
         <div className="mt-3">
           {isLoading && (
@@ -200,7 +224,7 @@ export default function HomePageTemplate() {
             </div>
           )}
           {eventSpaces &&
-            eventSpaces?.map((event, index) => (
+            eventSpaces.map((event, index) => (
               <div
                 key={index}
                 className="flex flex-col md:flex-row md:justify-between md:items-center border border-white/10 bg-componentPrimary hover:bg-itemHover rounded-2xl px-2 md:px-2 py-3 mt-5 duration-200"
@@ -231,6 +255,45 @@ export default function HomePageTemplate() {
             ))}
         </div>
       </div>
+      {hostUrl !== HostUrls.PROD && testEventSpace && (
+        <div>
+          <Label className="text-xl md:text-4xl">Test Events</Label>
+          <div className="flex flex-col md:flex-row md:justify-between md:items-center border border-white/10 bg-componentPrimary hover:bg-itemHover rounded-2xl px-2 md:px-2 py-3 mt-5 duration-200">
+            <div className="flex flex-col md:flex-row md:space-x-3 md:items-center">
+              <div>
+                <img
+                  src={testEventSpace.image_url ? testEventSpace.image_url : `/images/black-img.png`}
+                  className="rounded-xl w-full md:max-w-[180px] md:max-h-[180px]"
+                  alt="Event"
+                  width={150}
+                  height={150}
+                />
+              </div>
+              <div className="space-y-2 space-x-0 mt-2 md:mt-0">
+                <h4 className="text-2xl font-semibold">{testEventSpace.name}</h4>
+                <h2 className="text-base font-normal opacity-70 font-inter">{truncateString(testEventSpace.tagline, 40)}</h2>
+                <div className="flex gap-2 flex-wrap">
+                  <p className="flex items-center text-xs text-white/60 bg-white/10 rounded-xl py-2 px-3 w-fit font-normal">
+                    <BsCalendar2Fill className="mr-2 text-sm md:text-base" /> {formatDate(testEventSpace?.start_date)} - {formatDate(testEventSpace?.end_date)}
+                  </p>
+                  <p className="flex items-center text-xs text-white/60 bg-white/10 rounded-xl py-2 px-3 w-fit font-normal">
+                    <HiLockClosed className="mr-2 text-sm md:text-base" /> Resident Only
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="mt-3 md:mt-0 lg:mr-2">
+              <Button
+                size="lg"
+                className="rounded-full w-full flex items-center justify-center font-semibold md:w-auto bg-white/10"
+                onClick={() => testEventSpace.id && handleButtonClick(testEventSpace.id)}
+              >
+                View Event
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
       {profile && firstLogin && !profile.username && (
         <Dialog open={true}>
           <DialogContent className="w-96 sm:max-w-xl p-6">
