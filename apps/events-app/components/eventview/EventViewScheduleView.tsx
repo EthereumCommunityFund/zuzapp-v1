@@ -228,8 +228,11 @@ export default function EventViewScheduleViewTemplate({ event_space_id, schedule
               Delete
             </Button> */}
             <div className="flex flex-col gap-2.5 border-b border-t border-borderSecondary">
-              <div className=""></div>
               <div className="flex flex-col gap-4 py-[15px] px-[13px] w-full">
+                <div className="relative">
+                  <iframe src="https://app.streameth.org/embed/?playbackId=0294w9be36fgox9l&streamId=&playerName=Opening+Remarks" width="100%" height="100%" frameBorder="0" allow="autoplay; fullscreen" allowFullScreen></iframe>
+                </div>
+
                 <div className="flex gap-4 w-full justify-between">
                   <div className="flex flex-col gap-1.5 w-full">
                     <Label className="text-xl">
@@ -244,12 +247,16 @@ export default function EventViewScheduleViewTemplate({ event_space_id, schedule
                       </Label>
                     </div>
                   </div>
-                  <Label className="rounded-sm bg-[#F3966F20] px-2.5 py-1 text-[#F3966E]">
-                    Ended
-                  </Label>
-                  <Label className="rounded-sm bg-[#91F36F20] px-2.5 py-1 text-[#91F36E]">
-                    Live
-                  </Label>
+                  <div>
+                    <Label className="rounded-sm bg-[#F3966F20] px-2.5 py-1 text-[#F3966E]">
+                      Ended
+                    </Label>
+                  </div>
+                  <div>
+                    <Label className="rounded-sm bg-[#91F36F20] px-2.5 py-1 text-[#91F36E]">
+                      Live
+                    </Label>
+                  </div>
                 </div>
                 <Button
                   variant="quiet-SM"
@@ -266,7 +273,7 @@ export default function EventViewScheduleViewTemplate({ event_space_id, schedule
                   Location
                 </Label>
                 <Label className="text-white text-sm">
-                  {currentSchedule?.live_stream_url}
+                  {currentSchedule?.format === "online" && currentSchedule?.live_stream_url}
                   {currentSchedule?.format === "in-person" ? location : ``}
                 </Label>
               </>
