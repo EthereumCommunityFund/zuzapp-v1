@@ -1,21 +1,20 @@
 import Joi, { boolean } from 'joi';
 import { EventSpaceCreateRequestBody, EventSpaceStatusUpdateRequestBody, EventSpaceUpdateRequestBody } from '../types';
 
-
 const location_schema = Joi.object({
   id: Joi.string().uuid().optional(),
   name: Joi.string().required(),
   description: Joi.string().required(),
   address: Joi.string().required(),
   capacity: Joi.number().integer().default(50),
-  image_urls: Joi.array().items(Joi.string().uri())
+  image_urls: Joi.array().items(Joi.string().uri()),
 });
 
 const eventspace_update_schema = Joi.object({
   id: Joi.string().uuid(),
   name: Joi.string().required(),
   tagline: Joi.string().allow(''),
-  social_links: Joi.string().uri().when('format', {
+  social_links: Joi.string().when('format', {
     is: Joi.valid('online'),
     then: Joi.optional(),
     otherwise: Joi.optional(),
@@ -30,7 +29,7 @@ const eventspace_update_schema = Joi.object({
   event_type: Joi.array().items(Joi.string()).default(['General']),
   experience_level: Joi.array().items(Joi.string()).default(['Beginner']),
   image_url: Joi.string().uri().allow(''),
-  main_location: location_schema.required()
+  main_location: location_schema.required(),
 });
 
 const eventspace_status_update_schema = Joi.object({
