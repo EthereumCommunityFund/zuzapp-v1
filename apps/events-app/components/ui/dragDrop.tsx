@@ -7,8 +7,9 @@ import ImageUploadButtonDescription from './labels/image-upload-button-descripti
 import Button from './buttons/Button';
 import { HiUpload } from 'react-icons/hi';
 import { uploadImage } from '@/controllers/image.controller';
+import { Label } from './label';
 
-export default function DragAndDrop({ setPayload, payload }: any) {
+export default function DragAndDrop({ setPayload, payload, title }: any) {
   const [dragActive, setDragActive] = useState<boolean>(false);
   const inputRef = useRef<any>(null);
   const [files, setFiles] = useState<any>([]);
@@ -80,7 +81,10 @@ export default function DragAndDrop({ setPayload, payload }: any) {
       <div className="w-full">
         <Button className="flex flex-col rounded-[6px] border-dashed text-white border-white border-opacity-10 bg-pagePrimary h-full w-full" onClick={openFileExplorer}>
           <HiUpload />
-          <span className="text-[13px] text-center opacity-50 font-bold leading-[1.2] self-stretch">Select Header Image</span>
+          {title ?
+            <Label className="text-[13px] text-center opacity-50 font-bold">{title}</Label> :
+            <Label className="text-[13px] text-center opacity-50 font-bold">Select Event Header Image</Label>
+          }
         </Button>
       </div>
     </div>

@@ -23,6 +23,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         eventspacelocation: eventspacelocation (id, name, is_main_location, description, address, capacity, image_urls),
         tracks: track (*),
         schedules: schedule (*)
+        main_location: location(*)
         `)
         .filter('status', 'eq', 'published')
         .limit(limit)
