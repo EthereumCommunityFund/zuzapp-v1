@@ -35,12 +35,14 @@ export interface Database {
           {
             foreignKeyName: "editlogs_editor_id_fkey"
             columns: ["editor_id"]
+            isOneToOne: false
             referencedRelation: "profile"
             referencedColumns: ["uuid"]
           },
           {
             foreignKeyName: "editlogs_schedule_id_fkey"
             columns: ["schedule_id"]
+            isOneToOne: false
             referencedRelation: "schedule"
             referencedColumns: ["id"]
           }
@@ -59,6 +61,7 @@ export interface Database {
           format: string | null
           id: string
           image_url: string | null
+          main_location_id: string | null
           name: string
           social_links: string | null
           start_date: string | null
@@ -78,6 +81,7 @@ export interface Database {
           format?: string | null
           id?: string
           image_url?: string | null
+          main_location_id?: string | null
           name: string
           social_links?: string | null
           start_date?: string | null
@@ -97,6 +101,7 @@ export interface Database {
           format?: string | null
           id?: string
           image_url?: string | null
+          main_location_id?: string | null
           name?: string
           social_links?: string | null
           start_date?: string | null
@@ -108,8 +113,16 @@ export interface Database {
           {
             foreignKeyName: "eventspace_creator_id_fkey"
             columns: ["creator_id"]
+            isOneToOne: false
             referencedRelation: "profile"
             referencedColumns: ["uuid"]
+          },
+          {
+            foreignKeyName: "eventspace_main_location_id_fkey"
+            columns: ["main_location_id"]
+            isOneToOne: false
+            referencedRelation: "location"
+            referencedColumns: ["id"]
           }
         ]
       }
@@ -142,18 +155,21 @@ export interface Database {
           {
             foreignKeyName: "eventspaceinvites_event_space_id_fkey"
             columns: ["event_space_id"]
+            isOneToOne: false
             referencedRelation: "eventspace"
             referencedColumns: ["id"]
           },
           {
             foreignKeyName: "eventspaceinvites_invitee_id_fkey"
             columns: ["invitee_id"]
+            isOneToOne: false
             referencedRelation: "profile"
             referencedColumns: ["uuid"]
           },
           {
             foreignKeyName: "eventspaceinvites_inviter_id_fkey"
             columns: ["inviter_id"]
+            isOneToOne: false
             referencedRelation: "profile"
             referencedColumns: ["uuid"]
           }
@@ -194,6 +210,7 @@ export interface Database {
           {
             foreignKeyName: "eventspacelocation_event_space_id_fkey"
             columns: ["event_space_id"]
+            isOneToOne: false
             referencedRelation: "eventspace"
             referencedColumns: ["id"]
           }
@@ -261,6 +278,7 @@ export interface Database {
           {
             foreignKeyName: "profile_uuid_fkey"
             columns: ["uuid"]
+            isOneToOne: true
             referencedRelation: "users"
             referencedColumns: ["id"]
           }
@@ -352,18 +370,21 @@ export interface Database {
           {
             foreignKeyName: "schedule_event_space_id_fkey"
             columns: ["event_space_id"]
+            isOneToOne: false
             referencedRelation: "eventspace"
             referencedColumns: ["id"]
           },
           {
             foreignKeyName: "schedule_location_id_fkey"
             columns: ["location_id"]
+            isOneToOne: false
             referencedRelation: "eventspacelocation"
             referencedColumns: ["id"]
           },
           {
             foreignKeyName: "schedule_track_id_fkey"
             columns: ["track_id"]
+            isOneToOne: false
             referencedRelation: "track"
             referencedColumns: ["id"]
           }
@@ -392,12 +413,14 @@ export interface Database {
           {
             foreignKeyName: "schedulespeakerrole_schedule_id_fkey"
             columns: ["schedule_id"]
+            isOneToOne: false
             referencedRelation: "schedule"
             referencedColumns: ["id"]
           },
           {
             foreignKeyName: "schedulespeakerrole_speaker_id_fkey"
             columns: ["speaker_id"]
+            isOneToOne: false
             referencedRelation: "speaker"
             referencedColumns: ["id"]
           }
@@ -423,12 +446,14 @@ export interface Database {
           {
             foreignKeyName: "scheduletags_schedule_id_fkey"
             columns: ["schedule_id"]
+            isOneToOne: false
             referencedRelation: "schedule"
             referencedColumns: ["id"]
           },
           {
             foreignKeyName: "scheduletags_tag_id_fkey"
             columns: ["tag_id"]
+            isOneToOne: false
             referencedRelation: "tags"
             referencedColumns: ["id"]
           }
@@ -457,6 +482,7 @@ export interface Database {
           {
             foreignKeyName: "socialmedialinks_event_space_id_fkey"
             columns: ["event_space_id"]
+            isOneToOne: false
             referencedRelation: "eventspace"
             referencedColumns: ["id"]
           }
@@ -518,6 +544,7 @@ export interface Database {
           {
             foreignKeyName: "track_event_space_id_fkey"
             columns: ["event_space_id"]
+            isOneToOne: false
             referencedRelation: "eventspace"
             referencedColumns: ["id"]
           }
@@ -540,6 +567,7 @@ export interface Database {
           {
             foreignKeyName: "userrsvp_schedule_id_fkey"
             columns: ["schedule_id"]
+            isOneToOne: false
             referencedRelation: "schedule"
             referencedColumns: ["id"]
           }
