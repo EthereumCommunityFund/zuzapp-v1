@@ -105,15 +105,15 @@ export default function EventLocationEdit({
           </div>
         ) : (
           <form onSubmit={handleUpdateEventLocation} className="flex flex-col p-5 rounded-[10px] border items-start	gap-[30px] self-stretch border-opacity-10 bg-[#2B2E2E]">
-            <div className="flex flex-col justify-center items-start gap-[10px] self-stretch">
+            {/* <div className="flex flex-col justify-center items-start gap-[10px] self-stretch">
               <div className="flex items-center gap-5 self-stretch">
                 <SwitchButton value={isMainLocation} onClick={handleSwitchChange} />
                 <span className="text-lg font-semibold leading-[1.2] text-white self-stretch">Main Location</span>
               </div>
               <span className="opacity-70 h-[18px] font-normal text-[13px] leading-[18.2px] tracking-[0.13px] self-stretch">This is the location of the main event</span>
-            </div>
+            </div> */}
             <div className="flex flex-col items-start gap-[14px] self-stretch">
-              <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Location Name</Label>
+              <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Space Name</Label>
               <Input
                 className=" bg-inputField"
                 placeholder={'Name of this location'}
@@ -157,12 +157,12 @@ export default function EventLocationEdit({
               />
             </div>
             <div className="flex flex-col items-start gap-[14px] self-stretch">
-              <InputFieldLabel name="Location Description" />
+              <InputFieldLabel name="Space Description" />
               <TextEditor value={payload.description} onChange={handleTextEditorChange} />
               <EventDeatilsDescription1 name="000 characters left" />
             </div>
             <div className="flex flex-col items-center gap-[10px] self-stretch">
-              <InputFieldLabel name="Location Media" />
+              <InputFieldLabel name="Space Media" />
               <DragAndDrop payload={payload} setPayload={setPayload} />
               {/* <EventDeatilsDescription1 name="We recommend using at least a 2160x1080px" /> */}
             </div>
