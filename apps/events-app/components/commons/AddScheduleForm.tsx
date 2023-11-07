@@ -43,6 +43,7 @@ import { TimePicker } from 'antd';
 import { BsFillTicketFill } from 'react-icons/bs';
 import { sessionNavBarDetails } from '@/constant/addschedulenavbar';
 import { DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import {rotate} from "next/dist/server/lib/squoosh/impl";
 
 type Organizer = {
   name: string;
@@ -60,9 +61,10 @@ interface IAddScheduleForm {
   isFromEventView: boolean;
   track_title?: string;
   updateIsLoading?: (newState: boolean) => void;
+  setAddASessionDialogOpen?: (newState: boolean) => void;
 }
 
-export default function AddScheduleForm({ isQuickAccess, trackId, event_space_id, isFromEventView, track_title, updateIsLoading }: IAddScheduleForm) {
+export default function AddScheduleForm({ isQuickAccess, trackId, event_space_id, isFromEventView, track_title, updateIsLoading, setAddASessionDialogOpen }: IAddScheduleForm) {
   const router = useRouter();
   const { quickAccess } = router.query;
 
@@ -334,16 +336,33 @@ export default function AddScheduleForm({ isQuickAccess, trackId, event_space_id
     }
   }, [form.formState.errors]);
 
+  useEffect(() => {
+    if (scheduleAdded) {
+      setAddDialog(true);
+    }
+  }, [scheduleAdded]);
+
+  const getPathName = () => {
+    if (router.pathname.startsWith('/dashboard/eventview/about')) {
+      return `/dashboard/eventview/allschedules`;
+    } else if (router.pathname.startsWith('/dashboard/eventview/allschedules'))  {
+      setAddASessionDialogOpen && setAddASessionDialogOpen(false);
+      return `/dashboard/eventview/allschedules`;
+    } else {
+      return router.pathname;
+    }
+  }
   const handleEnterEventViewSessions = () => {
     updateIsLoading && updateIsLoading(true);
     try {
       router.push({
-        pathname: router.pathname.startsWith(`/dashboard/eventview/about`) ? `/dashboard/eventview/allschedules` : router.pathname,
+        pathname: getPathName(),
         query: {
           event_space_id: event_space_id,
           trackId: trackId,
         },
       });
+      setAddDialog(false);
     } catch (error) {
       console.error('Error redirecting schedulelists', error);
     }
@@ -415,7 +434,7 @@ export default function AddScheduleForm({ isQuickAccess, trackId, event_space_id
         ) : (
           <></>
         )}
-        <Dialog open={scheduleAdded} onOpenChange={(open) => setAddDialog(open)}>
+        <Dialog open={addDialog} onOpenChange={(open) => setAddDialog(open)}>
           <DialogContent className="sm:max-w-[525px] h-auto rounded-2xl">
             <DialogHeader className="my-2">
               <DialogTitle>Session Added</DialogTitle>
@@ -423,14 +442,14 @@ export default function AddScheduleForm({ isQuickAccess, trackId, event_space_id
             <div className="text-sm font-light text-white/70 my-2">You can edit your session details.</div>
             <div className="font-normal text-white my-2">Now go to Sessions and continue</div>
             <DialogFooter>
-              <Button
-                onClick={isFromEventView ? handleEnterEventViewSessions : handleEnterSessions}
-                variant="primary"
-                className="bg-[#67DBFF]/20 text-[#67DBFF] text-lg w-full justify-center rounded-full"
-                leftIcon={HiArrowRight}
-              >
-                Go to sessions
-              </Button>
+                  <Button
+                    onClick={isFromEventView ? handleEnterEventViewSessions : handleEnterSessions}
+                    variant="primary"
+                    className="bg-[#67DBFF]/20 text-[#67DBFF] text-lg w-full justify-center rounded-full"
+                    leftIcon={HiArrowRight}
+                  >
+                    Go to sessions
+                  </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
