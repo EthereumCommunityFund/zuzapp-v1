@@ -1,7 +1,7 @@
 import EventViewHeader from '@/components/eventview/EventViewHeader';
 import UserFacingTrack from '@/components/ui/UserFacingTrack';
 import Button from '@/components/ui/buttons/Button';
-import { ScheduleDetailstype } from '@/types';
+import { LocationType, ScheduleDetailstype } from '@/types';
 import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
 import { useRouter } from 'next/router';
 import React, { Fragment, useEffect, useRef, useState } from 'react';
@@ -27,6 +27,7 @@ import { Label } from "../ui/label";
 import { Switch } from "../ui/switch";
 import SwitchButton from "../ui/buttons/SwitchButton";
 import { fetchSchedulesByUserRsvp } from "@/controllers";
+import { DropDownMenu } from '../ui/DropDownMenu';
 
 interface ISessionViewPageTemplate {
   event_space_id: string;
@@ -43,6 +44,7 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
   const { isAuthenticated, user } = useGlobalContext();
   const [isMyRSVP, setIsMyRSVP] = useState<boolean>(false);
   const [groupedMyRSVPs, setGroupedMyRSVPs] = useState<Record<string, ScheduleDetailstype[]>>();
+  const [selectedSpaces, setSelectedSpaces] = useState<any[]>([]);
 
   const handleItemClick = (scheduleId: string, trackId?: string) => {
     router.push({
@@ -93,6 +95,17 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
     return filteredSchedules;
   };
 
+  const filterBySpace = (schedules: ScheduleDetailstype[]) => {
+    const selectedSpaceIds = selectedSpaces.map((item) => item.id);
+    const filteredSchedules =
+      selectedSpaceIds.length > 0
+        ? schedules.filter((schedule) => {
+          return schedule.location_id && selectedSpaceIds.includes(schedule.location_id);
+        })
+        : schedules;
+    return filteredSchedules;
+  };
+
   const handleTrackSelect = (newSelectedTracks: any[]) => {
     // console.log(newSelectedTracks, "new selected tracks");
     setSelectedTracks(newSelectedTracks);
@@ -101,6 +114,10 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
   const handleIsUpcoming = (newFilter: boolean) => {
     setIsUpcoming(newFilter);
   };
+
+  const handleSpaceSelect = (newSelectedSpaces: any[]) => {
+    setSelectedSpaces(newSelectedSpaces);
+  }
 
   // useEffect(() => {
   //   const observer = new IntersectionObserver(
@@ -183,6 +200,7 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
 
   let sortedSchedules = sortByUpcoming(schedules, isUpcoming);
   sortedSchedules = filterByTrack(sortedSchedules);
+  sortedSchedules = filterBySpace(sortedSchedules);
   let groupedSchedules: Record<string, ScheduleDetailstype[]> = {};
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -345,7 +363,21 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
             handleIsUpcoming={handleIsUpcoming}
           />
           <div className="flex lg:flex-col md:flex-row sm:flex-col w-full p-2.5 md:gap-5 sm:gap-3 text-sm">
-            <Listbox as={'div'} className={'w-full relative'} value={selectedTracks} multiple onChange={(newSelectedTracks) => handleTrackSelect(newSelectedTracks)}>
+            <DropDownMenu
+              values={selectedTracks}
+              multiple={true}
+              header={'Select Tracks'}
+              items={eventSpace.tracks}
+              onItemSelect={handleTrackSelect}
+            />
+            <DropDownMenu
+              values={selectedSpaces}
+              multiple={true}
+              header={'Select Space'}
+              items={eventSpace.eventspacelocation as LocationType[]}
+              onItemSelect={handleSpaceSelect}
+            />
+            {/* <Listbox as={'div'} className={'w-full relative'} value={selectedTracks} multiple onChange={(newSelectedTracks) => handleTrackSelect(newSelectedTracks)}>
               <Listbox.Button
                 className={
                   'relative w-full inline-flex justify-between item-center cursor-pointer bg-trackItemHover border border-borderSecondary py-2 px-2 shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm rounded-xl'
@@ -385,7 +417,7 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
                   ))}
                 </Listbox.Options>
               </Transition>
-            </Listbox>
+            </Listbox> */}
           </div>
         </div>
       </div>
