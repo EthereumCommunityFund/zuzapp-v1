@@ -183,12 +183,12 @@ export default function EventViewScheduleViewTemplate({ event_space_id, schedule
               </Button>
 
               {isAuthenticated && canEdit && (
-                  <Button onClick={() => setIsEditing(true)} variant="quiet" className="rounded-3xl p-2 px-3 text-base" leftIcon={FiEdit}>
-                    <Label className="px-1">Edit</Label>
-                  </Button>
+                <Button onClick={() => setIsEditing(true)} variant="quiet" className="rounded-3xl p-2 px-3 text-base" leftIcon={FiEdit}>
+                  <Label className="px-1">Edit</Label>
+                </Button>
               )}
 
-              <Dialog open={isEditing} onOpenChange={(edit) => setIsEditing(edit) }>
+              <Dialog open={isEditing} onOpenChange={(edit) => setIsEditing(edit)}>
                 <DialogContent className="lg:h-4/5 w-full h-screen lg:w-3/5 overflow-y-auto">
                   <EditScheduleForm edit={setIsEditing} isQuickAccess={true} scheduleId={scheduleId as string} trackId={trackId as string} isFromEventView={true} event_space_id={event_space_id} creatorId={creatorId} />
                 </DialogContent>
@@ -230,8 +230,16 @@ export default function EventViewScheduleViewTemplate({ event_space_id, schedule
             </Button> */}
             <div className="flex flex-col gap-2.5 border-b border-t border-borderSecondary">
               <div className="flex flex-col gap-4 py-[15px] px-[13px] w-full">
-                <div className="relative">
-                  <iframe src="https://app.streameth.org/embed/?playbackId=0294w9be36fgox9l&streamId=&playerName=Opening+Remarks" width="100%" height="100%" frameBorder="0" allow="autoplay; fullscreen" allowFullScreen></iframe>
+                <div className="relative w-full lg:h-[397px] md:h-[calc(56vw-54px)] sm:h-[calc(57vw-39px)]">
+                  <iframe
+                    src="https://app.streameth.org/embed/?playbackId=0294w9be36fgox9l&streamId=&playerName=Opening+Remarks"
+                    width={'100%'}
+                    height={'100%'}
+                    className='rounded-md'
+                    frameBorder="0"
+                    allow="autoplay; fullscreen"
+                    allowFullScreen
+                  />
                 </div>
 
                 <div className="flex gap-4 w-full justify-between">
