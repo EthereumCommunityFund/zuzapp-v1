@@ -130,7 +130,7 @@ export default function EventViewScheduleViewTemplate({ event_space_id, schedule
     ['inviteDetails'], // Query key
     () => isAuthenticated && fetchSpaceInvites(event_space_id as string), // Query function
     {
-      enabled: !!event_space_id,
+      enabled: !!isAuthenticated && !!event_space_id,
       refetchOnWindowFocus: false,
       refetchOnMount: true,
       refetchOnReconnect: true,
