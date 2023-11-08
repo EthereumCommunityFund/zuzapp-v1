@@ -180,7 +180,7 @@ const UserFacingTrack: React.ForwardRefRenderFunction<HTMLDivElement, IUserFacin
             <span className="font-semibold md:text-lg">{scheduleData.name}</span>
             <div className="flex gap-[6px] items-center py-2">
               <HiLocationMarker size={15} />
-              <Label className="text-sm font-light text-white/60">{locationName}</Label>
+              <Label className="text-sm font-light text-white/60">{isAuthenticated ? locationName : ``}</Label>
             </div>
             <div className="flex gap-2.5 md:flex-row sm:flex-col w-fit">
               {scheduleData.schedule_frequency !== 'once' && (
