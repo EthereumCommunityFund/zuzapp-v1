@@ -45,6 +45,7 @@ export default function EventViewScheduleViewTemplate({ event_space_id, schedule
   const [isRsvpFullOnLoad, setIsRsvpFullOnLoad] = useState(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [showLogs, setShowLogs] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
   const trackItem = eventSpace?.tracks.find((trackItem: TrackUpdateRequestBody) => trackItem.id === trackId);
   const { isAuthenticated, user } = useGlobalContext();
@@ -127,9 +128,9 @@ export default function EventViewScheduleViewTemplate({ event_space_id, schedule
 
   const { data: invites, isLoading: isInvitesLoading } = useQuery(
     ['inviteDetails'], // Query key
-    () => fetchSpaceInvites(event_space_id as string), // Query function
+    () => isAuthenticated && fetchSpaceInvites(event_space_id as string), // Query function
     {
-      enabled: !!event_space_id,
+      enabled: !!isAuthenticated && !!event_space_id,
       refetchOnWindowFocus: false,
       refetchOnMount: true,
       refetchOnReconnect: true,
@@ -144,7 +145,7 @@ export default function EventViewScheduleViewTemplate({ event_space_id, schedule
   };
 
   useEffect(() => {
-    fetchUserProfile();
+    isAuthenticated && fetchUserProfile();
     console.log(invites, 'invites');
   });
 
@@ -152,7 +153,7 @@ export default function EventViewScheduleViewTemplate({ event_space_id, schedule
     if (isAuthenticated) checkIfUserHasRsvpd();
   }, [isAuthenticated]);
 
-  const canEdit = creatorId === userId || invites?.some((invite: { invitee_id: string; status: string }) => invite.invitee_id === userId && invite.status === 'accepted');
+  const canEdit = isAuthenticated ? (creatorId === userId || (invites && invites?.some((invite: { invitee_id: string; status: string }) => invite.invitee_id === userId && invite.status === 'accepted'))) : false;
   const startTime = currentSchedule && toTurkeyTime(currentSchedule.start_time).format('H:mm');
 
   const endTime = currentSchedule && toTurkeyTime(currentSchedule.end_time).format('H:mm');
@@ -179,16 +180,16 @@ export default function EventViewScheduleViewTemplate({ event_space_id, schedule
               <Button variant="ghost" size="lg" className="font-semibold text-white/30 hover:bg-white/10 rounded-3xl" leftIcon={HiArrowLeft} onClick={handleBackToSchedule}>
                 <span className="text-sm">Back to Sessions</span>
               </Button>
-              <Dialog>
-                <DialogTrigger asChild>
-                  {isAuthenticated && canEdit && (
-                    <Button variant="quiet" className="rounded-3xl p-2 px-3 text-base" leftIcon={FiEdit}>
-                      <Label className="px-1">Edit</Label>
-                    </Button>
-                  )}
-                </DialogTrigger>
+
+              {isAuthenticated && canEdit && (
+                <Button onClick={() => setIsEditing(true)} variant="quiet" className="rounded-3xl p-2 px-3 text-base" leftIcon={FiEdit}>
+                  <Label className="px-1">Edit</Label>
+                </Button>
+              )}
+
+              <Dialog open={isEditing} onOpenChange={(edit) => setIsEditing(edit)}>
                 <DialogContent className="lg:h-4/5 w-full h-screen lg:w-3/5 overflow-y-auto">
-                  <EditScheduleForm isQuickAccess={true} scheduleId={scheduleId as string} trackId={trackId as string} isFromEventView={true} event_space_id={event_space_id} creatorId={creatorId} />
+                  <EditScheduleForm edit={setIsEditing} isQuickAccess={true} scheduleId={scheduleId as string} trackId={trackId as string} isFromEventView={true} event_space_id={event_space_id} creatorId={creatorId} />
                 </DialogContent>
               </Dialog>
             </div>

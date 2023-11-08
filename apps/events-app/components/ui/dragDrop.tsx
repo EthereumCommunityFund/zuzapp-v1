@@ -79,12 +79,9 @@ export default function DragAndDrop({ setPayload, payload, title }: any) {
     >
       <input placeholder="fileInput" className="hidden" ref={inputRef} type="file" multiple={true} onChange={handleChange} accept="image/*" />
       <div className="w-full">
-        <Button className="flex flex-col rounded-[6px] border-dashed text-white border-white border-opacity-10 bg-pagePrimary h-full w-full" onClick={openFileExplorer}>
+        <Button className="flex flex-col rounded-[6px] cursor-pointer p-2 border-dashed text-white border-white border-opacity-10 bg-pagePrimary h-full w-full" onClick={openFileExplorer}>
           <HiUpload />
-          {title ?
-            <Label className="text-[13px] text-center opacity-50 font-bold">{title}</Label> :
-            <Label className="text-[13px] text-center opacity-50 font-bold">Select Event Header Image</Label>
-          }
+          {title ? <Label className="text-[13px] text-center opacity-50 font-bold">{title}</Label> : <Label className="text-[13px] text-center opacity-50 font-bold">Select Event Header Image</Label>}
         </Button>
       </div>
     </div>

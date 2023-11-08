@@ -45,6 +45,7 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
   const [isMyRSVP, setIsMyRSVP] = useState<boolean>(false);
   const [groupedMyRSVPs, setGroupedMyRSVPs] = useState<Record<string, ScheduleDetailstype[]>>();
   const [selectedSpaces, setSelectedSpaces] = useState<any[]>([]);
+  const [addASessionDialogOpen, setAddASessionDialogOpen] = useState<boolean>(false);
 
   const handleItemClick = (scheduleId: string, trackId?: string) => {
     router.push({
@@ -245,12 +246,10 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
             <div className="pt-2 bg-componentPrimary rounded-2xl lg:px-2 lg:pt-8">
               {isAuthenticated && (
                 <div className="px-4">
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <Button variant="blue" size="lg" className="rounded-full sm:w-full lg:w-fit justify-center" leftIcon={BiPlusCircle}>
-                        Add a Session
-                      </Button>
-                    </DialogTrigger>
+                  <Button onClick={() => setAddASessionDialogOpen(true)} variant="blue" size="lg" className="rounded-full sm:w-full lg:w-fit justify-center" leftIcon={BiPlusCircle}>
+                    Add a Session
+                  </Button>
+                  <Dialog open={addASessionDialogOpen} onOpenChange={(open) => setAddASessionDialogOpen(open)}>
                     {
                       <DialogContent className="lg:w-3/5 lg:h-4/5 overflow-y-auto">
                         <AddScheduleForm
@@ -259,6 +258,7 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
                           isFromEventView={true}
                           // updateIsLoading={updateIsLoading}
                           event_space_id={event_space_id as string}
+                          setAddASessionDialogOpen={setAddASessionDialogOpen}
                         />
                       </DialogContent>
                     }
