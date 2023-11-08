@@ -9,8 +9,48 @@ export type Json =
 export interface Database {
   public: {
     Tables: {
+      editlogs: {
+        Row: {
+          edit_summary: string | null
+          edited_at: string | null
+          editor_id: string | null
+          id: string
+          schedule_id: string | null
+        }
+        Insert: {
+          edit_summary?: string | null
+          edited_at?: string | null
+          editor_id?: string | null
+          id?: string
+          schedule_id?: string | null
+        }
+        Update: {
+          edit_summary?: string | null
+          edited_at?: string | null
+          editor_id?: string | null
+          id?: string
+          schedule_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "editlogs_editor_id_fkey"
+            columns: ["editor_id"]
+            isOneToOne: false
+            referencedRelation: "profile"
+            referencedColumns: ["uuid"]
+          },
+          {
+            foreignKeyName: "editlogs_schedule_id_fkey"
+            columns: ["schedule_id"]
+            isOneToOne: false
+            referencedRelation: "schedule"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       eventspace: {
         Row: {
+          created_at: string | null
           creator_id: string
           description: string | null
           end_date: string | null
@@ -21,13 +61,16 @@ export interface Database {
           format: string | null
           id: string
           image_url: string | null
+          main_location_id: string | null
           name: string
           social_links: string | null
           start_date: string | null
           status: string | null
           tagline: string | null
+          updated_at: string | null
         }
         Insert: {
+          created_at?: string | null
           creator_id: string
           description?: string | null
           end_date?: string | null
@@ -38,13 +81,16 @@ export interface Database {
           format?: string | null
           id?: string
           image_url?: string | null
+          main_location_id?: string | null
           name: string
           social_links?: string | null
           start_date?: string | null
           status?: string | null
           tagline?: string | null
+          updated_at?: string | null
         }
         Update: {
+          created_at?: string | null
           creator_id?: string
           description?: string | null
           end_date?: string | null
@@ -55,18 +101,28 @@ export interface Database {
           format?: string | null
           id?: string
           image_url?: string | null
+          main_location_id?: string | null
           name?: string
           social_links?: string | null
           start_date?: string | null
           status?: string | null
           tagline?: string | null
+          updated_at?: string | null
         }
         Relationships: [
           {
             foreignKeyName: "eventspace_creator_id_fkey"
             columns: ["creator_id"]
+            isOneToOne: false
             referencedRelation: "profile"
             referencedColumns: ["uuid"]
+          },
+          {
+            foreignKeyName: "eventspace_main_location_id_fkey"
+            columns: ["main_location_id"]
+            isOneToOne: false
+            referencedRelation: "location"
+            referencedColumns: ["id"]
           }
         ]
       }
@@ -99,18 +155,21 @@ export interface Database {
           {
             foreignKeyName: "eventspaceinvites_event_space_id_fkey"
             columns: ["event_space_id"]
+            isOneToOne: false
             referencedRelation: "eventspace"
             referencedColumns: ["id"]
           },
           {
             foreignKeyName: "eventspaceinvites_invitee_id_fkey"
             columns: ["invitee_id"]
+            isOneToOne: false
             referencedRelation: "profile"
             referencedColumns: ["uuid"]
           },
           {
             foreignKeyName: "eventspaceinvites_inviter_id_fkey"
             columns: ["inviter_id"]
+            isOneToOne: false
             referencedRelation: "profile"
             referencedColumns: ["uuid"]
           }
@@ -151,6 +210,7 @@ export interface Database {
           {
             foreignKeyName: "eventspacelocation_event_space_id_fkey"
             columns: ["event_space_id"]
+            isOneToOne: false
             referencedRelation: "eventspace"
             referencedColumns: ["id"]
           }
@@ -218,6 +278,7 @@ export interface Database {
           {
             foreignKeyName: "profile_uuid_fkey"
             columns: ["uuid"]
+            isOneToOne: true
             referencedRelation: "users"
             referencedColumns: ["id"]
           }
@@ -226,9 +287,11 @@ export interface Database {
       schedule: {
         Row: {
           all_day: boolean | null
+          created_at: string | null
           current_rsvp_no: number
-          date: string
+          date: string | null
           description: string | null
+          end_date: string | null
           end_time: string
           event_space_id: string | null
           event_type: string | null
@@ -240,17 +303,22 @@ export interface Database {
           live_stream_url: string | null
           location_id: string | null
           name: string
+          real_end_date: string | null
           rsvp_amount: number
           schedule_frequency: string | null
+          start_date: string | null
           start_time: string
           track_id: string | null
+          updated_at: string | null
           video_call_link: string | null
         }
         Insert: {
           all_day?: boolean | null
+          created_at?: string | null
           current_rsvp_no?: number
-          date: string
+          date?: string | null
           description?: string | null
+          end_date?: string | null
           end_time: string
           event_space_id?: string | null
           event_type?: string | null
@@ -262,17 +330,22 @@ export interface Database {
           live_stream_url?: string | null
           location_id?: string | null
           name: string
+          real_end_date?: string | null
           rsvp_amount?: number
           schedule_frequency?: string | null
+          start_date?: string | null
           start_time: string
           track_id?: string | null
+          updated_at?: string | null
           video_call_link?: string | null
         }
         Update: {
           all_day?: boolean | null
+          created_at?: string | null
           current_rsvp_no?: number
-          date?: string
+          date?: string | null
           description?: string | null
+          end_date?: string | null
           end_time?: string
           event_space_id?: string | null
           event_type?: string | null
@@ -284,28 +357,34 @@ export interface Database {
           live_stream_url?: string | null
           location_id?: string | null
           name?: string
+          real_end_date?: string | null
           rsvp_amount?: number
           schedule_frequency?: string | null
+          start_date?: string | null
           start_time?: string
           track_id?: string | null
+          updated_at?: string | null
           video_call_link?: string | null
         }
         Relationships: [
           {
             foreignKeyName: "schedule_event_space_id_fkey"
             columns: ["event_space_id"]
+            isOneToOne: false
             referencedRelation: "eventspace"
             referencedColumns: ["id"]
           },
           {
             foreignKeyName: "schedule_location_id_fkey"
             columns: ["location_id"]
+            isOneToOne: false
             referencedRelation: "eventspacelocation"
             referencedColumns: ["id"]
           },
           {
             foreignKeyName: "schedule_track_id_fkey"
             columns: ["track_id"]
+            isOneToOne: false
             referencedRelation: "track"
             referencedColumns: ["id"]
           }
@@ -334,12 +413,14 @@ export interface Database {
           {
             foreignKeyName: "schedulespeakerrole_schedule_id_fkey"
             columns: ["schedule_id"]
+            isOneToOne: false
             referencedRelation: "schedule"
             referencedColumns: ["id"]
           },
           {
             foreignKeyName: "schedulespeakerrole_speaker_id_fkey"
             columns: ["speaker_id"]
+            isOneToOne: false
             referencedRelation: "speaker"
             referencedColumns: ["id"]
           }
@@ -365,12 +446,14 @@ export interface Database {
           {
             foreignKeyName: "scheduletags_schedule_id_fkey"
             columns: ["schedule_id"]
+            isOneToOne: false
             referencedRelation: "schedule"
             referencedColumns: ["id"]
           },
           {
             foreignKeyName: "scheduletags_tag_id_fkey"
             columns: ["tag_id"]
+            isOneToOne: false
             referencedRelation: "tags"
             referencedColumns: ["id"]
           }
@@ -399,6 +482,7 @@ export interface Database {
           {
             foreignKeyName: "socialmedialinks_event_space_id_fkey"
             columns: ["event_space_id"]
+            isOneToOne: false
             referencedRelation: "eventspace"
             referencedColumns: ["id"]
           }
@@ -460,6 +544,7 @@ export interface Database {
           {
             foreignKeyName: "track_event_space_id_fkey"
             columns: ["event_space_id"]
+            isOneToOne: false
             referencedRelation: "eventspace"
             referencedColumns: ["id"]
           }
@@ -482,6 +567,7 @@ export interface Database {
           {
             foreignKeyName: "userrsvp_schedule_id_fkey"
             columns: ["schedule_id"]
+            isOneToOne: false
             referencedRelation: "schedule"
             referencedColumns: ["id"]
           }

@@ -1,26 +1,25 @@
 import Joi, { boolean } from 'joi';
 import { EventSpaceCreateRequestBody, EventSpaceStatusUpdateRequestBody, EventSpaceUpdateRequestBody } from '../types';
 
-const locationSchema = Joi.object({
-  id: Joi.string().uuid(),
+const location_schema = Joi.object({
+  id: Joi.string().uuid().optional(),
   name: Joi.string().required(),
-  description: Joi.string().allow('', null),
-  iis_main_location: Joi.bool().required(),
+  description: Joi.string().required(),
   address: Joi.string().required(),
-  capacity: Joi.number().integer().min(1).required(),
-  image_urls: Joi.array().items(Joi.string()).optional(),
+  capacity: Joi.number().integer().default(50),
+  image_urls: Joi.array().items(Joi.string().uri()),
 });
 
 const eventspace_update_schema = Joi.object({
   id: Joi.string().uuid(),
   name: Joi.string().required(),
-  tagline: Joi.string().default(''),
+  tagline: Joi.string().allow(''),
   social_links: Joi.string().when('format', {
     is: Joi.valid('online'),
-    then: Joi.required(),
+    then: Joi.optional(),
     otherwise: Joi.optional(),
   }),
-  extra_links: Joi.string().default(''),
+  extra_links: Joi.string().allow(''),
   event_space_type: Joi.string().valid('tracks', 'schedules').required(),
   status: Joi.string().valid('draft', 'published', 'archived').required(),
   start_date: Joi.date().required(),
@@ -29,9 +28,10 @@ const eventspace_update_schema = Joi.object({
   format: Joi.string().valid('in-person', 'online').required(),
   event_type: Joi.array().items(Joi.string()).default(['General']),
   experience_level: Joi.array().items(Joi.string()).default(['Beginner']),
-  image_url: Joi.string()
-
+  image_url: Joi.string().uri().allow(''),
+  main_location: location_schema.required(),
 });
+
 const eventspace_status_update_schema = Joi.object({
   id: Joi.string().uuid().required(),
   status: Joi.string().valid('draft', 'published', 'archived').required(),
