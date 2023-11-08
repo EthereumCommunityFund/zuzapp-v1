@@ -1,7 +1,7 @@
 import EventViewHeader from '@/components/eventview/EventViewHeader';
 import UserFacingTrack from '@/components/ui/UserFacingTrack';
 import Button from '@/components/ui/buttons/Button';
-import { ScheduleDetailstype } from '@/types';
+import { LocationType, ScheduleDetailstype } from '@/types';
 import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
 import { useRouter } from 'next/router';
 import React, { Fragment, useEffect, useRef, useState } from 'react';
@@ -27,6 +27,7 @@ import { Label } from "../ui/label";
 import { Switch } from "../ui/switch";
 import SwitchButton from "../ui/buttons/SwitchButton";
 import { fetchSchedulesByUserRsvp } from "@/controllers";
+import { DropDownMenu } from '../ui/DropDownMenu';
 
 interface ISessionViewPageTemplate {
   event_space_id: string;
@@ -43,6 +44,7 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
   const { isAuthenticated, user } = useGlobalContext();
   const [isMyRSVP, setIsMyRSVP] = useState<boolean>(false);
   const [groupedMyRSVPs, setGroupedMyRSVPs] = useState<Record<string, ScheduleDetailstype[]>>();
+  const [selectedSpaces, setSelectedSpaces] = useState<any[]>([]);
   const [addASessionDialogOpen, setAddASessionDialogOpen] = useState<boolean>(false);
 
   const handleItemClick = (scheduleId: string, trackId?: string) => {
@@ -87,8 +89,22 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
     const filteredSchedules =
       selectedTrackIds.length > 0
         ? schedules.filter((schedule) => {
-          // console.log(schedule, "selected track ids");
-          return schedule.track_id && selectedTrackIds.includes(schedule.track_id);
+          if (schedule.track_id)
+            return selectedTrackIds.includes(schedule.track_id);
+        })
+        : schedules;
+    return filteredSchedules;
+  };
+
+  const filterBySpace = (schedules: ScheduleDetailstype[]) => {
+    const selectedSpaceIds = selectedSpaces.map((item) => item.id);
+    console.log(selectedSpaceIds, 'selectedSpaceIds:');
+    const filteredSchedules =
+      selectedSpaceIds.length > 0
+        ? schedules.filter((schedule) => {
+          if (schedule.location_id)
+            console.log(schedule.location_id, 'schedule.location_id', selectedSpaceIds.includes(schedule.location_id));
+          return selectedSpaceIds.includes(schedule.location_id);
         })
         : schedules;
     return filteredSchedules;
@@ -102,6 +118,10 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
   const handleIsUpcoming = (newFilter: boolean) => {
     setIsUpcoming(newFilter);
   };
+
+  const handleSpaceSelect = (newSelectedSpaces: any[]) => {
+    setSelectedSpaces(newSelectedSpaces);
+  }
 
   // useEffect(() => {
   //   const observer = new IntersectionObserver(
@@ -184,10 +204,11 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
 
   let sortedSchedules = sortByUpcoming(schedules, isUpcoming);
   sortedSchedules = filterByTrack(sortedSchedules);
+  sortedSchedules = filterBySpace(sortedSchedules);
   let groupedSchedules: Record<string, ScheduleDetailstype[]> = {};
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-
+  console.log(sortedSchedules, 'sortedSchedules');
   groupingSchedules(sortedSchedules, groupedSchedules);
 
   // Now, let's categorize them into "past" and "upcoming"
@@ -205,7 +226,8 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
     }
   }
 
-  groupedSchedules = isUpcoming ? upcomingSchedules : pastSchedules;
+  if (selectedSpaces.length === 0 && selectedTracks.length === 0)
+    groupedSchedules = isUpcoming ? upcomingSchedules : pastSchedules;
   // Now, pastSchedules contains all the past events and upcomingSchedules contains the upcoming ones.
 
   let chosenSchedules = sortGroupedSchedulesByStartTime(groupedSchedules);
@@ -219,6 +241,11 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
     setIsMyRSVP((prev) => !prev);
   }
 
+  const getLocationNameById = (id: string, locations: LocationType[]): string => {
+    const location = locations.find(location => location.id === id);
+    return location?.name as string;
+  };
+
   return (
     <>
       <div className="flex gap-4 lg:flex-row lg:mt-0 pb-24 lg:py-0 sm:pt-3 sm:px-3 sm:flex-col-reverse lg:bg-pagePrimary md:bg-componentPrimary">
@@ -231,7 +258,7 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
                   <Button onClick={() => setAddASessionDialogOpen(true)} variant="blue" size="lg" className="rounded-full sm:w-full lg:w-fit justify-center" leftIcon={BiPlusCircle}>
                     Add a Session
                   </Button>
-                  <Dialog open={addASessionDialogOpen} onOpenChange={(open) => setAddASessionDialogOpen(open) }>
+                  <Dialog open={addASessionDialogOpen} onOpenChange={(open) => setAddASessionDialogOpen(open)}>
                     {
                       <DialogContent className="lg:w-3/5 lg:h-4/5 overflow-y-auto">
                         <AddScheduleForm
@@ -251,7 +278,7 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
                 <Loader />
               ) : (
                 <div className="p-0 gap-[10px] flex flex-col overflow-hidden rounded-[10px] pb-36 cursor-pointer">
-                  {schedules && eventSpace && (
+                  {schedules && eventSpace && eventSpace.eventspacelocation && (
                     <>
                       {isMyRSVP ?
                         groupedMyRSVPs && Object.keys(groupedMyRSVPs).map((date, idx) => {
@@ -271,6 +298,7 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
                               </div>
                               {groupedMyRSVPs[date].map((schedule, idx) => {
                                 return (
+                                  schedule.id && schedule &&
                                   <UserFacingTrack
                                     key={idx}
                                     scheduleId={schedule.id}
@@ -282,6 +310,7 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
                                       )
                                     }
                                     eventSpace={eventSpace}
+                                    locationName={getLocationNameById(schedule.location_id, eventSpace.eventspacelocation as LocationType[])}
                                   />
                                 );
                               })}
@@ -303,8 +332,9 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
                                   })}
                                 </span>
                               </div>
-                              {groupedSchedules[date].map((schedule, idx) => {
+                              {chosenSchedules[date].map((schedule, idx) => {
                                 return (
+                                  schedule.id &&
                                   <UserFacingTrack
                                     key={idx}
                                     scheduleId={schedule.id}
@@ -316,6 +346,7 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
                                       )
                                     }
                                     eventSpace={eventSpace}
+                                    locationName={getLocationNameById(schedule.location_id, eventSpace.eventspacelocation as LocationType[])}
                                   />
                                 );
                               })}
@@ -345,7 +376,21 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
             handleIsUpcoming={handleIsUpcoming}
           />
           <div className="flex lg:flex-col md:flex-row sm:flex-col w-full p-2.5 md:gap-5 sm:gap-3 text-sm">
-            <Listbox as={'div'} className={'w-full relative'} value={selectedTracks} multiple onChange={(newSelectedTracks) => handleTrackSelect(newSelectedTracks)}>
+            <DropDownMenu
+              values={selectedTracks}
+              multiple={true}
+              header={'Select Tracks'}
+              items={eventSpace.tracks}
+              onItemSelect={handleTrackSelect}
+            />
+            <DropDownMenu
+              values={selectedSpaces}
+              multiple={true}
+              header={'Select Space'}
+              items={eventSpace.eventspacelocation as LocationType[]}
+              onItemSelect={handleSpaceSelect}
+            />
+            {/* <Listbox as={'div'} className={'w-full relative'} value={selectedTracks} multiple onChange={(newSelectedTracks) => handleTrackSelect(newSelectedTracks)}>
               <Listbox.Button
                 className={
                   'relative w-full inline-flex justify-between item-center cursor-pointer bg-trackItemHover border border-borderSecondary py-2 px-2 shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm rounded-xl'
@@ -385,7 +430,7 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
                   ))}
                 </Listbox.Options>
               </Transition>
-            </Listbox>
+            </Listbox> */}
           </div>
         </div>
       </div>

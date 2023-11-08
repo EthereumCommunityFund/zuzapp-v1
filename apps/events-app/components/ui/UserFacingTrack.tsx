@@ -25,10 +25,12 @@ interface IUserFacingTrack {
   scheduleData: ScheduleDetailstype;
   onClick: () => void;
   eventSpace: EventSpaceDetailsType;
+  locationName: string;
 }
 
 const UserFacingTrack: React.ForwardRefRenderFunction<HTMLDivElement, IUserFacingTrack> = (props, ref) => {
-  const { scheduleData, onClick, eventSpace } = props;
+  const { scheduleData, onClick, eventSpace, locationName } = props;
+  console.log(scheduleData.location_id, 'scheduleData.location_id');
   // const { trackDetails, isLoading } = useTrack(scheduleData.track_id as string);
   // const date = convertToTurkeyTimeAsDate(scheduleData.date);
   let date = stringToDateObject(scheduleData.start_date as string);
@@ -38,21 +40,14 @@ const UserFacingTrack: React.ForwardRefRenderFunction<HTMLDivElement, IUserFacin
   let startDate = stringToDateObject(scheduleData.start_date as string);
   let endDate = stringToDateObject(scheduleData.real_end_date as string);
 
-  const startTime = scheduleData.start_time;
+  const startTime = (scheduleData.start_time as string).includes('T') ? toTurkeyTime(scheduleData.start_time).format('H:mm') : scheduleData.start_time;
   const endTime = toTurkeyTime(scheduleData.end_time).format('H:mm');
   const [hasRsvpd, setHasRsvpd] = useState<boolean>(false);
   const [isRsvpFullOnLoad, setIsRsvpFullOnLoad] = useState<boolean>(false);
-  const [locationName, setLocationName] = useState<string>();
+
   const { isAuthenticated } = useGlobalContext();
 
-  console.log('scheduleData', scheduleData);
-  useEffect(() => {
-    (eventSpace.eventspacelocation ?? []).forEach((spaceLocation) => {
-      if (spaceLocation.id === scheduleData?.location_id) {
-        setLocationName(spaceLocation.name);
-      }
-    });
-  }, [eventSpace]);
+
 
   const handleRsvpAction = async (e: React.MouseEvent<HTMLButtonElement>) => {
     try {
@@ -146,11 +141,9 @@ const UserFacingTrack: React.ForwardRefRenderFunction<HTMLDivElement, IUserFacin
                   <IconButton
                     variant={`ghost`}
                     icon={TbTicket}
-                    className={`${
-                      hasRsvpd ? `bg-componentPrimary` : `bg-trackDateColor`
-                    } rounded-lg md:text-[40px] sm:text-[25px] opacity-70 text-white hover:bg-violet3 inline-flex h-[35px] w-[35px] items-center justify-center outline-none focus:shadow-[0_0_0_2px] focus:shadow-[#3B3B3B] ${
-                      isRsvpFullOnLoad || scheduleData?.rsvp_amount === 0 || (isRsvpFullOnLoad && !hasRsvpd) ? `cursor-not-allowed` : ``
-                    }`}
+                    className={`${hasRsvpd ? `bg-componentPrimary` : `bg-trackDateColor`
+                      } rounded-lg md:text-[40px] sm:text-[25px] opacity-70 text-white hover:bg-violet3 inline-flex h-[35px] w-[35px] items-center justify-center outline-none focus:shadow-[0_0_0_2px] focus:shadow-[#3B3B3B] ${isRsvpFullOnLoad || scheduleData?.rsvp_amount === 0 || (isRsvpFullOnLoad && !hasRsvpd) ? `cursor-not-allowed` : ``
+                      }`}
                     onClick={(e: React.MouseEvent<HTMLButtonElement>) => handleRsvpAction(e)}
                   />
                 </Tooltip.Trigger>
@@ -205,11 +198,9 @@ const UserFacingTrack: React.ForwardRefRenderFunction<HTMLDivElement, IUserFacin
                   <IconButton
                     variant={`ghost`}
                     icon={TbTicket}
-                    className={`${
-                      hasRsvpd ? `bg-componentPrimary` : `bg-trackDateColor`
-                    } rounded-lg md:text-[40px] sm:text-[25px] opacity-70 text-white hover:bg-violet3 inline-flex h-[35px] w-[35px] items-center justify-center outline-none focus:shadow-[0_0_0_2px] focus:shadow-[#3B3B3B] ${
-                      isRsvpFullOnLoad || scheduleData?.rsvp_amount === 0 || (isRsvpFullOnLoad && !hasRsvpd) ? `cursor-not-allowed` : ``
-                    }`}
+                    className={`${hasRsvpd ? `bg-componentPrimary` : `bg-trackDateColor`
+                      } rounded-lg md:text-[40px] sm:text-[25px] opacity-70 text-white hover:bg-violet3 inline-flex h-[35px] w-[35px] items-center justify-center outline-none focus:shadow-[0_0_0_2px] focus:shadow-[#3B3B3B] ${isRsvpFullOnLoad || scheduleData?.rsvp_amount === 0 || (isRsvpFullOnLoad && !hasRsvpd) ? `cursor-not-allowed` : ``
+                      }`}
                     onClick={(e: React.MouseEvent<HTMLButtonElement>) => handleRsvpAction(e)}
                   />
                 </Tooltip.Trigger>
