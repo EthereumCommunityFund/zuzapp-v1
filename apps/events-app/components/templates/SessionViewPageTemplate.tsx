@@ -89,8 +89,8 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
     const filteredSchedules =
       selectedTrackIds.length > 0
         ? schedules.filter((schedule) => {
-          // console.log(schedule, "selected track ids");
-          return schedule.track_id && selectedTrackIds.includes(schedule.track_id);
+          if (schedule.track_id)
+            return selectedTrackIds.includes(schedule.track_id);
         })
         : schedules;
     return filteredSchedules;
@@ -98,10 +98,13 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
 
   const filterBySpace = (schedules: ScheduleDetailstype[]) => {
     const selectedSpaceIds = selectedSpaces.map((item) => item.id);
+    console.log(selectedSpaceIds, 'selectedSpaceIds:');
     const filteredSchedules =
       selectedSpaceIds.length > 0
         ? schedules.filter((schedule) => {
-          return schedule.location_id && selectedSpaceIds.includes(schedule.location_id);
+          if (schedule.location_id)
+            console.log(schedule.location_id, 'schedule.location_id', selectedSpaceIds.includes(schedule.location_id));
+          return selectedSpaceIds.includes(schedule.location_id);
         })
         : schedules;
     return filteredSchedules;
@@ -205,7 +208,7 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
   let groupedSchedules: Record<string, ScheduleDetailstype[]> = {};
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-
+  console.log(sortedSchedules, 'sortedSchedules');
   groupingSchedules(sortedSchedules, groupedSchedules);
 
   // Now, let's categorize them into "past" and "upcoming"
@@ -223,7 +226,8 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
     }
   }
 
-  groupedSchedules = isUpcoming ? upcomingSchedules : pastSchedules;
+  if (selectedSpaces.length === 0 && selectedTracks.length === 0)
+    groupedSchedules = isUpcoming ? upcomingSchedules : pastSchedules;
   // Now, pastSchedules contains all the past events and upcomingSchedules contains the upcoming ones.
 
   let chosenSchedules = sortGroupedSchedulesByStartTime(groupedSchedules);
@@ -236,6 +240,11 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
     setGroupedMyRSVPs(groupedSchedules);
     setIsMyRSVP((prev) => !prev);
   }
+
+  const getLocationNameById = (id: string, locations: LocationType[]): string => {
+    const location = locations.find(location => location.id === id);
+    return location?.name as string;
+  };
 
   return (
     <>
@@ -269,7 +278,7 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
                 <Loader />
               ) : (
                 <div className="p-0 gap-[10px] flex flex-col overflow-hidden rounded-[10px] pb-36 cursor-pointer">
-                  {schedules && eventSpace && (
+                  {schedules && eventSpace && eventSpace.eventspacelocation && (
                     <>
                       {isMyRSVP ?
                         groupedMyRSVPs && Object.keys(groupedMyRSVPs).map((date, idx) => {
@@ -289,6 +298,7 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
                               </div>
                               {groupedMyRSVPs[date].map((schedule, idx) => {
                                 return (
+                                  schedule.id && schedule &&
                                   <UserFacingTrack
                                     key={idx}
                                     scheduleId={schedule.id}
@@ -300,6 +310,7 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
                                       )
                                     }
                                     eventSpace={eventSpace}
+                                    locationName={getLocationNameById(schedule.location_id, eventSpace.eventspacelocation as LocationType[])}
                                   />
                                 );
                               })}
@@ -321,8 +332,9 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
                                   })}
                                 </span>
                               </div>
-                              {groupedSchedules[date].map((schedule, idx) => {
+                              {chosenSchedules[date].map((schedule, idx) => {
                                 return (
+                                  schedule.id &&
                                   <UserFacingTrack
                                     key={idx}
                                     scheduleId={schedule.id}
@@ -334,6 +346,7 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
                                       )
                                     }
                                     eventSpace={eventSpace}
+                                    locationName={getLocationNameById(schedule.location_id, eventSpace.eventspacelocation as LocationType[])}
                                   />
                                 );
                               })}
