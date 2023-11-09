@@ -6,7 +6,7 @@ import UserFacingTrack from '@/components/ui/UserFacingTrack';
 import Button from '@/components/ui/buttons/Button';
 import { Label } from '@/components/ui/label';
 import { useEventSpace } from '@/context/EventSpaceContext';
-import { OrganizerType, ScheduleCreateRequestBody, ScheduleDetailstype, ScheduleUpdateRequestBody, TrackType, TrackUpdateRequestBody } from '@/types';
+import { LocationType, OrganizerType, ScheduleCreateRequestBody, ScheduleDetailstype, ScheduleUpdateRequestBody, TrackType, TrackUpdateRequestBody } from '@/types';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { BiEditAlt, BiPlusCircle } from 'react-icons/bi';
@@ -112,6 +112,11 @@ export default function TrackDetailsPageTemplate(props: any) {
     }
   }, [isLoading]);
 
+  const getLocationNameById = (id: string, locations: LocationType[]): string => {
+    const location = locations.find(location => location.id === id);
+    return location?.name as string;
+  };
+
   return (
     <div className="flex gap-4 lg:flex-row sm:flex-col">
       <div className="flex flex-col lg:min-w-[66.67%] lg:max-w-[66.67%] w-full">
@@ -182,7 +187,7 @@ export default function TrackDetailsPageTemplate(props: any) {
                   {currentSchedules.map(
                     (schedule: ScheduleDetailstype, idx: number) =>
                       schedule.track_id === trackItem?.id && (
-                        <UserFacingTrack key={idx} scheduleData={schedule} eventSpace={eventSpace} onClick={() => handleItemClick(schedule.name, trackItem?.id, eventSpace.id, schedule.id)} />
+                        <UserFacingTrack key={idx} scheduleData={schedule} eventSpace={eventSpace} onClick={() => handleItemClick(schedule.name, trackItem?.id, eventSpace.id, schedule.id)} locationName={getLocationNameById(schedule.location_id, eventSpace.eventspacelocation as LocationType[])} />
                       )
                   )}
                   {totalSchedules > ITEMS_PER_PAGE && <Pagination currentPage={currentPage} totalItems={schedules.length} itemsPerPage={ITEMS_PER_PAGE} onPageChange={handlePageChange} />}
