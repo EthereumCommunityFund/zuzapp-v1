@@ -1,19 +1,19 @@
-import EventViewHeader from '@/components/eventview/EventViewHeader';
-import UserFacingTrack from '@/components/ui/UserFacingTrack';
-import Button from '@/components/ui/buttons/Button';
-import { LocationType, ScheduleDetailstype } from '@/types';
-import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
-import { useRouter } from 'next/router';
-import React, { Fragment, useEffect, useRef, useState } from 'react';
-import { BiPlusCircle } from 'react-icons/bi';
-import { QueryClient, useQuery } from 'react-query';
-import { EventSpaceDetailsType } from '@/types';
-import { Loader } from '@/components/ui/Loader';
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
-import fetchSchedulesByEvenSpaceId from '@/services/fetchScheduleByEventSpace';
-import AddScheduleForm from '@/components/commons/AddScheduleForm';
-import { useGlobalContext } from '@/context/GlobalContext';
-import { Listbox, Transition } from '@headlessui/react';
+import EventViewHeader from "@/components/eventview/EventViewHeader";
+import UserFacingTrack from "@/components/ui/UserFacingTrack";
+import Button from "@/components/ui/buttons/Button";
+import { LocationType, ScheduleDetailstype } from "@/types";
+import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
+import { useRouter } from "next/router";
+import React, { Fragment, useEffect, useRef, useState } from "react";
+import { BiPlusCircle } from "react-icons/bi";
+import { QueryClient, useQuery } from "react-query";
+import { EventSpaceDetailsType } from "@/types";
+import { Loader } from "@/components/ui/Loader";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import fetchSchedulesByEvenSpaceId from "@/services/fetchScheduleByEventSpace";
+import AddScheduleForm from "@/components/commons/AddScheduleForm";
+import { useGlobalContext } from "@/context/GlobalContext";
+import { Listbox, Transition } from "@headlessui/react";
 
 import ToggleSwitch from "../commons/ToggleSwitch";
 import { TbChevronDown } from "react-icons/tb";
@@ -27,7 +27,7 @@ import { Label } from "../ui/label";
 import { Switch } from "../ui/switch";
 import SwitchButton from "../ui/buttons/SwitchButton";
 import { fetchSchedulesByUserRsvp } from "@/controllers";
-import { DropDownMenu } from '../ui/DropDownMenu';
+import { DropDownMenu } from "../ui/DropDownMenu";
 
 interface ISessionViewPageTemplate {
   event_space_id: string;
@@ -35,17 +35,25 @@ interface ISessionViewPageTemplate {
   eventSpace: EventSpaceDetailsType;
 }
 
-export default function SessionViewPageTemplate({ event_space_id, trackId, eventSpace }: ISessionViewPageTemplate) {
+export default function SessionViewPageTemplate({
+  event_space_id,
+  trackId,
+  eventSpace,
+}: ISessionViewPageTemplate) {
   const router = useRouter();
-  const [filteredSchedules, setFilteredSchedules] = useState<ScheduleDetailstype[]>([]);
+  const [filteredSchedules, setFilteredSchedules] = useState<
+    ScheduleDetailstype[]
+  >([]);
   const lastTrackRef = useRef<HTMLDivElement>(null);
   const [isUpcoming, setIsUpcoming] = useState<boolean>(true);
   const [selectedTracks, setSelectedTracks] = useState<any[]>([]);
   const { isAuthenticated, user } = useGlobalContext();
   const [isMyRSVP, setIsMyRSVP] = useState<boolean>(false);
-  const [groupedMyRSVPs, setGroupedMyRSVPs] = useState<Record<string, ScheduleDetailstype[]>>();
+  const [groupedMyRSVPs, setGroupedMyRSVPs] =
+    useState<Record<string, ScheduleDetailstype[]>>();
   const [selectedSpaces, setSelectedSpaces] = useState<any[]>([]);
-  const [addASessionDialogOpen, setAddASessionDialogOpen] = useState<boolean>(false);
+  const [addASessionDialogOpen, setAddASessionDialogOpen] =
+    useState<boolean>(false);
 
   const handleItemClick = (scheduleId: string, trackId?: string) => {
     router.push({
@@ -54,7 +62,10 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
     });
   };
 
-  const sortByUpcoming = (schedules: ScheduleDetailstype[] | undefined, isUpcoming: boolean): ScheduleDetailstype[] => {
+  const sortByUpcoming = (
+    schedules: ScheduleDetailstype[] | undefined,
+    isUpcoming: boolean
+  ): ScheduleDetailstype[] => {
     if (!schedules) return [];
     const isUpcomingEvent = (schedule: ScheduleDetailstype) => {
       // console.log(schedule, 'isUpcoming');
@@ -65,14 +76,20 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
       const endDate = stringToDateObject(schedule.real_end_date);
 
       // For non-recurring events:
-      if (!schedule.schedule_frequency || schedule.schedule_frequency === 'once') {
-        const [hours, minutes] = schedule.start_time.split(':').map(Number);
+      if (
+        !schedule.schedule_frequency ||
+        schedule.schedule_frequency === "once"
+      ) {
+        const [hours, minutes] = schedule.start_time.split(":").map(Number);
         startDate.setHours(hours, minutes, 0, 0);
 
         return isUpcoming ? startDate >= today : startDate < today;
       }
 
-      if (schedule.schedule_frequency === 'everyday' || schedule.schedule_frequency === 'weekly') {
+      if (
+        schedule.schedule_frequency === "everyday" ||
+        schedule.schedule_frequency === "weekly"
+      ) {
         if (isUpcoming) {
           return endDate >= today; // It's upcoming if the end date is today or in the future.
         } else {
@@ -89,23 +106,27 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
     const filteredSchedules =
       selectedTrackIds.length > 0
         ? schedules.filter((schedule) => {
-          if (schedule.track_id)
-            return selectedTrackIds.includes(schedule.track_id);
-        })
+            if (schedule.track_id)
+              return selectedTrackIds.includes(schedule.track_id);
+          })
         : schedules;
     return filteredSchedules;
   };
 
   const filterBySpace = (schedules: ScheduleDetailstype[]) => {
     const selectedSpaceIds = selectedSpaces.map((item) => item.id);
-    console.log(selectedSpaceIds, 'selectedSpaceIds:');
+    console.log(selectedSpaceIds, "selectedSpaceIds:");
     const filteredSchedules =
       selectedSpaceIds.length > 0
         ? schedules.filter((schedule) => {
-          if (schedule.location_id)
-            console.log(schedule.location_id, 'schedule.location_id', selectedSpaceIds.includes(schedule.location_id));
-          return selectedSpaceIds.includes(schedule.location_id);
-        })
+            if (schedule.location_id)
+              console.log(
+                schedule.location_id,
+                "schedule.location_id",
+                selectedSpaceIds.includes(schedule.location_id)
+              );
+            return selectedSpaceIds.includes(schedule.location_id);
+          })
         : schedules;
     return filteredSchedules;
   };
@@ -121,7 +142,7 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
 
   const handleSpaceSelect = (newSelectedSpaces: any[]) => {
     setSelectedSpaces(newSelectedSpaces);
-  }
+  };
 
   // useEffect(() => {
   //   const observer = new IntersectionObserver(
@@ -147,23 +168,26 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
     isLoading,
     isError,
   } = useQuery<ScheduleDetailstype[], Error>(
-    ['allSchedules', event_space_id], // Query key
+    ["allSchedules", event_space_id], // Query key
     () => fetchSchedulesByEvenSpaceId(event_space_id as string),
     {
       onSuccess: (data) => {
         // setSchedules(data);
       },
       onError: (error) => {
-        console.log(error, 'error loading events');
+        console.log(error, "error loading events");
         toast({
-          title: 'Error',
-          description: 'Error loading  Sessions',
-          variant: 'destructive',
+          title: "Error",
+          description: "Error loading  Sessions",
+          variant: "destructive",
         });
       },
     }
   );
-  const groupingSchedules = (allSchedules: ScheduleDetailstype[], groupedSchedules: Record<string, ScheduleDetailstype[]>) => {
+  const groupingSchedules = (
+    allSchedules: ScheduleDetailstype[],
+    groupedSchedules: Record<string, ScheduleDetailstype[]>
+  ) => {
     allSchedules.forEach((schedule) => {
       let isFirstEvent = true;
       let date = stringToDateObject(schedule.start_date as string);
@@ -180,7 +204,8 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
         const newSchedule = {
           ...schedule,
           repeating:
-            !isFirstEvent && (frequency === "everyday" || frequency === "weekly"),
+            !isFirstEvent &&
+            (frequency === "everyday" || frequency === "weekly"),
         } as ScheduleDetailstype & { repeating: boolean };
 
         if (!groupedSchedules[formattedDate]) {
@@ -200,7 +225,7 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
         isFirstEvent = false;
       } while (date <= end_date);
     });
-  }
+  };
 
   let sortedSchedules = sortByUpcoming(schedules, isUpcoming);
   sortedSchedules = filterByTrack(sortedSchedules);
@@ -208,7 +233,7 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
   let groupedSchedules: Record<string, ScheduleDetailstype[]> = {};
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  console.log(sortedSchedules, 'sortedSchedules');
+  console.log(sortedSchedules, "sortedSchedules");
   groupingSchedules(sortedSchedules, groupedSchedules);
 
   // Now, let's categorize them into "past" and "upcoming"
@@ -232,17 +257,23 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
 
   let chosenSchedules = sortGroupedSchedulesByStartTime(groupedSchedules);
 
-  const handleShowMyRSVPs = async () => {
-    const result = await fetchSchedulesByUserRsvp();
-    const myRSVPs: ScheduleDetailstype[] = result.data.data;
-    let groupedSchedules: Record<string, ScheduleDetailstype[]> = {};
-    groupingSchedules(myRSVPs, groupedSchedules);
-    setGroupedMyRSVPs(groupedSchedules);
-    setIsMyRSVP((prev) => !prev);
-  }
+  console.log(chosenSchedules, "chosen schedule");
 
-  const getLocationNameById = (id: string, locations: LocationType[]): string => {
-    const location = locations.find(location => location.id === id);
+  // const handleShowMyRSVPs = async () => {
+  //   const result = await fetchSchedulesByUserRsvp();
+  //   const myRSVPs: ScheduleDetailstype[] = result.data.data;
+  //   let groupedSchedules: Record<string, ScheduleDetailstype[]> = {};
+  //   groupingSchedules(myRSVPs, groupedSchedules);
+  //   setGroupedMyRSVPs(groupedSchedules);
+  //   setIsMyRSVP((prev) => !prev);
+  // };
+
+  // console.log(groupedSchedules, "groupded schedules");
+  const getLocationNameById = (
+    id: string,
+    locations: LocationType[]
+  ): string => {
+    const location = locations.find((location) => location.id === id);
     return location?.name as string;
   };
 
@@ -250,15 +281,28 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
     <>
       <div className="flex gap-4 lg:flex-row lg:mt-0 pb-24 lg:py-0 sm:pt-3 sm:px-3 sm:flex-col-reverse lg:bg-pagePrimary md:bg-componentPrimary">
         <div className="flex flex-col lg:w-2/3 sm:w-full pb-30 lg:pb-0 gap-5">
-          <EventViewHeader imgPath={eventSpace?.image_url as string} name={eventSpace?.name as string} tagline={eventSpace?.tagline as string} />
+          <EventViewHeader
+            imgPath={eventSpace?.image_url as string}
+            name={eventSpace?.name as string}
+            tagline={eventSpace?.tagline as string}
+          />
           <div className="flex flex-col gap-2.5 lg:px-1 md:px-1">
             <div className="pt-2 bg-componentPrimary rounded-2xl lg:px-2 lg:pt-8">
               {isAuthenticated && (
                 <div className="px-4">
-                  <Button onClick={() => setAddASessionDialogOpen(true)} variant="blue" size="lg" className="rounded-full sm:w-full lg:w-fit justify-center" leftIcon={BiPlusCircle}>
+                  <Button
+                    onClick={() => setAddASessionDialogOpen(true)}
+                    variant="blue"
+                    size="lg"
+                    className="rounded-full sm:w-full lg:w-fit justify-center"
+                    leftIcon={BiPlusCircle}
+                  >
                     Add a Session
                   </Button>
-                  <Dialog open={addASessionDialogOpen} onOpenChange={(open) => setAddASessionDialogOpen(open)}>
+                  <Dialog
+                    open={addASessionDialogOpen}
+                    onOpenChange={(open) => setAddASessionDialogOpen(open)}
+                  >
                     {
                       <DialogContent className="lg:w-3/5 lg:h-4/5 overflow-y-auto">
                         <AddScheduleForm
@@ -280,80 +324,95 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
                 <div className="p-0 gap-[10px] flex flex-col overflow-hidden rounded-[10px] pb-36 cursor-pointer">
                   {schedules && eventSpace && eventSpace.eventspacelocation && (
                     <>
-                      {isMyRSVP ?
-                        groupedMyRSVPs && Object.keys(groupedMyRSVPs).map((date, idx) => {
-                          return (
-                            <>
-                              <div
-                                key={idx}
-                                className="text-center border-b-2 p-3 mt-10 border-borderPrimary"
-                              >
-                                <span className="text-lg font-normal w-full">
-                                  {new Date(date).toLocaleDateString("en-US", {
-                                    year: "numeric",
-                                    month: "long",
-                                    day: "numeric",
-                                  })}
-                                </span>
-                              </div>
-                              {groupedMyRSVPs[date].map((schedule, idx) => {
-                                return (
-                                  schedule.id && schedule &&
-                                  <UserFacingTrack
-                                    key={idx}
-                                    scheduleId={schedule.id}
-                                    scheduleData={schedule}
-                                    onClick={() =>
-                                      handleItemClick(
-                                        schedule.id,
-                                        schedule.track_id as string
-                                      )
-                                    }
-                                    eventSpace={eventSpace}
-                                    locationName={getLocationNameById(schedule.location_id, eventSpace.eventspacelocation as LocationType[])}
-                                  />
-                                );
-                              })}
-                            </>
-                          );
-                        }) :
-                        Object.keys(chosenSchedules).map((date, idx) => {
-                          return (
-                            <>
-                              <div
-                                key={idx}
-                                className="text-center border-b-2 p-3 mt-10 border-borderPrimary"
-                              >
-                                <span className="text-lg font-normal w-full">
-                                  {new Date(date).toLocaleDateString("en-US", {
-                                    year: "numeric",
-                                    month: "long",
-                                    day: "numeric",
-                                  })}
-                                </span>
-                              </div>
-                              {chosenSchedules[date].map((schedule, idx) => {
-                                return (
-                                  schedule.id &&
-                                  <UserFacingTrack
-                                    key={idx}
-                                    scheduleId={schedule.id}
-                                    scheduleData={schedule}
-                                    onClick={() =>
-                                      handleItemClick(
-                                        schedule.id,
-                                        schedule.track_id as string
-                                      )
-                                    }
-                                    eventSpace={eventSpace}
-                                    locationName={getLocationNameById(schedule.location_id, eventSpace.eventspacelocation as LocationType[])}
-                                  />
-                                );
-                              })}
-                            </>
-                          );
-                        })
-                      }
+                      {isMyRSVP
+                        ? groupedMyRSVPs &&
+                          Object.keys(groupedMyRSVPs).map((date, idx) => {
+                            return (
+                              <>
+                                <div
+                                  key={idx}
+                                  className="text-center border-b-2 p-3 mt-10 border-borderPrimary"
+                                >
+                                  <span className="text-lg font-normal w-full">
+                                    {new Date(date).toLocaleDateString(
+                                      "en-US",
+                                      {
+                                        year: "numeric",
+                                        month: "long",
+                                        day: "numeric",
+                                      }
+                                    )}
+                                  </span>
+                                </div>
+                                {groupedMyRSVPs[date].map((schedule, idx) => {
+                                  return (
+                                    schedule.id &&
+                                    schedule && (
+                                      <UserFacingTrack
+                                        key={idx}
+                                        scheduleId={schedule.id}
+                                        scheduleData={schedule}
+                                        onClick={() =>
+                                          handleItemClick(
+                                            schedule.id,
+                                            schedule.track_id as string
+                                          )
+                                        }
+                                        eventSpace={eventSpace}
+                                        locationName={getLocationNameById(
+                                          schedule.location_id,
+                                          eventSpace.eventspacelocation as LocationType[]
+                                        )}
+                                      />
+                                    )
+                                  );
+                                })}
+                              </>
+                            );
+                          })
+                        : Object.keys(chosenSchedules).map((date, idx) => {
+                            return (
+                              <>
+                                <div
+                                  key={idx}
+                                  className="text-center border-b-2 p-3 mt-10 border-borderPrimary"
+                                >
+                                  <span className="text-lg font-normal w-full">
+                                    {new Date(date).toLocaleDateString(
+                                      "en-US",
+                                      {
+                                        year: "numeric",
+                                        month: "long",
+                                        day: "numeric",
+                                      }
+                                    )}
+                                  </span>
+                                </div>
+                                {chosenSchedules[date].map((schedule, idx) => {
+                                  return (
+                                    schedule.id && (
+                                      <UserFacingTrack
+                                        key={idx}
+                                        scheduleId={schedule.id}
+                                        scheduleData={schedule}
+                                        onClick={() =>
+                                          handleItemClick(
+                                            schedule.id,
+                                            schedule.track_id as string
+                                          )
+                                        }
+                                        eventSpace={eventSpace}
+                                        locationName={getLocationNameById(
+                                          schedule.location_id,
+                                          eventSpace.eventspacelocation as LocationType[]
+                                        )}
+                                      />
+                                    )
+                                  );
+                                })}
+                              </>
+                            );
+                          })}
                     </>
                   )}
                 </div>
@@ -365,12 +424,12 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
           <Label className="p-3.5 gap-[10px] font-bold text-xl sm:hidden lg:flex pb-4 border-b border-borderPrimary">
             Sessions: Sort & Filter
           </Label>
-          {isAuthenticated &&
+          {isAuthenticated && (
             <div className="flex gap-5 py-5">
-              <SwitchButton value={isMyRSVP} onClick={handleShowMyRSVPs} />
+              {/* <SwitchButton value={isMyRSVP} onClick={handleShowMyRSVPs} /> */}
               <Label className="text-base">Show my RSVPs</Label>
             </div>
-          }
+          )}
           <ToggleSwitch
             isUpcoming={isUpcoming}
             handleIsUpcoming={handleIsUpcoming}
@@ -379,14 +438,14 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
             <DropDownMenu
               values={selectedTracks}
               multiple={true}
-              header={'Select Tracks'}
+              header={"Select Tracks"}
               items={eventSpace.tracks}
               onItemSelect={handleTrackSelect}
             />
             <DropDownMenu
               values={selectedSpaces}
               multiple={true}
-              header={'Select Space'}
+              header={"Select Space"}
               items={eventSpace.eventspacelocation as LocationType[]}
               onItemSelect={handleSpaceSelect}
             />
