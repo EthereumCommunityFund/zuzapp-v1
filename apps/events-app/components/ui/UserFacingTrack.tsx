@@ -107,6 +107,7 @@ const UserFacingTrack: React.ForwardRefRenderFunction<HTMLDivElement, IUserFacin
 
   useEffect(() => {
     if (scheduleData) {
+      checkIfUserHasRsvpd();
       if (scheduleData.rsvp_amount === scheduleData.current_rsvp_no) {
         setIsRsvpFullOnLoad(true);
       }
@@ -116,9 +117,9 @@ const UserFacingTrack: React.ForwardRefRenderFunction<HTMLDivElement, IUserFacin
     }
   }, [scheduleData]);
 
-  useEffect(() => {
-    // checkIfUserHasRsvpd();
-  }, []);
+  // useEffect(() => {
+  //     // checkIfUserHasRsvpd();
+  // }, []);
 
   return scheduleData && scheduleData.repeating ? (
     <div ref={ref} onClick={onClick} className="flex flex-col gap-3  cursor-pointer">

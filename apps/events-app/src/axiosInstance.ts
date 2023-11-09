@@ -2,8 +2,8 @@ import axios, { AxiosInstance } from 'axios';
 import Router from 'next/router';
 
 const axiosInstance: AxiosInstance = axios.create({
-  // baseURL: 'https://zuzapp-test-v1-events-app-delta.vercel.app', // replace with your API endpoin
-  baseURL: 'https://www.zuzalu.city',
+  baseURL: 'https://zuzapp-test-v1-events-app-delta.vercel.app', // replace with your API endpoin
+  // baseURL: 'https://www.zuzalu.city',
   // baseURL: 'http://localhost:3001',
   headers: {
     'Content-Type': 'application/json',
