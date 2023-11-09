@@ -30,6 +30,8 @@ interface IUserFacingTrack {
   scheduleId?: string;
   scheduleData: ScheduleDetailstype;
   onClick: () => void;
+  eventSpace: any;
+  locationName: any;
 }
 
 const UserFacingTrack: React.ForwardRefRenderFunction<
