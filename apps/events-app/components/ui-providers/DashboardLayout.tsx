@@ -42,7 +42,7 @@ export const DashboardProvider = ({ children, props }: { children: React.ReactNo
     );
   return (
     <>
-      <div className={`lg:flex relative bg-[#222222] text-white h-[100vh] ${router.pathname === `/dashboard/zapps` ? `overflow-hidden` : ``}`}>
+      <div className={`lg:flex relative bg-[#222222] text-white h-[100vh] ${router.pathname === `/dashboard/zapps` ? `md:overflow-hidden` : ``}`}>
         {!checkIfCurrentRouteIsInEventViewRoutes() ? <DashboardNavigation /> : <EventViewNavigation />}
         <DashboardHeader />
 

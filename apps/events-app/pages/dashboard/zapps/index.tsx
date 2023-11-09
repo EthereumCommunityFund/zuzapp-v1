@@ -30,7 +30,7 @@ export default function Zapps() {
         </div>
       </div>
       {/* Zapps Cards */}
-      <div className="flex md:flex-row sm:flex-col overflow-auto md:w-full md:min-w-[1200px] border-b border-borderPrimary">
+      <div className="flex md:flex-row sm:flex-col overflow-auto md:w-full border-b border-borderPrimary">
         <div className="flex md:flex-row sm:flex-col gap-4 pt-2.5 pb-5">
           {zAppCards.map((zAppCard) => (
             <Dialog>
@@ -88,13 +88,15 @@ export default function Zapps() {
             </Dialog>
           )
           )}
-          <ZappCardComponentTemplate
-            imgURL={undefined}
-            appTitle={'Build With Zuzalu'}
-            appDescription={''}
-            appContents={undefined}
-            appTagLine={'Integrate with ZuPass & add your app for the Zuzalu Community'}
-          />
+          <a className="md:w-72 sm:w-full">
+            <ZappCardComponentTemplate
+              imgURL={undefined}
+              appTitle={'Build With Zuzalu'}
+              appDescription={''}
+              appContents={undefined}
+              appTagLine={'Integrate with ZuPass & add your app for the Zuzalu Community'}
+            />
+          </a>
         </div>
       </div>
       {/* Zapps Footer */}
