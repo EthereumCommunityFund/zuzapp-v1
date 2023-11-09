@@ -24,11 +24,11 @@ export default function TrackItem(props: IProps) {
       onClick={onClick}
     >
       <div className="flex items-center gap-2 w-full md:w-auto">
-        <div className="bg-gray-300 rounded-lg p-1 w-[130px]">
+        <div className="bg-gray-300 rounded-lg p-1">
           <Image
             src={trackImage}
             alt="track-image"
-            className="rounded-lg object-cover"
+            className="rounded-lg object-cover w-32 h-20"
             width={130}
             height={100}
             loading='lazy'
