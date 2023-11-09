@@ -67,6 +67,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     })
 
 
+    data.sort((a, b) => new Date(a.start_date) - new Date(b.start_date));
+
+    data.forEach(data => {
+        console.log(data.start_date)
+    })
+
+
 
 
 
