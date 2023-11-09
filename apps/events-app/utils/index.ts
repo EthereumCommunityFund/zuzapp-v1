@@ -81,6 +81,7 @@ function getRandomInt(min: number, max: number): number {
 // date functions
 
 export const sortGroupedSchedulesByStartTime = (groupedSchedules: Record<string, ScheduleDetailstype[]>): Record<string, ScheduleDetailstype[]> => {
+  console.log(groupedSchedules, "sorting grouped schedules")
   Object.keys(groupedSchedules).forEach((formattedDate: string) => {
     groupedSchedules[formattedDate].sort((a: any, b: any) => {
       const timeA = timeToMinutes(a.start_time);

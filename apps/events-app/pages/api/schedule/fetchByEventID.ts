@@ -42,16 +42,22 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         return res.status(200).send({ data: [] });
     }
 
-    console.log(data, "data")
+
+    data.sort((a, b) => new Date(a.start_date) - new Date(b.start_date));
+
+    data.forEach(data => {
+        console.log(data.start_date)
+    })
+
 
     // Sort the data based on date and just the time portion of start_time
     // data.sort((a: any, b: any) => {
-    //     if (a.start_date < b.start_date) return -1;
-    //     if (a.start_date > b.start_date) return 1;
-    //     const timeA = timeToMinutes(a.start_time);
-    //     const timeB = timeToMinutes(b.start_time);
-    //     return timeA - timeB;
-    // });
+    // //     if (a.start_date < b.start_date) return -1;
+    // //     if (a.start_date > b.start_date) return 1;
+    // //     const timeA = timeToMinutes(a.start_time);
+    // //     const timeB = timeToMinutes(b.start_time);
+    // //     return timeA - timeB;
+    // // });
 
 
 
