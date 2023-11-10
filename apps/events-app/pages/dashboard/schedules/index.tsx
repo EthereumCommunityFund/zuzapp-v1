@@ -42,6 +42,7 @@ export default function EventViewTracksAlleSchedulesPage() {
         <SessionViewPageTemplate
           event_space_id={event_space_id}
           eventSpace={eventSpace}
+          speakers={[]}
         />
       }
     </>

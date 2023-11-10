@@ -30,7 +30,7 @@ interface IUserFacingTrack {
 
 const UserFacingTrack: React.ForwardRefRenderFunction<HTMLDivElement, IUserFacingTrack> = (props, ref) => {
   const { scheduleData, onClick, eventSpace, locationName } = props;
-  console.log(scheduleData.location_id, 'scheduleData.location_id');
+  // console.log(scheduleData.location_id, 'scheduleData.location_id');
   // const { trackDetails, isLoading } = useTrack(scheduleData.track_id as string);
   // const date = convertToTurkeyTimeAsDate(scheduleData.date);
   let date = stringToDateObject(scheduleData.start_date as string);
