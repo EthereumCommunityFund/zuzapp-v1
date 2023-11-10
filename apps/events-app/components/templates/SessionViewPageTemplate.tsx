@@ -26,16 +26,17 @@ import { toast } from "../ui/use-toast";
 import { Label } from "../ui/label";
 import { Switch } from "../ui/switch";
 import SwitchButton from "../ui/buttons/SwitchButton";
-import { fetchSchedulesByUserRsvp } from "@/controllers";
+import { fetchAllSpeakers, fetchSchedulesByUserRsvp } from "@/controllers";
 import { DropDownMenu } from '../ui/DropDownMenu';
 
 interface ISessionViewPageTemplate {
   event_space_id: string;
   trackId?: string;
   eventSpace: EventSpaceDetailsType;
+  speakers: any[];
 }
 
-export default function SessionViewPageTemplate({ event_space_id, trackId, eventSpace }: ISessionViewPageTemplate) {
+export default function SessionViewPageTemplate({ event_space_id, trackId, eventSpace, speakers }: ISessionViewPageTemplate) {
   const router = useRouter();
   const [filteredSchedules, setFilteredSchedules] = useState<ScheduleDetailstype[]>([]);
   const lastTrackRef = useRef<HTMLDivElement>(null);
@@ -46,6 +47,7 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
   const [groupedMyRSVPs, setGroupedMyRSVPs] = useState<Record<string, ScheduleDetailstype[]>>();
   const [selectedSpaces, setSelectedSpaces] = useState<any[]>([]);
   const [addASessionDialogOpen, setAddASessionDialogOpen] = useState<boolean>(false);
+  const [selectedSpeakers, setSelectedSpeakers] = useState<any[]>([]);
 
   const handleItemClick = (scheduleId: string, trackId?: string) => {
     router.push({
@@ -98,14 +100,24 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
 
   const filterBySpace = (schedules: ScheduleDetailstype[]) => {
     const selectedSpaceIds = selectedSpaces.map((item) => item.id);
-    console.log(selectedSpaceIds, 'selectedSpaceIds:');
+    // console.log(selectedSpaceIds, 'selectedSpaceIds:');
     const filteredSchedules =
       selectedSpaceIds.length > 0
         ? schedules.filter((schedule) => {
-          if (schedule.location_id)
-            console.log(schedule.location_id, 'schedule.location_id', selectedSpaceIds.includes(schedule.location_id));
+          // if (schedule.location_id)
+          //   console.log(schedule.location_id, 'schedule.location_id', selectedSpaceIds.includes(schedule.location_id));
           return selectedSpaceIds.includes(schedule.location_id);
         })
+        : schedules;
+    return filteredSchedules;
+  };
+
+  const filterBySpeaker = (schedules: ScheduleDetailstype[]) => {
+    const filteredSchedules =
+      selectedSpeakers.length > 0
+        ? schedules.filter((schedule) =>
+          selectedSpeakers.every((speakerName) =>
+            schedule.organizers?.some((organizer) => organizer.name.trim() === speakerName)))
         : schedules;
     return filteredSchedules;
   };
@@ -121,6 +133,10 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
 
   const handleSpaceSelect = (newSelectedSpaces: any[]) => {
     setSelectedSpaces(newSelectedSpaces);
+  }
+
+  const handleSpeakerSelect = (newSelectedSpeakers: any[]) => {
+    setSelectedSpeakers(newSelectedSpeakers);
   }
 
   // useEffect(() => {
@@ -163,6 +179,7 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
       },
     }
   );
+
   const groupingSchedules = (allSchedules: ScheduleDetailstype[], groupedSchedules: Record<string, ScheduleDetailstype[]>) => {
     allSchedules.forEach((schedule) => {
       let isFirstEvent = true;
@@ -205,10 +222,11 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
   let sortedSchedules = sortByUpcoming(schedules, isUpcoming);
   sortedSchedules = filterByTrack(sortedSchedules);
   sortedSchedules = filterBySpace(sortedSchedules);
+  sortedSchedules = filterBySpeaker(sortedSchedules);
   let groupedSchedules: Record<string, ScheduleDetailstype[]> = {};
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  console.log(sortedSchedules, 'sortedSchedules');
+  // console.log(sortedSchedules, 'sortedSchedules');
   groupingSchedules(sortedSchedules, groupedSchedules);
 
   // Now, let's categorize them into "past" and "upcoming"
@@ -389,6 +407,13 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
               header={'Select Space'}
               items={eventSpace.eventspacelocation as LocationType[]}
               onItemSelect={handleSpaceSelect}
+            />
+            <DropDownMenu
+              values={selectedSpeakers}
+              multiple={true}
+              header={'Select Speaker'}
+              items={speakers}
+              onItemSelect={handleSpeakerSelect}
             />
             {/* <Listbox as={'div'} className={'w-full relative'} value={selectedTracks} multiple onChange={(newSelectedTracks) => handleTrackSelect(newSelectedTracks)}>
               <Listbox.Button

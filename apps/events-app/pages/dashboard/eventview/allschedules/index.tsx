@@ -1,7 +1,7 @@
-import { DropDownMenuItemType } from '@/types';
+import { DropDownMenuItemType, OrganizerType } from '@/types';
 import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { QueryClient } from 'react-query';
 
@@ -9,24 +9,44 @@ import SessionViewPageTemplate from '@/components/templates/SessionViewPageTempl
 import { useRouter } from 'next/router';
 import useEventDetails from '@/hooks/useCurrentEventSpace';
 import { Loader } from '@/components/ui/Loader';
+import { fetchAllSpeakers } from '@/controllers';
 
 export default function EventViewTracksAlleSchedulesPage() {
   const router = useRouter();
   const { event_space_id } = router.query;
-  const { eventSpace, isLoading } = useEventDetails();
+  const { eventSpace } = useEventDetails();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [allSpeakers, setAllSpeakers] = useState<any[]>([]);
+
+  const fetchSchedules = async () => {
+    const allOrganizersSet: Set<string> = new Set();
+    const response = await fetchAllSpeakers();
+    const allOrganizers: OrganizerType[] = response.data.data;
+    allOrganizers.forEach((organizer) => allOrganizersSet.add(organizer.name.trim()));
+    setAllSpeakers(Array.from(allOrganizersSet));
+    setIsLoading(false);
+  };
+
+  useEffect(() => {
+    if (isLoading) {
+      fetchSchedules();
+    }
+  }, [isLoading]);
 
   if (isLoading) {
     return (
       <Loader />
     )
   }
+
   return (
     <div className='lg:pt-0 sm:pt-6'>
       {
-        event_space_id && eventSpace &&
+        event_space_id && eventSpace && allSpeakers &&
         <SessionViewPageTemplate
           event_space_id={event_space_id as string}
           eventSpace={eventSpace}
+          speakers={allSpeakers}
         />
       }
     </div>
