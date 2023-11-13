@@ -49,6 +49,10 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
   const [addASessionDialogOpen, setAddASessionDialogOpen] = useState<boolean>(false);
   const [selectedSpeakers, setSelectedSpeakers] = useState<any[]>([]);
 
+
+  const storageKeys = {
+    SCROLL_POSITION: 'scrollPosition',
+  }
   const handleItemClick = (scheduleId: string, trackId?: string) => {
     router.push({
       pathname: `/dashboard/eventview/allschedules/schedule`,
@@ -264,6 +268,26 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
     return location?.name as string;
   };
 
+  const saveCurrentPosition = () =>{
+    sessionStorage.setItem(storageKeys.SCROLL_POSITION, window.scrollY.toString());
+  }
+
+  useEffect(() => {
+    const targetScrollPosition = sessionStorage.getItem(storageKeys.SCROLL_POSITION);
+
+    if (targetScrollPosition) {
+      const targetPosition = parseInt(targetScrollPosition, 10);
+
+      window.scrollTo({
+        top: targetPosition,
+        behavior: 'smooth',
+      });
+
+      sessionStorage.removeItem(storageKeys.SCROLL_POSITION);
+    }
+  }, []);
+
+
   return (
     <>
       <div className="flex gap-4 lg:flex-row lg:mt-0 pb-24 lg:py-0 sm:pt-3 sm:px-3 sm:flex-col-reverse lg:bg-pagePrimary md:bg-componentPrimary">
@@ -321,12 +345,13 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
                                     key={idx}
                                     scheduleId={schedule.id}
                                     scheduleData={schedule}
-                                    onClick={() =>
-                                      handleItemClick(
-                                        schedule.id,
-                                        schedule.track_id as string
-                                      )
-                                    }
+                                    onClick={() =>{
+                                        saveCurrentPosition();
+                                        handleItemClick(
+                                            schedule.id,
+                                            schedule.track_id as string
+                                        )
+                                    }}
                                     eventSpace={eventSpace}
                                     locationName={getLocationNameById(schedule.location_id, eventSpace.eventspacelocation as LocationType[])}
                                   />
@@ -357,12 +382,13 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
                                     key={idx}
                                     scheduleId={schedule.id}
                                     scheduleData={schedule}
-                                    onClick={() =>
+                                    onClick={() =>{
+                                      saveCurrentPosition();
                                       handleItemClick(
-                                        schedule.id,
-                                        schedule.track_id as string
+                                          schedule.id,
+                                          schedule.track_id as string
                                       )
-                                    }
+                                    }}
                                     eventSpace={eventSpace}
                                     locationName={getLocationNameById(schedule.location_id, eventSpace.eventspacelocation as LocationType[])}
                                   />

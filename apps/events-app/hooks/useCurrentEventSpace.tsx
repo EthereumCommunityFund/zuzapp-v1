@@ -14,18 +14,18 @@ const useCurrentEventSpace = () => {
     data: eventSpace,
     isLoading,
     isError,
+    refetch,
   } = useQuery<EventSpaceDetailsType, Error>(
-    ["currentEventSpace", event_space_id], // Query key
+    ['currentEventSpace', event_space_id], // Query key
     () => fetchEventSpaceById(event_space_id as string),
 
     {
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
-      onSuccess: (data) => {
-      },
+      onSuccess: (data) => {},
     }
   );
-  return { eventSpace, isLoading, isError };
+  return { eventSpace, isLoading, isError, refetch };
 };
 
 export default useCurrentEventSpace;
