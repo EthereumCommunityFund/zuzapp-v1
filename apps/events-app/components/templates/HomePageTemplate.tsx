@@ -58,7 +58,7 @@ export default function HomePageTemplate() {
       query: { event_space_id: event_space_id },
     });
   };
-  const testEventId = `7aa90b9a-456e-4852-bfad-ed247513b28f`;
+  const testEventId = `7bce1a05-1b78-497d-8070-29ff7cd695ed`;
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [eventSpaces, setEventSpaces] = useState<EventSpaceDetailsType[]>();
   const [testEventSpace, setTestEventSpace] = useState<EventSpaceDetailsType>();
