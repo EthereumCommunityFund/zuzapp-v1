@@ -241,6 +241,7 @@ export enum SpaceDashboardCardType {
   PublishEvent,
   EditDetails,
   OpenSettings,
+  ArchiveEvent,
 }
 
 export enum InputFieldType {
