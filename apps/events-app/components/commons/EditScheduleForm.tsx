@@ -45,6 +45,8 @@ import { sessionNavBarDetails } from '@/constant/addschedulenavbar';
 import { TimePicker } from 'antd';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import Link from 'next/link';
+import TimezoneSelector from '../ui/TimezoneSelector';
+import { ITimezone } from 'react-timezone-select';
 
 type Organizer = {
   name: string;
@@ -227,6 +229,7 @@ export default function EditScheduleForm({ isQuickAccess, creatorId, scheduleId,
     }
   );
   const track_title = eventSpace?.tracks.find((track) => track.id === trackId)?.name;
+  const [selectedTimezone, setSelectedTimezone] = useState<ITimezone>('Europe/Rome');
 
   const handleLimitRSVP = () => {
     setSchedule({ ...schedule, limit_rsvp: !schedule.limit_rsvp });
@@ -460,6 +463,10 @@ export default function EditScheduleForm({ isQuickAccess, creatorId, scheduleId,
       }
     }
   };
+
+  const handleTimezoneSelect = (newSelectedTimezone: ITimezone) => {
+    setSelectedTimezone(newSelectedTimezone);
+  }
 
   if (isLoading) {
     return <Loader />;
@@ -723,6 +730,13 @@ export default function EditScheduleForm({ isQuickAccess, creatorId, scheduleId,
                         </div>
                       )}
                       <line></line>
+                    </div>
+                    <div className='flex flex-col gap-3.5 w-full'>
+                      <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select a Timezone</Label>
+                      <TimezoneSelector
+                        value={selectedTimezone}
+                        onChange={handleTimezoneSelect}
+                      />
                     </div>
                   </div>
                   <div className="w-full">

@@ -43,7 +43,9 @@ import { TimePicker } from 'antd';
 import { BsFillTicketFill } from 'react-icons/bs';
 import { sessionNavBarDetails } from '@/constant/addschedulenavbar';
 import { DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import {rotate} from "next/dist/server/lib/squoosh/impl";
+import { rotate } from "next/dist/server/lib/squoosh/impl";
+import TimezoneSelector from '../ui/TimezoneSelector';
+import { ITimezone } from 'react-timezone-select';
 
 type Organizer = {
   name: string;
@@ -151,6 +153,7 @@ export default function AddScheduleForm({ isQuickAccess, trackId, event_space_id
   );
 
   const [eventType, setEventType] = useState('');
+  const [selectedTimezone, setSelectedTimezone] = useState<ITimezone>('Europe/Rome');
 
   const handleLimitRSVP = () => {
     setIsLimit(!isLimit);
@@ -280,6 +283,10 @@ export default function AddScheduleForm({ isQuickAccess, trackId, event_space_id
     setSelectedEventFormat(e);
   };
 
+  const handleTimezoneSelect = (newSelectedTimezone: ITimezone) => {
+    setSelectedTimezone(newSelectedTimezone);
+  }
+
   const defaultProps = {
     options: optionTags,
     getOptionLabel: (option: { name: string }) => option.name,
@@ -345,7 +352,7 @@ export default function AddScheduleForm({ isQuickAccess, trackId, event_space_id
   const getPathName = () => {
     if (router.pathname.startsWith('/dashboard/eventview/about')) {
       return `/dashboard/eventview/allschedules`;
-    } else if (router.pathname.startsWith('/dashboard/eventview/allschedules'))  {
+    } else if (router.pathname.startsWith('/dashboard/eventview/allschedules')) {
       setAddASessionDialogOpen && setAddASessionDialogOpen(false);
       return `/dashboard/eventview/allschedules`;
     } else {
@@ -442,14 +449,14 @@ export default function AddScheduleForm({ isQuickAccess, trackId, event_space_id
             <div className="text-sm font-light text-white/70 my-2">You can edit your session details.</div>
             <div className="font-normal text-white my-2">Now go to Sessions and continue</div>
             <DialogFooter>
-                  <Button
-                    onClick={isFromEventView ? handleEnterEventViewSessions : handleEnterSessions}
-                    variant="primary"
-                    className="bg-[#67DBFF]/20 text-[#67DBFF] text-lg w-full justify-center rounded-full"
-                    leftIcon={HiArrowRight}
-                  >
-                    Go to sessions
-                  </Button>
+              <Button
+                onClick={isFromEventView ? handleEnterEventViewSessions : handleEnterSessions}
+                variant="primary"
+                className="bg-[#67DBFF]/20 text-[#67DBFF] text-lg w-full justify-center rounded-full"
+                leftIcon={HiArrowRight}
+              >
+                Go to sessions
+              </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
@@ -657,6 +664,13 @@ export default function AddScheduleForm({ isQuickAccess, trackId, event_space_id
                           </div>
                         )}
                         <line></line>
+                      </div>
+                      <div className='flex flex-col gap-3.5 w-full'>
+                        <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select a Timezone</Label>
+                        <TimezoneSelector
+                          value={selectedTimezone}
+                          onChange={handleTimezoneSelect}
+                        />
                       </div>
                     </div>
                     <div className="w-full" ref={sectionRefs[3]}>
