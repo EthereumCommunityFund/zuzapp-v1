@@ -21,6 +21,8 @@ import LocationMarker from './icons/LocationMarker';
 import { HiLocationMarker } from 'react-icons/hi';
 import TicketSolid from './icons/TicketSolid';
 import TicketOutline from './icons/TicketOutline';
+import Button from './buttons/Button';
+import { useRouter } from 'next/router';
 
 interface IUserFacingTrack {
   scheduleId?: string;
@@ -48,7 +50,7 @@ const UserFacingTrack: React.ForwardRefRenderFunction<HTMLDivElement, IUserFacin
   const [isRsvpFullOnLoad, setIsRsvpFullOnLoad] = useState<boolean>(false);
 
   const { isAuthenticated } = useGlobalContext();
-
+  const router = useRouter();
 
 
   const handleRsvpAction = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -107,6 +109,18 @@ const UserFacingTrack: React.ForwardRefRenderFunction<HTMLDivElement, IUserFacin
     }
   };
 
+  const handleSessionShare = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    try {
+      e.stopPropagation();
+      await navigator.clipboard.writeText(`${window.location.origin}${router.pathname}/schedule?scheduleId=${scheduleData.id}&trackId=${scheduleData.track_id}&event_space_id=${scheduleData.event_space_id}`);
+      toast({
+        title: 'Session Link shared successfully',
+      });
+    } catch (error) {
+      console.error(error, 'error');
+    }
+  }
+
   useEffect(() => {
     if (scheduleData) {
       checkIfUserHasRsvpd();
@@ -161,6 +175,9 @@ const UserFacingTrack: React.ForwardRefRenderFunction<HTMLDivElement, IUserFacin
                 </Tooltip.Portal>
               </Tooltip.Root>
             </Tooltip.Provider>
+          </div>
+          <div>
+            <Button className='rounded-2xl' onClick={(e: React.MouseEvent<HTMLButtonElement>) => handleSessionShare(e)}>Share</Button>
           </div>
         </div>
       </div>
@@ -218,6 +235,9 @@ const UserFacingTrack: React.ForwardRefRenderFunction<HTMLDivElement, IUserFacin
                 </Tooltip.Portal>
               </Tooltip.Root>
             </Tooltip.Provider>
+          </div>
+          <div>
+            <Button className='rounded-2xl' onClick={(e: React.MouseEvent<HTMLButtonElement>) => handleSessionShare(e)}>Share</Button>
           </div>
         </div>
       </div>
