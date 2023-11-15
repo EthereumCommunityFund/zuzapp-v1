@@ -10,23 +10,23 @@ const schedule_create_schema = Joi.object({
   name: Joi.string().required(),
   format: Joi.string().valid('in-person', 'online').required(),
   description: Joi.string().required(),
-  date: Joi.date().required(),
-  end_date: Joi.date()
-    .when('schedule_frequency', {
-      is: Joi.valid('everyday', 'weekly'),
-      then: Joi.required(),
-      otherwise: Joi.optional()
-    }),
-  start_time: Joi.date().when('all_day', {
-    is: false,
-    then: Joi.required(),
-    // otherwise: Joi.optional().default(Date.now()),
-  }),
-  end_time: Joi.date().when('all_day', {
-    is: false,
-    then: Joi.required(),
-    // otherwise: Joi.optional().default(Date.now()),
-  }),
+  // date: Joi.date().required(),
+  // end_date: Joi.date()
+  //   .when('schedule_frequency', {
+  //     is: Joi.valid('everyday', 'weekly'),
+  //     then: Joi.required(),
+  //     otherwise: Joi.optional()
+  //   }),
+  // start_time: Joi.date().when('all_day', {
+  //   is: false,
+  //   then: Joi.required(),
+  //   // otherwise: Joi.optional().default(Date.now()),
+  // }),
+  // end_time: Joi.date().when('all_day', {
+  //   is: false,
+  //   then: Joi.required(),
+  //   // otherwise: Joi.optional().default(Date.now()),
+  // }),
   all_day: Joi.boolean().default(false),
   schedule_frequency: Joi.string().valid('once', 'everyday', 'weekly').required(),
   images: Joi.array().items(Joi.string().uri()).default([]),
@@ -41,6 +41,8 @@ const schedule_create_schema = Joi.object({
   track_id: Joi.string().uuid().required(),
   tags: Joi.array().items(Joi.string()).default([]),
   organizers: Joi.array().items(organizer_schema).default([]),
+  start_period: Joi.date().required(),
+  end_period: Joi.date().required()
 });
 
 
@@ -48,18 +50,18 @@ const schedule_update_schema = Joi.object({
   name: Joi.string().required(),
   format: Joi.string().valid('in-person', 'online').required(),
   description: Joi.string().required(),
-  date: Joi.date().required(),
-  end_date: Joi.date(),
-  start_time: Joi.date().when('all_day', {
-    is: false,
-    then: Joi.required(),
-    // otherwise: Joi.optional().default(Date.now()),
-  }),
-  end_time: Joi.date().when('all_day', {
-    is: false,
-    then: Joi.required(),
-    // otherwise: Joi.optional().default(Date.now()),
-  }),
+  // date: Joi.date().required(),
+  // end_date: Joi.date(),
+  // start_time: Joi.date().when('all_day', {
+  //   is: false,
+  //   then: Joi.required(),
+  //   // otherwise: Joi.optional().default(Date.now()),
+  // }),
+  // end_time: Joi.date().when('all_day', {
+  //   is: false,
+  //   then: Joi.required(),
+  //   // otherwise: Joi.optional().default(Date.now()),
+  // }),
   all_day: Joi.boolean().default(false),
   schedule_frequency: Joi.string().valid('once', 'everyday', 'weekly').required(),
   images: Joi.array().items(Joi.string().uri()).default([]),
@@ -74,6 +76,8 @@ const schedule_update_schema = Joi.object({
   track_id: Joi.string().uuid().required(),
   tags: Joi.array().items(Joi.string()).default([]),
   organizers: Joi.array().items(organizer_schema).default([]),
+  start_period: Joi.date().required(),
+  end_period: Joi.date().required()
 });
 
 export const validateScheduleCreation = (body: any): [Joi.ValidationResult<any>, ScheduleCreateRequestBody] => {

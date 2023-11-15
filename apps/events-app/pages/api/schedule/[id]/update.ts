@@ -68,15 +68,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   };
 
   let insertData: any = {}
-  let start_time = formatTimestamp(validatedData.start_time as Date);
-  let end_time = formatTimestamp(validatedData.end_time as Date);
-  let start_date = convertDateToString(validatedData.date as Date)
-  if (validatedData.end_date) {
-    let end_date = convertDateToString(validatedData.end_date as Date)
-    insertData = { start_time, end_time, start_date, real_end_date: end_date };
-  } else {
-    insertData = { start_time, end_time, start_date };
-  }
+  let start_period = formatTimestamp(validatedData.start_period as Date);
+  let end_period = formatTimestamp(validatedData.end_period as Date);
+  insertData = { start_period, end_period: end_period };
+
+
+
+
 
   for (let key in validatedFields) {
     if (validatedFields[key] !== undefined) {
@@ -84,13 +82,15 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     }
   }
 
+  console.log(insertData)
   // Update the schedule in the database
   const schedule_update_result = await supabase
     .from('schedule')
     .update(insertData)
     .eq('id', id)
-    .single();
 
+
+  console.log(schedule_update_result)
   if (schedule_update_result.error) {
     logToFile('server error', schedule_update_result.error.message, 500, req.body.user.email);
     return res.status(500).send('Internal server error');
@@ -180,6 +180,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   // Inserting into the EditLogs after updating the schedule
+
+
   const editLogInsertResult = await supabase
     .from('editlogs')
     .insert({
