@@ -44,9 +44,11 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
   const [selectedSpaces, setSelectedSpaces] = useState<any[]>([]);
   const [addASessionDialogOpen, setAddASessionDialogOpen] = useState<boolean>(false);
   const [selectedSpeakers, setSelectedSpeakers] = useState<any[]>([]);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const storageKeys = {
-    SCROLL_POSITION: 'scrollPosition',
+    CONTAINER_SCROLL_POSITION: 'containerScrollPosition',
+    WINDOW_SCROLL_POSITION: 'windowScrollPosition',
   };
   const handleItemClick = (scheduleId: string, trackId?: string) => {
     router.push({
@@ -259,21 +261,32 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
   };
 
   const saveCurrentPosition = () => {
-    sessionStorage.setItem(storageKeys.SCROLL_POSITION, window.scrollY.toString());
+    if (containerRef.current === null) return;
+    sessionStorage.setItem(storageKeys.CONTAINER_SCROLL_POSITION, containerRef.current.scrollTop.toString());
+    sessionStorage.setItem(storageKeys.WINDOW_SCROLL_POSITION, window.scrollY.toString());
   };
 
   useEffect(() => {
-    const targetScrollPosition = sessionStorage.getItem(storageKeys.SCROLL_POSITION);
+    if (containerRef.current === null) return;
+    const targetScrollPosition = sessionStorage.getItem(storageKeys.CONTAINER_SCROLL_POSITION);
+    const windowTargetScrollPosition = sessionStorage.getItem(storageKeys.WINDOW_SCROLL_POSITION);
 
-    if (targetScrollPosition) {
+    if (targetScrollPosition && windowTargetScrollPosition) {
       const targetPosition = parseInt(targetScrollPosition, 10);
+      const windowTargetPosition = parseInt(windowTargetScrollPosition, 10);
 
       window.scrollTo({
+        top: windowTargetPosition,
+        behavior: 'smooth',
+      });
+
+      containerRef.current.scrollTo({
         top: targetPosition,
         behavior: 'smooth',
       });
 
-      sessionStorage.removeItem(storageKeys.SCROLL_POSITION);
+      sessionStorage.removeItem(storageKeys.CONTAINER_SCROLL_POSITION);
+      sessionStorage.removeItem(storageKeys.WINDOW_SCROLL_POSITION);
     }
   }, []);
 
@@ -282,7 +295,7 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
       <div className="flex gap-4 lg:flex-row lg:mt-0 pb-24 lg:py-0 sm:pt-3 sm:px-3 sm:flex-col-reverse lg:bg-pagePrimary md:bg-componentPrimary">
         <div className="flex flex-col lg:w-2/3 sm:w-full pb-30 lg:pb-0 gap-5">
           <EventViewHeader imgPath={eventSpace?.image_url as string} name={eventSpace?.name as string} tagline={eventSpace?.tagline as string} />
-          <div className="flex flex-col gap-2.5 lg:px-1 md:px-1 h-screen overflow-auto">
+          <div ref={containerRef} className="flex flex-col gap-2.5 lg:px-1 md:px-1 h-screen overflow-auto">
             <div className="pt-2 bg-componentPrimary rounded-2xl lg:px-2 lg:pt-8">
               {isAuthenticated && (
                 <div className="px-4">
