@@ -58,15 +58,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   };
   // console.log(validatedData.start_time, validatedData.end_time, "timre")
   let insertData: any = {}
-  let start_time = formatTimestamp(validatedData.start_time as Date);
-  let end_time = formatTimestamp(validatedData.end_time as Date);
-  let start_date = convertDateToString(validatedData.date as Date)
-  if (validatedData.end_date) {
-    let end_date = convertDateToString(validatedData.end_date as Date)
-    insertData = { start_time, end_time, start_date, real_end_date: end_date };
-  } else {
-    insertData = { start_time, end_time, start_date };
-  }
+  let start_period = formatTimestamp(validatedData.start_period as Date);
+  let end_period = formatTimestamp(validatedData.end_period as Date);
+  insertData = { start_period, end_period: end_period };
 
 
 
