@@ -26,10 +26,15 @@
     "@radix-ui/react-portal": "^1.0.3",
     "@radix-ui/react-switch": "^1.0.3",
     "@radix-ui/react-tooltip": "^1.0.7",
+    "@types/luxon": "^3.3.4",
+    "@types/react-select": "^5.0.1",
     "http-status-codes": "^2.3.0",
+    "luxon": "^3.4.4",
+    "moment-timezone": "^0.5.43",
     "nprogress": "^0.2.0",
     "react-datepicker": "^4.18.0",
     "react-icons": "^4.11.0",
-    "react-markdown": "^9.0.0"
+    "react-markdown": "^9.0.0",
+    "react-timezone-select": "^2.1.2"
   }
 }

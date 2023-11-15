@@ -37,6 +37,8 @@ import Image from 'next/image';
 import EditionButtons from '../ui/buttons/EditionButtons';
 import { CgClose } from 'react-icons/cg';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import TimezoneSelector from '../ui/TimezoneSelector';
+import { ITimezone } from 'react-timezone-select';
 dayjs.extend(isSameOrAfter);
 
 interface EventSpaceDetailsProps {
@@ -113,6 +115,7 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace, handl
   const { event_space_id } = router.query;
   const [detailsUpdated, setDetailsUpdated] = useState(false);
   const [dialog, setDialog] = useState(false);
+  const [selectedTimezone, setSelectedTimezone] = useState<ITimezone>('Europe/Rome');
 
   interface SocialMediaFormState {
     socialMediaLinks: { label: string; link: string }[];
@@ -275,6 +278,11 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace, handl
     const updatedItems = [...locationPayloads.image_urls.slice(0, index), ...locationPayloads.image_urls.slice(index + 1)];
     setLocationPayloads({ ...locationPayloads, image_urls: updatedItems });
   };
+
+  const handleTimezoneSelect = (newSelectedTimezone: ITimezone) => {
+    setSelectedTimezone(newSelectedTimezone);
+  }
+
   useEffect(() => {
     // Check if the main_location has image_urls and they are not already in locationPayloads
     if (main_location?.image_urls?.length > 0 && locationPayloads.image_urls.length === 0) {
@@ -391,6 +399,13 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace, handl
                       )}
                     />
                   </div>
+                </div>
+                <div className='flex flex-col gap-3.5 w-full'>
+                  <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select a Timezone</Label>
+                  <TimezoneSelector
+                    value={selectedTimezone}
+                    onChange={handleTimezoneSelect}
+                  />
                 </div>
 
                 <div className="flex flex-col gap-[10px]">
