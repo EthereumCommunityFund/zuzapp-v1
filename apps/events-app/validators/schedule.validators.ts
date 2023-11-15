@@ -50,7 +50,7 @@ const schedule_update_schema = Joi.object({
   name: Joi.string().required(),
   format: Joi.string().valid('in-person', 'online').required(),
   description: Joi.string().required(),
-  date: Joi.date().required(),
+  // date: Joi.date().required(),
   // end_date: Joi.date(),
   // start_time: Joi.date().when('all_day', {
   //   is: false,
