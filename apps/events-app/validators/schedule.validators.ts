@@ -42,7 +42,8 @@ const schedule_create_schema = Joi.object({
   tags: Joi.array().items(Joi.string()).default([]),
   organizers: Joi.array().items(organizer_schema).default([]),
   start_period: Joi.date().required(),
-  end_period: Joi.date().required()
+  end_period: Joi.date().required(),
+  timezone: Joi.string().required()
 });
 
 
@@ -77,7 +78,8 @@ const schedule_update_schema = Joi.object({
   tags: Joi.array().items(Joi.string()).default([]),
   organizers: Joi.array().items(organizer_schema).default([]),
   start_period: Joi.date().required(),
-  end_period: Joi.date().required()
+  end_period: Joi.date().required(),
+  timezone: Joi.string().required()
 });
 
 export const validateScheduleCreation = (body: any): [Joi.ValidationResult<any>, ScheduleCreateRequestBody] => {

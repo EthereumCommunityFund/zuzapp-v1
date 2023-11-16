@@ -88,6 +88,7 @@ export type ScheduleCreateRequestBody = {
   // end_time: string | Date;
   start_period: string | Date;
   end_period: string | Date;
+  timezone: string;
   all_day?: boolean;
   schedule_frequency: 'once' | 'everyday' | 'weekly';
   images?: string[];
@@ -121,6 +122,7 @@ export type ScheduleDetailstype = {
   // end_date: string | Date | number;
   start_period: string | Date;
   end_period: string | Date;
+  timezone: string,
   all_day?: boolean;
   current_rsvp_no?: number;
   schedule_frequency: 'once' | 'everyday' | 'weekly';
@@ -156,6 +158,7 @@ export type ScheduleUpdateRequestBody = {
   end_time: string | Date | number;
   start_period: string | Date;
   end_period: string | Date;
+  timezone: string;
   all_day?: boolean;
   schedule_frequency: 'once' | 'everyday' | 'weekly';
   images?: string[];
