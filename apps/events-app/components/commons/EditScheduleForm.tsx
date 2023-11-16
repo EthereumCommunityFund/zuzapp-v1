@@ -88,6 +88,8 @@ export default function EditScheduleForm({ isQuickAccess, creatorId, scheduleId,
     end_date: '',
     start_time: '',
     end_time: '',
+    start_period: '',
+    end_period: '',
     all_day: undefined,
     schedule_frequency: 'once',
     images: [''],
@@ -111,6 +113,9 @@ export default function EditScheduleForm({ isQuickAccess, creatorId, scheduleId,
     editlogs: '',
   });
   const [startDate, setStartDate] = useState<Date | undefined>();
+  const [endDate, setEndDate] = useState<Date | undefined>();
+  const [startTime, setStartTime] = useState<Date | undefined>();
+  const [endTime, setEndTime] = useState<Date | undefined>();
   const [optionTags, setOptionTags] = useState<TagItemProp[]>([]);
   const [optionSpeakers, setOptionSpeakers] = useState<TagItemProp[]>([]);
   const [tagItem, setTagItem] = useState<TagItemProp>({ name: '' });
@@ -369,26 +374,49 @@ export default function EditScheduleForm({ isQuickAccess, creatorId, scheduleId,
         console.log(error);
       }
     };
+    const toLocalDateTime = (utcDateTime: string | number | Date) => {
+      const date = new Date(utcDateTime);
+      return {
+        localDate: dayjs(date).format('DD/MM/YYYY'), // Adjust to your preferred format
+        localTime: dayjs(date).format('HH:mm:ss'), // Format for time
+      };
+    };
 
     const fetchCurrentSchedule = async () => {
       try {
         const result = await fetchScheduleByID(scheduleId as string);
-        setSchedule({
-          ...result.data.data,
-          event_type: JSON.parse(result.data.data.event_type)[0],
-          experience_level: JSON.parse(result.data.data.experience_level)[0],
-        });
+        const data = result.data.data;
 
-        setStartDate(stringToDateObject(result.data.data.start_date as string));
+        const { localDate: startDate, localTime: startTime } = toLocalDateTime(data.start_period);
+        const { localDate: endDate, localTime: endTime } = toLocalDateTime(data.end_period);
+
+        // setSchedule({
+        //   ...data,
+        //   event_type: JSON.parse(data.event_type)[0],
+        //   experience_level: JSON.parse(data.experience_level)[0],
+        // });
+
+        setSchedule({
+          ...data,
+          start_date: startDate,
+          start_time: startTime,
+          end_date: endDate,
+          end_time: endTime,
+          event_type: JSON.parse(data.event_type)[0],
+          experience_level: JSON.parse(data.experience_level)[0],
+        });
+        console.log(startDate, startTime, endDate, endTime);
+        setStartDate(stringToDateObject(data.start_date as string));
+        setEndDate(stringToDateObject(data.end_date as string));
 
         form.reset({
-          name: result.data.data.name,
-          format: result.data.data.format,
-          date: stringToDateObject(result.data.data.start_date as string),
-          end_date: stringToDateObject(result.data.data.real_end_date as string),
-          description: result.data.data.description,
-          // video_call_link: result.data.data.video_call_link,
-          live_stream_url: result.data.data.live_stream_url,
+          name: data.name,
+          format: data.format,
+          date: stringToDateObject(data.start_date as string),
+          end_date: stringToDateObject(data.real_end_date as string),
+          description: data.description,
+          // video_call_link: data.video_call_link,
+          live_stream_url: data.live_stream_url,
         });
       } catch (error) {
         console.log(error);
@@ -466,7 +494,11 @@ export default function EditScheduleForm({ isQuickAccess, creatorId, scheduleId,
 
   const handleTimezoneSelect = (newSelectedTimezone: ITimezone) => {
     setSelectedTimezone(newSelectedTimezone);
-  }
+  };
+
+  useEffect(() => {
+    console.log(startDate, endDate);
+  }, []);
 
   if (isLoading) {
     return <Loader />;
@@ -671,16 +703,22 @@ export default function EditScheduleForm({ isQuickAccess, creatorId, scheduleId,
                                   placeholder="Select Start Time"
                                   size="large"
                                   format="h:mm a"
-                                  value={toTurkeyTime(schedule?.start_time)}
+                                  value={schedule.start_time ? dayjs(schedule.start_time, 'HH:mm:ss') : null}
                                   className="custom-time-picker flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
                                   popupStyle={{
                                     pointerEvents: 'auto',
                                   }}
-                                  onSelect={(newValue: any) => {
-                                    let _time = fromTurkeyToUTC(newValue);
+                                  // onSelect={(newValue: any) => {
+                                  //   let _time = fromTurkeyToUTC(newValue);
+                                  //   setSchedule({
+                                  //     ...schedule,
+                                  //     start_time: _time as string,
+                                  //   });
+                                  // }}
+                                  onSelect={(newValue) => {
                                     setSchedule({
                                       ...schedule,
-                                      start_time: _time as string,
+                                      start_time: newValue ? newValue.format('HH:mm:ss') : '',
                                     });
                                   }}
                                 />
@@ -688,23 +726,29 @@ export default function EditScheduleForm({ isQuickAccess, creatorId, scheduleId,
                                   placeholder="Select End Time"
                                   size="large"
                                   format="h:mm a"
-                                  value={toTurkeyTime(schedule.end_time)}
+                                  value={schedule.end_time ? dayjs(schedule.end_time, 'HH:mm:ss') : null}
                                   className="custom-time-picker flex w-full text-white outline-none rounded-lg py-2.5 pr-3 pl-2.5 bg-inputField gap-2.5 items-center border border-white/10 border-opacity-10"
                                   popupStyle={{
                                     pointerEvents: 'auto',
                                   }}
-                                  onSelect={(newValue: any) => {
-                                    let _time = fromTurkeyToUTC(newValue);
+                                  // onSelect={(newValue: any) => {
+                                  //   let _time = fromTurkeyToUTC(newValue);
+                                  //   setSchedule({
+                                  //     ...schedule,
+                                  //     end_time: _time as string,
+                                  //   });
+                                  // }}
+                                  onSelect={(newValue) => {
                                     setSchedule({
                                       ...schedule,
-                                      end_time: _time as string,
+                                      end_time: newValue ? newValue.format('HH:mm:ss') : '',
                                     });
                                   }}
                                 />
                               </div>
                               <div className="w-full flex flex-col gap-2">
-                                <Label className="text-[#FFDD87] md:text-base sm:text-sm">Times here will temporarily only be set to the Istanbul timezone</Label>
-                                <Label className="md:text-sm sm:text-xs">(Dynamic timezones will be added soon)</Label>
+                                {/* <Label className="text-[#FFDD87] md:text-base sm:text-sm">Times here will temporarily only be set to the Istanbul timezone</Label>
+                                <Label className="md:text-sm sm:text-xs">(Dynamic timezones will be added soon)</Label> */}
                               </div>
                             </LocalizationProvider>
                             <style>{customTimePickerInputStyle}</style>
@@ -731,12 +775,9 @@ export default function EditScheduleForm({ isQuickAccess, creatorId, scheduleId,
                       )}
                       <line></line>
                     </div>
-                    <div className='flex flex-col gap-3.5 w-full'>
+                    <div className="flex flex-col gap-3.5 w-full">
                       <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select a Timezone</Label>
-                      <TimezoneSelector
-                        value={selectedTimezone}
-                        onChange={handleTimezoneSelect}
-                      />
+                      <TimezoneSelector value={selectedTimezone} onChange={handleTimezoneSelect} />
                     </div>
                   </div>
                   <div className="w-full">

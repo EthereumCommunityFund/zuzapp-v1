@@ -150,10 +150,10 @@ export type ScheduleUpdateRequestBody = {
   name: string;
   format: 'in-person' | 'online';
   description: string;
-  // date: string | Date | number;
-  // end_date: string | Date | number | null;
-  // start_time: string | Date | number;
-  // end_time: string | Date | number;
+  date: string | Date | number;
+  end_date: string | Date | number | null;
+  start_time: string | Date | number;
+  end_time: string | Date | number;
   start_period: string | Date;
   end_period: string | Date;
   all_day?: boolean;
