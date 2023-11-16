@@ -46,7 +46,8 @@ import { TimePicker } from 'antd';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import Link from 'next/link';
 import TimezoneSelector from '../ui/TimezoneSelector';
-import { ITimezone } from 'react-timezone-select';
+import { ITimezone, ITimezoneOption } from 'react-timezone-select';
+import { omit } from 'lodash';
 
 type Organizer = {
   name: string;
@@ -240,6 +241,22 @@ export default function EditScheduleForm({ isQuickAccess, creatorId, scheduleId,
     setSchedule({ ...schedule, limit_rsvp: !schedule.limit_rsvp });
   };
 
+  const convertTimezone = (date: Date, timezoneOffset: number): Date => {
+    const utcTime = date.getTime() + (date.getTimezoneOffset() * 60000); // Get UTC time
+    const newTime = utcTime + (timezoneOffset * 60 * 60000); // Apply new timezone offset
+    return new Date(newTime);
+  };
+
+  const changeTimeBasedOnDayjs = (dateObj: Date, dayjsObj: dayjs.Dayjs): Date => {
+    const newDate = dayjs(dateObj)
+      .set('hour', dayjsObj.hour())
+      .set('minute', dayjsObj.minute())
+      .set('second', dayjsObj.second())
+      .set('millisecond', dayjsObj.millisecond());
+
+    return newDate.toDate();
+  };
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
     if (values.format !== 'in-person' && (!values.live_stream_url || values.live_stream_url === '')) {
       form.setError('live_stream_url', {
@@ -282,8 +299,10 @@ export default function EditScheduleForm({ isQuickAccess, creatorId, scheduleId,
 
     const additionalPayload = {
       event_space_id: schedule.event_space_id,
-      start_time: schedule.start_time as unknown as string,
-      end_time: schedule.end_time as unknown as string,
+      // start_time: schedule.start_time as unknown as string,
+      // end_time: schedule.end_time as unknown as string,
+      start_period: convertDateToString(convertTimezone(changeTimeBasedOnDayjs(values.date, dayjs(startTime)), (selectedTimezone as ITimezoneOption).offset as number)),
+      end_period: convertDateToString(convertTimezone(changeTimeBasedOnDayjs(values.end_date as Date, dayjs(endTime)), (selectedTimezone as ITimezoneOption).offset as number)),
       event_type: (schedule.event_type as unknown as []).length > 0 ? JSON.stringify([schedule.event_type]) : ((eventSpace?.event_type as string[])[0] as unknown as string[]),
       experience_level:
         (schedule.experience_level as unknown as []).length > 0 ? (JSON.stringify([schedule.experience_level]) as unknown as string[]) : [(eventSpace?.experience_level as string[])[0]],
@@ -296,16 +315,18 @@ export default function EditScheduleForm({ isQuickAccess, creatorId, scheduleId,
       all_day: schedule.all_day,
       track_id: trackId,
       limit_rsvp: schedule.limit_rsvp,
-      date: convertDateToString(values.date as Date),
-      end_date: convertDateToString(values.end_date as Date),
+      // date: convertDateToString(values.date as Date),
+      // end_date: convertDateToString(values.end_date as Date),
       ...(eventSpace?.event_space_type === 'tracks' && {
         track_id: trackId as string,
       }),
       ...(schedule.limit_rsvp ? { rsvp_amount: schedule.rsvp_amount } : {}),
       // isLimit && rsvp_amount: rsvpAmount
+      timezone: (selectedTimezone as ITimezoneOption).value,
     };
 
     const payload: any = { ...values, ...additionalPayload };
+    const payloadWithoutDate = omit(payload, 'date');
     try {
       setIsUpdating(true);
       const result = await updateSchedule(scheduleId as string, payload, event_space_id as string);
