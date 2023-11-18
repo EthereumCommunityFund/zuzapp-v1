@@ -6,6 +6,7 @@ import dayjs, { Dayjs } from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
+import moment from "moment-timezone";
 
 
 // date function
@@ -159,3 +160,26 @@ export const truncateString = (string: string, charLength: number, withEllipses:
 };
 // eventspacelocation: [generateRandomLocation(), generateRandomLocation(), generateRandomLocation()]
 
+export const tweakToSelectedTimezone = (dateString: Date, tz: string) => {
+  const originalDate = new Date(dateString);
+  const targetTimezone = tz;
+
+  const day = originalDate.toDateString().split(' ')[0];
+  const month = originalDate.toDateString().split(' ')[1];
+  const date = originalDate.getDate();
+  const year = originalDate.getFullYear();
+  const time = originalDate.toTimeString().split(' ')[0];
+  return `${day} ${month} ${date} ${year} ${time} GMT${originalDate.getTimezoneOffset() / -60 < 0 ? '+' : '-'}${Math.abs(originalDate.getTimezoneOffset() / 60).toString().padStart(2, '0')}00 (${targetTimezone})`;
+
+}
+
+
+export function convertTimeToTimezone(utcTime: string | number | Date, timezoneName: any) {
+  const utcDateTime = moment.utc(utcTime);
+  const localDateTime = utcDateTime.tz(timezoneName);
+
+  const dateStr = localDateTime.format('DD/MM/YYYY');
+  const timeStr = localDateTime.format('HH:mm:ss');
+
+  return { date: dateStr, time: timeStr };
+}

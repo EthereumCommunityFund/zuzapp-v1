@@ -38,15 +38,14 @@ import { Dialog } from '@radix-ui/react-dialog';
 
 import { X } from 'lucide-react';
 import { sessionFrequency } from '@/constant/scheduleconstants';
-import { convertDateToString, fromTurkeyToUTC, stringToDateObject, toTurkeyTime } from '@/utils';
+import {convertDateToString, fromTurkeyToUTC, stringToDateObject, toTurkeyTime, tweakToSelectedTimezone} from '@/utils';
 import { TimePicker } from 'antd';
 import { BsFillTicketFill } from 'react-icons/bs';
 import { sessionNavBarDetails } from '@/constant/addschedulenavbar';
 import { DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { rotate } from "next/dist/server/lib/squoosh/impl";
 import TimezoneSelector from '../ui/TimezoneSelector';
-import { ITimezone, ITimezoneOption } from 'react-timezone-select';
-import { omit } from 'lodash';
+import { ITimezone } from 'react-timezone-select';
 
 type Organizer = {
   name: string;
@@ -159,38 +158,25 @@ export default function AddScheduleForm({ isQuickAccess, trackId, event_space_id
   const handleLimitRSVP = () => {
     setIsLimit(!isLimit);
   };
-  // console.log('eventSpace:', eventSpace);
+  console.log('eventSpace:', eventSpace);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: '',
       format: eventSpace?.format,
-      date: undefined,
-      end_date: undefined,
+      // date: undefined,
+      // end_date: undefined,
       description: '',
       video_call_link: '',
       live_stream_url: '',
     },
   });
 
-  const convertTimezone = (date: Date, timezoneOffset: number): Date => {
-    const utcTime = date.getTime() + (date.getTimezoneOffset() * 60000); // Get UTC time
-    const newTime = utcTime + (timezoneOffset * 60 * 60000); // Apply new timezone offset
-    return new Date(newTime);
-  };
-
-  const changeTimeBasedOnDayjs = (dateObj: Date, dayjsObj: dayjs.Dayjs): Date => {
-    const newDate = dayjs(dateObj)
-      .set('hour', dayjsObj.hour())
-      .set('minute', dayjsObj.minute())
-      .set('second', dayjsObj.second())
-      .set('millisecond', dayjsObj.millisecond());
-
-    return newDate.toDate();
-  };
-
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log('values format:', values.format);
+    console.log('values format:', values);
+    const startPeriod  = tweakToSelectedTimezone(values.date, selectedTimezone.value);
+    const endPeriod = (frequency === 'once') ? startPeriod : tweakToSelectedTimezone(values.end_date, selectedTimezone.value);
+
     if (values.format !== 'in-person' && (!values.live_stream_url || values.live_stream_url === '')) {
       form.setError('live_stream_url', {
         message: 'Live stream link is required for online events',
@@ -205,21 +191,18 @@ export default function AddScheduleForm({ isQuickAccess, trackId, event_space_id
       });
       return;
     }
-    // if (frequency === 'everyday' || frequency === 'weekly') {
-    // const endDate = values.endate;
-    // const startDate = values.date;
-    // if (endDate.isBefore(startDate)) {
-    //   form.setError("end_date", {
-    //     message: "End date cannot be earlier than start date",
-    //   });
-    //   return;
-    // }
-    // }
-
+    if (frequency === 'everyday' || frequency === 'weekly') {
+      // const endDate = values.endate;
+      // const startDate = values.date;
+      // if (endDate.isBefore(startDate)) {
+      //   form.setError("end_date", {
+      //     message: "End date cannot be earlier than start date",
+      //   });
+      //   return;
+      // }
+    }
     const basePayload = {
       event_space_id: event_space_id as string,
-      start_period: convertTimezone(changeTimeBasedOnDayjs(values.date, dayjs(startTime)), (selectedTimezone as ITimezoneOption).offset as number),
-      end_period: convertTimezone(changeTimeBasedOnDayjs(values.end_date as Date, dayjs(endTime)), (selectedTimezone as ITimezoneOption).offset as number),
       event_type: eventType.length > 0 ? [eventType] : eventSpace?.event_type?.[0] ? [eventSpace?.event_type[0]] : [eventSpace?.event_type || 'Meetup'],
       experience_level: experienceLevel.length > 0 ? [experienceLevel] : eventSpace?.experience_level?.[0] ? [eventSpace?.experience_level[0]] : [eventSpace?.experience_level || 'Beginner'],
       tags: tags,
@@ -227,9 +210,11 @@ export default function AddScheduleForm({ isQuickAccess, trackId, event_space_id
       organizers,
       all_day: isAllDay,
       limit_rsvp: isLimit,
-      timezone: (selectedTimezone as ITimezoneOption).value,
       // date: convertDateToString(values.date as Date),
       // end_date: convertDateToString(values.end_date as Date),
+      start_period: startPeriod,
+      end_period: endPeriod,
+      timezone: selectedTimezone.value,
       ...(eventSpace?.event_space_type === 'tracks' && {
         track_id: selectedTrackId ? selectedTrackId : (trackId as string),
       }),
@@ -244,12 +229,15 @@ export default function AddScheduleForm({ isQuickAccess, trackId, event_space_id
       video_call_link: values.video_call_link === '' ? 'https://youtube.com' : values.video_call_link,
       live_stream_url: values.live_stream_url === '' ? 'https://youtube.com' : values.live_stream_url,
     };
-    // console.log('payload in addschedule:', payload);
-    const payloadWithoutDate = omit(payload, 'date');
 
+    // Remove date and end date
+    delete payload.date;
+    delete payload.end_date;
+
+    console.log('payload in addschedule:', payload);
     setIsLoading(true);
     try {
-      const result = await createSchedule(payloadWithoutDate as any, event_space_id as string);
+      const result = await createSchedule(payload as any, event_space_id as string);
       setScheduleAdded(true);
       // toast({
       //   title: 'Session created successfully',
@@ -300,7 +288,7 @@ export default function AddScheduleForm({ isQuickAccess, trackId, event_space_id
   };
 
   const handleEventFormatChange = (e: string) => {
-    // console.log('eventFormat', e, selectedEventFormat === 'new' ? eventSpace?.format === 'online' : selectedEventFormat === 'online');
+    console.log('eventFormat', e, selectedEventFormat === 'new' ? eventSpace?.format === 'online' : selectedEventFormat === 'online');
     setSelectedEventFormat(e);
   };
 
@@ -632,13 +620,13 @@ export default function AddScheduleForm({ isQuickAccess, trackId, event_space_id
                                     placeholder="Select Start Time"
                                     size="large"
                                     format="h:mm a"
-                                    value={dayjs(startTime)}
+                                    value={toTurkeyTime(startTime)}
                                     className="custom-time-picker w-full bg-inputField focus-visible:outline-none hover:outline-none border border-borderPrimary hover:border-borderSecondary"
                                     popupStyle={{
                                       pointerEvents: 'auto',
                                     }}
                                     onSelect={(newValue: any) => {
-                                      let _time = fromTurkeyToUTC(newValue);
+                                      let _time = newValue;
                                       setStartTime(_time);
                                     }}
                                   />
@@ -652,7 +640,7 @@ export default function AddScheduleForm({ isQuickAccess, trackId, event_space_id
                                       pointerEvents: 'auto',
                                     }}
                                     onSelect={(newValue: any) => {
-                                      let _time = fromTurkeyToUTC(newValue);
+                                      let _time = newValue;
                                       setEndTime(_time);
                                     }}
                                   />

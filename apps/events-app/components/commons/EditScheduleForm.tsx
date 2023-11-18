@@ -39,15 +39,14 @@ import { sessionFrequency } from '@/constant/scheduleconstants';
 import { X } from 'lucide-react';
 import { deleteScheduleById } from '@/services/deleteSchedule';
 import { fetchProfile } from '@/controllers/profile.controllers';
-import { convertDateToString, convertToTurkeyTimeAsDate, fromTurkeyToUTC, stringToDateObject, toTurkeyTime } from '@/utils';
+import { convertDateToString, convertTimeToTimezone, convertToTurkeyTimeAsDate, fromTurkeyToUTC, stringToDateObject, toTurkeyTime, tweakToSelectedTimezone } from '@/utils';
 import { BsFillTicketFill } from 'react-icons/bs';
 import { sessionNavBarDetails } from '@/constant/addschedulenavbar';
 import { TimePicker } from 'antd';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import Link from 'next/link';
 import TimezoneSelector from '../ui/TimezoneSelector';
-import { ITimezone, ITimezoneOption } from 'react-timezone-select';
-import { omit } from 'lodash';
+import { ITimezone } from 'react-timezone-select';
 
 type Organizer = {
   name: string;
@@ -104,6 +103,7 @@ export default function EditScheduleForm({ isQuickAccess, creatorId, scheduleId,
     event_space_id: '',
     track_id: '',
     tags: [''],
+    timezone: '',
     organizers: [
       {
         name: '',
@@ -235,29 +235,17 @@ export default function EditScheduleForm({ isQuickAccess, creatorId, scheduleId,
     }
   );
   const track_title = eventSpace?.tracks.find((track) => track.id === trackId)?.name;
-  const [selectedTimezone, setSelectedTimezone] = useState<ITimezone>('Europe/Rome');
+  const [selectedTimezone, setSelectedTimezone] = useState<ITimezone>('');
 
   const handleLimitRSVP = () => {
     setSchedule({ ...schedule, limit_rsvp: !schedule.limit_rsvp });
   };
 
-  const convertTimezone = (date: Date, timezoneOffset: number): Date => {
-    const utcTime = date.getTime() + (date.getTimezoneOffset() * 60000); // Get UTC time
-    const newTime = utcTime + (timezoneOffset * 60 * 60000); // Apply new timezone offset
-    return new Date(newTime);
-  };
-
-  const changeTimeBasedOnDayjs = (dateObj: Date, dayjsObj: dayjs.Dayjs): Date => {
-    const newDate = dayjs(dateObj)
-      .set('hour', dayjsObj.hour())
-      .set('minute', dayjsObj.minute())
-      .set('second', dayjsObj.second())
-      .set('millisecond', dayjsObj.millisecond());
-
-    return newDate.toDate();
-  };
-
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    console.log(values, 'the-values-to-test');
+    const startPeriod = tweakToSelectedTimezone(values.date, selectedTimezone.value);
+    const endPeriod = frequency === 'once' ? startPeriod : tweakToSelectedTimezone(values.end_date, selectedTimezone.value);
+
     if (values.format !== 'in-person' && (!values.live_stream_url || values.live_stream_url === '')) {
       form.setError('live_stream_url', {
         message: 'Live stream link is required for online events',
@@ -273,8 +261,8 @@ export default function EditScheduleForm({ isQuickAccess, creatorId, scheduleId,
       return;
     }
     if (frequency === 'everyday' || frequency === 'weekly') {
-      const endDate = fromTurkeyToUTC(values.end_date);
-      const startDate = fromTurkeyToUTC(values.date);
+      const endDate = values.end_date;
+      const startDate = values.date;
 
       if (endDate.isBefore(startDate)) {
         form.setError('end_date', {
@@ -299,10 +287,6 @@ export default function EditScheduleForm({ isQuickAccess, creatorId, scheduleId,
 
     const additionalPayload = {
       event_space_id: schedule.event_space_id,
-      // start_time: schedule.start_time as unknown as string,
-      // end_time: schedule.end_time as unknown as string,
-      start_period: convertDateToString(convertTimezone(changeTimeBasedOnDayjs(values.date, dayjs(startTime)), (selectedTimezone as ITimezoneOption).offset as number)),
-      end_period: convertDateToString(convertTimezone(changeTimeBasedOnDayjs(values.end_date as Date, dayjs(endTime)), (selectedTimezone as ITimezoneOption).offset as number)),
       event_type: (schedule.event_type as unknown as []).length > 0 ? JSON.stringify([schedule.event_type]) : ((eventSpace?.event_type as string[])[0] as unknown as string[]),
       experience_level:
         (schedule.experience_level as unknown as []).length > 0 ? (JSON.stringify([schedule.experience_level]) as unknown as string[]) : [(eventSpace?.experience_level as string[])[0]],
@@ -315,20 +299,24 @@ export default function EditScheduleForm({ isQuickAccess, creatorId, scheduleId,
       all_day: schedule.all_day,
       track_id: trackId,
       limit_rsvp: schedule.limit_rsvp,
-      // date: convertDateToString(values.date as Date),
-      // end_date: convertDateToString(values.end_date as Date),
+      start_period: startPeriod,
+      end_period: endPeriod,
+      timezone: selectedTimezone.value,
       ...(eventSpace?.event_space_type === 'tracks' && {
         track_id: trackId as string,
       }),
       ...(schedule.limit_rsvp ? { rsvp_amount: schedule.rsvp_amount } : {}),
       // isLimit && rsvp_amount: rsvpAmount
-      timezone: (selectedTimezone as ITimezoneOption).value,
     };
 
     const payload: any = { ...values, ...additionalPayload };
-    const payloadWithoutDate = omit(payload, 'date');
+
+    delete payload.date;
+    delete payload.end_date;
+
     try {
       setIsUpdating(true);
+      console.log(payload, 'sessionpayload');
       const result = await updateSchedule(scheduleId as string, payload, event_space_id as string);
       // setSwitchDialogue(true);
       setScheduleUpdated(true);
@@ -408,8 +396,11 @@ export default function EditScheduleForm({ isQuickAccess, creatorId, scheduleId,
         const result = await fetchScheduleByID(scheduleId as string);
         const data = result.data.data;
 
-        const { localDate: startDate, localTime: startTime } = toLocalDateTime(data.start_period);
-        const { localDate: endDate, localTime: endTime } = toLocalDateTime(data.end_period);
+        console.log(data, 'data period');
+        console.log(data.start_period, 'start period');
+        console.log(data.end_period, 'end period');
+        const { date: startDate, time: startTime } = convertTimeToTimezone(data.start_period, data.timezone);
+        const { date: endDate, time: endTime } = convertTimeToTimezone(data.end_period, data.timezone);
 
         // setSchedule({
         //   ...data,
@@ -426,9 +417,11 @@ export default function EditScheduleForm({ isQuickAccess, creatorId, scheduleId,
           event_type: JSON.parse(data.event_type)[0],
           experience_level: JSON.parse(data.experience_level)[0],
         });
-        console.log(startDate, startTime, endDate, endTime);
-        setStartDate(stringToDateObject(data.start_date as string));
-        setEndDate(stringToDateObject(data.end_date as string));
+        console.log(startDate, startTime, endDate, endTime, data.timezone, 'start and end date');
+
+        setStartDate(stringToDateObject(data.start_period));
+        setEndDate(stringToDateObject(data.end_period));
+        setSelectedTimezone(data.timezone);
 
         form.reset({
           name: data.name,
@@ -780,7 +773,7 @@ export default function EditScheduleForm({ isQuickAccess, creatorId, scheduleId,
                         <div className="flex flex-col items-center gap-[30px] self-stretch w-full">
                           <FormField
                             control={form.control}
-                            name="end_date"
+                            name="end_period"
                             render={({ field }) => (
                               <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
                                 <span className="text-lg opacity-70 self-stretch">End Date</span>
@@ -798,7 +791,7 @@ export default function EditScheduleForm({ isQuickAccess, creatorId, scheduleId,
                     </div>
                     <div className="flex flex-col gap-3.5 w-full">
                       <Label className="text-lg font-semibold leading-[1.2] text-white self-stretch">Select a Timezone</Label>
-                      <TimezoneSelector value={selectedTimezone} onChange={handleTimezoneSelect} />
+                      {selectedTimezone && <TimezoneSelector value={selectedTimezone} onChange={handleTimezoneSelect} />}
                     </div>
                   </div>
                   <div className="w-full">
