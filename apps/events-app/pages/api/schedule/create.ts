@@ -37,6 +37,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     track_id,
     tags,
     organizers,
+    timezone
   } = validatedData;
 
   let validatedFields: any = {
@@ -55,6 +56,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     limit_rsvp,
     event_space_id,
     track_id,
+    timezone
   };
   // console.log(validatedData.start_time, validatedData.end_time, "timre")
   let insertData: any = {}
