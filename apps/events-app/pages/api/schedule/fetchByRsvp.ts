@@ -41,7 +41,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             schedulespeakerrole: schedulespeakerrole!id (role, speaker: speaker!id (name))
         `)
         .in("id", scheduleIds)
-        .order('start_date', { ascending: true });
+        .order('start_period', { ascending: true });
 
     if (error) {
         logToFile("server error", error.message, error.code, "Unknown user");

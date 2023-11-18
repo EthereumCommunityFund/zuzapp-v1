@@ -28,7 +28,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             editlogs: editlogs!schedule_id (*, user: profile!uuid (username))
         `)
         .eq("track_id", id)
-        .order('start_date', { ascending: true });
+        .order('start_period', { ascending: true });
 
     if (error) {
         logToFile("server error", error.message, error.code, "Unknown user");
@@ -40,25 +40,25 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     // Sort the data based on date and just the time portion of start_time
-    data.sort((a: any, b: any) => {
-        if (a.start_date < b.start_date) return -1;
-        if (a.start_date > b.start_date) return 1;
-        const timeA = timeToMinutes(a.start_time);
-        const timeB = timeToMinutes(b.start_time);
-        return timeA - timeB;
-    });
+    // data.sort((a: any, b: any) => {
+    //     if (a.start_date < b.start_date) return -1;
+    //     if (a.start_date > b.start_date) return 1;
+    //     const timeA = timeToMinutes(a.start_time);
+    //     const timeB = timeToMinutes(b.start_time);
+    //     return timeA - timeB;
+    // });
 
     let response: any = [];
 
     data.map(item => {
-        const adjustedTime = new Date(item.start_time);
-        adjustedTime.setUTCHours(adjustedTime.getUTCHours() + 3); // Adjusting time to Turkey time
+        // const adjustedTime = new Date(item.start_time);
+        // adjustedTime.setUTCHours(adjustedTime.getUTCHours() + 3); // Adjusting time to Turkey time
 
-        const timeString = `${String(adjustedTime.getUTCHours()).padStart(2, '0')}:${String(adjustedTime.getUTCMinutes()).padStart(2, '0')}`; // Convert to HH:mm format
+        // const timeString = `${String(adjustedTime.getUTCHours()).padStart(2, '0')}:${String(adjustedTime.getUTCMinutes()).padStart(2, '0')}`; // Convert to HH:mm format
 
         let result = {
             ...item,
-            start_time: timeString, // Set the start_time to just the time
+            // start_time: timeString, // Set the start_time to just the time
             tags: item.scheduletags.map((tagObj: any) => tagObj.tags.name),
             organizers: item.schedulespeakerrole.map((speakerObj: any) => ({
                 name: speakerObj.speaker.name,

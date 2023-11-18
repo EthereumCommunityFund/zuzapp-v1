@@ -29,7 +29,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         editlogs: editlogs!schedule_id (*, user: profile!uuid (username))
     `)
         .eq("event_space_id", id)
-        .order('start_date', { ascending: true });
+        .order('start_period', { ascending: true });
 
 
 
@@ -54,11 +54,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     // });
 
 
-    data.sort((a, b) => new Date(a.start_date) - new Date(b.start_date));
+    // data.sort((a, b) => new Date(a.start_date) - new Date(b.start_date));
 
-    data.forEach(data => {
-        console.log(data.start_date)
-    })
+    // data.forEach(data => {
+    //     console.log(data.start_date)
+    // })
 
 
 
@@ -68,14 +68,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     let response: any = [];
 
     data.map(item => {
-        const adjustedTime = new Date(item.start_time);
-        adjustedTime.setUTCHours(adjustedTime.getUTCHours() + 3); // Adjusting time to Turkey time
+        // const adjustedTime = new Date(item.start_time);
+        // adjustedTime.setUTCHours(adjustedTime.getUTCHours() + 3); // Adjusting time to Turkey time
 
-        const timeString = `${String(adjustedTime.getUTCHours()).padStart(2, '0')}:${String(adjustedTime.getUTCMinutes()).padStart(2, '0')}`; // Convert to HH:mm format
+        // const timeString = `${String(adjustedTime.getUTCHours()).padStart(2, '0')}:${String(adjustedTime.getUTCMinutes()).padStart(2, '0')}`; // Convert to HH:mm format
 
         let result = {
             ...item,
-            start_time: timeString, // Set the start_time to just the time
+            // start_time: timeString, // Set the start_time to just the time
             tags: item.scheduletags.map((tagObj: any) => tagObj.tags.name),
             organizers: item.schedulespeakerrole.map((speakerObj: any) => ({
                 name: speakerObj.speaker.name,
