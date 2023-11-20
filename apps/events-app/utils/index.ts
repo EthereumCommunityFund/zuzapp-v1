@@ -103,12 +103,12 @@ export const sortSchedulesByStartTime = (schedules: ScheduleDetailstype[] | unde
   }
 
   schedules.sort((a: any, b: any) => {
-    const dateA = parseDateString(a.start_date);
-    const dateB = parseDateString(b.start_date);
+    const dateA = parseDateString(a.start_period);
+    const dateB = parseDateString(b.start_period);
     if (dateA < dateB) return -1;
     if (dateA > dateB) return 1;
-    const timeA = timeToMinutes(a.start_time);
-    const timeB = timeToMinutes(b.start_time);
+    const timeA = timeToMinutes(a.start_period);
+    const timeB = timeToMinutes(b.start_period);
     return timeA - timeB;
   });
 

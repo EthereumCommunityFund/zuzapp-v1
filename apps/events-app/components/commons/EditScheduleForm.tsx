@@ -215,8 +215,8 @@ export default function EditScheduleForm({ isQuickAccess, creatorId, scheduleId,
     defaultValues: {
       name: schedule?.name,
       format: schedule?.format,
-      date: stringToDateObject(schedule.start_date as string),
-      end_date: stringToDateObject(schedule.real_end_date as string),
+      date: stringToDateObject(schedule.start_period as string),
+      end_date: stringToDateObject(schedule.end_period as string),
       description: '',
       video_call_link: '',
       live_stream_url: schedule?.live_stream_url,
@@ -260,17 +260,17 @@ export default function EditScheduleForm({ isQuickAccess, creatorId, scheduleId,
       });
       return;
     }
-    if (frequency === 'everyday' || frequency === 'weekly') {
-      const endDate = values.end_date;
-      const startDate = values.date;
+    // if (frequency === 'everyday' || frequency === 'weekly') {
+    //   const endDate = values.end_date;
+    //   const startDate = values.date;
 
-      if (endDate.isBefore(startDate)) {
-        form.setError('end_date', {
-          message: 'End date cannot be earlier than start date',
-        });
-        return;
-      }
-    }
+    //   if (endDate.isBefore(startDate)) {
+    //     form.setError('end_date', {
+    //       message: 'End date cannot be earlier than start date',
+    //     });
+    //     return;
+    //   }
+    // }
     const updatedOrganizers = (schedule.organizers as any).map((user: any) => {
       if (user.name) {
         return {
@@ -773,7 +773,7 @@ export default function EditScheduleForm({ isQuickAccess, creatorId, scheduleId,
                         <div className="flex flex-col items-center gap-[30px] self-stretch w-full">
                           <FormField
                             control={form.control}
-                            name="end_period"
+                            name="end_date"
                             render={({ field }) => (
                               <div className="flex flex-col gap-[14px] items-start self-stretch w-full">
                                 <span className="text-lg opacity-70 self-stretch">End Date</span>
