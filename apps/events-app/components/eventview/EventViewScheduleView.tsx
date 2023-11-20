@@ -30,6 +30,7 @@ import { useUserPassportContext } from '@/context/PassportContext';
 import EventDataDate from '../ui/labels/event-data-date';
 import fetchSpaceInvites from '@/services/fetchSpaceInvites';
 import { fetchProfile } from '@/controllers/profile.controllers';
+import dayjs from 'dayjs';
 interface IEventViewScheduleViewTemplate {
   event_space_id: string;
   scheduleId: string;
@@ -154,9 +155,9 @@ export default function EventViewScheduleViewTemplate({ event_space_id, schedule
   }, [isAuthenticated]);
 
   const canEdit = isAuthenticated ? (creatorId === userId || (invites && invites?.some((invite: { invitee_id: string; status: string }) => invite.invitee_id === userId && invite.status === 'accepted'))) : false;
-  const startTime = currentSchedule && toTurkeyTime(currentSchedule.start_time).format('H:mm');
+  const startTime = currentSchedule && dayjs(currentSchedule.start_period).format('H:mm');
 
-  const endTime = currentSchedule && toTurkeyTime(currentSchedule.end_time).format('H:mm');
+  const endTime = currentSchedule && dayjs(currentSchedule.end_period).format('H:mm');
 
   const toggleLogs = () => {
     setShowLogs(!showLogs);
