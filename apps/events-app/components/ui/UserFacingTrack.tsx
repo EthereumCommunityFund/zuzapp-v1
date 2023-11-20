@@ -42,8 +42,8 @@ const UserFacingTrack: React.ForwardRefRenderFunction<HTMLDivElement, IUserFacin
   let startDate = stringToDateObject(scheduleData.start_date as string);
   let endDate = stringToDateObject(scheduleData.real_end_date as string);
 
-  const startTime = (scheduleData.start_time as string).includes('T') ? toTurkeyTime(scheduleData.start_time).format('H:mm') : scheduleData.start_time;
-  const endTime = toTurkeyTime(scheduleData.end_time).format('H:mm');
+  const startTime = dayjs(scheduleData.start_period).format('H:mm');
+  const endTime = dayjs(scheduleData.end_period).format('H:mm');
   const [hasRsvpd, setHasRsvpd] = useState<boolean>(false);
   const [isRsvpFullOnLoad, setIsRsvpFullOnLoad] = useState<boolean>(false);
 

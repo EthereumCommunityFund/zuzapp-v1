@@ -69,8 +69,10 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
 
       // For non-recurring events:
       if (!schedule.schedule_frequency || schedule.schedule_frequency === 'once') {
-        const [hours, minutes] = schedule.start_time.split(':').map(Number);
-        startDate.setHours(hours, minutes, 0, 0);
+        const startTime = new Date(schedule.start_period);
+        const hours = startTime.getHours();
+        const mins = startTime.getMinutes();
+        startDate.setHours(hours, mins, 0, 0);
 
         return isUpcoming ? startDate >= today : startDate < today;
       }
@@ -92,8 +94,8 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
     const filteredSchedules =
       selectedTrackIds.length > 0
         ? schedules.filter((schedule) => {
-            if (schedule.track_id) return selectedTrackIds.includes(schedule.track_id);
-          })
+          if (schedule.track_id) return selectedTrackIds.includes(schedule.track_id);
+        })
         : schedules;
     return filteredSchedules;
   };
@@ -104,10 +106,10 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
     const filteredSchedules =
       selectedSpaceIds.length > 0
         ? schedules.filter((schedule) => {
-            // if (schedule.location_id)
-            //   console.log(schedule.location_id, 'schedule.location_id', selectedSpaceIds.includes(schedule.location_id));
-            return selectedSpaceIds.includes(schedule.location_id);
-          })
+          // if (schedule.location_id)
+          //   console.log(schedule.location_id, 'schedule.location_id', selectedSpaceIds.includes(schedule.location_id));
+          return selectedSpaceIds.includes(schedule.location_id);
+        })
         : schedules;
     return filteredSchedules;
   };
@@ -326,71 +328,71 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
                     <>
                       {isMyRSVP
                         ? groupedMyRSVPs &&
-                          Object.keys(groupedMyRSVPs).map((date, idx) => {
-                            return (
-                              <>
-                                <div key={idx} className="text-center border-b-2 p-3 mt-10 border-borderPrimary sticky top-[2px] w-full bg-componentPrimary backdrop-blur-lg z-[20]">
-                                  <span className="text-lg font-normal w-full">
-                                    {new Date(date).toLocaleDateString('en-US', {
-                                      year: 'numeric',
-                                      month: 'long',
-                                      day: 'numeric',
-                                    })}
-                                  </span>
-                                </div>
-                                {groupedMyRSVPs[date].map((schedule, idx) => {
-                                  return (
-                                    schedule.id &&
-                                    schedule && (
-                                      <UserFacingTrack
-                                        key={idx}
-                                        scheduleId={schedule.id}
-                                        scheduleData={schedule}
-                                        onClick={() => {
-                                          saveCurrentPosition();
-                                          handleItemClick(schedule.id, schedule.track_id as string);
-                                        }}
-                                        eventSpace={eventSpace}
-                                        locationName={getLocationNameById(schedule.location_id, eventSpace.eventspacelocation as LocationType[])}
-                                      />
-                                    )
-                                  );
-                                })}
-                              </>
-                            );
-                          })
+                        Object.keys(groupedMyRSVPs).map((date, idx) => {
+                          return (
+                            <>
+                              <div key={idx} className="text-center border-b-2 p-3 mt-10 border-borderPrimary sticky top-[2px] w-full bg-componentPrimary backdrop-blur-lg z-[20]">
+                                <span className="text-lg font-normal w-full">
+                                  {new Date(date).toLocaleDateString('en-US', {
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: 'numeric',
+                                  })}
+                                </span>
+                              </div>
+                              {groupedMyRSVPs[date].map((schedule, idx) => {
+                                return (
+                                  schedule.id &&
+                                  schedule && (
+                                    <UserFacingTrack
+                                      key={idx}
+                                      scheduleId={schedule.id}
+                                      scheduleData={schedule}
+                                      onClick={() => {
+                                        saveCurrentPosition();
+                                        handleItemClick(schedule.id, schedule.track_id as string);
+                                      }}
+                                      eventSpace={eventSpace}
+                                      locationName={getLocationNameById(schedule.location_id, eventSpace.eventspacelocation as LocationType[])}
+                                    />
+                                  )
+                                );
+                              })}
+                            </>
+                          );
+                        })
                         : Object.keys(chosenSchedules).map((date, idx) => {
-                            return (
-                              <>
-                                <div key={idx} className="text-center border-b-2 py-3 mt-10 border-borderPrimary sticky top-[2px] w-full bg-componentPrimary backdrop-blur-lg z-[20]">
-                                  <span className="text-lg font-normal w-full">
-                                    {new Date(date).toLocaleDateString('en-US', {
-                                      year: 'numeric',
-                                      month: 'long',
-                                      day: 'numeric',
-                                    })}
-                                  </span>
-                                </div>
-                                {chosenSchedules[date].map((schedule, idx) => {
-                                  return (
-                                    schedule.id && (
-                                      <UserFacingTrack
-                                        key={idx}
-                                        scheduleId={schedule.id}
-                                        scheduleData={schedule}
-                                        onClick={() => {
-                                          saveCurrentPosition();
-                                          handleItemClick(schedule.id, schedule.track_id as string);
-                                        }}
-                                        eventSpace={eventSpace}
-                                        locationName={getLocationNameById(schedule.location_id, eventSpace.eventspacelocation as LocationType[])}
-                                      />
-                                    )
-                                  );
-                                })}
-                              </>
-                            );
-                          })}
+                          return (
+                            <>
+                              <div key={idx} className="text-center border-b-2 py-3 mt-10 border-borderPrimary sticky top-[2px] w-full bg-componentPrimary backdrop-blur-lg z-[20]">
+                                <span className="text-lg font-normal w-full">
+                                  {new Date(date).toLocaleDateString('en-US', {
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: 'numeric',
+                                  })}
+                                </span>
+                              </div>
+                              {chosenSchedules[date].map((schedule, idx) => {
+                                return (
+                                  schedule.id && (
+                                    <UserFacingTrack
+                                      key={idx}
+                                      scheduleId={schedule.id}
+                                      scheduleData={schedule}
+                                      onClick={() => {
+                                        saveCurrentPosition();
+                                        handleItemClick(schedule.id, schedule.track_id as string);
+                                      }}
+                                      eventSpace={eventSpace}
+                                      locationName={getLocationNameById(schedule.location_id, eventSpace.eventspacelocation as LocationType[])}
+                                    />
+                                  )
+                                );
+                              })}
+                            </>
+                          );
+                        })}
                     </>
                   )}
                 </div>
