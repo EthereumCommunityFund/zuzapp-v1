@@ -243,8 +243,8 @@ export default function EditScheduleForm({ isQuickAccess, creatorId, scheduleId,
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values, 'the-values-to-test');
-    const startPeriod = tweakToSelectedTimezone(values.date, selectedTimezone.value);
-    const endPeriod = frequency === 'once' ? startPeriod : tweakToSelectedTimezone(values.end_date, selectedTimezone.value);
+    const startPeriod = tweakToSelectedTimezone(values.date, dayjs(schedule.start_time), selectedTimezone.value);
+    const endPeriod = frequency === 'once' ? tweakToSelectedTimezone(values.date, endTime, selectedTimezone.value) : tweakToSelectedTimezone(values.end_date, dayjs(schedule.end_time), selectedTimezone.value);
 
     if (values.format !== 'in-person' && (!values.live_stream_url || values.live_stream_url === '')) {
       form.setError('live_stream_url', {

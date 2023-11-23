@@ -160,16 +160,14 @@ export const truncateString = (string: string, charLength: number, withEllipses:
 };
 // eventspacelocation: [generateRandomLocation(), generateRandomLocation(), generateRandomLocation()]
 
-export const tweakToSelectedTimezone = (dateString: Date, tz: string) => {
-  const originalDate = new Date(dateString);
+export const tweakToSelectedTimezone = (dateString: Date, timeString: Dayjs, tz: string) => {
   const targetTimezone = tz;
+  const originalDate = dayjs(dateString).tz(targetTimezone);
+  const updatedDate = originalDate.set('hour', timeString.hour())
+    .set('minute', timeString.minute())
+    .set('second', timeString.second());
 
-  const day = originalDate.toDateString().split(' ')[0];
-  const month = originalDate.toDateString().split(' ')[1];
-  const date = originalDate.getDate();
-  const year = originalDate.getFullYear();
-  const time = originalDate.toTimeString().split(' ')[0];
-  return `${day} ${month} ${date} ${year} ${time} GMT${originalDate.getTimezoneOffset() / -60 < 0 ? '+' : '-'}${Math.abs(originalDate.getTimezoneOffset() / 60).toString().padStart(2, '0')}00 (${targetTimezone})`;
+  return `${updatedDate.format()}`;
 
 }
 

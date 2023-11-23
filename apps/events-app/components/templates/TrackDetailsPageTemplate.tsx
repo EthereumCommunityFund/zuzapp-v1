@@ -72,8 +72,8 @@ export default function TrackDetailsPageTemplate(props: any) {
   const [schedules, setSchedules] = useState<ScheduleDetailstype[]>();
   const [organizers, setOrganizers] = useState<OrganizerType[]>([]);
   const [tags, setTags] = useState<string[]>([]);
-  const ITEMS_PER_PAGE = 7;
-  const [currentPage, setCurrentPage] = useState<number>(1);
+  // const ITEMS_PER_PAGE = 7;
+  // const [currentPage, setCurrentPage] = useState<number>(1);
 
   // const handlePageChange = (page: number) => {
   //   setCurrentPage(page);
@@ -84,8 +84,8 @@ export default function TrackDetailsPageTemplate(props: any) {
     schedules as ScheduleDetailstype[]
   );
 
-  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-  const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, totalSchedules);
+  // const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  // const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, totalSchedules);
 
   const updateIsLoading = (newState: boolean) => {
     setIsLoading(newState);
@@ -111,9 +111,9 @@ export default function TrackDetailsPageTemplate(props: any) {
     });
   };
 
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
+  // const handlePageChange = (page: number) => {
+  //   setCurrentPage(page);
+  // };
 
   const fetchSchedules = async () => {
     const response: ScheduleDetailstype[] = await fetchSchedulesByTrackId(
@@ -283,14 +283,6 @@ export default function TrackDetailsPageTemplate(props: any) {
                           )}
                         />
                       )
-                  )}
-                  {totalSchedules > ITEMS_PER_PAGE && (
-                    <Pagination
-                      currentPage={currentPage}
-                      totalItems={schedules.length}
-                      itemsPerPage={ITEMS_PER_PAGE}
-                      onPageChange={handlePageChange}
-                    />
                   )}
                 </>
               )}

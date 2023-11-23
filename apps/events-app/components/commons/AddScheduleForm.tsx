@@ -38,7 +38,7 @@ import { Dialog } from '@radix-ui/react-dialog';
 
 import { X } from 'lucide-react';
 import { sessionFrequency } from '@/constant/scheduleconstants';
-import {convertDateToString, fromTurkeyToUTC, stringToDateObject, toTurkeyTime, tweakToSelectedTimezone} from '@/utils';
+import { convertDateToString, fromTurkeyToUTC, stringToDateObject, toTurkeyTime, tweakToSelectedTimezone } from '@/utils';
 import { TimePicker } from 'antd';
 import { BsFillTicketFill } from 'react-icons/bs';
 import { sessionNavBarDetails } from '@/constant/addschedulenavbar';
@@ -174,8 +174,8 @@ export default function AddScheduleForm({ isQuickAccess, trackId, event_space_id
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log('values format:', values);
-    const startPeriod  = tweakToSelectedTimezone(values.date, selectedTimezone.value);
-    const endPeriod = (frequency === 'once') ? startPeriod : tweakToSelectedTimezone(values.end_date, selectedTimezone.value);
+    const startPeriod = tweakToSelectedTimezone(values.date, startTime, selectedTimezone.value);
+    const endPeriod = (frequency === 'once') ? tweakToSelectedTimezone(values.date, endTime, selectedTimezone.value) : tweakToSelectedTimezone(values.end_date, endTime, selectedTimezone.value);
 
     if (values.format !== 'in-person' && (!values.live_stream_url || values.live_stream_url === '')) {
       form.setError('live_stream_url', {
@@ -620,7 +620,7 @@ export default function AddScheduleForm({ isQuickAccess, trackId, event_space_id
                                     placeholder="Select Start Time"
                                     size="large"
                                     format="h:mm a"
-                                    value={toTurkeyTime(startTime)}
+                                    value={startTime}
                                     className="custom-time-picker w-full bg-inputField focus-visible:outline-none hover:outline-none border border-borderPrimary hover:border-borderSecondary"
                                     popupStyle={{
                                       pointerEvents: 'auto',
@@ -634,7 +634,7 @@ export default function AddScheduleForm({ isQuickAccess, trackId, event_space_id
                                     placeholder="Select End Time"
                                     size="large"
                                     format="h:mm a"
-                                    value={toTurkeyTime(endTime)}
+                                    value={endTime}
                                     className="custom-time-picker w-full bg-inputField focus-visible:outline-none hover:outline-none border border-borderPrimary hover:border-borderSecondary"
                                     popupStyle={{
                                       pointerEvents: 'auto',
