@@ -50,7 +50,7 @@ export const DropDownMenu = (props: DropDownMenu) => {
                 {({ selected }) => (
                   <>
                     <Label className={`relative block truncate rounded-2xl py-2 px-2 w-full hover:bg-itemHover ${selected ? 'font-medium bg-slate-700' : 'font-normal'}`}>
-                      {item.name.charAt(0).toUpperCase() + item.name.slice(1)}
+                      {item.name ? item.name.charAt(0).toUpperCase() + item.name.slice(1) : item.charAt(0).toUpperCase() + item.slice(1)}
                     </Label>
                   </>
                 )}

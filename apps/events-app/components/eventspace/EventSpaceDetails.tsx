@@ -191,7 +191,8 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace, handl
     }
 
     const mainLocation: MainLocationType = {
-      id: main_location_id,
+      // id: main_location_id,
+      ...(main_location_id && { id: main_location_id }),
       name: values.locationName,
       address: values.locationAddress,
       capacity: values.locationCapacity,

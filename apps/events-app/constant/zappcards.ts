@@ -2,6 +2,18 @@ import { ZappCardTemplate } from "@/types";
 
 export const zAppCards: ZappCardTemplate[] = [
   {
+    imgURL: "/images/zapps/5.png",
+    appTitle: "Zuzagora",
+    appTagLine:
+      "Forum for the Zuzalu community to explore and discuss ideas.",
+    appContents: ["Forum"],
+    appDescription:
+      "Zuzagora is a Zupass-gated forum where community members get to express themselves. This spaces fosters thoughtful and civil discourse, where we get to learn from each other.Zuzagora is a Zupass-gated forum where community members get to express themselves. This spaces fosters thoughtful and civil discourse, where we get to learn from each other.",
+    githubLink: "https://github.com/0xPetra/zuzagorauth",
+    websiteLink: "https://www.zuzagora.com",
+    cardItemLink: "https://www.zuzagora.com",
+  },
+  {
     imgURL: "/images/zapps/1.png",
     appTitle: "Rubber Ducky",
     appTagLine: "The ultimate conversational chatbot for Zuzaluans!",
@@ -40,4 +52,5 @@ export const zAppCards: ZappCardTemplate[] = [
     websiteLink: "https://zuzalu.network/about",
     cardItemLink: "https://zuzalu.network",
   },
+
 ];

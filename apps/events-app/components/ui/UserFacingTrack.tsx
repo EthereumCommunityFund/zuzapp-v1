@@ -19,6 +19,8 @@ import { Label } from '@/components/ui/label';
 import { useGlobalContext } from '@/context/GlobalContext';
 import LocationMarker from './icons/LocationMarker';
 import { HiLocationMarker } from 'react-icons/hi';
+import TicketSolid from './icons/TicketSolid';
+import TicketOutline from './icons/TicketOutline';
 
 interface IUserFacingTrack {
   scheduleId?: string;
@@ -30,7 +32,7 @@ interface IUserFacingTrack {
 
 const UserFacingTrack: React.ForwardRefRenderFunction<HTMLDivElement, IUserFacingTrack> = (props, ref) => {
   const { scheduleData, onClick, eventSpace, locationName } = props;
-  console.log(scheduleData.location_id, 'scheduleData.location_id');
+  // console.log(scheduleData.location_id, 'scheduleData.location_id');
   // const { trackDetails, isLoading } = useTrack(scheduleData.track_id as string);
   // const date = convertToTurkeyTimeAsDate(scheduleData.date);
   let date = stringToDateObject(scheduleData.start_date as string);
@@ -107,6 +109,7 @@ const UserFacingTrack: React.ForwardRefRenderFunction<HTMLDivElement, IUserFacin
 
   useEffect(() => {
     if (scheduleData) {
+      checkIfUserHasRsvpd();
       if (scheduleData.rsvp_amount === scheduleData.current_rsvp_no) {
         setIsRsvpFullOnLoad(true);
       }
@@ -116,9 +119,9 @@ const UserFacingTrack: React.ForwardRefRenderFunction<HTMLDivElement, IUserFacin
     }
   }, [scheduleData]);
 
-  useEffect(() => {
-    // checkIfUserHasRsvpd();
-  }, []);
+  // useEffect(() => {
+  //     // checkIfUserHasRsvpd();
+  // }, []);
 
   return scheduleData && scheduleData.repeating ? (
     <div ref={ref} onClick={onClick} className="flex flex-col gap-3  cursor-pointer">
@@ -140,7 +143,7 @@ const UserFacingTrack: React.ForwardRefRenderFunction<HTMLDivElement, IUserFacin
                 <Tooltip.Trigger asChild>
                   <IconButton
                     variant={`ghost`}
-                    icon={TbTicket}
+                    icon={hasRsvpd ? TicketSolid : TicketOutline}
                     className={`${hasRsvpd ? `bg-componentPrimary` : `bg-trackDateColor`
                       } rounded-lg md:text-[40px] sm:text-[25px] opacity-70 text-white hover:bg-violet3 inline-flex h-[35px] w-[35px] items-center justify-center outline-none focus:shadow-[0_0_0_2px] focus:shadow-[#3B3B3B] ${isRsvpFullOnLoad || scheduleData?.rsvp_amount === 0 || (isRsvpFullOnLoad && !hasRsvpd) ? `cursor-not-allowed` : ``
                       }`}
@@ -197,7 +200,7 @@ const UserFacingTrack: React.ForwardRefRenderFunction<HTMLDivElement, IUserFacin
                 <Tooltip.Trigger asChild>
                   <IconButton
                     variant={`ghost`}
-                    icon={TbTicket}
+                    icon={hasRsvpd ? TicketSolid : TicketOutline}
                     className={`${hasRsvpd ? `bg-componentPrimary` : `bg-trackDateColor`
                       } rounded-lg md:text-[40px] sm:text-[25px] opacity-70 text-white hover:bg-violet3 inline-flex h-[35px] w-[35px] items-center justify-center outline-none focus:shadow-[0_0_0_2px] focus:shadow-[#3B3B3B] ${isRsvpFullOnLoad || scheduleData?.rsvp_amount === 0 || (isRsvpFullOnLoad && !hasRsvpd) ? `cursor-not-allowed` : ``
                       }`}
