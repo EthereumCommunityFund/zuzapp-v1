@@ -1,29 +1,26 @@
+import React, { Fragment, useEffect, useMemo, useRef, useState } from 'react';
+import { useRouter } from 'next/router';
+import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
 import EventViewHeader from '@/components/eventview/EventViewHeader';
 import UserFacingTrack from '@/components/ui/UserFacingTrack';
-import Button from '@/components/ui/buttons/Button';
+import AddScheduleForm from '@/components/commons/AddScheduleForm';
 import { LocationType, ScheduleDetailstype } from '@/types';
-import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
-import { useRouter } from 'next/router';
-import React, { Fragment, useEffect, useRef, useState } from 'react';
 import { BiPlusCircle } from 'react-icons/bi';
-import { QueryClient, useQuery } from 'react-query';
-import { EventSpaceDetailsType } from '@/types';
 import { Loader } from '@/components/ui/Loader';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
-import fetchSchedulesByEvenSpaceId from '@/services/fetchScheduleByEventSpace';
-import AddScheduleForm from '@/components/commons/AddScheduleForm';
-import { useGlobalContext } from '@/context/GlobalContext';
-import { Listbox, Transition } from '@headlessui/react';
-
-import ToggleSwitch from '../commons/ToggleSwitch';
-import { TbChevronDown } from 'react-icons/tb';
-import { sortGroupedSchedulesByStartTime, stringToDateObject, toTurkeyTime } from '@/utils';
 import { toast } from '../ui/use-toast';
 import { Label } from '../ui/label';
-import { Switch } from '../ui/switch';
-import SwitchButton from '../ui/buttons/SwitchButton';
-import { fetchAllSpeakers, fetchSchedulesByUserRsvp } from '@/controllers';
 import { DropDownMenu } from '../ui/DropDownMenu';
+import SwitchButton from '../ui/buttons/SwitchButton';
+import Button from '@/components/ui/buttons/Button';
+import ToggleSwitch from '../commons/ToggleSwitch';
+// import CalendarGrid from '../commons/CalendarGrid';
+import { QueryClient, useQuery } from 'react-query';
+import { EventSpaceDetailsType } from '@/types';
+import fetchSchedulesByEvenSpaceId from '@/services/fetchScheduleByEventSpace';
+import { useGlobalContext } from '@/context/GlobalContext';
+import { sortGroupedSchedulesByStartTime, stringToDateObject, toTurkeyTime } from '@/utils';
+import { fetchAllSpeakers, fetchSchedulesByUserRsvp } from '@/controllers';
 
 interface ISessionViewPageTemplate {
   event_space_id: string;
@@ -31,6 +28,11 @@ interface ISessionViewPageTemplate {
   eventSpace: EventSpaceDetailsType;
   speakers: any[];
 }
+
+type TEventSpaceDetails = EventSpaceDetailsType & {
+  eventspacelocation: LocationType[];
+  tracks: any[];
+};
 
 export default function SessionViewPageTemplate({ event_space_id, trackId, eventSpace, speakers }: ISessionViewPageTemplate) {
   const router = useRouter();
@@ -46,15 +48,77 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
   const [selectedSpeakers, setSelectedSpeakers] = useState<any[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
 
+  const {
+    data: schedules,
+    isLoading,
+    isError,
+  } = useQuery<ScheduleDetailstype[], Error>(
+    ['allSchedules', event_space_id], // Query key
+    () => fetchSchedulesByEvenSpaceId(event_space_id as string),
+    {
+      onSuccess: (data) => {
+        // setSchedules(data);
+      },
+      onError: (error) => {
+        console.log(error, 'error loading events');
+        toast({
+          title: 'Error',
+          description: 'Error loading  Sessions',
+          variant: 'destructive',
+        });
+      },
+    }
+  );
+
   const storageKeys = {
     CONTAINER_SCROLL_POSITION: 'containerScrollPosition',
     WINDOW_SCROLL_POSITION: 'windowScrollPosition',
   };
+  useEffect(() => {
+    if (containerRef.current === null) return;
+    const targetScrollPosition = sessionStorage.getItem(storageKeys.CONTAINER_SCROLL_POSITION);
+    const windowTargetScrollPosition = sessionStorage.getItem(storageKeys.WINDOW_SCROLL_POSITION);
+
+    if (targetScrollPosition && windowTargetScrollPosition) {
+      const targetPosition = parseInt(targetScrollPosition, 10);
+      const windowTargetPosition = parseInt(windowTargetScrollPosition, 10);
+
+      window.scrollTo({
+        top: windowTargetPosition,
+        behavior: 'smooth',
+      });
+
+      containerRef.current.scrollTo({
+        top: targetPosition,
+        behavior: 'smooth',
+      });
+
+      sessionStorage.removeItem(storageKeys.CONTAINER_SCROLL_POSITION);
+      sessionStorage.removeItem(storageKeys.WINDOW_SCROLL_POSITION);
+    }
+  }, []);
+
   const handleItemClick = (scheduleId: string, trackId?: string) => {
     router.push({
       pathname: `/dashboard/eventview/allschedules/schedule`,
       query: { scheduleId, trackId, event_space_id },
     });
+  };
+
+  const handleTrackSelect = (newSelectedTracks: any[]) => {
+    setSelectedTracks(newSelectedTracks);
+    return;
+  };
+  const handleIsUpcoming = (newFilter: boolean) => {
+    setIsUpcoming(newFilter);
+  };
+
+  const handleSpaceSelect = (newSelectedSpaces: any[]) => {
+    setSelectedSpaces(newSelectedSpaces);
+  };
+
+  const handleSpeakerSelect = (newSelectedSpeakers: any[]) => {
+    setSelectedSpeakers(newSelectedSpeakers);
   };
 
   const sortByUpcoming = (schedules: ScheduleDetailstype[] | undefined, isUpcoming: boolean): ScheduleDetailstype[] => {
@@ -87,96 +151,26 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
     return filter;
   };
 
-  const filterByTrack = (schedules: ScheduleDetailstype[]) => {
+  const filterByTrack = (schedules: ScheduleDetailstype[], selectedTracks: any[]) => {
     const selectedTrackIds = selectedTracks.map((item) => item.id);
-    const filteredSchedules =
-      selectedTrackIds.length > 0
-        ? schedules.filter((schedule) => {
-            if (schedule.track_id) return selectedTrackIds.includes(schedule.track_id);
-          })
-        : schedules;
-    return filteredSchedules;
+    return selectedTrackIds.length > 0 ? schedules.filter((schedule) => schedule.track_id && selectedTrackIds.includes(schedule.track_id)) : schedules;
   };
-
-  const filterBySpace = (schedules: ScheduleDetailstype[]) => {
+  const filterBySpace = (schedules: ScheduleDetailstype[], selectedSpaces: any[]) => {
     const selectedSpaceIds = selectedSpaces.map((item) => item.id);
-    // console.log(selectedSpaceIds, 'selectedSpaceIds:');
-    const filteredSchedules =
-      selectedSpaceIds.length > 0
-        ? schedules.filter((schedule) => {
-            // if (schedule.location_id)
-            //   console.log(schedule.location_id, 'schedule.location_id', selectedSpaceIds.includes(schedule.location_id));
-            return selectedSpaceIds.includes(schedule.location_id);
-          })
-        : schedules;
-    return filteredSchedules;
+    return selectedSpaceIds.length > 0 ? schedules.filter((schedule) => selectedSpaceIds.includes(schedule.location_id)) : schedules;
+  };
+  const filterBySpeaker = (schedules: ScheduleDetailstype[], selectedSpeakers: any[]) => {
+    return selectedSpeakers.length > 0
+      ? schedules.filter((schedule) => selectedSpeakers.every((speakerName) => schedule.organizers?.some((organizer) => organizer.name.trim() === speakerName)))
+      : schedules;
   };
 
-  const filterBySpeaker = (schedules: ScheduleDetailstype[]) => {
-    const filteredSchedules =
-      selectedSpeakers.length > 0
-        ? schedules.filter((schedule) => selectedSpeakers.every((speakerName) => schedule.organizers?.some((organizer) => organizer.name.trim() === speakerName)))
-        : schedules;
-    return filteredSchedules;
-  };
-
-  const handleTrackSelect = (newSelectedTracks: any[]) => {
-    // console.log(newSelectedTracks, "new selected tracks");
-    setSelectedTracks(newSelectedTracks);
-    return;
-  };
-  const handleIsUpcoming = (newFilter: boolean) => {
-    setIsUpcoming(newFilter);
-  };
-
-  const handleSpaceSelect = (newSelectedSpaces: any[]) => {
-    setSelectedSpaces(newSelectedSpaces);
-  };
-
-  const handleSpeakerSelect = (newSelectedSpeakers: any[]) => {
-    setSelectedSpeakers(newSelectedSpeakers);
-  };
-
-  // useEffect(() => {
-  //   const observer = new IntersectionObserver(
-  //     (entries) => {
-  //       if (entries[0].isIntersecting) {
-  //       }
-  //     },
-  //     { threshold: 1 }
-  //   );
-
-  //   if (lastTrackRef.current) {
-  //     observer.observe(lastTrackRef.current);
-  //   }
-  //   return () => {
-  //     if (lastTrackRef.current) {
-  //       observer.unobserve(lastTrackRef.current);
-  //     }
-  //   };
-  // }, [lastTrackRef]);
-
-  const {
-    data: schedules,
-    isLoading,
-    isError,
-  } = useQuery<ScheduleDetailstype[], Error>(
-    ['allSchedules', event_space_id], // Query key
-    () => fetchSchedulesByEvenSpaceId(event_space_id as string),
-    {
-      onSuccess: (data) => {
-        // setSchedules(data);
-      },
-      onError: (error) => {
-        console.log(error, 'error loading events');
-        toast({
-          title: 'Error',
-          description: 'Error loading  Sessions',
-          variant: 'destructive',
-        });
-      },
-    }
-  );
+  const optimizedSortedSchedules = useMemo(() => {
+    let sorted = sortByUpcoming(schedules, isUpcoming);
+    sorted = filterByTrack(sorted, selectedTracks);
+    sorted = filterBySpace(sorted, selectedSpaces);
+    return filterBySpeaker(sorted, selectedSpeakers);
+  }, [schedules, isUpcoming, selectedTracks, selectedSpaces, selectedSpeakers]);
 
   const groupingSchedules = (allSchedules: ScheduleDetailstype[], groupedSchedules: Record<string, ScheduleDetailstype[]>) => {
     allSchedules.forEach((schedule) => {
@@ -215,21 +209,15 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
       } while (date <= end_date);
     });
   };
-
-  let sortedSchedules = sortByUpcoming(schedules, isUpcoming);
-  sortedSchedules = filterByTrack(sortedSchedules);
-  sortedSchedules = filterBySpace(sortedSchedules);
-  sortedSchedules = filterBySpeaker(sortedSchedules);
   let groupedSchedules: Record<string, ScheduleDetailstype[]> = {};
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  // console.log(sortedSchedules, 'sortedSchedules');
-  groupingSchedules(sortedSchedules, groupedSchedules);
+  groupingSchedules(optimizedSortedSchedules, groupedSchedules);
 
   // Now, let's categorize them into "past" and "upcoming"
-
   const pastSchedules: Record<string, ScheduleDetailstype[]> = {};
   const upcomingSchedules: Record<string, ScheduleDetailstype[]> = {};
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
 
   for (const dateStr in groupedSchedules) {
     const dateOfGroup = new Date(dateStr);
@@ -266,29 +254,40 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
     sessionStorage.setItem(storageKeys.WINDOW_SCROLL_POSITION, window.scrollY.toString());
   };
 
-  useEffect(() => {
-    if (containerRef.current === null) return;
-    const targetScrollPosition = sessionStorage.getItem(storageKeys.CONTAINER_SCROLL_POSITION);
-    const windowTargetScrollPosition = sessionStorage.getItem(storageKeys.WINDOW_SCROLL_POSITION);
+  const renderDateHeader = (date: string) => (
+    <div className="text-center border-b-2 py-3 mt-10 border-borderPrimary sticky top-[2px] w-full bg-componentPrimary backdrop-blur-lg z-[20]">
+      <span className="text-lg font-normal w-full">
+        {new Date(date).toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+        })}
+      </span>
+    </div>
+  );
 
-    if (targetScrollPosition && windowTargetScrollPosition) {
-      const targetPosition = parseInt(targetScrollPosition, 10);
-      const windowTargetPosition = parseInt(windowTargetScrollPosition, 10);
+  const renderSchedule = (schedule: ScheduleDetailstype, eventSpace: TEventSpaceDetails) => (
+    <UserFacingTrack
+      key={schedule.id}
+      scheduleId={schedule.id}
+      scheduleData={schedule}
+      onClick={() => {
+        saveCurrentPosition();
+        handleItemClick(schedule.id, schedule.track_id);
+      }}
+      eventSpace={eventSpace}
+      locationName={getLocationNameById(schedule.location_id, eventSpace.eventspacelocation)}
+    />
+  );
 
-      window.scrollTo({
-        top: windowTargetPosition,
-        behavior: 'smooth',
-      });
-
-      containerRef.current.scrollTo({
-        top: targetPosition,
-        behavior: 'smooth',
-      });
-
-      sessionStorage.removeItem(storageKeys.CONTAINER_SCROLL_POSITION);
-      sessionStorage.removeItem(storageKeys.WINDOW_SCROLL_POSITION);
-    }
-  }, []);
+  const renderSchedules = (schedules: Record<string, ScheduleDetailstype[]>, eventSpace: TEventSpaceDetails) => {
+    return Object.keys(schedules).map((date) => (
+      <React.Fragment key={date}>
+        {renderDateHeader(date)}
+        {schedules[date].map((schedule) => renderSchedule(schedule, eventSpace))}
+      </React.Fragment>
+    ));
+  };
 
   return (
     <>
@@ -323,75 +322,7 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
               ) : (
                 <div className="p-0 gap-[10px] flex flex-col rounded-[10px] pb-36 cursor-pointer">
                   {schedules && eventSpace && eventSpace.eventspacelocation && (
-                    <>
-                      {isMyRSVP
-                        ? groupedMyRSVPs &&
-                          Object.keys(groupedMyRSVPs).map((date, idx) => {
-                            return (
-                              <>
-                                <div key={idx} className="text-center border-b-2 p-3 mt-10 border-borderPrimary sticky top-[2px] w-full bg-componentPrimary backdrop-blur-lg z-[20]">
-                                  <span className="text-lg font-normal w-full">
-                                    {new Date(date).toLocaleDateString('en-US', {
-                                      year: 'numeric',
-                                      month: 'long',
-                                      day: 'numeric',
-                                    })}
-                                  </span>
-                                </div>
-                                {groupedMyRSVPs[date].map((schedule, idx) => {
-                                  return (
-                                    schedule.id &&
-                                    schedule && (
-                                      <UserFacingTrack
-                                        key={idx}
-                                        scheduleId={schedule.id}
-                                        scheduleData={schedule}
-                                        onClick={() => {
-                                          saveCurrentPosition();
-                                          handleItemClick(schedule.id, schedule.track_id as string);
-                                        }}
-                                        eventSpace={eventSpace}
-                                        locationName={getLocationNameById(schedule.location_id, eventSpace.eventspacelocation as LocationType[])}
-                                      />
-                                    )
-                                  );
-                                })}
-                              </>
-                            );
-                          })
-                        : Object.keys(chosenSchedules).map((date, idx) => {
-                            return (
-                              <>
-                                <div key={idx} className="text-center border-b-2 py-3 mt-10 border-borderPrimary sticky top-[2px] w-full bg-componentPrimary backdrop-blur-lg z-[20]">
-                                  <span className="text-lg font-normal w-full">
-                                    {new Date(date).toLocaleDateString('en-US', {
-                                      year: 'numeric',
-                                      month: 'long',
-                                      day: 'numeric',
-                                    })}
-                                  </span>
-                                </div>
-                                {chosenSchedules[date].map((schedule, idx) => {
-                                  return (
-                                    schedule.id && (
-                                      <UserFacingTrack
-                                        key={idx}
-                                        scheduleId={schedule.id}
-                                        scheduleData={schedule}
-                                        onClick={() => {
-                                          saveCurrentPosition();
-                                          handleItemClick(schedule.id, schedule.track_id as string);
-                                        }}
-                                        eventSpace={eventSpace}
-                                        locationName={getLocationNameById(schedule.location_id, eventSpace.eventspacelocation as LocationType[])}
-                                      />
-                                    )
-                                  );
-                                })}
-                              </>
-                            );
-                          })}
-                    </>
+                    <>{isMyRSVP ? renderSchedules(groupedMyRSVPs || {}, eventSpace as TEventSpaceDetails) : renderSchedules(chosenSchedules, eventSpace as TEventSpaceDetails)}</>
                   )}
                 </div>
               )}
@@ -411,47 +342,6 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
             <DropDownMenu values={selectedTracks} multiple={true} header={'Select Tracks'} items={eventSpace.tracks} onItemSelect={handleTrackSelect} />
             <DropDownMenu values={selectedSpaces} multiple={true} header={'Select Space'} items={eventSpace.eventspacelocation as LocationType[]} onItemSelect={handleSpaceSelect} />
             <DropDownMenu values={selectedSpeakers} multiple={true} header={'Select Speaker'} items={speakers} onItemSelect={handleSpeakerSelect} />
-            {/* <Listbox as={'div'} className={'w-full relative'} value={selectedTracks} multiple onChange={(newSelectedTracks) => handleTrackSelect(newSelectedTracks)}>
-              <Listbox.Button
-                className={
-                  'relative w-full inline-flex justify-between item-center cursor-pointer bg-trackItemHover border border-borderSecondary py-2 px-2 shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm rounded-xl'
-                }
-              >
-                <div className="flex gap-2 items-center font-semibold pl-2">
-                  <span>Select Tracks</span>
-                </div>
-                <TbChevronDown className="h-5 w-5 text-gray-40 font-extrabold" aria-hidden="true" />
-              </Listbox.Button>
-              <Transition
-                as={Fragment}
-                enter="transition ease-out duration-100"
-                enterFrom="transform opacity-0 scale-95"
-                enterTo="transform opacity-100 scale-100"
-                leave="transition ease-in duration-75"
-                leaveFrom="transform opacity-100 scale-100"
-                leaveTo="transform opacity-0 scale-95"
-              >
-                <Listbox.Options className={'absolute right-0 z-10 mt-2 w-full pb-2 bg-componentPrimary origin-top-right rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'}>
-                  {eventSpace.tracks.map((item, idx) => (
-                    <Listbox.Option key={idx} value={item} className={'block pt-2 px-2 text-sm'}>
-                      {({ selected }) => (
-                        <>
-                          <span
-                            className={`relative block truncate rounded-2xl py-2 cursor-pointer px-2 w-full hover:bg-itemHover ${selected
-                              ? "font-medium bg-slate-700"
-                              : "font-normal"
-                              }`}
-                          >
-                            {item.name.charAt(0).toUpperCase() +
-                              item.name.slice(1)}
-                          </span>
-                        </>
-                      )}
-                    </Listbox.Option>
-                  ))}
-                </Listbox.Options>
-              </Transition>
-            </Listbox> */}
           </div>
         </div>
       </div>
