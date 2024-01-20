@@ -19,7 +19,7 @@ import { QueryClient, useQuery } from 'react-query';
 import { EventSpaceDetailsType } from '@/types';
 import fetchSchedulesByEvenSpaceId from '@/services/fetchScheduleByEventSpace';
 import { useGlobalContext } from '@/context/GlobalContext';
-import { sortGroupedSchedulesByStartTime, stringToDateObject, toTurkeyTime } from '@/utils';
+import { filterBySpace, filterBySpeaker, filterByTrack, groupingSchedules, sortByUpcoming, sortGroupedSchedulesByStartTime, stringToDateObject, toTurkeyTime } from '@/utils';
 import { fetchAllSpeakers, fetchSchedulesByUserRsvp } from '@/controllers';
 
 interface ISessionViewPageTemplate {
@@ -121,50 +121,6 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
     setSelectedSpeakers(newSelectedSpeakers);
   };
 
-  const sortByUpcoming = (schedules: ScheduleDetailstype[] | undefined, isUpcoming: boolean): ScheduleDetailstype[] => {
-    if (!schedules) return [];
-    const isUpcomingEvent = (schedule: ScheduleDetailstype) => {
-      // console.log(schedule, 'isUpcoming');
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-
-      const startDate = stringToDateObject(schedule.start_date);
-      const endDate = stringToDateObject(schedule.real_end_date);
-
-      // For non-recurring events:
-      if (!schedule.schedule_frequency || schedule.schedule_frequency === 'once') {
-        const [hours, minutes] = schedule.start_time.split(':').map(Number);
-        startDate.setHours(hours, minutes, 0, 0);
-
-        return isUpcoming ? startDate >= today : startDate < today;
-      }
-
-      if (schedule.schedule_frequency === 'everyday' || schedule.schedule_frequency === 'weekly') {
-        if (isUpcoming) {
-          return endDate >= today; // It's upcoming if the end date is today or in the future.
-        } else {
-          return startDate < today;
-        }
-      }
-    };
-    const filter: ScheduleDetailstype[] = schedules.filter(isUpcomingEvent);
-    return filter;
-  };
-
-  const filterByTrack = (schedules: ScheduleDetailstype[], selectedTracks: any[]) => {
-    const selectedTrackIds = selectedTracks.map((item) => item.id);
-    return selectedTrackIds.length > 0 ? schedules.filter((schedule) => schedule.track_id && selectedTrackIds.includes(schedule.track_id)) : schedules;
-  };
-  const filterBySpace = (schedules: ScheduleDetailstype[], selectedSpaces: any[]) => {
-    const selectedSpaceIds = selectedSpaces.map((item) => item.id);
-    return selectedSpaceIds.length > 0 ? schedules.filter((schedule) => selectedSpaceIds.includes(schedule.location_id)) : schedules;
-  };
-  const filterBySpeaker = (schedules: ScheduleDetailstype[], selectedSpeakers: any[]) => {
-    return selectedSpeakers.length > 0
-      ? schedules.filter((schedule) => selectedSpeakers.every((speakerName) => schedule.organizers?.some((organizer) => organizer.name.trim() === speakerName)))
-      : schedules;
-  };
-
   const optimizedSortedSchedules = useMemo(() => {
     let sorted = sortByUpcoming(schedules, isUpcoming);
     sorted = filterByTrack(sorted, selectedTracks);
@@ -172,43 +128,6 @@ export default function SessionViewPageTemplate({ event_space_id, trackId, event
     return filterBySpeaker(sorted, selectedSpeakers);
   }, [schedules, isUpcoming, selectedTracks, selectedSpaces, selectedSpeakers]);
 
-  const groupingSchedules = (allSchedules: ScheduleDetailstype[], groupedSchedules: Record<string, ScheduleDetailstype[]>) => {
-    allSchedules.forEach((schedule) => {
-      let isFirstEvent = true;
-      let date = stringToDateObject(schedule.start_date as string);
-      const end_date = stringToDateObject(schedule.real_end_date as string);
-      const frequency = schedule.schedule_frequency;
-
-      do {
-        const formattedDate = date.toLocaleDateString('en-US', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
-        });
-
-        const newSchedule = {
-          ...schedule,
-          repeating: !isFirstEvent && (frequency === 'everyday' || frequency === 'weekly'),
-        } as ScheduleDetailstype & { repeating: boolean };
-
-        if (!groupedSchedules[formattedDate]) {
-          groupedSchedules[formattedDate] = [];
-        }
-
-        groupedSchedules[formattedDate].push(newSchedule);
-
-        if (frequency === 'everyday') {
-          date.setDate(date.getDate() + 1);
-        } else if (frequency === 'weekly') {
-          date.setDate(date.getDate() + 7);
-        } else {
-          break;
-        }
-
-        isFirstEvent = false;
-      } while (date <= end_date);
-    });
-  };
   let groupedSchedules: Record<string, ScheduleDetailstype[]> = {};
   groupingSchedules(optimizedSortedSchedules, groupedSchedules);
 
