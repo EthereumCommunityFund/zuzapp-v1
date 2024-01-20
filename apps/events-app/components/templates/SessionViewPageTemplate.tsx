@@ -14,7 +14,6 @@ import { DropDownMenu } from '../ui/DropDownMenu';
 import SwitchButton from '../ui/buttons/SwitchButton';
 import Button from '@/components/ui/buttons/Button';
 import ToggleSwitch from '../commons/ToggleSwitch';
-// import CalendarGrid from '../commons/CalendarGrid';
 import { QueryClient, useQuery } from 'react-query';
 import { EventSpaceDetailsType } from '@/types';
 import fetchSchedulesByEvenSpaceId from '@/services/fetchScheduleByEventSpace';
