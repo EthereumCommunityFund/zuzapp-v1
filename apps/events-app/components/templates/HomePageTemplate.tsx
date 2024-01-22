@@ -70,9 +70,6 @@ export default function HomePageTemplate() {
     ['publishedEventSpaces'], // Query key
     () => fetchPublishedEventSpaces({ page: 1, limit: 10 }),
     {
-      // onSuccess: (data) => {
-      //   setEventSpaces(data);
-      // },
       onError: (error) => {
         console.log(error, 'error loading events');
         toast({
@@ -81,14 +78,13 @@ export default function HomePageTemplate() {
           variant: 'destructive',
         });
       },
-      staleTime: Infinity, // 5 minutes
+      staleTime: 1000 * 60 * 5,
       refetchOnWindowFocus: false,
-      cacheTime: 1000 * 60 * 60 * 24, // 24 hours
+      cacheTime: 1000 * 60 * 5,
     }
   );
 
-  const fetchEventSpaces = async (id: string) => {
-    // const response: EventSpaceDetailsType[] = await fetchPublishedEventSpaces({ page: 1, limit: 10 });
+  const fetchTestEventSpace = async (id: string) => {
     const testSpace: EventSpaceDetailsType = await fetchEventSpaceById(id);
     setTestEventSpace(testSpace);
   };
@@ -96,7 +92,7 @@ export default function HomePageTemplate() {
   useEffect(() => {
     const hostUrl = window.location.origin;
     setHostUrl(hostUrl);
-    fetchEventSpaces(testEventId);
+    fetchTestEventSpace(testEventId);
   }, []);
 
   function formatDate(dateString: string | number | Date) {
