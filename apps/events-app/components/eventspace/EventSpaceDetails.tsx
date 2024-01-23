@@ -523,7 +523,7 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace, handl
                     </div>
                   </div>
                   <hr className="border border-borderPrimary" />
-                  <div className="flex flex-col gap-8">
+                  <div className="flex flex-col gap-8" ref={sectionRefs[4]}>
                     <div className="flex flex-col gap-2">
                       <Label className="text-2xl font-bold text-white/70">Main Address</Label>
                       <Label className="text-sm text-white/70">Enter the details of the main location for the event</Label>
@@ -629,9 +629,9 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace, handl
               </div>
             </form>
           </Form>
-          <div className="w-full" ref={sectionRefs[4]}>
+          {/* <div className="w-full" ref={sectionRefs[4]}>
             <EventLocation />
-          </div>
+          </div> */}
         </div>
         <Dialog open={detailsUpdated} onOpenChange={(open) => setDialog(open)}>
           <DialogContent className="sm:max-w-[525px] h-auto rounded-2xl">
@@ -639,11 +639,11 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace, handl
               <DialogTitle>Event Details Saved</DialogTitle>
             </DialogHeader>
             <div className="text-sm font-light text-white/70 my-2">You can edit event space details in your dashboard.</div>
-            <div className="font-normal text-white my-2">Now go to Tracks and start building your schedules</div>
+            {/* <div className="font-normal text-white my-2">Now go to Tracks and start building your schedules</div> */}
             <DialogFooter>
-              <Link href={`/dashboard/events/space/tracks?event_space_id=${event_space_id}`}>
+              <Link href={`/dashboard/events/myspaces?event_space_id=${event_space_id}`}>
                 <Button variant="primary" className="bg-[#67DBFF]/20 text-[#67DBFF] text-lg w-full justify-center rounded-full" leftIcon={HiArrowRight}>
-                  Go to tracks
+                  Back to Spaces
                 </Button>
               </Link>
             </DialogFooter>

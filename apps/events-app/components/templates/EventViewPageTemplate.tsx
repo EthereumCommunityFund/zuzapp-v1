@@ -98,8 +98,9 @@ export default function EventViewPageTemplate({ eventSpace, user }: { eventSpace
             {' '}
             {/* About */}
             <h3 className="text-lg font-bold text-white/70">ABOUT THIS EVENT</h3>
-            <div className={`md:h-auto overflow-hidden text-gray-300 text-md`} dangerouslySetInnerHTML={{ __html: `${description.slice(0, 350)}...` }} />
-            <Dialog>
+            {/* <div className={`md:h-auto overflow-hidden text-gray-300 text-md`} dangerouslySetInnerHTML={{ __html: `${description.slice(0, 350)}...` }} /> */}
+            <RenderHTMLString height="500" htmlString={description} />
+            {/* <Dialog>
               <DialogTrigger asChild>
                 <Button variant="quiet" size="lg" className="rounded-2xl inline-block text-white/70 font-bold hover:text-white">
                   Read Description
@@ -119,7 +120,7 @@ export default function EventViewPageTemplate({ eventSpace, user }: { eventSpace
                   </Button>
                 </DialogPrimitive.Close>
               </DialogContent>
-            </Dialog>
+            </Dialog> */}
           </div>
         </div>
         <div className="lg:w-1/4 md:w-full flex flex-col px-5 lg:px-10 py-5 gap-8 lg:fixed lg:right-0">

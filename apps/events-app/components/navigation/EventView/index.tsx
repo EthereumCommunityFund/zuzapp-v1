@@ -67,7 +67,7 @@ export default function EventViewNavigation() {
             <Button size="lg" variant="quiet-SM" className="lg:mb-8 md:mb-4 sm:mb-2 opacity-80 hover:bg-white/10 rounded-3xl mt-2" leftIcon={ArrowCircleLeft} onClick={handleBackToEvents}>
               <span className="text-sm opacity-70">Back to Events</span>
             </Button>
-            <div className="flex flex-col gap-3.5 lg:pb-10 md:pb-1 mt-[-15px]">
+            {/* <div className="flex flex-col gap-3.5 lg:pb-10 md:pb-1 mt-[-15px]">
               <span className="font-normal text-sm md:hidden lg:contents sm:hidden">Navigate Event</span>
               <ul className="space-y-5 lg:block flex gap-2.5 lg:gap-0 items-end overflow-x-auto">
                 {routes.map(
@@ -87,7 +87,7 @@ export default function EventViewNavigation() {
                     )
                 )}
               </ul>
-            </div>
+            </div> */}
             {isAuthenticated ? (
               router.pathname.includes('/dashboard/eventview/about') &&
               eventSpace?.creator_id === user.id && (
