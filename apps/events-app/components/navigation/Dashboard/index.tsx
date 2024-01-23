@@ -7,11 +7,19 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useGlobalContext } from "@/context/GlobalContext";
 import Button from "@/components/ui/buttons/Button";
+import IconButton from "@/components/ui/buttons/IconButton";
 import { Label } from "@/components/ui/label";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import * as DialogPrimitive from '@radix-ui/react-dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
-import ReactMarkdown from 'react-markdown';
+import ReactMarkdown from "react-markdown";
 import RenderHTMLString from "@/components/ui/RenderHTMLString";
 
 // Create a navigation side menu for the dashboard.
@@ -19,7 +27,7 @@ export default function DashboardNavigation() {
   const routes = navBarRoutes;
   const [dashboardOpen, setDashboardOpen] = React.useState(false);
   const { isAuthenticated, user } = useGlobalContext();
-  const [markdownContent, setMarkdownContent] = useState<string>('');
+  const [markdownContent, setMarkdownContent] = useState<string>("");
   const url = `/zuzalu/Zuzalu_Mission.md`;
   const zuzaluLink = `https://zuzalu.notion.site/Zuzalu-s-Mission-and-Vision-28d0dfaf60c043ab8bb1943f493a225f`;
 
@@ -56,30 +64,69 @@ export default function DashboardNavigation() {
       </div>
       {/* Overlay that can close the dashboard menu */}
       <div
-        className={` hidden fixed inset-0 bg-black/10 z-10 ${dashboardOpen ? "block" : "hidden"
-          }`}
+        className={` hidden fixed inset-0 bg-black/10 z-10 ${
+          dashboardOpen ? "block" : "hidden"
+        }`}
         onClick={handleClick}
       ></div>
       <nav
-        className={`dashboard-menu min-w-[260px] z-10 fixed flex flex-col h-screen border-r border-r-gray-800 bg-[#2F3232] py-10 px-6 transition-transform duration-300 ${dashboardOpen && "open"
-          }`}
+        className={`dashboard-menu min-w-[260px] z-10 fixed flex flex-col h-screen border-r border-r-gray-800 bg-[#2F3232] py-10 px-6 transition-transform duration-300 ${
+          dashboardOpen && "open"
+        }`}
       >
         <div className="flex-1 flex flex-col">
           <div className="mt-10 flex-1">
-            <ul className="space-y-3">
+            <ul className="space-y-1">
               {routes.map((route, index) => (
                 <li
                   key={route.path}
-                  className={`flex items-center text-sm transition duration-200 space-x-2 py-2 font-semibold px-3 hover:bg-white/20 rounded-3xl ${router.pathname === route.path ? "bg-white/20" : "opacity-60"
-                    }`}
+                  className={`flex items-center text-sm transition duration-200 space-x-2 py-2 font-semibold px-3 hover:bg-white/20 rounded-xl ${
+                    router.pathname === route.path
+                      ? "bg-white/20"
+                      : "opacity-60"
+                  }`}
                 >
                   {route.icon && <route.icon size={30} />}
                   <Link href={route.path} className="w-full ">
                     {route.title}
                   </Link>
+                  <span className="icon_end">
+                    {route.icon_end && <route.icon_end size={24} />}
+                  </span>
                 </li>
               ))}
             </ul>
+
+            <div className="community_items">
+              <div
+                className="menu_cta"
+                onClick={() => window.open(zuzaluLink, "_blank")}
+              >
+                <img src="/images/about_zuzalu.svg" />
+                <span>About Zuzalu</span>
+              </div>
+              <div
+                className="menu_cta"
+                onClick={() =>
+                  window.open("https://www.guilded.gg/Zuzalu/blog", "_blank")
+                }
+              >
+                <img src="/images/guilded_logo.svg" />
+                <span>Community Blog</span>
+              </div>
+              <div
+                className="menu_cta"
+                onClick={() =>
+                  window.open(
+                    "https://www.guilded.gg/Zuzalu/blog/Announcements",
+                    "_blank"
+                  )
+                }
+              >
+                <img src="/images/guilded_logo.svg" />
+                <span>Announcements</span>
+              </div>
+            </div>
           </div>
           {/* Profile navigation */}
           {isAuthenticated && (
@@ -98,10 +145,42 @@ export default function DashboardNavigation() {
               </li>
             </ul>
           )}
-          <div className="mt-5 py-[15px] px-[13px] gap-3.5 flex flex-col rounded-2xl bg-[#2B2D2D] w-[240px]">
+          {/* <div className="mt-5 py-[15px] px-[13px] gap-3.5 flex flex-col rounded-2xl bg-[#2B2D2D] w-[240px]">
             <Label className="text-white text-xl">Zuzalu</Label>
             <Label className="text-white/70 text-xs font-normal">Foster a global network of communities to advance humanity by creating playgrounds at the intersection of free and open technology, science, heath and social innovation</Label>
-            <Button variant='quiet' className="rounded-2xl tracking-wide justify-center" onClick={() => window.open(zuzaluLink, '_blank')}>Learn About Zuzalu</Button>
+            <Button variant='quiet' className="rounded-2xl tracking-wide justify-center" onClick={() => window.open(zuzaluLink, '_blank')}>Learn About Zuzalu</Button> */}
+          <div className="mt-5 py-[15px] px-[13px] gap-3.5 flex flex-col rounded-2xl bg-[#2C2D2D] w-[240px]">
+            <Label className="text-white text-xl">Collaborate</Label>
+            <Label className="text-white/70 text-xs font-normal">
+              Take part in building Zuzalu tools and discussions!
+            </Label>
+
+            <Label className="text-white text-l border_top">
+              Build With Us
+            </Label>
+            <div
+              className="menu_cta"
+              onClick={() =>
+                window.open(
+                  "https://www.guilded.gg/r/zzME2L6mXR?i=dVbg9yzd",
+                  "_blank"
+                )
+              }
+            >
+              <img src="/images/guilded_logo.svg" />
+              <span>Join Guilded</span>
+            </div>
+
+            <Label className="text-white text-l">
+              Participate in Discussions:
+            </Label>
+            <div
+              className="menu_cta"
+              onClick={() => window.open("https://www.zuzagora.com/", "_blank")}
+            >
+              <img src="/images/zuzagora.svg" />
+              <span>Zuzagora Discourse</span>
+            </div>
             {/* <Dialog>
               <DialogTrigger asChild>
                 <Button variant='quiet' className="rounded-2xl tracking-wide justify-center" >Learn About Zuzalu</Button>
@@ -124,7 +203,7 @@ export default function DashboardNavigation() {
             </Dialog> */}
           </div>
         </div>
-      </nav >
+      </nav>
     </>
   );
 }
