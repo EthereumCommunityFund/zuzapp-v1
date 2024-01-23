@@ -11,19 +11,19 @@ interface TabButtons {
 }
 
 export const tabButtonLists: TabButtons[] = [
-  {
-    name: 'Dashboard',
-    icon: BiSolidLayout,
-    path: '/dashboard/events/space/dashboard',
-  },
-  {
-    name: 'Tracks',
-    icon: HiMap,
-    path: '/dashboard/events/space/tracks',
-  },
-  {
-    name: 'Sessions',
-    icon: BsFillTicketFill,
-    path: '/dashboard/events/space/schedules',
-  },
+  // {
+  //   name: 'Dashboard',
+  //   icon: BiSolidLayout,
+  //   path: '/dashboard/events/space/dashboard',
+  // },
+  // {
+  //   name: 'Tracks',
+  //   icon: HiMap,
+  //   path: '/dashboard/events/space/tracks',
+  // },
+  // {
+  //   name: 'Sessions',
+  //   icon: BsFillTicketFill,
+  //   path: '/dashboard/events/space/schedules',
+  // },
 ];

@@ -123,12 +123,12 @@ export default function DashboardHeader() {
           )}
         </div>
       </header>
-      {router.pathname === `/dashboard/home` && isAlert && (
+      {/* {router.pathname === `/dashboard/home` && isAlert && (
         <div className="flex justify-between w-full bg-[#7D432C] hover:bg-[#7D432C] text-[#FF956B] items-center">
           <Label className="md:px-2 px-1 sm:py-2 lg:py-0">Note: The app is still in Beta. Maintenance happens IST 2:00am to 6:00am. Thank you!</Label>
           <IconButton variant="ghost" className="text-[#FF956B]" icon={XCircle} onClick={handleAlert} />
         </div>
-      )}
+      )} */}
     </div>
   );
 }
