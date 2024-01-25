@@ -1,16 +1,19 @@
 import { Loader } from '@/components/ui/Loader';
 import { Database } from '@/database.types';
+import { useGuildedMembers } from '@/hooks/useGuildedMembers';
 
 import contributorsData from '@/pages/dashboard/contributors.json';
+import axiosInstance from '@/src/axiosInstance';
 import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
 
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { set } from 'nprogress';
 
-export default function UserProfile() {
+export default function About() {
   const router = useRouter();
 
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { guildedMembers, isLoading, isError } = useGuildedMembers();
+  console.log(guildedMembers, 'guildedMembers');
 
   if (isLoading) {
     return <Loader />;
