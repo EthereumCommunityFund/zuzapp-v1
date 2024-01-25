@@ -17,6 +17,12 @@ import { LucideIcon } from "lucide-react";
 import { HiArrowUpRight } from "react-icons/hi2";
 import { GoArrowUpRight } from "react-icons/go";
 
+interface RouteOption {
+  path: string;
+  title: string;
+  img: string;
+}
+
 interface Routes {
   name?: string;
   tabIndex?: SubHeaderTabIndex;
@@ -24,6 +30,7 @@ interface Routes {
   title: string;
   icon?: IconType | LucideIcon;
   icon_end?: IconType | LucideIcon;
+  options?: RouteOption[];
 }
 export const eventRoutes: Routes[] = [
   {
@@ -106,6 +113,23 @@ export const navBarRoutes: Routes[] = [
     title: "Community",
     icon: HiSpeakerphone,
     icon_end: HiChevronDown,
+    options: [
+      {
+        path: "/dashboard/about",
+        title: "About Zuzalu",
+        img: "/images/about_zuzalu.svg",
+      },
+      {
+        path: "/dashboard/resources/events",
+        title: "Community Blog",
+        img: "/images/guilded_logo.svg",
+      },
+      {
+        path: "/dashboard/resources/events",
+        title: "Announcements",
+        img: "/images/guilded_logo.svg",
+      },
+    ],
   },
 ];
 

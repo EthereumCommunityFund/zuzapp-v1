@@ -1,0 +1,1204 @@
+[
+  {
+    "name": "0xGarfield2568",
+    "image": "/images/contributors_assets/avatars/0xGarfield.svg",
+    "roles": [
+      {
+        "title": "Member",
+        "img": "/images/contributors_assets/members_icon.svg"
+      }
+    ]
+  },
+  {
+    "name": "0xjei",
+    "image": "/images/contributors_assets/avatars/0xjei.svg",
+    "roles": [
+      {
+        "title": "Member",
+        "img": "/images/contributors_assets/members_icon.svg"
+      }
+    ]
+  },
+  {
+    "name": "0xMilica",
+    "image": "/images/contributors_assets/avatars/0xmilica.svg",
+    "roles": [
+      {
+        "title": "Member",
+        "img": "/images/contributors_assets/members_icon.svg"
+      },
+      {
+        "title": "ZK",
+        "img": "/images/contributors_assets/zk.svg"
+      },
+      { "title": "Privacy", "img": "/images/contributors_assets/privacy.svg" }
+    ]
+  },
+  {
+    "name": "17",
+    "image": "/images/contributors_assets/avatars/17.svg",
+    "roles": [
+      {
+        "title": "Contributor",
+        "img": "/images/contributors_assets/contributor_icon.svg"
+      },
+      { "title": "Research", "img": "/images/contributors_assets/research.svg" }
+    ]
+  },
+  {
+    "name": "afra",
+    "image": "/images/contributors_assets/avatars/afra.svg",
+    "roles": [
+      {
+        "title": "Member",
+        "img": "/images/contributors_assets/members_icon.svg"
+      }
+    ]
+  },
+  {
+    "name": "Alex",
+    "image": "/images/contributors_assets/avatars/Alex.svg",
+    "roles": [
+      {
+        "title": "Contributor",
+        "img": "/images/contributors_assets/contributor_icon.svg"
+      },
+      {
+        "title": "Akasha",
+        "img": "/images/contributors_assets/akasha.svg"
+      },
+      { "title": "Project", "img": "/images/contributors_assets/project.svg" }
+    ]
+  },
+  {
+    "name": "alextnetto",
+    "image": "/images/contributors_assets/avatars/alextnetto.svg",
+    "roles": [
+      {
+        "title": "Member",
+        "img": "/images/contributors_assets/members_icon.svg"
+      }
+    ]
+  },
+  {
+    "name": "alyria",
+    "image": "/images/contributors_assets/avatars/alyria.svg",
+    "roles": [
+      {
+        "title": "Contributor",
+        "img": "/images/contributors_assets/contributor_icon.svg"
+      },
+      {
+        "title": "Operations",
+        "img": "/images/contributors_assets/operations.svg"
+      }
+    ]
+  },
+  {
+    "name": "Amber",
+    "image": "/images/contributors_assets/avatars/Amber.svg",
+    "roles": [
+      {
+        "title": "Contributor",
+        "img": "/images/contributors_assets/contributor_icon.svg"
+      },
+      { "title": "Research", "img": "/images/contributors_assets/research.svg" }
+    ]
+  },
+  {
+    "name": "Amir Mehrbakhsh",
+    "image": "/images/contributors_assets/avatars/Amir.svg",
+    "roles": [
+      {
+        "title": "Member",
+        "img": "/images/contributors_assets/members_icon.svg"
+      }
+    ]
+  },
+  {
+    "name": "AnneJiang",
+    "image": "/images/contributors_assets/avatars/AnneJiang.svg",
+    "roles": [
+      {
+        "title": "Contributor",
+        "img": "/images/contributors_assets/contributor_icon.svg"
+      }
+    ]
+  },
+  {
+    "name": "Axel",
+    "image": "/images/contributors_assets/avatars/Axel.svg",
+    "roles": [
+      {
+        "title": "Member",
+        "img": "/images/contributors_assets/members_icon.svg"
+      }
+    ]
+  },
+  {
+    "name": "beth",
+    "image": "/images/contributors_assets/avatars/beth.svg",
+    "roles": [
+      {
+        "title": "Funding The Commons",
+        "img": "/images/contributors_assets/funding_commons.svg"
+      },
+      { "title": "Project", "img": "/images/contributors_assets/project.svg" }
+    ]
+  },
+  {
+    "name": "Bharat",
+    "image": "/images/contributors_assets/avatars/Bharat.svg",
+    "roles": [
+      {
+        "title": "Member",
+        "img": "/images/contributors_assets/members_icon.svg"
+      }
+    ]
+  },
+  {
+    "name": "brucexu",
+    "image": "/images/contributors_assets/avatars/brucexu.svg",
+    "roles": [
+      {
+        "title": "Contributor",
+        "img": "/images/contributors_assets/contributor_icon.svg"
+      },
+      {
+        "title": "Member",
+        "img": "/images/contributors_assets/members_icon.svg"
+      },
+
+      {
+        "title": "Sustainability",
+        "img": "/images/contributors_assets/sustainability.svg"
+      },
+      { "title": "more", "img": "/images/contributors_assets/1.svg" }
+    ]
+  },
+  {
+    "name": "Burns",
+    "image": "/images/contributors_assets/avatars/Burns.svg",
+    "roles": [
+      {
+        "title": "Contributor",
+        "img": "/images/contributors_assets/contributor_icon.svg"
+      },
+      { "title": "Zuzagora", "img": "/images/contributors_assets/Zuzagora.svg" }
+    ]
+  },
+  {
+    "name": "Carlos",
+    "image": "/images/contributors_assets/avatars/Carlos.svg",
+    "roles": [
+      {
+        "title": "Member",
+        "img": "/images/contributors_assets/members_icon.svg"
+      }
+    ]
+  },
+  {
+    "name": "Cassie",
+    "image": "/images/contributors_assets/avatars/Cassie.svg",
+    "roles": [
+      {
+        "title": "Tripsha",
+        "img": "/images/contributors_assets/Tripsha.svg"
+      },
+      { "title": "Project", "img": "/images/contributors_assets/Project.svg" }
+    ]
+  },
+  {
+    "name": "chance",
+    "image": "/images/contributors_assets/avatars/chance.svg",
+    "roles": [
+      {
+        "title": "Member",
+        "img": "/images/contributors_assets/members_icon.svg"
+      }
+    ]
+  },
+  {
+    "name": "Charleslev",
+    "image": "/images/contributors_assets/avatars/Charleslev.svg",
+    "roles": [
+      {
+        "title": "Orbis",
+        "img": "/images/contributors_assets/orbis.svg"
+      },
+      { "title": "Project", "img": "/images/contributors_assets/Project.svg" }
+    ]
+  },
+  {
+    "name": "cheeky-gorilla",
+    "image": "/images/contributors_assets/avatars/cheeky-gorilla.svg",
+    "roles": [
+      {
+        "title": "Contributor",
+        "img": "/images/contributors_assets/contributor_icon.svg"
+      },
+      {
+        "title": "Project Guild",
+        "img": "/images/contributors_assets/guild.svg"
+      },
+      { "title": "Project", "img": "/images/contributors_assets/Project.svg" },
+      { "title": "more", "img": "/images/contributors_assets/2.svg" }
+    ]
+  },
+  {
+    "name": "Claire",
+    "image": "/images/contributors_assets/avatars/Claire.svg",
+    "roles": [
+      {
+        "title": "EthSign",
+        "img": "/images/contributors_assets/ethsign.svg"
+      },
+      { "title": "Project", "img": "/images/contributors_assets/Project.svg" }
+    ]
+  },
+  {
+    "name": "dan.kakarot",
+    "image": "/images/contributors_assets/avatars/dan_kakarot.svg",
+    "roles": [
+      {
+        "title": "Contributor",
+        "img": "/images/contributors_assets/contributor_icon.svg"
+      }
+    ]
+  },
+  {
+    "name": "daviK",
+    "image": "/images/contributors_assets/avatars/daviK.svg",
+    "roles": [
+      {
+        "title": "Contributor",
+        "img": "/images/contributors_assets/contributor_icon.svg"
+      },
+      { "title": "Development", "img": "/images/contributors_assets/dev.svg" },
+      { "title": "Zuzapp", "img": "/images/contributors_assets/Zuzapp.svg" },
+      { "title": "more", "img": "/images/contributors_assets/3.svg" }
+    ]
+  },
+  {
+    "name": "dikkexander",
+    "image": "/images/contributors_assets/avatars/dikkexander.svg",
+    "roles": [
+      {
+        "title": "StreamEth",
+        "img": "/images/contributors_assets/Stream_eth.svg"
+      },
+      { "title": "Project", "img": "/images/contributors_assets/Project.svg" }
+    ]
+  },
+  {
+    "name": "Discuss Bot",
+    "image": "/images/contributors_assets/avatars/Discuss_bot.svg",
+    "roles": [{ "title": "Bot", "img": "/images/contributors_assets/Bot.svg" }]
+  },
+  {
+    "name": "drivenfast",
+    "image": "/images/contributors_assets/avatars/drivenfast.svg",
+    "roles": [
+      {
+        "title": "Contributor",
+        "img": "/images/contributors_assets/contributor_icon.svg"
+      },
+      {
+        "title": "Product",
+        "img": "/images/contributors_assets/Product.svg"
+      },
+
+      {
+        "title": "Operations",
+        "img": "/images/contributors_assets/Operations.svg"
+      },
+      { "title": "more", "img": "/images/contributors_assets/14.svg" }
+    ]
+  },
+  {
+    "name": "eggy",
+    "image": "/images/contributors_assets/avatars/eggy.svg",
+    "roles": [
+      {
+        "title": "Contributor",
+        "img": "/images/contributors_assets/contributor_icon.svg"
+      },
+      {
+        "title": "Social Layer",
+        "img": "/images/contributors_assets/social_layer.svg"
+      },
+
+      { "title": "Project", "img": "/images/contributors_assets/Project.svg" },
+      { "title": "more", "img": "/images/contributors_assets/5.svg" }
+    ]
+  },
+  {
+    "name": "Ellen",
+    "image": "/images/contributors_assets/avatars/Ellen.svg",
+    "roles": [
+      {
+        "title": "Member",
+        "img": "/images/contributors_assets/members_icon.svg"
+      }
+    ]
+  },
+  {
+    "name": "Enzo",
+    "image": "/images/contributors_assets/avatars/Enzo.svg",
+    "roles": [
+      {
+        "title": "Member",
+        "img": "/images/contributors_assets/members_icon.svg"
+      }
+    ]
+  },
+  {
+    "name": "Exporting Bot",
+    "image": "/images/contributors_assets/avatars/Exportingbot.svg",
+    "roles": [
+      {
+        "title": "Bot",
+        "img": "/images/contributors_assets/bot.svg"
+      }
+    ]
+  },
+  {
+    "name": "France_zkPass",
+    "image": "/images/contributors_assets/avatars/France_zkPass.svg",
+    "roles": [
+      {
+        "title": "ZkPass",
+        "img": "/images/contributors_assets/ZkPass.svg"
+      },
+      { "title": "Project", "img": "/images/contributors_assets/Project.svg" }
+    ]
+  },
+  {
+    "name": "Fravins",
+    "image": "/images/contributors_assets/avatars/Fravins.svg",
+    "roles": [
+      {
+        "title": "Sewer",
+        "img": "/images/contributors_assets/Sewer.svg"
+      },
+      { "title": "Project", "img": "/images/contributors_assets/Project.svg" },
+      {
+        "title": "Member",
+        "img": "/images/contributors_assets/members_icon.svg"
+      }
+    ]
+  },
+  {
+    "name": "Gabriele",
+    "image": "/images/contributors_assets/avatars/Gabrielle.svg",
+    "roles": [
+      {
+        "title": "Liminal",
+        "img": "/images/contributors_assets/Liminal.svg"
+      },
+      { "title": "Project", "img": "/images/contributors_assets/Project.svg" },
+      {
+        "title": "Member",
+        "img": "/images/contributors_assets/members_icon.svg"
+      }
+    ]
+  },
+  {
+    "name": "Gary Sheng",
+    "image": "/images/contributors_assets/avatars/Garysheng.svg",
+    "roles": [
+      {
+        "title": "Member",
+        "img": "/images/contributors_assets/members_icon.svg"
+      }
+    ]
+  },
+  {
+    "name": "Gordon B",
+    "image": "/images/contributors_assets/avatars/Gordonb.svg",
+    "roles": [
+      {
+        "title": "Contributor",
+        "img": "/images/contributors_assets/contributor_icon.svg"
+      }
+    ]
+  },
+  {
+    "name": "Guo",
+    "image": "/images/contributors_assets/avatars/Guo.svg",
+    "roles": [
+      {
+        "title": "Matters Lab",
+        "img": "/images/contributors_assets/matterslab.svg"
+      },
+      { "title": "Project", "img": "/images/contributors_assets/Project.svg" }
+    ]
+  },
+  {
+    "name": "Haotian",
+    "image": "/images/contributors_assets/avatars/Haotian.svg",
+    "roles": [
+      {
+        "title": "Member",
+        "img": "/images/contributors_assets/members_icon.svg"
+      }
+    ]
+  },
+  {
+    "name": "helloworld",
+    "image": "/images/contributors_assets/avatars/helloworld.svg",
+    "roles": [
+      {
+        "title": "Member",
+        "img": "/images/contributors_assets/members_icon.svg"
+      },
+      {
+        "title": "ZK",
+        "img": "/images/contributors_assets/zk.svg"
+      },
+      { "title": "FOSS", "img": "/images/contributors_assets/foss.svg" },
+      { "title": "more", "img": "/images/contributors_assets/1.svg" }
+    ]
+  },
+  {
+    "name": "ichub",
+    "image": "/images/contributors_assets/avatars/ichub.svg",
+    "roles": [
+      {
+        "title": "Contributor",
+        "img": "/images/contributors_assets/contributor_icon.svg"
+      },
+      {
+        "title": "PCD",
+        "img": "/images/contributors_assets/pcd.svg"
+      },
+
+      { "title": "Project", "img": "/images/contributors_assets/Project.svg" }
+    ]
+  },
+  {
+    "name": "Jack",
+    "image": "/images/contributors_assets/avatars/Jack.svg",
+    "roles": [
+      {
+        "title": "EthSign",
+        "img": "/images/contributors_assets/ethsign.svg"
+      },
+      {
+        "title": "Project",
+        "img": "/images/contributors_assets/project.svg"
+      },
+      { "title": "ZK", "img": "/images/contributors_assets/ZK.svg" }
+    ]
+  },
+  {
+    "name": "JanineLeger",
+    "image": "/images/contributors_assets/avatars/JanineLeger.svg",
+    "roles": [
+      {
+        "title": "Contributor",
+        "img": "/images/contributors_assets/contributor_icon.svg"
+      }
+    ]
+  },
+  {
+    "name": "Jason",
+    "image": "/images/contributors_assets/avatars/Jason.svg",
+    "roles": [
+      {
+        "title": "Member",
+        "img": "/images/contributors_assets/members_icon.svg"
+      }
+    ]
+  },
+  {
+    "name": "JasonJiao",
+    "image": "/images/contributors_assets/avatars/JasonJiao.svg",
+    "roles": [
+      {
+        "title": "Member",
+        "img": "/images/contributors_assets/members_icon.svg"
+      },
+      { "title": "Voting", "img": "/images/contributors_assets/Voting.svg" }
+    ]
+  },
+  {
+    "name": "jesusgatos",
+    "image": "/images/contributors_assets/avatars/jesusgatos.svg",
+    "roles": [
+      {
+        "title": "Member",
+        "img": "/images/contributors_assets/members_icon.svg"
+      }
+    ]
+  },
+  {
+    "name": "jiang",
+    "image": "/images/contributors_assets/avatars/jiang.svg",
+    "roles": [
+      {
+        "title": "Contributor",
+        "img": "/images/contributors_assets/contributor_icon.svg"
+      },
+      {
+        "title": "Social Layer",
+        "img": "/images/contributors_assets/social_layer.svg"
+      },
+
+      { "title": "Project", "img": "/images/contributors_assets/Project.svg" }
+    ]
+  },
+  {
+    "name": "Johnson",
+    "image": "/images/contributors_assets/avatars/Johnson.svg",
+    "roles": [
+      {
+        "title": "Member",
+        "img": "/images/contributors_assets/members_icon.svg"
+      },
+      {
+        "title": "Socials/Messaging",
+        "img": "/images/contributors_assets/socials.svg"
+      }
+    ]
+  },
+  {
+    "name": "j-yw",
+    "image": "/images/contributors_assets/avatars/jwy.svg",
+    "roles": [
+      {
+        "title": "Member",
+        "img": "/images/contributors_assets/members_icon.svg"
+      }
+    ]
+  },
+  {
+    "name": "Karabo",
+    "image": "/images/contributors_assets/avatars/Karabo.svg",
+    "roles": [
+      {
+        "title": "Contributor",
+        "img": "/images/contributors_assets/contributor_icon.svg"
+      },
+      {
+        "title": "Development",
+        "img": "/images/contributors_assets/dev.svg"
+      },
+
+      {
+        "title": "Carbonvote",
+        "img": "/images/contributors_assets/carbon.svg"
+      },
+      { "title": "more", "img": "/images/contributors_assets/1.svg" }
+    ]
+  },
+  {
+    "name": "Kashushu",
+    "image": "/images/contributors_assets/avatars/Kashushu.svg",
+    "roles": [
+      {
+        "title": "Contributor",
+        "img": "/images/contributors_assets/contributor_icon.svg"
+      },
+      { "title": "Research", "img": "/images/contributors_assets/research.svg" }
+    ]
+  },
+  {
+    "name": "Kelly",
+    "image": "/images/contributors_assets/avatars/Kelly.svg",
+    "roles": [
+      {
+        "title": "Contributor",
+        "img": "/images/contributors_assets/contributor_icon.svg"
+      },
+      {
+        "title": "Communications",
+        "img": "/images/contributors_assets/comms.svg"
+      },
+
+      { "title": "Zuzapp", "img": "/images/contributors_assets/zuzapp.svg" },
+      { "title": "more", "img": "/images/contributors_assets/4.svg" }
+    ]
+  },
+  {
+    "name": "kiba",
+    "image": "/images/contributors_assets/avatars/kiba.svg",
+    "roles": [
+      {
+        "title": "Member",
+        "img": "/images/contributors_assets/members_icon.svg"
+      }
+    ]
+  },
+  {
+    "name": "kudibos.eth",
+    "image": "/images/contributors_assets/avatars/kudibos.svg",
+    "roles": [
+      {
+        "title": "Member",
+        "img": "/images/contributors_assets/members_icon.svg"
+      }
+    ]
+  },
+  {
+    "name": "Laurence Ion",
+    "image": "/images/contributors_assets/avatars/Laurence_ion.svg",
+    "roles": [
+      {
+        "title": "VitaDAO",
+        "img": "/images/contributors_assets/vitadao.svg"
+      },
+      { "title": "Project", "img": "/images/contributors_assets/Project.svg" }
+    ]
+  },
+  {
+    "name": "leomanfree",
+    "image": "/images/contributors_assets/avatars/leomanfree.svg",
+    "roles": [
+      {
+        "title": "Member",
+        "img": "/images/contributors_assets/members_icon.svg"
+      }
+    ]
+  },
+  {
+    "name": "LinkGuan",
+    "image": "/images/contributors_assets/avatars/LinkGuan.svg",
+    "roles": [
+      {
+        "title": "Contributor",
+        "img": "/images/contributors_assets/contributor_icon.svg"
+      }
+    ]
+  },
+  {
+    "name": "Marius",
+    "image": "/images/contributors_assets/avatars/Marius.svg",
+    "roles": [
+      {
+        "title": "Contributor",
+        "img": "/images/contributors_assets/contributor_icon.svg"
+      },
+      {
+        "title": "Akasha",
+        "img": "/images/contributors_assets/akasha.svg"
+      },
+
+      { "title": "Project", "img": "/images/contributors_assets/project.svg" }
+    ]
+  },
+  {
+    "name": "Martin E AKASHA",
+    "image": "/images/contributors_assets/avatars/Martin.svg",
+    "roles": [
+      {
+        "title": "Contributor",
+        "img": "/images/contributors_assets/contributor_icon.svg"
+      },
+      {
+        "title": "Akasha",
+        "img": "/images/contributors_assets/akasha.svg"
+      },
+
+      { "title": "Project", "img": "/images/contributors_assets/project.svg" }
+    ]
+  },
+  {
+    "name": "minsheng",
+    "image": "/images/contributors_assets/avatars/minsheng.svg",
+    "roles": [
+      {
+        "title": "Contributor",
+        "img": "/images/contributors_assets/contributor_icon.svg"
+      },
+      {
+        "title": "Paideia",
+        "img": "/images/contributors_assets/Paideia.svg"
+      },
+
+      { "title": "Project", "img": "/images/contributors_assets/project.svg" }
+    ]
+  },
+  {
+    "name": "nata1iel",
+    "image": "/images/contributors_assets/avatars/nata1iel.svg",
+    "roles": [
+      {
+        "title": "Member",
+        "img": "/images/contributors_assets/members_icon.svg"
+      }
+    ]
+  },
+  {
+    "name": "Noah Chon Lee",
+    "image": "/images/contributors_assets/avatars/Noahchonlee.svg",
+    "roles": [
+      {
+        "title": "Contributor",
+        "img": "/images/contributors_assets/contributor_icon.svg"
+      },
+      {
+        "title": "ViaPrize",
+        "img": "/images/contributors_assets/viaprize.svg"
+      },
+
+      { "title": "Project", "img": "/images/contributors_assets/project.svg" },
+      { "title": "more", "img": "/images/contributors_assets/3.svg" }
+    ]
+  },
+  {
+    "name": "notkitty",
+    "image": "/images/contributors_assets/avatars/notkitty.svg",
+    "roles": [
+      {
+        "title": "Contributor",
+        "img": "/images/contributors_assets/contributor_icon.svg"
+      },
+      {
+        "title": "Communications",
+        "img": "/images/contributors_assets/comms.svg"
+      },
+
+      { "title": "ECF", "img": "/images/contributors_assets/ECF.svg" },
+      { "title": "more", "img": "/images/contributors_assets/4.svg" }
+    ]
+  },
+  {
+    "name": "ori",
+    "image": "/images/contributors_assets/avatars/ori.svg",
+    "roles": [
+      {
+        "title": "Mechanism Institute",
+        "img": "/images/contributors_assets/mechanism.svg"
+      },
+      { "title": "Project", "img": "/images/contributors_assets/project.svg" }
+    ]
+  },
+  {
+    "name": "Orimishi",
+    "image": "/images/contributors_assets/avatars/Orimishi.svg",
+    "roles": [
+      {
+        "title": "Member",
+        "img": "/images/contributors_assets/members_icon.svg"
+      }
+    ]
+  },
+  {
+    "name": "pablo",
+    "image": "/images/contributors_assets/avatars/pablo.svg",
+    "roles": [
+      {
+        "title": "StreamEth",
+        "img": "/images/contributors_assets/Stream_eth.svg"
+      },
+      { "title": "Project", "img": "/images/contributors_assets/Project.svg" }
+    ]
+  },
+  {
+    "name": "pablo",
+    "image": "/images/contributors_assets/avatars/pablo2.svg",
+    "roles": [
+      {
+        "title": "Contributor",
+        "img": "/images/contributors_assets/contributor_icon.svg"
+      }
+    ]
+  },
+  {
+    "name": "Panther",
+    "image": "/images/contributors_assets/avatars/Panther.svg",
+    "roles": [
+      {
+        "title": "Contributor",
+        "img": "/images/contributors_assets/contributor_icon.svg"
+      },
+      {
+        "title": "Development",
+        "img": "/images/contributors_assets/dev.svg"
+      },
+
+      { "title": "Zuzapp", "img": "/images/contributors_assets/Zuzapp.svg" },
+      { "title": "more", "img": "/images/contributors_assets/3.svg" }
+    ]
+  },
+  {
+    "name": "Petra",
+    "image": "/images/contributors_assets/avatars/Petra.svg",
+    "roles": [
+      {
+        "title": "Contributor",
+        "img": "/images/contributors_assets/contributor_icon.svg"
+      }
+    ]
+  },
+  {
+    "name": "Petra",
+    "image": "/images/contributors_assets/avatars/Petra2.svg",
+    "roles": [
+      {
+        "title": "Contributor",
+        "img": "/images/contributors_assets/contributor_icon.svg"
+      },
+      {
+        "title": "Zuzagora",
+        "img": "/images/contributors_assets/Zuzagora.svg"
+      },
+      {
+        "title": "Carbonvote",
+        "img": "/images/contributors_assets/carbon.svg"
+      },
+
+      { "title": "more", "img": "/images/contributors_assets/5.svg" }
+    ]
+  },
+  {
+    "name": "Pkstevenz",
+    "image": "/images/contributors_assets/avatars/Pkstevenz.svg",
+    "roles": [
+      {
+        "title": "Member",
+        "img": "/images/contributors_assets/members_icon.svg"
+      },
+      {
+        "title": "Impact Evaluators",
+        "img": "/images/contributors_assets/impact.svg"
+      },
+      {
+        "title": "Community Coordination",
+        "img": "/images/contributors_assets/research.svg"
+      },
+      { "title": "more", "img": "/images/contributors_assets/1.svg" }
+    ]
+  },
+  {
+    "name": "Potter",
+    "image": "/images/contributors_assets/avatars/Potter.svg",
+    "roles": [
+      {
+        "title": "EthSign",
+        "img": "/images/contributors_assets/ethsign.svg"
+      },
+      {
+        "title": "Project",
+        "img": "/images/contributors_assets/project.svg"
+      },
+      {
+        "title": "Socials/Messaging",
+        "img": "/images/contributors_assets/socials.svg"
+      },
+      {
+        "title": "more",
+        "img": "/images/contributors_assets/1.svg"
+      }
+    ]
+  },
+  {
+    "name": "QJ",
+    "image": "/images/contributors_assets/avatars/QJ.svg",
+    "roles": [
+      {
+        "title": "Contributor",
+        "img": "/images/contributors_assets/Contributor_icon.svg"
+      },
+      {
+        "title": "Product",
+        "img": "/images/contributors_assets/Product.svg"
+      },
+      {
+        "title": "Operations",
+        "img": "/images/contributors_assets/operations.svg"
+      },
+
+      { "title": "more", "img": "/images/contributors_assets/7.svg" }
+    ]
+  },
+  {
+    "name": "quera",
+    "image": "/images/contributors_assets/avatars/quera.svg",
+    "roles": [
+      {
+        "title": "Contributor",
+        "img": "/images/contributors_assets/contributor_icon.svg"
+      },
+      {
+        "title": "Product",
+        "img": "/images/contributors_assets/product.svg"
+      },
+      {
+        "title": "Zuzapp",
+        "img": "/images/contributors_assets/zuzapp.svg"
+      }
+    ]
+  },
+  {
+    "name": "Rachel",
+    "image": "/images/contributors_assets/avatars/Rachel.svg",
+    "roles": [
+      {
+        "title": "Contributor",
+        "img": "/images/contributors_assets/contributor_icon.svg"
+      },
+      {
+        "title": "PSE",
+        "img": "/images/contributors_assets/pse.svg"
+      },
+      {
+        "title": "Project",
+        "img": "/images/contributors_assets/project.svg"
+      }
+    ]
+  },
+  {
+    "name": "raz",
+    "image": "/images/contributors_assets/avatars/raz.svg",
+    "roles": [
+      {
+        "title": "Contributor",
+        "img": "/images/contributors_assets/contributor_icon.svg"
+      },
+      {
+        "title": "Guild",
+        "img": "/images/contributors_assets/Guild.svg"
+      },
+      {
+        "title": "Project",
+        "img": "/images/contributors_assets/project.svg"
+      }
+    ]
+  },
+  {
+    "name": "Reno",
+    "image": "/images/contributors_assets/avatars/Reno.svg",
+    "roles": [
+      {
+        "title": "Contributor",
+        "img": "/images/contributors_assets/contributor_icon.svg"
+      },
+      {
+        "title": "Development",
+        "img": "/images/contributors_assets/dev.svg"
+      },
+      {
+        "title": "Carbonvote",
+        "img": "/images/contributors_assets/carbon.svg"
+      },
+
+      { "title": "more", "img": "/images/contributors_assets/1.svg" }
+    ]
+  },
+  {
+    "name": "Rising",
+    "image": "/images/contributors_assets/avatars/Rising.svg",
+    "roles": [
+      {
+        "title": "Member",
+        "img": "/images/contributors_assets/members_icon.svg"
+      }
+    ]
+  },
+  {
+    "name": "Rob Knight",
+    "image": "/images/contributors_assets/avatars/Robknight.svg",
+    "roles": [
+      {
+        "title": "Legra",
+        "img": "/images/contributors_assets/legra.svg"
+      },
+      {
+        "title": "Project",
+        "img": "/images/contributors_assets/project.svg"
+      },
+      {
+        "title": "Member",
+        "img": "/images/contributors_assets/members_icon.svg"
+      }
+    ]
+  },
+  {
+    "name": "Ryan",
+    "image": "/images/contributors_assets/avatars/Ryan.svg",
+    "roles": [
+      {
+        "title": "Tripsha",
+        "img": "/images/contributors_assets/tripsha.svg"
+      },
+      { "title": "Project", "img": "/images/contributors_assets/Project.svg" }
+    ]
+  },
+  {
+    "name": "scott",
+    "image": "/images/contributors_assets/avatars/scott.svg",
+    "roles": [
+      {
+        "title": "Member",
+        "img": "/images/contributors_assets/members_icon.svg"
+      }
+    ]
+  },
+  {
+    "name": "shaun.y.khan@gmail.com",
+    "image": "/images/contributors_assets/avatars/shaunkhan.svg",
+    "roles": [
+      {
+        "title": "Member",
+        "img": "/images/contributors_assets/members_icon.svg"
+      }
+    ]
+  },
+  {
+    "name": "Slychonaut",
+    "image": "/images/contributors_assets/avatars/Slychonaut.svg",
+    "roles": [
+      {
+        "title": "Contributor",
+        "img": "/images/contributors_assets/contributor_icon.svg"
+      },
+      {
+        "title": "Development",
+        "img": "/images/contributors_assets/dev.svg"
+      },
+      {
+        "title": "Zuzapp",
+        "img": "/images/contributors_assets/zuzapp.svg"
+      },
+
+      { "title": "more", "img": "/images/contributors_assets/2.svg" }
+    ]
+  },
+  {
+    "name": "tomasruta",
+    "image": "/images/contributors_assets/avatars/tomasruta.svg",
+    "roles": [
+      {
+        "title": "Tripsha",
+        "img": "/images/contributors_assets/tripsha.svg"
+      },
+      { "title": "Project", "img": "/images/contributors_assets/Project.svg" }
+    ]
+  },
+  {
+    "name": "Una",
+    "image": "/images/contributors_assets/avatars/Una.svg",
+    "roles": [
+      {
+        "title": "Research",
+        "img": "/images/contributors_assets/research.svg"
+      },
+      {
+        "title": "Member",
+        "img": "/images/contributors_assets/members_icon.svg"
+      },
+
+      {
+        "title": "Governance",
+        "img": "/images/contributors_assets/Governance.svg"
+      }
+    ]
+  },
+  {
+    "name": "V",
+    "image": "/images/contributors_assets/avatars/V.svg",
+    "roles": [
+      {
+        "title": "Contributor",
+        "img": "/images/contributors_assets/contributor_icon.svg"
+      },
+      {
+        "title": "ZuAvenger",
+        "img": "/images/contributors_assets/ZuAvenger.svg"
+      }
+    ]
+  },
+  {
+    "name": "Veronica",
+    "image": "/images/contributors_assets/avatars/Veronica.svg",
+    "roles": [
+      {
+        "title": "Contributor",
+        "img": "/images/contributors_assets/contributor_icon.svg"
+      },
+      {
+        "title": "Communications",
+        "img": "/images/contributors_assets/comms.svg"
+      },
+      {
+        "title": "Paideia",
+        "img": "/images/contributors_assets/paideia.svg"
+      },
+
+      { "title": "more", "img": "/images/contributors_assets/7.svg" }
+    ]
+  },
+  {
+    "name": "Vjer",
+    "image": "/images/contributors_assets/avatars/Vjer.svg",
+    "roles": [
+      {
+        "title": "Member",
+        "img": "/images/contributors_assets/members_icon.svg"
+      }
+    ]
+  },
+  {
+    "name": "wwei",
+    "image": "/images/contributors_assets/avatars/wwei.svg",
+    "roles": [
+      {
+        "title": "Member",
+        "img": "/images/contributors_assets/members_icon.svg"
+      },
+      { "title": "Voting", "img": "/images/contributors_assets/voting.svg" }
+    ]
+  },
+  {
+    "name": "XP Bot",
+    "image": "/images/contributors_assets/avatars/XPbot.svg",
+    "roles": [
+      {
+        "title": "Bot",
+        "img": "/images/contributors_assets/bot.svg"
+      }
+    ]
+  },
+  {
+    "name": "yihan",
+    "image": "/images/contributors_assets/avatars/yihan.svg",
+    "roles": [
+      {
+        "title": "Contributor",
+        "img": "/images/contributors_assets/contributor_icon.svg"
+      },
+      {
+        "title": "Yes",
+        "img": "/images/contributors_assets/Yes.svg"
+      },
+      {
+        "title": "Paideia",
+        "img": "/images/contributors_assets/paideia.svg"
+      },
+
+      { "title": "more", "img": "/images/contributors_assets/2.svg" }
+    ]
+  },
+  {
+    "name": "zik",
+    "image": "/images/contributors_assets/avatars/zik.svg",
+    "roles": [
+      {
+        "title": "Contributor",
+        "img": "/images/contributors_assets/contributor_icon.svg"
+      },
+      {
+        "title": "Governance",
+        "img": "/images/contributors_assets/Governance.svg"
+      },
+      {
+        "title": "Privacy",
+        "img": "/images/contributors_assets/privacy.svg"
+      },
+
+      { "title": "more", "img": "/images/contributors_assets/1.svg" }
+    ]
+  }
+]

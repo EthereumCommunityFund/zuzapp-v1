@@ -26,29 +26,22 @@ import RenderHTMLString from "@/components/ui/RenderHTMLString";
 export default function DashboardNavigation() {
   const routes = navBarRoutes;
   const [dashboardOpen, setDashboardOpen] = React.useState(false);
+  const [communityDropdownOpen, setCommunityDropdownOpen] = useState(true);
   const { isAuthenticated, user } = useGlobalContext();
   const [markdownContent, setMarkdownContent] = useState<string>("");
   const url = `/zuzalu/Zuzalu_Mission.md`;
   const zuzaluLink = `https://zuzalu.notion.site/Zuzalu-s-Mission-and-Vision-28d0dfaf60c043ab8bb1943f493a225f`;
 
   const router = useRouter();
-  const handleClick = () => {
-    setDashboardOpen(!dashboardOpen);
+
+  const handleCommunityDropdownClick = () => {
+    setCommunityDropdownOpen(!communityDropdownOpen);
   };
 
-  // useEffect(() => {
-  //   const fetchMarkdownContent = async () => {
-  //     try {
-  //       const response = await fetch(url);
-  //       const content = await response.text();
-  //       setMarkdownContent(content);
-  //     } catch (error) {
-  //       console.error('Error fetching Markdown content:', error);
-  //     }
-  //   };
-
-  //   fetchMarkdownContent();
-  // }, [url]);
+  const handleClick = () => {
+    setDashboardOpen(!dashboardOpen);
+    setCommunityDropdownOpen(false);
+  };
 
   return (
     <>
@@ -87,9 +80,17 @@ export default function DashboardNavigation() {
                   }`}
                 >
                   {route.icon && <route.icon size={30} />}
-                  <Link href={route.path} className="w-full ">
-                    {route.title}
-                  </Link>
+                  {route.options ? (
+                    <>
+                      <span className="w-full cursor-pointer">
+                        {route.title}
+                      </span>
+                    </>
+                  ) : (
+                    <Link href={route.path} className="w-full">
+                      {route.title}
+                    </Link>
+                  )}
                   <span className="icon_end">
                     {route.icon_end && <route.icon_end size={24} />}
                   </span>
@@ -97,36 +98,34 @@ export default function DashboardNavigation() {
               ))}
             </ul>
 
-            <div className="community_items">
-              <div
-                className="menu_cta"
-                onClick={() => window.open(zuzaluLink, "_blank")}
-              >
-                <img src="/images/about_zuzalu.svg" />
-                <span>About Zuzalu</span>
-              </div>
-              <div
-                className="menu_cta"
-                onClick={() =>
-                  window.open("https://www.guilded.gg/Zuzalu/blog", "_blank")
-                }
-              >
-                <img src="/images/guilded_logo.svg" />
-                <span>Community Blog</span>
-              </div>
-              <div
-                className="menu_cta"
-                onClick={() =>
-                  window.open(
-                    "https://www.guilded.gg/Zuzalu/blog/Announcements",
-                    "_blank"
-                  )
-                }
-              >
-                <img src="/images/guilded_logo.svg" />
-                <span>Announcements</span>
-              </div>
-            </div>
+            {/* Dropdown outside the li */}
+            {communityDropdownOpen && (
+              <ul className="community_items">
+                {routes.map(
+                  (route) =>
+                    route.options &&
+                    route.options.map((option) => (
+                      <li
+                        key={option.path}
+                        className={`flex  ${
+                          router.pathname === option.path
+                            ? "bg-white/0"
+                            : "opacity-60"
+                        }`}
+                      >
+                        <div>
+                          <div className="menu_cta">
+                            <img src={option.img} />
+                            <Link href={option.path}>
+                              <span>{option.title}</span>
+                            </Link>
+                          </div>
+                        </div>
+                      </li>
+                    ))
+                )}
+              </ul>
+            )}
           </div>
           {/* Profile navigation */}
           {isAuthenticated && (
