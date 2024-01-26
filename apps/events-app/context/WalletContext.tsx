@@ -136,8 +136,10 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
     }
 
     try {
+        const commitment = localStorage.getItem('commitment');
       await axiosInstance.post("/api/profile/walletSignIn", {
        accounts,
+        commitment,
       });
       router.push({
         pathname: router.pathname,

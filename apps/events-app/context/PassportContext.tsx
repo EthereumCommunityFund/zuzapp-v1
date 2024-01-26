@@ -74,6 +74,7 @@ export function UserPassportContextProvider({
         if (user) {
           logInUser(user);
           localStorage.setItem('commitment',user.commitment);
+          console.log(user.commitment,'user commitment');
         console.log(user,'user');
         }
       });
