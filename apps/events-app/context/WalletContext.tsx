@@ -75,13 +75,11 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
     if (accounts.length === 0) {
       setAccount(null);
       setIsConnected(false);
-      setIsAuthenticated(false);
     } else {
       setAccount(accounts[0]);
       setIsConnected(true);
       sethasChangedAccount(true);
       localStorage.setItem('account', accounts[0]);
-      setIsAuthenticated(true);
     }
   };
 
@@ -109,12 +107,10 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
       setSigner(newSigner);
       setAccount(newAccount);
       setProvider(newProvider);
-      setIsConnected(true);
       localStorage.setItem('account', newAccount);
       console.log('succes');
       localStorage.setItem('userAccount', newAccount as string);
       logInAccount(accounts.map((account) => account.address));
-      setIsAuthenticated(true);
     } catch (error) {
       console.error('Error connecting to MetaMask or generating signature:', error);
     } finally {
@@ -146,12 +142,14 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
         accounts,
         commitment,
       });
+      setIsAuthenticated(true);
       router.push({
         pathname: router.pathname,
         query: query,
       });
     } catch (error) {
       console.log(error, 'new error');
+      setIsAuthenticated(false);
     }
   };
 
