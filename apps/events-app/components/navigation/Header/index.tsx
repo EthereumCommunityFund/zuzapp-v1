@@ -24,11 +24,23 @@ import MyProfileButton from "./MyProfileButton";
 import CreateEventSpace from "@/components/navigation/Header/CreateEventSpace";
 import { Label } from "@/components/ui/label";
 import { useClickAway } from "@uidotdev/usehooks";
-
+import { useWallet } from "@/context/WalletContext";
 export default function DashboardHeader() {
   const { signIn } = useUserPassportContext();
   const { isAuthenticated, user, profile } = useGlobalContext();
+  const {connectToMetamask} = useWallet();
   const router = useRouter();
+  const [activePopover, setActivePopover] = useState('');
+
+  const signInWithPassport = () => {
+    signIn(); 
+    setActivePopover('passport'); 
+  };
+    
+  const signInWithMetamask = () => {
+    connectToMetamask(); 
+    setActivePopover('wallet'); 
+  };
 
   const containerRef = useClickAway(() => {
     setDashboardOpen(false);
@@ -43,9 +55,7 @@ export default function DashboardHeader() {
   }, []);
 
   const routes = navBarRoutes;
-
   console.log("isAuthenticated", isAuthenticated, profile);
-
   const [dashboardOpen, setDashboardOpen] = useState<boolean>(false);
   const [isAlert, setIsAlert] = useState<boolean>(true);
 
@@ -137,7 +147,7 @@ export default function DashboardHeader() {
             <div className="flex items-center gap-3">
               <CreateEventSpace />
               <MyProfileButton
-                className=""
+                className={profile.commitment !== 'default_commitment'? "zupass" : "wallet"}
                 userName={profile.username ? profile.username : `My Profile`}
               />
             </div>
@@ -145,19 +155,29 @@ export default function DashboardHeader() {
             // <Button leftIcon={User} variant="quiet" className="space-x-2 rounded-full">
             // </Button>
             <Popover>
+              <div className="flex gap-4">
               <PopoverTrigger
-                className="flex space-x-2 items-center rounded-3xl px-5 py-2 h-full bg-dark text-sm md:text-base"
-                onClick={signIn}
-              >
-                <Image
-                  src="/images/zaluza blackandwhite.png"
-                  width={20}
-                  height={20}
-                  alt="Passport"
-                  className="mr-2"
-                />
-                Connect <span className="hidden md:inline"> Passport</span>
-              </PopoverTrigger>
+                  className="flex space-x-2 items-center rounded-3xl px-5 py-2 h-full bg-dark text-sm md:text-base"
+                  onClick={signInWithPassport}
+                >
+                  <Image
+                    src="/images/zaluza blackandwhite.png"
+                    width={20}
+                    height={20}
+                    alt="Passport"
+                    className="mr-2"
+                  />
+                  Connect <span className="hidden md:inline"> Passport</span>
+                </PopoverTrigger>
+                <PopoverTrigger
+                  className="flex space-x-2 items-center rounded-3xl px-5 py-2 h-full bg-dark text-sm md:text-base"
+                  onClick={signInWithMetamask}
+                >
+                  Connect&nbsp;
+                    <span className="hidden md:inline">&nbsp;Wallet</span>
+                </PopoverTrigger>
+                </div>
+                {activePopover === 'passport' && (
               <PopoverContent className="bg-[#2B2D2DE5] mt-5 mr-5 rounded-2xl w-80">
                 <div className="w-full flex flex-col items-center">
                   <Image
@@ -178,6 +198,20 @@ export default function DashboardHeader() {
                   </div>
                 </div>
               </PopoverContent>
+             )} 
+            {activePopover === 'wallet' && (
+              <PopoverContent className="bg-[#2B2D2DE5] mt-5 mr-5 rounded-2xl w-80">
+                <div className="w-full flex flex-col items-center">
+                  <div className="my-5 font-semibold text-sm">
+                    {!isAuthenticated ? (
+                      <p>Connecting to Metamask</p>
+                    ) : (
+                      <p className="font-bold text-primary">Connected!</p>
+                    )}
+                  </div>
+                </div>
+              </PopoverContent>
+             )}
             </Popover>
           )}
         </div>

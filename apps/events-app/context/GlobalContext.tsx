@@ -33,21 +33,22 @@ type GlobalProviderProps = {
 };
 
 export const GlobalProvider = ({ children, user }: GlobalProviderProps) => {
-  const isAuthenticated = user ? true : false;
-
+  let isAuthenticated = user ? true : false;
   const [profile, setProfile] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
     if (isAuthenticated) {
       loadProfile();
+      isAuthenticated =true;
     }
   }, [isAuthenticated]);
   const loadProfile = async () => {
-    fetchProfile().then((res) => {
+    try{fetchProfile().then((res) => {
       setIsLoading(true);
       setProfile(res.data.data);
       setIsLoading(false);
-    });
+    });}
+    catch(error){console.log(error,'error fetching');}
   };
 
   return (

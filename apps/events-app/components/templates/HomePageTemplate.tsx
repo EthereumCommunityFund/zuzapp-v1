@@ -30,6 +30,7 @@ import { HostUrls } from '@/constant/hostUrls';
 import { fetchEventSpace } from '@/controllers';
 import { fetchEventSpaceById } from '@/services/fetchEventSpaceDetails';
 import slideData from '@/constant/slidedata';
+import { useWallet } from '@/context/WalletContext';
 
 interface DialogContent {
   title: string;
@@ -41,6 +42,7 @@ interface DialogContent {
 export default function HomePageTemplate() {
   const { signIn } = useUserPassportContext();
   const { isAuthenticated, user } = useGlobalContext();
+  const {connectToMetamask} = useWallet();
   const router = useRouter();
   const [userName, setUsername] = useState<string>('');
   const { firstLogin } = router.query;
@@ -156,6 +158,9 @@ export default function HomePageTemplate() {
                           <Image src="/images/zaluza blackandwhite.png" width={20} height={20} alt="Passport" className="mr-2" />
                           Connect Passport
                         </Button>
+                        <Button variant="ghost" className="w-full flex space-x-2 items-center justify-center rounded-3xl px-5 py-3 h-full bg-dark text-sm md:text-base" onClick={connectToMetamask}>
+                          Connect Wallet
+                        </Button>
                       </DialogFooter>
                     </DialogHeader>
                   </DialogContent>
@@ -260,7 +265,7 @@ export default function HomePageTemplate() {
               <Button
                 variant={`${userName.length ? `strongerGreen` : `ghost`}`}
                 className="w-full flex items-center justify-center rounded-3xl py-2 h-full bg-dark text-lg md:text-base text-white"
-                onClick={dialogContent.buttonLabel === 'Continue' ? handleDialogButton : () => router.push('/dashboard/home')}
+                onClick={dialogContent.buttonLabel === 'Continue' ? handleDialogButton : () => router.reload()}
               >
                 {dialogContent?.buttonLabel}
               </Button>

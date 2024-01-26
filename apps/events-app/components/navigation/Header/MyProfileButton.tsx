@@ -65,10 +65,17 @@ const MyProfileButton: React.FC<MyProfileButtonType> = (props: MyProfileButtonTy
             <Avvvatars value={userName} style="shape" size={40} />
             <div className="flex flex-col">
               <p className="text-lg font-semibold text-white">{userName}</p>
-              <div className="text-textSecondary text-sm flex items-center gap-1">
-                <small className="inline-block bg-green-400 w-1.5 h-1.5 rounded-full"></small>
-                <span>Zupass Connected</span>
-              </div>
+              {className === "zupass" ? (
+    <div className="flex items-center gap-1">
+      <small className="inline-block bg-green-400 w-1.5 h-1.5 rounded-full"></small>
+      <span>Zupass Connected</span>
+    </div>
+  ) : (
+    <div className="flex items-center gap-1">
+    <small className="inline-block bg-green-400 w-1.5 h-1.5 rounded-full"></small>
+    <span>Wallet Connected</span>
+    </div>
+  )}
             </div>
           </div>
           <DropdownMenu.Separator className="border-[0.5px] border-white/20 w-full my-2" />

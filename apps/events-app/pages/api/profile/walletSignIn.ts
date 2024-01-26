@@ -2,62 +2,55 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { createPagesServerClient } from '@supabase/auth-helpers-nextjs'
 import { Database } from "@/database.types";
 
-const PASSWORD = process.env.SUPABASE_USER_PASS as string
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
-    const supabase = createPagesServerClient<Database>({
-        req,
-        res,
-    })
+    const supabase = createPagesServerClient<Database>({ req, res });
+    const PASSWORD = process.env.SUPABASE_USER_PASS as string;
 
+    const accounts = req.body.accounts;
+    let account = ""; 
+    let fakeEmail = ""; 
 
-    const { pcdString, uuid,
-        commitment,
-        userAccount,
-        email,
-        name,
-        role,
-        residence,
-        order_id } = req.body;
-
-        if(userAccount){
-            try {
-                const { data: userData, error: userError } = await supabase
-                    .from('profile')
-                    .select('*')
-                    .contains('useraddresses', [userAccount])
-                    .single();
-        
-                if (userError) {
-                    throw userError;
-                }
-        
-                const { error: updateError } = await supabase
-                    .from('profile')
-                    .update({ commitment,
-                        name,
-                        role,
-                        residence,
-                        order_id })
-                    .eq('uuid', userData.uuid);
-        
-                if (updateError) {
-                    throw updateError;
-                }
-                res.status(200).send("User addresses updated successfully");
-            } catch (error) {
-                res.status(500).send("Internal server error ");
-            }
-        }
-
-    else{
+    if(accounts){ 
+        account = accounts[0];
+        fakeEmail = `${account}@gmail.com`;
+    }
+    
+    const commitment = req.body.commitment;
+    
+    if(commitment){
         try {
+            const { data: userData, error: userError } = await supabase
+                .from('profile')
+                .select('*')
+                .eq('commitment', commitment)
+                .single();
+    
+            if (userError) {
+                throw userError;
+            }
+    
+            const { error: updateError } = await supabase
+                .from('profile')
+                .update({ useraddresses: accounts as string[] })
+                .eq('uuid', userData.uuid);
+    
+            if (updateError) {
+                throw updateError;
+            }
+    
+            res.status(200).send("User addresses updated successfully");
+        } catch (error) {
+            res.status(500).send("Internal server error ");
+        }
+    }
+
+    else{try {
+        console.log(fakeEmail,'fakeemail');
         const { data, error: signInError } = await supabase.auth.signInWithPassword({
-            email,
+            email: fakeEmail,
             password: PASSWORD
         });
-
-
         // If the user signs in successfully
         if (data?.user) {
             return res.status(200).send("User signed in");
@@ -66,10 +59,10 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
         // throw (signInError)
         if (signInError) {
             console.error("Error during signIn:", signInError.message);
-
+           
             // Attempt to sign up if the error indicates the user does not exist
             const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-                email,
+                email: fakeEmail,
                 password: PASSWORD
             });
 
@@ -81,12 +74,8 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
                 const { error: updateError } = await supabase
                     .from('profile')
                     .update({
-                        commitment,
-                        email,
-                        name,
-                        role,
-                        residence,
-                        order_id
+                        email:fakeEmail,
+                        useraddresses:accounts
                     })
                     .eq('uuid', signUpData.user.id);
 
@@ -105,19 +94,10 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
                 return res.status(signUpError.status as number).send(signUpError.message)
             }
         }
-    } catch (error) {
+    }catch (error) {
         res.status(500).send("Internal server error")
     }
 
-
-
-    }
 }
-
-
-
-// / check if user exists in profile and if he doesn't create 
-
-
-
+}
 export default handler
