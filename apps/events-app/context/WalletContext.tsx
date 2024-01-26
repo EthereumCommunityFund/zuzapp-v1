@@ -1,9 +1,10 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { ethers } from 'ethers';
 import { toast } from '@/components/ui/use-toast';
-import { WalletContextType } from 'types'
-import { useRouter } from "next/router";
-import axiosInstance from "../src/axiosInstance";
+import { WalletContextType } from 'types';
+import { useRouter } from 'next/router';
+import axiosInstance from '../src/axiosInstance';
+import { useGlobalContext } from './GlobalContext';
 
 // Create the context
 const WalletContext = createContext<WalletContextType | null>(null);
@@ -22,7 +23,7 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
   const [isConnecting, setIsConnecting] = useState(false);
   const [hasChangedAccount, sethasChangedAccount] = useState(false);
   const router = useRouter();
-
+  const { setIsAuthenticated } = useGlobalContext();
 
   useEffect(() => {
     const init = async () => {
@@ -33,12 +34,13 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
           console.log(accounts, 'accounts');
           let addressArray = [];
           if (accounts.length > 0) {
-            addressArray = accounts.map(account => account.address);
+            addressArray = accounts.map((account) => account.address);
             setAccounts(addressArray);
-            console.log(accounts,'accounts');
+            console.log(accounts, 'accounts');
             setAccount(accounts[0].address);
             localStorage.setItem('account', accounts[0].address);
             setIsConnected(true);
+
             setProvider(newProvider);
           }
         } catch (error) {
@@ -73,11 +75,13 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
     if (accounts.length === 0) {
       setAccount(null);
       setIsConnected(false);
+      setIsAuthenticated(false);
     } else {
       setAccount(accounts[0]);
       setIsConnected(true);
       sethasChangedAccount(true);
       localStorage.setItem('account', accounts[0]);
+      setIsAuthenticated(true);
     }
   };
 
@@ -101,15 +105,16 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
       const newSigner = await newProvider.getSigner();
       const newAccount = await newSigner.getAddress();
       const accounts = await newProvider.listAccounts();
-      setAccounts(accounts.map(account => account.address));
+      setAccounts(accounts.map((account) => account.address));
       setSigner(newSigner);
       setAccount(newAccount);
       setProvider(newProvider);
       setIsConnected(true);
       localStorage.setItem('account', newAccount);
       console.log('succes');
-      localStorage.setItem('userAccount',newAccount as string);
-      logInAccount(accounts.map(account => account.address));
+      localStorage.setItem('userAccount', newAccount as string);
+      logInAccount(accounts.map((account) => account.address));
+      setIsAuthenticated(true);
     } catch (error) {
       console.error('Error connecting to MetaMask or generating signature:', error);
     } finally {
@@ -117,12 +122,12 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
     }
   };
 
-  const logInAccount = async (accounts:string[]|null) => {
+  const logInAccount = async (accounts: string[] | null) => {
     const { scheduleName, trackId, event_space_id, scheduleId } = router.query;
-    let query: string = "";
+    let query: string = '';
     switch (router.pathname) {
       case '/dashboard/home':
-        query = "firstLogin=true";
+        query = 'firstLogin=true';
         break;
       case '/dashboard/eventview/tracks/track/schedule':
         query = `scheduleName=${scheduleName}&trackId=${trackId}&event_space_id=${event_space_id}&scheduleId=${scheduleId}`;
@@ -136,9 +141,9 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
     }
 
     try {
-        const commitment = localStorage.getItem('commitment');
-      await axiosInstance.post("/api/profile/walletSignIn", {
-       accounts,
+      const commitment = localStorage.getItem('commitment');
+      await axiosInstance.post('/api/profile/walletSignIn', {
+        accounts,
         commitment,
       });
       router.push({
@@ -146,12 +151,12 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
         query: query,
       });
     } catch (error) {
-      console.log(error, "new error");
+      console.log(error, 'new error');
     }
   };
 
   // Provide the context
-  return <WalletContext.Provider value={{ provider, signer, account, isConnected, connectToMetamask, hasChangedAccount,userAccounts }}>{children}</WalletContext.Provider>;
+  return <WalletContext.Provider value={{ provider, signer, account, isConnected, connectToMetamask, hasChangedAccount, userAccounts }}>{children}</WalletContext.Provider>;
 };
 
 // Custom hook to use the wallet context
