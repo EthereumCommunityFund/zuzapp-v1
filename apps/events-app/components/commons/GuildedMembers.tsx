@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import Avvvatars from "avvvatars-react";
-import { GuildedMember } from "@/hooks/useGuildedMembers";
+import React, { useState } from 'react';
+import Avvvatars from 'avvvatars-react';
+import { GuildedMember } from '@/hooks/useGuildedMembers';
 
 type GuildedMembersProps = {
   member: GuildedMember;
@@ -14,11 +14,7 @@ function GuildedMembers({ member }: GuildedMembersProps) {
       <div className="contrib_col">
         {!imgError ? (
           <div className="contrib_col_img_container">
-            <img
-              src={member.user.avatar}
-              alt={member.user.name}
-              onError={() => setImgError(true)}
-            />
+            <img src={member.user.avatar || '/images/avatar_faux.png'} alt={member.user.name} onError={() => setImgError(true)} />
           </div>
         ) : (
           <img src="/images/avatar_faux.png" />
