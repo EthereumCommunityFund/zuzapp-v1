@@ -1,16 +1,18 @@
 import { Loader } from '@/components/ui/Loader';
 import { Database } from '@/database.types';
+import { useGuildedMembers } from '@/hooks/useGuildedMembers';
 
 import contributorsData from '@/pages/dashboard/contributors.json';
+import axiosInstance from '@/src/axiosInstance';
 import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
 
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { set } from 'nprogress';
 
-export default function UserProfile() {
+export default function About() {
   const router = useRouter();
 
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { guildedMembers, isLoading, isError } = useGuildedMembers();
 
   if (isLoading) {
     return <Loader />;
@@ -117,21 +119,22 @@ export default function UserProfile() {
         <div className="black_overlay"></div>
         <div className="black_overlay2"></div>
         <div className="marquee">
-          {contributorsData.map((contributor, index) => (
-            <div key={index} className="contributor">
-              <div className="contrib_col">
-                <img src={contributor.image} alt={contributor.name} />
-                <span className="contrib_name">{contributor.name}</span>
+          {guildedMembers &&
+            guildedMembers.map((member, index) => (
+              <div key={index} className="contributor">
+                <div className="contrib_col">
+                  <img src={member.user.avatar} alt={member.user.name} />
+                  <span className="contrib_name">{member.user.name}</span>
+                </div>
+                <div className="contrib_roles">
+                  {member.roleIds.map((roleId, roleIndex) => (
+                    <div key={roleIndex} className="contrib_role">
+                      {/* <img src={role.img} alt={role.title} /> */}
+                    </div>
+                  ))}
+                </div>
               </div>
-              <div className="contrib_roles">
-                {contributor.roles.map((role, roleIndex) => (
-                  <div key={roleIndex} className="contrib_role">
-                    <img src={role.img} alt={role.title} />
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))}
+            ))}
         </div>
       </div>
 
