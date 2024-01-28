@@ -13,7 +13,6 @@ export default function About() {
   const router = useRouter();
 
   const { guildedMembers, isLoading, isError } = useGuildedMembers();
-  console.log(guildedMembers, 'guildedMembers');
 
   if (isLoading) {
     return <Loader />;
@@ -120,21 +119,22 @@ export default function About() {
         <div className="black_overlay"></div>
         <div className="black_overlay2"></div>
         <div className="marquee">
-          {contributorsData.map((contributor, index) => (
-            <div key={index} className="contributor">
-              <div className="contrib_col">
-                <img src={contributor.image} alt={contributor.name} />
-                <span className="contrib_name">{contributor.name}</span>
+          {guildedMembers &&
+            guildedMembers.map((member, index) => (
+              <div key={index} className="contributor">
+                <div className="contrib_col">
+                  <img src={member.user.avatar} alt={member.user.name} />
+                  <span className="contrib_name">{member.user.name}</span>
+                </div>
+                <div className="contrib_roles">
+                  {member.roleIds.map((roleId, roleIndex) => (
+                    <div key={roleIndex} className="contrib_role">
+                      {/* <img src={role.img} alt={role.title} /> */}
+                    </div>
+                  ))}
+                </div>
               </div>
-              <div className="contrib_roles">
-                {contributor.roles.map((role, roleIndex) => (
-                  <div key={roleIndex} className="contrib_role">
-                    <img src={role.img} alt={role.title} />
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))}
+            ))}
         </div>
       </div>
 

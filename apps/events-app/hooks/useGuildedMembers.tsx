@@ -1,6 +1,10 @@
 import axiosInstance from '@/src/axiosInstance';
 import { useQuery } from 'react-query';
 
+type GuildedMembersResponse = {
+  members: GuildedMember[];
+};
+
 type GuildedMember = {
   user: {
     id: string;
@@ -17,13 +21,13 @@ const fetchGuildedMembers = async () => {
 
 export const useGuildedMembers = () => {
   const {
-    data: guildedMembers,
+    data: guildedMembersResponse,
     isLoading,
     isError,
-  } = useQuery<GuildedMember[]>(['guildedMembers'], fetchGuildedMembers, {
+  } = useQuery<GuildedMembersResponse>(['guildedMembers'], fetchGuildedMembers, {
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
   });
 
-  return { guildedMembers, isLoading, isError };
+  return { guildedMembers: guildedMembersResponse?.members ?? [], isLoading, isError };
 };
