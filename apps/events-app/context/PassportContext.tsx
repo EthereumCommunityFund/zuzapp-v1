@@ -23,7 +23,7 @@ import {
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import axiosInstance from "../src/axiosInstance";
 import { useRouter } from "next/router";
-
+import { useGlobalContext } from './GlobalContext';
 import { EdDSATicketPCDPackage } from "@pcd/eddsa-ticket-pcd";
 import { EdDSAPCDPackage } from "@pcd/eddsa-pcd";
 
@@ -45,9 +45,8 @@ export function UserPassportContextProvider({
   // We only do client-side proofs for Zuzalu UUID proofs, which means we can
   // ignore any PendingPCDs that would result from server-side proving
   const [pcdStr, _passportPendingPCDStr] = usePassportPopupMessages();
-
+  const [commitment, setCommitment] = useState<string | null>(null);
   // console.log(pcdStr, "pcdString")
-
   const [signatureProofValid, setSignatureProofValid] = useState<
     boolean | undefined
   >();
@@ -55,7 +54,7 @@ export function UserPassportContextProvider({
   const [signedMessage, setSignedMessage] = useState<
     SignInMessagePayload | undefined
   >();
-
+  const { setIsAuthenticated } = useGlobalContext();
   const onProofVerified = (valid: boolean) => {
     setSignatureProofValid(valid);
   };
@@ -74,6 +73,9 @@ export function UserPassportContextProvider({
       fetchUser(ZUPASS_SERVER_URL, signInPayload.uuid).then((user) => {
         if (user) {
           logInUser(user);
+          localStorage.setItem('commitment',user.commitment);
+          console.log(user.commitment,'user commitment');
+        console.log(user,'user');
         }
       });
       setSignedMessage(signInPayload);
@@ -114,6 +116,7 @@ export function UserPassportContextProvider({
     let pcdStr = "adfaf";
     const { scheduleName, trackId, event_space_id, scheduleId } = router.query;
     let query: string = "";
+    
     switch (router.pathname) {
       case '/dashboard/home':
         query = "firstLogin=true";
@@ -130,21 +133,25 @@ export function UserPassportContextProvider({
     }
 
     try {
+      const userAccount = localStorage.getItem('userAccount');
       await axiosInstance.post("/api/auth/authenticate", {
         pcdString: pcdStr,
         ...user,
+        userAccount,
       });
       router.push({
         pathname: router.pathname,
         query: query,
       });
+      setIsAuthenticated(true);
     } catch (error) {
       console.log(error, "new error");
+      setIsAuthenticated(false);
     }
   };
 
   return (
-    <UserPassportContext.Provider value={{ signIn }}>
+    <UserPassportContext.Provider value={{ signIn}}>
       {children}
     </UserPassportContext.Provider>
   );

@@ -11,7 +11,6 @@ const withSession = (handler: NextApiHandler) => {
             return res.status(401).send("Unathourized access")
         }
         let user = data.session?.user;
-
         const errors = validateUUID(user.id);
         if (errors.length > 0) {
             return res.status(400).json({ errors });

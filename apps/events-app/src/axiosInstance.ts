@@ -1,15 +1,20 @@
 import axios, { AxiosInstance } from 'axios';
 import Router from 'next/router';
 
+const getBaseUrl = () => {
+  if (typeof window !== 'undefined') {
+    return window.location.origin;
+  }
+  // Fallback for server-side rendering
+  return 'https://www.zuzalu.city';
+};
+
 const axiosInstance: AxiosInstance = axios.create({
-  // baseURL: 'https://zuzapp-test-v1-events-app-delta.vercel.app', // replace with your API endpoin
-  // baseURL: 'https://www.zuzalu.city',
-  baseURL: 'http://localhost:3001',
+  baseURL: getBaseUrl(),
   headers: {
     'Content-Type': 'application/json',
   },
 });
-
 // const axiosInstance: AxiosInstance = axios.create({
 //     headers: {
 //         'Content-Type': 'application/json',

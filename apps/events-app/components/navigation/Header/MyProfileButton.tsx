@@ -10,7 +10,7 @@ import Avvvatars from 'avvvatars-react';
 
 import { ReactNode } from 'react';
 import SignOut from "@/components/ui/icons/SignOut";
-
+import { useGlobalContext } from '../../../context/GlobalContext';
 interface DropDownMenuItem {
   icon: ReactNode;
   label: string;
@@ -36,7 +36,6 @@ function handleSignOut() {
   document.cookie.split(';').forEach(function (c) {
     document.cookie = c.replace(/^ +/, '').replace(/=.*/, '=;expires=' + new Date().toUTCString() + ';path=/');
   });
-
   router.push('/');
 }
 
@@ -49,6 +48,7 @@ const MyProfileButton: React.FC<MyProfileButtonType> = (props: MyProfileButtonTy
   const router = useRouter();
   const { event_space_id, trackId } = router.query;
   const { userName, className } = props;
+  const { setIsAuthenticated } = useGlobalContext();
 
   return (
     <>
@@ -65,10 +65,17 @@ const MyProfileButton: React.FC<MyProfileButtonType> = (props: MyProfileButtonTy
             <Avvvatars value={userName} style="shape" size={40} />
             <div className="flex flex-col">
               <p className="text-lg font-semibold text-white">{userName}</p>
-              <div className="text-textSecondary text-sm flex items-center gap-1">
-                <small className="inline-block bg-green-400 w-1.5 h-1.5 rounded-full"></small>
-                <span>Zupass Connected</span>
-              </div>
+              {className === "zupass" ? (
+    <div className="flex items-center gap-1">
+      <small className="inline-block bg-green-400 w-1.5 h-1.5 rounded-full"></small>
+      <span>Zupass Connected</span>
+    </div>
+  ) : (
+    <div className="flex items-center gap-1">
+    <small className="inline-block bg-green-400 w-1.5 h-1.5 rounded-full"></small>
+    <span>Wallet Connected</span>
+    </div>
+  )}
             </div>
           </div>
           <DropdownMenu.Separator className="border-[0.5px] border-white/20 w-full my-2" />
@@ -81,6 +88,7 @@ const MyProfileButton: React.FC<MyProfileButtonType> = (props: MyProfileButtonTy
                   onClick={() => {
                     if (item.action) {
                       item.action();
+                      setIsAuthenticated(false);
                     } else {
                       let path = item.path;
                       router.push(path);
