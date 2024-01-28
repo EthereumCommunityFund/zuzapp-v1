@@ -23,7 +23,7 @@ import {
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import axiosInstance from "../src/axiosInstance";
 import { useRouter } from "next/router";
-
+import { useGlobalContext } from './GlobalContext';
 import { EdDSATicketPCDPackage } from "@pcd/eddsa-ticket-pcd";
 import { EdDSAPCDPackage } from "@pcd/eddsa-pcd";
 
@@ -54,7 +54,7 @@ export function UserPassportContextProvider({
   const [signedMessage, setSignedMessage] = useState<
     SignInMessagePayload | undefined
   >();
-
+  const { setIsAuthenticated } = useGlobalContext();
   const onProofVerified = (valid: boolean) => {
     setSignatureProofValid(valid);
   };
@@ -143,8 +143,10 @@ export function UserPassportContextProvider({
         pathname: router.pathname,
         query: query,
       });
+      setIsAuthenticated(true);
     } catch (error) {
       console.log(error, "new error");
+      setIsAuthenticated(false);
     }
   };
 

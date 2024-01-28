@@ -10,7 +10,7 @@ import Avvvatars from 'avvvatars-react';
 
 import { ReactNode } from 'react';
 import SignOut from "@/components/ui/icons/SignOut";
-
+import { useGlobalContext } from '../../../context/GlobalContext';
 interface DropDownMenuItem {
   icon: ReactNode;
   label: string;
@@ -36,7 +36,6 @@ function handleSignOut() {
   document.cookie.split(';').forEach(function (c) {
     document.cookie = c.replace(/^ +/, '').replace(/=.*/, '=;expires=' + new Date().toUTCString() + ';path=/');
   });
-
   router.push('/');
 }
 
@@ -49,6 +48,7 @@ const MyProfileButton: React.FC<MyProfileButtonType> = (props: MyProfileButtonTy
   const router = useRouter();
   const { event_space_id, trackId } = router.query;
   const { userName, className } = props;
+  const { setIsAuthenticated } = useGlobalContext();
 
   return (
     <>
@@ -88,6 +88,7 @@ const MyProfileButton: React.FC<MyProfileButtonType> = (props: MyProfileButtonTy
                   onClick={() => {
                     if (item.action) {
                       item.action();
+                      setIsAuthenticated(false);
                     } else {
                       let path = item.path;
                       router.push(path);

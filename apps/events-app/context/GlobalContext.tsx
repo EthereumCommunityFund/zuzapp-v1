@@ -34,6 +34,7 @@ export const GlobalProvider = ({ children, user }: GlobalProviderProps) => {
   useEffect(() => {
     if (isAuthenticated) {
       loadProfile();
+      console.log('loding');
       setIsAuthenticated(true);
     }
   }, [isAuthenticated]);

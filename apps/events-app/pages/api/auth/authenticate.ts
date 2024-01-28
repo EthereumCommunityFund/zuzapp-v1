@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { createPagesServerClient } from '@supabase/auth-helpers-nextjs'
 import { Database } from "@/database.types";
-
+import { createClient } from '@supabase/supabase-js';
 const PASSWORD = process.env.SUPABASE_USER_PASS as string
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -9,7 +9,12 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
         req,
         res,
     })
-
+    const supabaseAuth = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL as string, process.env.SUPABASE_SERVICE_ROLE as string, {
+        auth: {
+          autoRefreshToken: false,
+          persistSession: false
+        }
+      });
 
     const { pcdString, uuid,
         commitment,
@@ -27,14 +32,36 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
                     .select('*')
                     .contains('useraddresses', [userAccount])
                     .single();
-        
+                console.log(userAccount);
+                
                 if (userError) {
                     throw userError;
                 }
+                
+                console.log(userData.uuid);
+                const { data, error: signInError } = await supabase.auth.signInWithPassword({
+                    email,
+                    password: PASSWORD
+                });
         
+                // If the user signs in successfully
+                if (data?.user) {
+                    return res.status(200).send("User signed in");
+                }
+        
+                // throw (signInError)
+                if (signInError) {
+                const { data: user, error:AuthError } = await supabaseAuth.auth.admin.updateUserById(
+                    userData.uuid,
+                    { email: email }
+                  )
+                if (AuthError) {
+                    throw AuthError;
+                }
                 const { error: updateError } = await supabase
                     .from('profile')
                     .update({ commitment,
+                        email,
                         name,
                         role,
                         residence,
@@ -44,7 +71,17 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
                 if (updateError) {
                     throw updateError;
                 }
-                res.status(200).send("User addresses updated successfully");
+
+                const { data, error: signInError } = await supabase.auth.signInWithPassword({
+                    email,
+                    password: PASSWORD
+                });
+        
+                // If the user signs in successfully
+                if (data?.user) {
+                    return res.status(200).send("User signed in");
+                }
+            }
             } catch (error) {
                 res.status(500).send("Internal server error ");
             }
