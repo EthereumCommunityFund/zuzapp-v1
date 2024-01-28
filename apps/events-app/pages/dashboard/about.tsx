@@ -1,9 +1,11 @@
+import GuildedMembers from '@/components/commons/GuildedMembers';
 import { Loader } from '@/components/ui/Loader';
 import { Database } from '@/database.types';
 import { useGuildedMembers } from '@/hooks/useGuildedMembers';
 
 import contributorsData from '@/pages/dashboard/contributors.json';
 import axiosInstance from '@/src/axiosInstance';
+import { Avatar } from '@mui/material';
 import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
 
 import { useRouter } from 'next/router';
@@ -119,22 +121,22 @@ export default function About() {
         <div className="black_overlay"></div>
         <div className="black_overlay2"></div>
         <div className="marquee">
-          {guildedMembers &&
-            guildedMembers.map((member, index) => (
-              <div key={index} className="contributor">
-                <div className="contrib_col">
-                  <img src={member.user.avatar} alt={member.user.name} />
-                  <span className="contrib_name">{member.user.name}</span>
-                </div>
-                <div className="contrib_roles">
-                  {member.roleIds.map((roleId, roleIndex) => (
-                    <div key={roleIndex} className="contrib_role">
-                      {/* <img src={role.img} alt={role.title} /> */}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
+          {guildedMembers.map((member, index) => (
+            <div key={index} className="contributor">
+              {/* <div className="contrib_col">
+               { <img src={member.user.avatar} alt={member.user.name} />}
+                <span className="contrib_name">{member.user.name}</span>
+              </div> */}
+              {/* <div className="contrib_roles">
+                {member.roles.map((role, roleIndex) => (
+                  <div key={roleIndex} className="contrib_role">
+                    <span>{role.name}</span>
+                  </div>
+                ))}
+              </div> */}
+              <GuildedMembers member={member} />
+            </div>
+          ))}
         </div>
       </div>
 
