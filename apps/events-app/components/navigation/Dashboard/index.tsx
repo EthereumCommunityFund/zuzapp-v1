@@ -99,12 +99,12 @@ export default function DashboardNavigation() {
                         {route.title}
                       </span>
                     </>
+                  ) : route.path.startsWith('http') ? (
+                    <a href={route.path} className="w-full" target="_blank" rel="noopener noreferrer">
+                      {route.title}
+                    </a>
                   ) : (
-                    <Link
-                      href={route.path}
-                      className="w-full"
-                      // target={route.options ? "" : "_blank"}
-                    >
+                    <Link href={route.path} className="w-full">
                       {route.title}
                     </Link>
                   )}
