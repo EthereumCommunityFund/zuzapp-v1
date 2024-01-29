@@ -2,6 +2,8 @@ import { useRouter } from 'next/router';
 import PlusIcon from '@/components/ui/icons/PlusIcon';
 import Button from '@/components/ui/buttons/Button';
 import { cn } from '@/lib/utils';
+import { SignInDialog } from '../HomePageTemplate';
+import { useGlobalContext } from '@/context/GlobalContext';
 
 type CreateEventProps = {
   btnTitle: string;
@@ -16,9 +18,14 @@ const DarkPlusIcon = () => {
 };
 
 export const CreateEvent = ({ btnTitle, className }: CreateEventProps) => {
+  const { isAuthenticated, user } = useGlobalContext();
   const router = useRouter();
 
   const routeToCreateEventsPage = () => {
+    // if (!isAuthenticated) {
+    //   SignInDialog.open();
+    //   return;
+    // }
     router.push({
       pathname: `/dashboard/events/create`,
     });
