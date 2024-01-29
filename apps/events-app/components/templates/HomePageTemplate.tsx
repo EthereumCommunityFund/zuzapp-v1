@@ -133,7 +133,7 @@ export default function HomePageTemplate() {
             setCurr={setCurrentSlide}
           >
             <div className="absolute top-0 left-0 px-8 slider_md:px-14 py-14 max-w-[650px] ml-4 mt-4">
-              <h1 className="font-bold font-inter text-left text-3xl md:text-5xl mb-5">
+              <h1 className="banner_header font-bold font-inter text-left text-3xl md:text-5xl mb-5">
                 {slideData[currentSlide].title}
               </h1>
               <p className="text-left mb-4 max-w-[650px]font-inter text-gray-200 text-md">

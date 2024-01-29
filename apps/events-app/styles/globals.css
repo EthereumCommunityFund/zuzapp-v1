@@ -130,7 +130,7 @@
   align-items: center;
   justify-content: flex-start;
   border-radius: 100px;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   padding: 10px 20px;
   gap: 10px;
@@ -391,6 +391,17 @@
 
 .connect_opt_btn img {
   width: 20px;
+}
+
+.connect_header {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.connection {
+  margin-left: calc(100vw - 350px);
+  margin-top: 60px;
 }
 
 @media screen and (max-width: 1200px) {

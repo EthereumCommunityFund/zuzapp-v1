@@ -109,7 +109,7 @@ export const navBarRoutes: Routes[] = [
     icon_end: GoArrowUpRight,
   },
   {
-    path: "/dashboard/resources",
+    path: "",
     title: "Community",
     icon: HiSpeakerphone,
     icon_end: HiChevronDown,
@@ -120,12 +120,12 @@ export const navBarRoutes: Routes[] = [
         img: "/images/about_zuzalu.svg",
       },
       {
-        path: "/dashboard/resources/events",
+        path: "https://www.guilded.gg/Zuzalu/blog/Commuity-Blog",
         title: "Community Blog",
         img: "/images/guilded_logo.svg",
       },
       {
-        path: "/dashboard/resources/events",
+        path: "https://www.guilded.gg/Zuzalu/blog/Announcements",
         title: "Announcements",
         img: "/images/guilded_logo.svg",
       },

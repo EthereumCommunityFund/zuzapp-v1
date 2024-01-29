@@ -181,7 +181,7 @@ export default function DashboardHeader() {
             // <Button leftIcon={User} variant="quiet" className="space-x-2 rounded-full">
             // </Button>
             <Popover>
-              {/* <div className="flex gap-4">
+              {/* 
                 <PopoverTrigger
                   className="flex space-x-2 items-center rounded-3xl px-5 py-2 h-full bg-dark text-sm md:text-base"
                   onClick={signInWithPassport}
@@ -214,7 +214,7 @@ export default function DashboardHeader() {
                   aria-expanded="true"
                 >
                   <img src="/images/profile.svg" />
-                  <span>Connect to City</span>
+                  <span>Connect</span>
                 </button>
 
                 {isDropdownOpen && (
@@ -246,41 +246,43 @@ export default function DashboardHeader() {
                 )}
               </div>
 
-              {activePopover === "passport" && (
-                <PopoverContent className="bg-[#2B2D2DE5] mt-5 mr-5 rounded-2xl w-80">
-                  <div className="w-full flex flex-col items-center">
-                    <Image
-                      src="/images/small-icon.png"
-                      alt="Avatar"
-                      width={100}
-                      height={25}
-                    />
-                    <p className="text-white/50 font-light text-xs mt-2">
-                      POWERED BY OXPARC WITH ZERO-KNOWLEDGE
-                    </p>
-                    <div className="my-5 font-semibold text-sm">
-                      {!isAuthenticated ? (
-                        <p>Confirming on Zupass...</p>
-                      ) : (
-                        <p className="font-bold text-primary">Connected!</p>
-                      )}
+              <div className="connect_header">
+                {activePopover === "passport" && (
+                  <PopoverContent className="connection bg-[#2B2D2DE5] mt-5 mr-5 rounded-2xl w-80">
+                    <div className="w-full flex flex-col items-center">
+                      <Image
+                        src="/images/small-icon.png"
+                        alt="Avatar"
+                        width={100}
+                        height={25}
+                      />
+                      <p className="text-white/50 font-light text-xs mt-2">
+                        POWERED BY OXPARC WITH ZERO-KNOWLEDGE
+                      </p>
+                      <div className="my-5 font-semibold text-sm">
+                        {!isAuthenticated ? (
+                          <p>Confirming on Zupass...</p>
+                        ) : (
+                          <p className="font-bold text-primary">Connected!</p>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                </PopoverContent>
-              )}
-              {activePopover === "wallet" && (
-                <PopoverContent className="bg-[#2B2D2DE5] mt-5 mr-5 rounded-2xl w-80">
-                  <div className="w-full flex flex-col items-center">
-                    <div className="my-5 font-semibold text-sm">
-                      {!isAuthenticated ? (
-                        <p>Connecting to Metamask</p>
-                      ) : (
-                        <p className="font-bold text-primary">Connected!</p>
-                      )}
+                  </PopoverContent>
+                )}
+                {activePopover === "wallet" && (
+                  <PopoverContent className="connection bg-[#2B2D2DE5] mt-5 mr-5 rounded-2xl w-80">
+                    <div className="w-full flex flex-col items-center">
+                      <div className="my-5 font-semibold text-sm">
+                        {!isAuthenticated ? (
+                          <p>Connecting to Metamask</p>
+                        ) : (
+                          <p className="font-bold text-primary">Connected!</p>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                </PopoverContent>
-              )}
+                  </PopoverContent>
+                )}
+              </div>
             </Popover>
           )}
         </div>
