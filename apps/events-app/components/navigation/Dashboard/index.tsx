@@ -43,6 +43,12 @@ export default function DashboardNavigation() {
     setCommunityDropdownOpen(false);
   };
 
+  const allowedPaths = [
+    "https://www.zuzagora.com/",
+    "https://www.guilded.gg/Zuzalu/blog/Commuity-Blog",
+    "https://www.guilded.gg/Zuzalu/blog/Announcements",
+  ];
+
   return (
     <>
       {/* Mobile menu button */}
@@ -87,10 +93,15 @@ export default function DashboardNavigation() {
                       </span>
                     </>
                   ) : (
-                    <Link href={route.path} className="w-full">
+                    <Link
+                      href={route.path}
+                      className="w-full"
+                      target={route.options ? "" : "_blank"}
+                    >
                       {route.title}
                     </Link>
                   )}
+
                   <span className="icon_end">
                     {route.icon_end && <route.icon_end size={24} />}
                   </span>
@@ -129,7 +140,7 @@ export default function DashboardNavigation() {
           </div>
           {/* Profile navigation */}
           {isAuthenticated && (
-            <ul className="flex flex-col gap-[31px]">
+            <ul className="flex mt-5 flex-col gap-[31px]">
               <li className="flex items-center space-x-2">
                 <Link href={"/dashboard/events/myspaces"} className="w-full">
                   <Button
