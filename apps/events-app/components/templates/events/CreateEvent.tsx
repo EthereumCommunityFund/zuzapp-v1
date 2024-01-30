@@ -22,25 +22,36 @@ export const CreateEvent = ({ btnTitle, className }: CreateEventProps) => {
   const router = useRouter();
 
   const routeToCreateEventsPage = () => {
-    // if (!isAuthenticated) {
-    //   SignInDialog.open();
-    //   return;
-    // }
     router.push({
       pathname: `/dashboard/events/create`,
     });
   };
+  const button = (
+    <Button
+      onClick={() => {
+        if (isAuthenticated) {
+          router.push(`/dashboard/events/create`);
+        }
+      }}
+      size="sm"
+      className="flex py-2 my-4 text-sm bg-[#383B3B] hover:bg-[#383B3B] text-textSecondary hover:text-textSecondary self-stretch font-semibold border-b-[1px] border-white/10 hover:bg-white/20 duration-200 rounded-xl border-none"
+      leftIcon={DarkPlusIcon}
+    >
+      {btnTitle}
+    </Button>
+  );
   return (
     <>
       <div className={cn('flex pt-1.5 pb-3 px-1.5 flex-col items-center gap-[14px] self-stretch', className)}>
-        <Button
+        {/* <Button
           onClick={routeToCreateEventsPage}
           size="sm"
           className="flex py-2 my-4 text-sm bg-[#383B3B] hover:bg-[#383B3B] text-textSecondary hover:text-textSecondary self-stretch font-semibold border-b-[1px] border-white/10 hover:bg-white/20 duration-200 rounded-xl border-none"
           leftIcon={DarkPlusIcon}
         >
           {btnTitle}
-        </Button>
+        </Button> */}
+        {isAuthenticated ? button : <SignInDialog>{button}</SignInDialog>}
       </div>
     </>
   );

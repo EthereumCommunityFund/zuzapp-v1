@@ -238,11 +238,11 @@ export const SignInDialog = ({ children }: SignInDialogProps) => {
             <DialogDescription className="text-sm font-bold pt-5 text-white">Sign in to Create Events and Access more Features</DialogDescription>
           </DialogHeader>
           <DialogFooter className="pt-5">
-            <Button variant="ghost" className="w-full flex space-x-2 items-center justify-center rounded-3xl px-5 py-3 h-full bg-dark text-sm md:text-base" onClick={signIn}>
+            <Button variant="primaryGreen" className="w-full flex space-x-2 items-center justify-center rounded-3xl px-5 py-3 h-full bg-dark text-sm md:text-base" onClick={signIn}>
               <Image src="/images/zaluza blackandwhite.png" width={20} height={20} alt="Passport" className="mr-2" />
               Connect Passport
             </Button>
-            <Button variant="ghost" className="w-full flex space-x-2 items-center justify-center rounded-3xl px-5 py-3 h-full bg-dark text-sm md:text-base" onClick={connectToMetamask}>
+            <Button variant="primaryGreen" className="w-full flex space-x-2 items-center justify-center rounded-3xl px-5 py-3 h-full bg-dark text-sm md:text-base" onClick={connectToMetamask}>
               Connect Wallet
             </Button>
           </DialogFooter>
