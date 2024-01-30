@@ -37,8 +37,9 @@ import Image from 'next/image';
 import { updateEventSpaceStatus } from '@/controllers';
 import EditionButtons from '../ui/buttons/EditionButtons';
 import { CgClose } from 'react-icons/cg';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { MdCancel } from 'react-icons/md';
+import { deleteEventSpaceById } from '@/services/deleteEventSpaces';
 dayjs.extend(isSameOrAfter);
 
 interface EventSpaceDetailsProps {
@@ -423,6 +424,28 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace, handl
       popUpModal(type);
     }
   };
+  const zuconnectId = '873f2ae3-bcab-4a30-8b99-cb5e011a9db0';
+  const [isDeleting, setIsDeleting] = useState(false);
+  const handleDeleteEventSpace = async () => {
+    if (!eventSpace) return;
+    if (eventSpace.id === zuconnectId) {
+      toast({
+        title: 'Error',
+        description: 'This event cannot be deleted without adequate permissions.',
+        variant: 'destructive',
+      });
+      return;
+    }
+    try {
+      setIsDeleting(true);
+      await deleteEventSpaceById(eventSpace.id as string);
+      router.push('/dashboard/events/myspaces');
+    } catch (error) {
+      console.error('Error deleting the event space', error);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
   if (isLoadingEvent) {
     return <Loader />;
   }
@@ -444,7 +467,31 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace, handl
           <Button variant="primaryGreen" className="w-40 flex justify-center rounded-3xl text-xl" onClick={() => handleButtonClick(SpaceDashboardCardType.PublishEvent)}>
             Publish Event
           </Button>
-          <Button className="w-40 flex justify-center rounded-3xl text-xl bg-[#EB5757]/20">Delete Event</Button>
+          {/* <Button className="w-40 flex justify-center rounded-3xl text-xl bg-[#EB5757]/20">Delete Event</Button> */}
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button aria-disabled className="w-40 rounded-full flex justify-center" variant="red" size="lg" type="button" disabled={isDeleting}>
+                Delete Event
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px] h-auto rounded-2xl">
+              <DialogHeader>
+                <DialogTitle>Delete space?</DialogTitle>
+                <DialogDescription className="text-sm font-bold">Are you sure you want to delete this event space?</DialogDescription>
+                <DialogFooter className="pt-5">
+                  <div className="flex items-center">
+                    {/* <button className="py-2.5 px-3.5 flex items-center gap-1 rounded-[20px] bg-white/20">
+                      <span>Cancel</span>
+                    </button> */}
+                    <button onClick={handleDeleteEventSpace} className="flex w-full justify-center py-2.5 px-3.5 items-center gap-1 text-[#FF5E5E] rounded-[20px] bg-[#EB5757]/20">
+                      <HiXCircle />
+                      <span>{isDeleting ? 'Deleting...' : 'Delete'}</span>
+                    </button>
+                  </div>
+                </DialogFooter>
+              </DialogHeader>
+            </DialogContent>
+          </Dialog>
         </div>
         <div className="flex flex-col gap-5 items-start lg:ml-[300px] w-full">
           <div className="mx-5">
