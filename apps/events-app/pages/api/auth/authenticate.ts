@@ -35,16 +35,18 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
         if (olduserError) {
             throw olduserError;
         }
-
+        console.log(commitment,'olduserdata should existe');
         if(olduserData){
+            console.log(olduserData,'olduserdata');
             const { data: olduserupdateData, error: olduserupdateError } = await supabase
                     .from('profile')
-                    .update(commitment)
+                    .update({commitment})
                     .eq('uuid',olduserData.uuid)
             
                     if (olduserupdateError) {
                         throw olduserupdateError;
                     }
+            console.log(olduserData,'newuserdata');
         }
         
         if(userAccount){
