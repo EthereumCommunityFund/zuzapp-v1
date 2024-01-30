@@ -9,7 +9,7 @@ import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
 
 import { useRouter } from 'next/router';
 import { set } from 'nprogress';
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 
 export default function About() {
   const router = useRouter();
@@ -114,7 +114,7 @@ export default function About() {
       <br />
       <br />
 
-      <>
+      <Suspense fallback={<Loader />}>
         <h2>Current List of Contributors ({guildedMembers?.length})</h2>
         <div className="contributors_container">
           <div className="black_overlay"></div>
@@ -127,7 +127,7 @@ export default function About() {
             ))}
           </div>
         </div>
-      </>
+      </Suspense>
 
       <h1>Build With Us:</h1>
       <h4>Join Guilded - R&D, coop building portal</h4>
