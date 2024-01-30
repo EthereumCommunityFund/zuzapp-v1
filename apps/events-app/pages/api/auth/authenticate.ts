@@ -40,7 +40,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
             const { data: olduserupdateData, error: olduserupdateError } = await supabase
                     .from('profile')
                     .update(commitment)
-                    .eq('uuid',olduserData)
+                    .eq('uuid',olduserData.uuid)
             
                     if (olduserupdateError) {
                         throw olduserupdateError;

@@ -186,7 +186,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
                 //since no previous wallet account, merge info to zupass account
                 const { data:searchdata, error } = await supabase
                 .from('profile')
-                .select('useraddresses')
+                .select('*')
                 .eq('uuid', userzupassData.uuid)
                 .maybeSingle()
 
