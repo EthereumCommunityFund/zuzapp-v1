@@ -39,6 +39,7 @@ import { fetchEventSpace } from "@/controllers";
 import { fetchEventSpaceById } from "@/services/fetchEventSpaceDetails";
 import slideData from "@/constant/slidedata";
 import { useWallet } from "@/context/WalletContext";
+import axios from 'axios';
 
 interface DialogContent {
   title: string;
@@ -116,6 +117,13 @@ export default function HomePageTemplate() {
         buttonLabel: "Complete",
       });
     } catch (error) {
+      if (axios.isAxiosError(error) && error.response && error.response.status === 400) {
+        toast({
+          title: 'Error',
+          description: 'User name already exists, please choose another one',
+          variant: 'destructive',
+        });
+      }
       console.error("Error updating username", error);
     }
   };
