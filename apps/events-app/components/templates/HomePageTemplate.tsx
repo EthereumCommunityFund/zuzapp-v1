@@ -1,31 +1,39 @@
-import { useUserPassportContext } from '@/context/PassportContext';
-import Button from '../ui/buttons/Button';
-import Image from 'next/image';
-import Link from 'next/link';
-import { BsCalendar2Fill } from 'react-icons/bs';
-import { HiLockClosed } from 'react-icons/hi';
-import { useGlobalContext } from '@/context/GlobalContext';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
-import { useRouter } from 'next/router';
-import { EventSpaceDetailsType, EventTypes } from '@/types';
-import { arrayFromLength } from '@/lib/helper';
-import { HomePageTemplateSkeleton } from '../commons/HomePageTemplateSkeleton';
-import { useEffect, useState } from 'react';
-import { Input } from '../ui/input';
-import { updateUsername } from '@/controllers/profile.controllers';
-import banner1 from '@/public/images/zuconnectbanner.png';
-import banner2 from '@/public/images/playbook.png';
-import CustomCarousel from '../ui/CustomCarousel';
-import { formatDate, truncateString } from '@/utils';
-import { toast } from '../ui/use-toast';
-import { Label } from '../ui/label';
-import { HostUrls } from '@/constant/hostUrls';
-import { fetchEventSpaceById } from '@/services/fetchEventSpaceDetails';
-import slideData from '@/constant/slidedata';
-import { useWallet } from '@/context/WalletContext';
-import { CreateEvent } from './events/CreateEvent';
-import { usePublishedEvents } from '@/hooks/usePublishedEvents';
-import axios from 'axios';
+import { useUserPassportContext } from "@/context/PassportContext";
+import Button from "../ui/buttons/Button";
+import Image from "next/image";
+import Link from "next/link";
+import { BsCalendar2Fill } from "react-icons/bs";
+import { HiLockClosed } from "react-icons/hi";
+import { useGlobalContext } from "@/context/GlobalContext";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../ui/dialog";
+import { useRouter } from "next/router";
+import { EventSpaceDetailsType, EventTypes } from "@/types";
+import { arrayFromLength } from "@/lib/helper";
+import { HomePageTemplateSkeleton } from "../commons/HomePageTemplateSkeleton";
+import { useEffect, useState } from "react";
+import { Input } from "../ui/input";
+import { updateUsername } from "@/controllers/profile.controllers";
+import banner1 from "@/public/images/banner2.png";
+import banner2 from "@/public/images/banner2.png";
+import CustomCarousel from "../ui/CustomCarousel";
+import { formatDate, truncateString } from "@/utils";
+import { toast } from "../ui/use-toast";
+import { Label } from "../ui/label";
+import { HostUrls } from "@/constant/hostUrls";
+import { fetchEventSpaceById } from "@/services/fetchEventSpaceDetails";
+import slideData from "@/constant/slidedata";
+import { useWallet } from "@/context/WalletContext";
+import { CreateEvent } from "./events/CreateEvent";
+import { usePublishedEvents } from "@/hooks/usePublishedEvents";
+import axios from "axios";
 
 export default function HomePageTemplate() {
   return (
@@ -35,7 +43,7 @@ export default function HomePageTemplate() {
       </div>
       <div className="mt-10 pb-5">
         <Label className="text-2xl md:text-4xl">Events</Label>
-        <CreateEvent btnTitle={'Add Event'} className="w-40" />
+        <CreateEvent btnTitle={"Add Event"} className="w-40" />
         <PublishedEventSpaces />
       </div>
       <TestEventSpace />
@@ -76,7 +84,11 @@ export const TestEventSpace = () => {
             <div className="flex flex-col md:flex-row md:space-x-3 md:items-center">
               <div>
                 <img
-                  src={testEventSpace.image_url ? testEventSpace.image_url : `/images/black-img.png`}
+                  src={
+                    testEventSpace.image_url
+                      ? testEventSpace.image_url
+                      : `/images/black-img.png`
+                  }
                   className="rounded-xl w-full md:max-w-[180px] md:max-h-[180px]"
                   alt="Event"
                   width={150}
@@ -84,14 +96,21 @@ export const TestEventSpace = () => {
                 />
               </div>
               <div className="space-y-2 space-x-0 mt-2 md:mt-0">
-                <h4 className="text-2xl font-semibold">{testEventSpace.name}</h4>
-                <h2 className="text-base font-normal opacity-70 font-inter">{truncateString(testEventSpace.tagline, 40)}</h2>
+                <h4 className="text-2xl font-semibold">
+                  {testEventSpace.name}
+                </h4>
+                <h2 className="text-base font-normal opacity-70 font-inter">
+                  {truncateString(testEventSpace.tagline, 40)}
+                </h2>
                 <div className="flex gap-2 flex-wrap">
                   <p className="flex items-center text-xs text-white/60 bg-white/10 rounded-xl py-2 px-3 w-fit font-normal">
-                    <BsCalendar2Fill className="mr-2 text-sm md:text-base" /> {formatDate(testEventSpace?.start_date)} - {formatDate(testEventSpace?.end_date)}
+                    <BsCalendar2Fill className="mr-2 text-sm md:text-base" />{" "}
+                    {formatDate(testEventSpace?.start_date)} -{" "}
+                    {formatDate(testEventSpace?.end_date)}
                   </p>
                   <p className="flex items-center text-xs text-white/60 bg-white/10 rounded-xl py-2 px-3 w-fit font-normal">
-                    <HiLockClosed className="mr-2 text-sm md:text-base" /> Resident Only
+                    <HiLockClosed className="mr-2 text-sm md:text-base" />{" "}
+                    Resident Only
                   </p>
                 </div>
               </div>
@@ -100,7 +119,9 @@ export const TestEventSpace = () => {
               <Button
                 size="lg"
                 className="rounded-full w-full flex items-center justify-center font-semibold md:w-auto bg-white/10"
-                onClick={() => testEventSpace.id && handleButtonClick(testEventSpace.id)}
+                onClick={() =>
+                  testEventSpace.id && handleButtonClick(testEventSpace.id)
+                }
               >
                 View Event
               </Button>
@@ -123,9 +144,9 @@ export const PublishedEventSpaces = () => {
   };
   if (isError) {
     toast({
-      title: 'Error',
-      description: 'Error loading Published Events',
-      variant: 'destructive',
+      title: "Error",
+      description: "Error loading Published Events",
+      variant: "destructive",
     });
   }
   return (
@@ -146,23 +167,42 @@ export const PublishedEventSpaces = () => {
             >
               <div className="flex flex-col md:flex-row md:space-x-3 md:items-center">
                 <div>
-                  <Image src={event.image_url ? event.image_url : `/images/black-img.png`} className="rounded-xl w-full md:max-w-[180px] md:max-h-[180px]" alt="Event" width={150} height={150} />
+                  <Image
+                    src={
+                      event.image_url
+                        ? event.image_url
+                        : `/images/black-img.png`
+                    }
+                    className="rounded-xl w-full md:max-w-[180px] md:max-h-[180px]"
+                    alt="Event"
+                    width={150}
+                    height={150}
+                  />
                 </div>
                 <div className="space-y-2 space-x-0 mt-2 md:mt-0">
                   <h4 className="text-2xl font-semibold">{event.name}</h4>
-                  <h2 className="text-base font-normal opacity-70 font-inter">{truncateString(event.tagline, 40)}</h2>
+                  <h2 className="text-base font-normal opacity-70 font-inter">
+                    {truncateString(event.tagline, 40)}
+                  </h2>
                   <div className="flex gap-2 flex-wrap">
                     <p className="flex items-center text-xs text-white/60 bg-white/10 rounded-xl py-2 px-3 w-fit font-normal">
-                      <BsCalendar2Fill className="mr-2 text-sm md:text-base" /> {formatDate(event?.start_date)} - {formatDate(event?.end_date)}
+                      <BsCalendar2Fill className="mr-2 text-sm md:text-base" />{" "}
+                      {formatDate(event?.start_date)} -{" "}
+                      {formatDate(event?.end_date)}
                     </p>
                     <p className="flex items-center text-xs text-white/60 bg-white/10 rounded-xl py-2 px-3 w-fit font-normal">
-                      <HiLockClosed className="mr-2 text-sm md:text-base" /> Resident Only
+                      <HiLockClosed className="mr-2 text-sm md:text-base" />{" "}
+                      Resident Only
                     </p>
                   </div>
                 </div>
               </div>
               <div className="mt-3 md:mt-0 lg:mr-2">
-                <Button size="lg" className="rounded-full w-full flex items-center justify-center font-semibold md:w-auto bg-white/10" onClick={() => event.id && handleButtonClick(event.id)}>
+                <Button
+                  size="lg"
+                  className="rounded-full w-full flex items-center justify-center font-semibold md:w-auto bg-white/10"
+                  onClick={() => event.id && handleButtonClick(event.id)}
+                >
                   View Event
                 </Button>
               </div>
@@ -182,15 +222,30 @@ export const HomePageBanner = () => {
 
   return (
     <>
-      <CustomCarousel slides={slides as unknown as string[]} curr={currentSlide} setCurr={setCurrentSlide}>
+      <CustomCarousel
+        slides={slides as unknown as string[]}
+        curr={currentSlide}
+        setCurr={setCurrentSlide}
+      >
         <div className="absolute top-0 left-0 px-8 slider_md:px-14 py-14 max-w-[650px] ml-4 mt-4">
-          <h1 className="banner_header font-bold font-inter text-left text-3xl md:text-5xl mb-5">{slideData[currentSlide].title}</h1>
-          <p className="text-left mb-4 max-w-[650px]font-inter text-gray-200 text-md">{slideData[currentSlide].description}</p>
+          <h1 className="banner_header font-bold font-inter text-left text-3xl md:text-5xl mb-5">
+            {slideData[currentSlide].title}
+          </h1>
+          <p className="text-left mb-4 max-w-[650px]font-inter text-gray-200 text-md">
+            {slideData[currentSlide].description}
+          </p>
           {slideData[currentSlide].ctas.map((cta, index) => {
-            if (cta.ctaLink === '/dashboard/events/create' && !isAuthenticated) {
+            if (
+              cta.ctaLink === "/dashboard/events/create" &&
+              !isAuthenticated
+            ) {
               return (
                 <SignInDialog key={index}>
-                  <Button size="lg" variant="primaryGreen" className={`${cta.twClassNames} rounded-full w-full slider_md:w-auto my-2.5 text-xl justify-center text-white font-inter font-semibold`}>
+                  <Button
+                    size="lg"
+                    variant="primaryGreen"
+                    className={`${cta.twClassNames} rounded-full w-full slider_md:w-auto my-2.5 text-xl justify-center text-white font-inter font-semibold`}
+                  >
                     {cta.ctaText}
                   </Button>
                 </SignInDialog>
@@ -203,10 +258,13 @@ export const HomePageBanner = () => {
                   variant="primaryGreen"
                   className={`${cta.twClassNames} rounded-full w-full slider_md:w-auto my-2.5 text-xl justify-center text-white font-inter font-semibold`}
                   onClick={() => {
-                    if (cta.ctaLink === '/dashboard/events/create' && isAuthenticated) {
+                    if (
+                      cta.ctaLink === "/dashboard/events/create" &&
+                      isAuthenticated
+                    ) {
                       router.push(cta.ctaLink);
                     } else {
-                      window.open(cta.ctaLink, '_blank');
+                      window.open(cta.ctaLink, "_blank");
                     }
                   }}
                 >
@@ -235,15 +293,33 @@ export const SignInDialog = ({ children }: SignInDialogProps) => {
         <DialogTrigger asChild>{children}</DialogTrigger>
         <DialogContent className="sm:max-w-[425px] rounded-2xl">
           <DialogHeader>
-            <DialogTitle className="text-gray-300 font-inter font-bold">Need to Sign in!</DialogTitle>
-            <DialogDescription className="text-sm font-bold pt-5 text-white">Sign in to Create Events and Access more Features</DialogDescription>
+            <DialogTitle className="text-gray-300 font-inter font-bold">
+              Need to Sign in!
+            </DialogTitle>
+            <DialogDescription className="text-sm font-bold pt-5 text-white">
+              Sign in to Create Events and Access more Features
+            </DialogDescription>
           </DialogHeader>
           <DialogFooter className="pt-5">
-            <Button variant="primaryGreen" className="w-full flex space-x-2 items-center justify-center rounded-3xl px-5 py-3 h-full bg-dark text-sm md:text-base" onClick={signIn}>
-              <Image src="/images/zaluza blackandwhite.png" width={20} height={20} alt="Passport" className="mr-2" />
+            <Button
+              variant="primaryGreen"
+              className="w-full flex space-x-2 items-center justify-center rounded-3xl px-5 py-3 h-full bg-dark text-sm md:text-base"
+              onClick={signIn}
+            >
+              <Image
+                src="/images/zaluza blackandwhite.png"
+                width={20}
+                height={20}
+                alt="Passport"
+                className="mr-2"
+              />
               Connect Passport
             </Button>
-            <Button variant="primaryGreen" className="w-full flex space-x-2 items-center justify-center rounded-3xl px-5 py-3 h-full bg-dark text-sm md:text-base" onClick={connectToMetamask}>
+            <Button
+              variant="primaryGreen"
+              className="w-full flex space-x-2 items-center justify-center rounded-3xl px-5 py-3 h-full bg-dark text-sm md:text-base"
+              onClick={connectToMetamask}
+            >
               Connect Wallet
             </Button>
           </DialogFooter>
@@ -255,7 +331,7 @@ export const SignInDialog = ({ children }: SignInDialogProps) => {
 
 export const FirstUserLogin = () => {
   const { profile } = useGlobalContext();
-  const [userName, setUsername] = useState<string>('');
+  const [userName, setUsername] = useState<string>("");
   const router = useRouter();
   const { firstLogin } = router.query;
 
@@ -268,8 +344,9 @@ export const FirstUserLogin = () => {
 
   const [dialogContent, setDialogContent] = useState<DialogContent>({
     title: "Welcome to Zuzalu, let's get your name!",
-    description: 'Type in a username. Does not have to be your real name. You can also change your username later',
-    buttonLabel: 'Continue',
+    description:
+      "Type in a username. Does not have to be your real name. You can also change your username later",
+    buttonLabel: "Continue",
   });
 
   const handleDialogButton = async () => {
@@ -277,18 +354,22 @@ export const FirstUserLogin = () => {
       const res = await updateUsername({ username: userName });
       setDialogContent({
         title: `Welcome, ${userName}`,
-        description: 'Now, head to explore Zuzalu & community events!',
-        buttonLabel: 'Complete',
+        description: "Now, head to explore Zuzalu & community events!",
+        buttonLabel: "Complete",
       });
     } catch (error) {
-      if (axios.isAxiosError(error) && error.response && error.response.status === 400) {
+      if (
+        axios.isAxiosError(error) &&
+        error.response &&
+        error.response.status === 400
+      ) {
         toast({
-          title: 'Error',
-          description: 'User name already exists, please choose another one',
-          variant: 'destructive',
+          title: "Error",
+          description: "User name already exists, please choose another one",
+          variant: "destructive",
         });
       }
-      console.error('Error updating username', error);
+      console.error("Error updating username", error);
     }
   };
 
@@ -298,17 +379,30 @@ export const FirstUserLogin = () => {
         <Dialog open={true}>
           <DialogContent className="w-96 sm:max-w-xl p-6">
             <DialogHeader>
-              <DialogTitle className="text-2xl font-bold text-white mb-4">{dialogContent?.title}</DialogTitle>
-              <DialogDescription className="text-md font-normal text-gray-400">{dialogContent?.description}</DialogDescription>
+              <DialogTitle className="text-2xl font-bold text-white mb-4">
+                {dialogContent?.title}
+              </DialogTitle>
+              <DialogDescription className="text-md font-normal text-gray-400">
+                {dialogContent?.description}
+              </DialogDescription>
             </DialogHeader>
             <DialogFooter className="pt-5">
-              {dialogContent.buttonLabel === 'Continue' && (
-                <Input placeholder="Type your username" className="text-white py-2 px-3 rounded border border-gray-600" value={userName} onChange={(e) => setUsername(e.target.value)} />
+              {dialogContent.buttonLabel === "Continue" && (
+                <Input
+                  placeholder="Type your username"
+                  className="text-white py-2 px-3 rounded border border-gray-600"
+                  value={userName}
+                  onChange={(e) => setUsername(e.target.value)}
+                />
               )}
               <Button
                 variant={`${userName.length ? `strongerGreen` : `ghost`}`}
                 className="w-full flex items-center justify-center rounded-3xl py-2 h-full bg-dark text-lg md:text-base text-white"
-                onClick={dialogContent.buttonLabel === 'Continue' ? handleDialogButton : () => router.reload()}
+                onClick={
+                  dialogContent.buttonLabel === "Continue"
+                    ? handleDialogButton
+                    : () => router.reload()
+                }
               >
                 {dialogContent?.buttonLabel}
               </Button>

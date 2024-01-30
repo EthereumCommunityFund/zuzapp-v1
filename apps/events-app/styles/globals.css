@@ -185,6 +185,11 @@
 
 .highlighted_p {
   color: #b3d3a4;
+  font-style: italic;
+}
+
+.highlighted_p_bold {
+  color: #b3d3a4;
 }
 
 .container_box {
