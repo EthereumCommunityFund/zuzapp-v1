@@ -112,29 +112,20 @@ export default function About() {
 
       <br />
       <br />
-      <h2>Current List of Contributors ({guildedMembers.length})</h2>
-      {/* <p className="sub_text">List Last Updated: Jan 23, 2024</p> */}
+      <h2>Current List of Contributors ({isLoading ? '...' : guildedMembers.length})</h2>
       <div className="contributors_container">
         <div className="black_overlay"></div>
         <div className="black_overlay2"></div>
         <div className="marquee">
-          {isLoading && <Loader />}
-          {guildedMembers.map((member, index) => (
-            <div key={index}>
-              {/* <div className="contrib_col">
-               { <img src={member.user.avatar} alt={member.user.name} />}
-                <span className="contrib_name">{member.user.name}</span>
-              </div> */}
-              {/* <div className="contrib_roles">
-                {member.roles.map((role, roleIndex) => (
-                  <div key={roleIndex} className="contrib_role">
-                    <span>{role.name}</span>
-                  </div>
-                ))}
-              </div> */}
-              <GuildedMembers member={member} />
-            </div>
-          ))}
+          {isLoading ? (
+            <Loader />
+          ) : (
+            guildedMembers.map((member, index) => (
+              <div key={index}>
+                <GuildedMembers member={member} />
+              </div>
+            ))
+          )}
         </div>
       </div>
 
