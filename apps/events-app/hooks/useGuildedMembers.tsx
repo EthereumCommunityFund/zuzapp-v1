@@ -1,4 +1,5 @@
 import axiosInstance from '@/src/axiosInstance';
+import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 
 type GuildedMembersResponse = {
@@ -31,12 +32,12 @@ export type GuildedMember = {
   roles: GuildedRole[];
 };
 
-const fetchGuildedMembers = async () => {
-  const response = await axiosInstance.get('/api/guilded');
-  return response.data;
-};
-
 export const useGuildedMembers = () => {
+  const fetchGuildedMembers = async () => {
+    const response = await axiosInstance.get('/api/guilded');
+    return response.data;
+  };
+
   const {
     data: guildedMembersResponse,
     isLoading,
