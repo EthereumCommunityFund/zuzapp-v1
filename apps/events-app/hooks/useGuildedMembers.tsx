@@ -1,4 +1,5 @@
 import axiosInstance from '@/src/axiosInstance';
+import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 
 type GuildedMembersResponse = {
@@ -31,20 +32,28 @@ export type GuildedMember = {
   roles: GuildedRole[];
 };
 
-const fetchGuildedMembers = async () => {
-  const response = await axiosInstance.get('/api/guilded');
-  return response.data;
-};
-
 export const useGuildedMembers = () => {
-  const {
-    data: guildedMembersResponse,
-    isLoading,
-    isError,
-  } = useQuery<GuildedMembersResponse>(['guildedMembers'], fetchGuildedMembers, {
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
-  });
+  const [guildedMembersResponse, setGuilded] = useState<GuildedMembersResponse>();
+  const [isLoading, setIsLoading] = useState(true);
+  const fetchGuildedMembers = async () => {
+    setIsLoading(true);
+    const response = await axiosInstance.get('/api/guilded');
+    setGuilded(response.data);
+    setIsLoading(false);
+  };
 
-  return { guildedMembers: guildedMembersResponse?.members ?? [], isLoading, isError };
+  // const {
+  //   data: guildedMembersResponse,
+  //   isLoading,
+  //   isError,
+  // } = useQuery<GuildedMembersResponse>(['guildedMembers'], fetchGuildedMembers, {
+  //   refetchOnWindowFocus: true,
+  //   refetchOnReconnect: true,
+  // });
+
+  useEffect(() => {
+    fetchGuildedMembers();
+  }, []);
+
+  return { guildedMembers: guildedMembersResponse?.members ?? [], isLoading };
 };

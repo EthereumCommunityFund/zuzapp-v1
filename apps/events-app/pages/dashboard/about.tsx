@@ -9,11 +9,13 @@ import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
 
 import { useRouter } from 'next/router';
 import { set } from 'nprogress';
+import { Suspense, useState } from 'react';
 
 export default function About() {
   const router = useRouter();
 
-  const { guildedMembers, isLoading, isError } = useGuildedMembers();
+  const { guildedMembers, isLoading } = useGuildedMembers();
+
   console.log(guildedMembers, 'guildedMembers');
 
   return (
@@ -112,7 +114,7 @@ export default function About() {
 
       <br />
       <br />
-      <h2>Current List of Contributors ({isLoading ? '...' : guildedMembers.length})</h2>
+      <h2>Current List of Contributors ({guildedMembers?.length})</h2>
       <div className="contributors_container">
         <div className="black_overlay"></div>
         <div className="black_overlay2"></div>
@@ -120,7 +122,7 @@ export default function About() {
           {isLoading ? (
             <Loader />
           ) : (
-            guildedMembers.map((member, index) => (
+            guildedMembers?.map((member, index) => (
               <div key={index}>
                 <GuildedMembers member={member} />
               </div>
@@ -128,7 +130,6 @@ export default function About() {
           )}
         </div>
       </div>
-
       <h1>Build With Us:</h1>
       <h4>Join Guilded - R&D, coop building portal</h4>
 
