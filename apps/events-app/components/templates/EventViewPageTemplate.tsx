@@ -8,9 +8,7 @@ import Button from '../ui/buttons/Button';
 import { HiCalendar, HiLocationMarker } from 'react-icons/hi';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
 import RenderHTMLString from '../ui/RenderHTMLString';
-import { X } from 'lucide-react';
-import * as DialogPrimitive from '@radix-ui/react-dialog';
-import { BsArrowRightCircleFill } from 'react-icons/bs';
+
 import { Label } from '../ui/label';
 import Image from 'next/image';
 
@@ -51,14 +49,20 @@ export default function EventViewPageTemplate({ eventSpace, user }: { eventSpace
     if (social_links) setSocialLinks(JSON.parse(social_links));
     if (extra_links) setExtraLinks(JSON.parse(extra_links));
     if (main_location) {
-      // eventSpace.main_location.forEach((location) => {
-      //   if (location.image_urls) URLs.push(...location.image_urls);
-      // });
-      setImgUrls(main_location.image_urls);
-      setLocationName(eventSpace.main_location.name);
+      setImgUrls(main_location.image_urls || []);
+      setLocationName(main_location.name);
       setLocationAddress(user && main_location.address);
     }
-  }, [social_links, extra_links, eventSpace]);
+    if (eventspacelocation && (!main_location || eventspacelocation.length > 0)) {
+      const URLs = main_location && main_location.image_urls ? [...main_location.image_urls] : [];
+      eventspacelocation.forEach((location) => {
+        if (location.image_urls) URLs.push(...location.image_urls);
+      });
+      setImgUrls(URLs.length > 0 ? URLs : imgUrls);
+      setLocationName(eventspacelocation[0]?.name || locationName);
+      setLocationAddress(user && (eventspacelocation[0]?.address || locationAddress));
+    }
+  }, [social_links, extra_links, eventSpace, main_location, eventspacelocation, user]);
 
   return (
     <>
@@ -73,7 +77,7 @@ export default function EventViewPageTemplate({ eventSpace, user }: { eventSpace
             <div className="items-center justify-between w-full pb-5 sm:flex-col sm:gap-3 sm:flex md:flex md:flex-row">
               <div className="flex flex-col gap-3 sm:w-full md:w-auto">
                 <div className="flex items-center gap-3 text-[#D7FFC4]/80">
-                  <LockClosed />
+                  {/* <LockClosed /> */}
                   <span className="font-bold">Zuzalu Residents & Invited Guests</span>
                 </div>
                 <h2 className="font-semibold text-[30px]">{name}</h2>

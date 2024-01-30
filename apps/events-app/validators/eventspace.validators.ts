@@ -7,7 +7,7 @@ const location_schema = Joi.object({
   description: Joi.string().required(),
   address: Joi.string().required(),
   capacity: Joi.number().integer().default(50),
-  image_urls: Joi.array().items(Joi.string().uri()),
+  image_urls: Joi.array().items(Joi.string().uri()).allow(null),
 });
 
 const eventspace_update_schema = Joi.object({
@@ -28,7 +28,7 @@ const eventspace_update_schema = Joi.object({
   format: Joi.string().valid('in-person', 'online').required(),
   event_type: Joi.array().items(Joi.string()).default(['General']),
   experience_level: Joi.array().items(Joi.string()).default(['Beginner']),
-  image_url: Joi.string().uri().allow(''),
+  image_url: Joi.string().uri().allow('').allow(null),
   main_location: location_schema.required(),
 });
 

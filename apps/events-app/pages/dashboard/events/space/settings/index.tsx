@@ -187,7 +187,7 @@ const EventSpaceSettings = () => {
         <Dialog>
           <DialogTrigger asChild>
             <Button aria-disabled className="w-40 rounded-full flex justify-center" variant="red" size="lg" type="button" disabled={isLoading}>
-              {isLoading ? 'Deleting...' : 'Delete Event'}
+              {'Delete Event'}
             </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[425px] h-auto rounded-2xl">

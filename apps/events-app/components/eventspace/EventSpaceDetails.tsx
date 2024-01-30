@@ -21,7 +21,7 @@ import { updateEventSpace } from '@/controllers';
 import { useQueryClient } from 'react-query';
 import Button from '../ui/buttons/Button';
 import Link from 'next/link';
-import { HiArrowLeft, HiArrowRight, HiCalendar, HiXCircle } from 'react-icons/hi';
+import { HiArrowCircleUp, HiArrowLeft, HiArrowRight, HiCalendar, HiXCircle } from 'react-icons/hi';
 import { EventBanner } from './EventBanner';
 import IconButton from '../ui/buttons/IconButton';
 import { RxPlus } from 'react-icons/rx';
@@ -63,8 +63,8 @@ const formSchema = z.object({
     required_error: 'You need to select a valid date for this event.',
     invalid_type_error: 'You need to select a valid date for this event.',
   }),
-  description: z.string().min(40, {
-    message: 'Description is required and is a minimum of 40 characters',
+  description: z.string().min(5, {
+    message: 'Description is required and is a minimum of 5 characters',
   }),
   locationName: z.string().min(2, {
     message: 'Main Location Name is required',
@@ -75,8 +75,8 @@ const formSchema = z.object({
   locationCapacity: z.number().min(1, {
     message: 'Main Location Capacity is required',
   }),
-  locationDescription: z.string().min(2, {
-    message: 'Main Location Description is a minimum of 40 characters',
+  locationDescription: z.string().min(5, {
+    message: 'Main Location Description is a minimum of 5 characters',
   }),
 });
 
@@ -464,13 +464,19 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace, handl
               </div>
             ))}
           </div>
-          <Button variant="primaryGreen" className="w-40 flex justify-center rounded-3xl text-xl" onClick={() => handleButtonClick(SpaceDashboardCardType.PublishEvent)}>
+          <hr className="bg-gray-500 w-60" />
+          <Button
+            variant="primaryGreen"
+            leftIcon={HiArrowCircleUp}
+            className="w-52 ml-4 flex justify-center rounded-3xl text-base font-inter font-bold text-[#d4ffb5]"
+            onClick={() => handleButtonClick(SpaceDashboardCardType.PublishEvent)}
+          >
             Publish Event
           </Button>
           {/* <Button className="w-40 flex justify-center rounded-3xl text-xl bg-[#EB5757]/20">Delete Event</Button> */}
           <Dialog>
             <DialogTrigger asChild>
-              <Button aria-disabled className="w-40 rounded-full flex justify-center" variant="red" size="lg" type="button" disabled={isDeleting}>
+              <Button aria-disabled leftIcon={HiXCircle} className="w-52 ml-4 flex justify-center rounded-3xl text-base font-inter font-bold" variant="red" type="button" disabled={isDeleting}>
                 Delete Event
               </Button>
             </DialogTrigger>
@@ -795,11 +801,7 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace, handl
                           <span>Discard Edit</span>
                         </Button> */}
                     <Button className="rounded-full w-full md:w-full lg:w-full flex justify-center" variant="blue" size="lg" onClick={() => form.handleSubmit(onSubmit)()} leftIcon={FaCircleArrowUp}>
-                      {isLoading && !detailsUpdated && (
-                        <div className="">
-                          <Loader />
-                        </div>
-                      )}
+                      {isLoading && !detailsUpdated && <div className="">submitting...</div>}
                       <span>Save Edit</span>
                     </Button>
                   </div>
