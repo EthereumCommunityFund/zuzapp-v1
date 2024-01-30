@@ -15,7 +15,10 @@ export default function About() {
   const router = useRouter();
 
   const { guildedMembers, isLoading, isError } = useGuildedMembers();
+
   console.log(guildedMembers, 'guildedMembers');
+
+  if (isLoading) <Loader />;
 
   return (
     <div className="about_container">

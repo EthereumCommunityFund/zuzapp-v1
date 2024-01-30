@@ -42,8 +42,8 @@ export const useGuildedMembers = () => {
     isLoading,
     isError,
   } = useQuery<GuildedMembersResponse>(['guildedMembers'], fetchGuildedMembers, {
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
   });
 
   return { guildedMembers: guildedMembersResponse?.members ?? [], isLoading, isError };
