@@ -18,7 +18,9 @@ export default function About() {
 
   console.log(guildedMembers, 'guildedMembers');
 
-  if (isLoading) <Loader />;
+  if (isLoading) {
+    return <Loader />;
+  }
 
   return (
     <div className="about_container">
@@ -116,22 +118,18 @@ export default function About() {
 
       <br />
       <br />
-
-      <Suspense fallback={<Loader />}>
-        <h2>Current List of Contributors ({guildedMembers?.length})</h2>
-        <div className="contributors_container">
-          <div className="black_overlay"></div>
-          <div className="black_overlay2"></div>
-          <div className="marquee">
-            {guildedMembers?.map((member, index) => (
-              <div key={index}>
-                <GuildedMembers member={member} />
-              </div>
-            ))}
-          </div>
+      <h2>Current List of Contributors ({guildedMembers?.length})</h2>
+      <div className="contributors_container">
+        <div className="black_overlay"></div>
+        <div className="black_overlay2"></div>
+        <div className="marquee">
+          {guildedMembers?.map((member, index) => (
+            <div key={index}>
+              <GuildedMembers member={member} />
+            </div>
+          ))}
         </div>
-      </Suspense>
-
+      </div>
       <h1>Build With Us:</h1>
       <h4>Join Guilded - R&D, coop building portal</h4>
 
