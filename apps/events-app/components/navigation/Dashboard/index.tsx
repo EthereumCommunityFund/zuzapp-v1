@@ -7,13 +7,7 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useGlobalContext } from '@/context/GlobalContext';
 import Button from '@/components/ui/buttons/Button';
-import IconButton from '@/components/ui/buttons/IconButton';
 import { Label } from '@/components/ui/label';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import * as DialogPrimitive from '@radix-ui/react-dialog';
-import { X } from 'lucide-react';
-import ReactMarkdown from 'react-markdown';
-import RenderHTMLString from '@/components/ui/RenderHTMLString';
 
 // Create a navigation side menu for the dashboard.
 export default function DashboardNavigation() {
@@ -27,8 +21,12 @@ export default function DashboardNavigation() {
 
   const router = useRouter();
 
-  const handleCommunityDropdownClick = () => {
-    setCommunityDropdownOpen(!communityDropdownOpen);
+  // const handleCommunityDropdownClick = () => {
+  //   setCommunityDropdownOpen(!communityDropdownOpen);
+  // };
+
+  const handleCommunityLinkClick = () => {
+    setCommunityDropdownOpen((prevOpen) => !prevOpen);
   };
 
   const handleClick = () => {
@@ -62,7 +60,9 @@ export default function DashboardNavigation() {
                   {route.icon && <route.icon size={30} />}
                   {route.options ? (
                     <>
-                      <span className="w-full cursor-pointer">{route.title}</span>
+                      <span className="w-full cursor-pointer" onClick={handleCommunityLinkClick}>
+                        {route.title}
+                      </span>
                     </>
                   ) : route.path.startsWith('http') ? (
                     <a href={route.path} className="w-full" target="_blank" rel="noopener noreferrer">
@@ -74,7 +74,9 @@ export default function DashboardNavigation() {
                     </Link>
                   )}
 
-                  <span className="icon_end">{route.icon_end && <route.icon_end size={24} />}</span>
+                  <span className="icon_end" onClick={handleCommunityLinkClick}>
+                    {route.icon_end && <route.icon_end size={24} />}
+                  </span>
                 </li>
               ))}
             </ul>

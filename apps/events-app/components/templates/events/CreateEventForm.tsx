@@ -8,9 +8,10 @@ import { set, useForm } from 'react-hook-form';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { BsPlusCircleFill } from 'react-icons/bs';
 import { createEventSpace } from '@/controllers/eventspace.controller';
+import { toast } from '@/components/ui/use-toast';
 
 const formSchema = z.object({
-  name: z.string().min(2, {
+  name: z.string().min(5, {
     message: 'Event name is required.',
   }),
   event_space_type: z.enum(['schedules', 'tracks'], {
@@ -18,7 +19,7 @@ const formSchema = z.object({
   }),
 });
 
-export default function CreateEventsForm({ setEventCreated }: { setEventCreated: (eventCreated: boolean) => void }) {
+export default function CreateEventsForm({ onEventCreated }: { onEventCreated: (eventSpaceId: string | null) => void }) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -30,9 +31,13 @@ export default function CreateEventsForm({ setEventCreated }: { setEventCreated:
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       const result = await createEventSpace(values);
-      setEventCreated(true);
+      const eventSpaceId = result?.data?.data?.id;
+      toast({
+        title: 'Event Space Created Successfully',
+      });
+      onEventCreated(eventSpaceId);
     } catch (error) {
-      setEventCreated(false);
+      onEventCreated(null);
       console.log(error);
     }
   }
@@ -45,7 +50,7 @@ export default function CreateEventsForm({ setEventCreated }: { setEventCreated:
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-lg">Event Name Space</FormLabel>
+              <FormLabel className="text-lg">Event Space Name</FormLabel>
               <FormControl>
                 <Input placeholder="Type Something" {...field} />
               </FormControl>
@@ -53,7 +58,7 @@ export default function CreateEventsForm({ setEventCreated }: { setEventCreated:
             </FormItem>
           )}
         />
-        <FormField
+        {/* <FormField
           control={form.control}
           name="event_space_type"
           render={({ field }) => (
@@ -85,7 +90,7 @@ export default function CreateEventsForm({ setEventCreated }: { setEventCreated:
               <FormMessage />
             </FormItem>
           )}
-        />
+        /> */}
         <div className="flex justify-center pt-8">
           <Button className="rounded-full" size="lg" type="submit" leftIcon={BsPlusCircleFill}>
             Create Event Space

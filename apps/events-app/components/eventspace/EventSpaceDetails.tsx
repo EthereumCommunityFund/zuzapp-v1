@@ -3,7 +3,7 @@ import * as z from 'zod';
 
 import { useEffect, useRef, useState } from 'react';
 
-import { EventSpaceDetailsType, EventSpaceStatusUpdateRequestBody, EventSpaceUpdateRequestBody, InputFieldType, MainLocationType } from '@/types';
+import { EventSpaceDetailsType, EventSpaceStatusUpdateRequestBody, EventSpaceUpdateRequestBody, InputFieldType, MainLocationType, SpaceDashboardCardType } from '@/types';
 import EventLinks from './EventLinks';
 import { FaCircleArrowUp } from 'react-icons/fa6';
 import InputFieldDark from '../ui/inputFieldDark';
@@ -34,9 +34,12 @@ import { Label } from '../ui/label';
 import DragAndDrop from '../ui/dragDrop';
 import { Input } from '../ui/input';
 import Image from 'next/image';
+import { updateEventSpaceStatus } from '@/controllers';
 import EditionButtons from '../ui/buttons/EditionButtons';
 import { CgClose } from 'react-icons/cg';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { MdCancel } from 'react-icons/md';
+import { deleteEventSpaceById } from '@/services/deleteEventSpaces';
 dayjs.extend(isSameOrAfter);
 
 interface EventSpaceDetailsProps {
@@ -162,7 +165,7 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace, handl
   };
 
   const goBackToPreviousPage = () => {
-    router.back();
+    router.push(`/dashboard/events/space/dashboard?event_space_id=${event_space_id}`);
   };
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -296,6 +299,153 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace, handl
       });
     }
   }, [form.formState.errors]);
+  const [dialogContent, setDialogContent] = useState<DialogContent | null>(null);
+  const [isDialogOpen, setDialogOpen] = useState(false);
+  const [confirmationModal, setConfirmationModal] = useState(false);
+  const currentEventStatus = eventSpace?.status;
+  const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
+
+  interface DialogContent {
+    title: string;
+    description: string;
+    buttonLabel: string;
+    buttonAction: () => void;
+  }
+
+  const handlePublishEvent = async () => {
+    if (!eventSpace) {
+      console.error('Event space is not defined');
+      return;
+    }
+
+    const { name, main_location, tracks } = eventSpace;
+
+    if (!name || !main_location) {
+      console.error('Event space does not meet the minimum requirements for publishing');
+      setDialogContent({
+        title: 'Error!',
+        description: 'Event space does not meet the minimum requirements for publishing.',
+        buttonLabel: 'Edit Event',
+        buttonAction: () =>
+          router.push({
+            pathname: '/dashboard/events/space/details/',
+            query: { event_space_id: event_space_id },
+          }),
+      });
+      setDialogOpen(true);
+      return;
+    }
+
+    try {
+      const result = await updateEventSpaceStatus(eventSpace.id as string, {
+        status: 'published',
+        id: eventSpace.id,
+      });
+      // setIsUpdatingStatus(true);
+      console.log(result, 'Event space published successfully');
+      if (result) {
+        setDialogContent({
+          title: 'Success!',
+          description: 'Your Event Was Published Successfully.',
+          buttonLabel: 'View Event',
+          buttonAction: () => router.push('/dashboard/home'),
+        });
+        setDialogOpen(true);
+      } else {
+        setDialogContent({
+          title: 'Error!',
+          description: 'Event space does not meet the minimum requirements for publishing.',
+          buttonLabel: 'Edit Event',
+          buttonAction: () =>
+            router.push({
+              pathname: '/dashboard/events/space/details/',
+              query: { event_space_id: event_space_id },
+            }),
+        });
+      }
+    } catch (error) {
+      console.error('Failed to publish event space', error);
+    }
+    setIsUpdatingStatus(false);
+  };
+  const handleArchiveEvent = async () => {
+    setIsUpdatingStatus(true);
+    if (!eventSpace) {
+      console.error('Event space is not defined');
+      return;
+    }
+    if (currentEventStatus === 'published') {
+      try {
+        const result = await updateEventSpaceStatus(eventSpace.id as string, {
+          status: 'archived',
+          id: eventSpace.id,
+        });
+        if (result) {
+          toast({
+            title: 'Eventspace archived successfully',
+          });
+          // refetch();
+          setConfirmationModal(false);
+        }
+      } catch (error: any) {
+        console.log(error);
+        toast({
+          title: 'Error',
+          description: error?.response.data?.error,
+          variant: 'destructive',
+        });
+      }
+    }
+    setIsUpdatingStatus(false);
+  };
+
+  const popUpModal = (actionType: SpaceDashboardCardType) => {
+    let content: DialogContent | null = null;
+    if (actionType === SpaceDashboardCardType.PublishEvent) {
+      content = {
+        title: 'Publish Event',
+        description: "You're about to publish this event.",
+        buttonLabel: 'Publish Event',
+        buttonAction: handlePublishEvent,
+      };
+    } else if (actionType === SpaceDashboardCardType.ArchiveEvent) {
+      content = {
+        title: 'Archive Event',
+        description: "You're about to archive this event.",
+        buttonLabel: 'Archive Event',
+        buttonAction: handleArchiveEvent,
+      };
+    }
+    setDialogContent(content);
+    setConfirmationModal(true);
+  };
+  const handleButtonClick = (type: SpaceDashboardCardType) => {
+    if (type === SpaceDashboardCardType.PublishEvent || type === SpaceDashboardCardType.ArchiveEvent) {
+      popUpModal(type);
+    }
+  };
+  const zuconnectId = '873f2ae3-bcab-4a30-8b99-cb5e011a9db0';
+  const [isDeleting, setIsDeleting] = useState(false);
+  const handleDeleteEventSpace = async () => {
+    if (!eventSpace) return;
+    if (eventSpace.id === zuconnectId) {
+      toast({
+        title: 'Error',
+        description: 'This event cannot be deleted without adequate permissions.',
+        variant: 'destructive',
+      });
+      return;
+    }
+    try {
+      setIsDeleting(true);
+      await deleteEventSpaceById(eventSpace.id as string);
+      router.push('/dashboard/events/myspaces');
+    } catch (error) {
+      console.error('Error deleting the event space', error);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
   if (isLoadingEvent) {
     return <Loader />;
   }
@@ -314,6 +464,34 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace, handl
               </div>
             ))}
           </div>
+          <Button variant="primaryGreen" className="w-40 flex justify-center rounded-3xl text-xl" onClick={() => handleButtonClick(SpaceDashboardCardType.PublishEvent)}>
+            Publish Event
+          </Button>
+          {/* <Button className="w-40 flex justify-center rounded-3xl text-xl bg-[#EB5757]/20">Delete Event</Button> */}
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button aria-disabled className="w-40 rounded-full flex justify-center" variant="red" size="lg" type="button" disabled={isDeleting}>
+                Delete Event
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px] h-auto rounded-2xl">
+              <DialogHeader>
+                <DialogTitle>Delete space?</DialogTitle>
+                <DialogDescription className="text-sm font-bold">Are you sure you want to delete this event space?</DialogDescription>
+                <DialogFooter className="pt-5">
+                  <div className="flex items-center">
+                    {/* <button className="py-2.5 px-3.5 flex items-center gap-1 rounded-[20px] bg-white/20">
+                      <span>Cancel</span>
+                    </button> */}
+                    <button onClick={handleDeleteEventSpace} className="flex w-full justify-center py-2.5 px-3.5 items-center gap-1 text-[#FF5E5E] rounded-[20px] bg-[#EB5757]/20">
+                      <HiXCircle />
+                      <span>{isDeleting ? 'Deleting...' : 'Delete'}</span>
+                    </button>
+                  </div>
+                </DialogFooter>
+              </DialogHeader>
+            </DialogContent>
+          </Dialog>
         </div>
         <div className="flex flex-col gap-5 items-start lg:ml-[300px] w-full">
           <div className="mx-5">
@@ -321,7 +499,7 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace, handl
               className="rounded-[40px] py-2.5 px-3.5 bg-bgPrimary border-none hover:bg-[#363636] duration-200 text-textSecondary hover:text-textSecondary"
               size="lg"
               leftIcon={HiArrowLeft}
-              onClick={handleGoBack}
+              onClick={goBackToPreviousPage}
             >
               Back
             </Button>
@@ -650,6 +828,42 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace, handl
           </DialogContent>
         </Dialog>
         {/* <EventLocation /> */}
+        <Dialog open={confirmationModal} onOpenChange={(open) => setConfirmationModal(open)}>
+          <DialogContent className="sm:max-w-[425px] lg:w-[800px] lg:max-w-[800px]">
+            <DialogHeader>
+              <DialogTitle className="text-2xl my-3">{dialogContent?.title}</DialogTitle>
+              <DialogDescription className="text-base font-normal text-white my-2">{dialogContent?.description}</DialogDescription>
+            </DialogHeader>
+            {/* <section className="text-white w-full flex flex-col gap-6 bg-accent-foreground rounded-2xl p-4">
+            <div className="flex gap-3">
+              <span className="font-semibold">Total Tracks: {trackDetails && trackDetails.length}</span>
+              <span className="font-semibold">Total Sessions: {schedules && schedules.length}</span>
+            </div>
+            {trackDetails && trackDetails.map((track, index) => <ScheduleList track={track} />)}
+          </section> */}
+            <DialogFooter className="pt-5 self-end text-2xl">
+              <div className="flex flex-col lg:flex-row gap-6">
+                <Button
+                  variant="yellow"
+                  className="w-full flex space-x-2 items-center justify-center rounded-3xl px-5 py-2 text-2xl md:text-base"
+                  leftIcon={MdCancel}
+                  onClick={() => setConfirmationModal(false)}
+                >
+                  Don't {dialogContent?.buttonLabel.split(' ')[0]} Yet
+                </Button>
+                <Button
+                  variant="primaryGreen"
+                  className="w-full flex space-x-2 items-center justify-center rounded-3xl px-5 py-2 text-2xl md:text-base"
+                  leftIcon={HiCalendar}
+                  onClick={dialogContent?.buttonAction}
+                  // disabled={isUpdatingStatus}
+                >
+                  {dialogContent?.buttonLabel}
+                </Button>
+              </div>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );
