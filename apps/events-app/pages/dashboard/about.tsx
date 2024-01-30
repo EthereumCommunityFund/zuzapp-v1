@@ -1,22 +1,24 @@
 import GuildedMembers from '@/components/commons/GuildedMembers';
 import { Loader } from '@/components/ui/Loader';
+import { toast } from '@/components/ui/use-toast';
 import { Database } from '@/database.types';
 import { useGuildedMembers } from '@/hooks/useGuildedMembers';
-
-import contributorsData from '@/pages/dashboard/contributors.json';
-import axiosInstance from '@/src/axiosInstance';
 import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
 
 import { useRouter } from 'next/router';
-import { set } from 'nprogress';
-import { Suspense, useState } from 'react';
 
 export default function About() {
   const router = useRouter();
 
-  const { guildedMembers, isLoading } = useGuildedMembers();
+  const { guildedMembers, isLoading, isError } = useGuildedMembers();
 
-  console.log(guildedMembers, 'guildedMembers');
+  if (isError) {
+    toast({
+      title: 'Error',
+      description: 'Contributors Fetch Failed',
+      variant: 'destructive',
+    });
+  }
 
   return (
     <div className="about_container">
@@ -114,7 +116,7 @@ export default function About() {
 
       <br />
       <br />
-      <h2>Current List of Contributors ({guildedMembers?.length})</h2>
+      <h2>Current List of Contributors ({isLoading ? '...' : guildedMembers?.length})</h2>
       <div className="contributors_container">
         <div className="black_overlay"></div>
         <div className="black_overlay2"></div>

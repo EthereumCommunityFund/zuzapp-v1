@@ -33,27 +33,19 @@ export type GuildedMember = {
 };
 
 export const useGuildedMembers = () => {
-  const [guildedMembersResponse, setGuilded] = useState<GuildedMembersResponse>();
-  const [isLoading, setIsLoading] = useState(true);
   const fetchGuildedMembers = async () => {
-    setIsLoading(true);
     const response = await axiosInstance.get('/api/guilded');
-    setGuilded(response.data);
-    setIsLoading(false);
+    return response.data;
   };
 
-  // const {
-  //   data: guildedMembersResponse,
-  //   isLoading,
-  //   isError,
-  // } = useQuery<GuildedMembersResponse>(['guildedMembers'], fetchGuildedMembers, {
-  //   refetchOnWindowFocus: true,
-  //   refetchOnReconnect: true,
-  // });
+  const {
+    data: guildedMembersResponse,
+    isLoading,
+    isError,
+  } = useQuery<GuildedMembersResponse>(['guildedMembers'], fetchGuildedMembers, {
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+  });
 
-  useEffect(() => {
-    fetchGuildedMembers();
-  }, []);
-
-  return { guildedMembers: guildedMembersResponse?.members ?? [], isLoading };
+  return { guildedMembers: guildedMembersResponse?.members ?? [], isLoading, isError };
 };
