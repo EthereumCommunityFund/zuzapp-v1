@@ -14,13 +14,9 @@ import { Suspense, useState } from 'react';
 export default function About() {
   const router = useRouter();
 
-  const { guildedMembers, isLoading, isError } = useGuildedMembers();
+  const { guildedMembers, isLoading } = useGuildedMembers();
 
   console.log(guildedMembers, 'guildedMembers');
-
-  if (isLoading) {
-    return <Loader />;
-  }
 
   return (
     <div className="about_container">
@@ -123,11 +119,15 @@ export default function About() {
         <div className="black_overlay"></div>
         <div className="black_overlay2"></div>
         <div className="marquee">
-          {guildedMembers?.map((member, index) => (
-            <div key={index}>
-              <GuildedMembers member={member} />
-            </div>
-          ))}
+          {isLoading ? (
+            <Loader />
+          ) : (
+            guildedMembers?.map((member, index) => (
+              <div key={index}>
+                <GuildedMembers member={member} />
+              </div>
+            ))
+          )}
         </div>
       </div>
       <h1>Build With Us:</h1>
