@@ -25,6 +25,7 @@ import slideData from '@/constant/slidedata';
 import { useWallet } from '@/context/WalletContext';
 import { CreateEvent } from './events/CreateEvent';
 import { usePublishedEvents } from '@/hooks/usePublishedEvents';
+import axios from 'axios';
 
 export default function HomePageTemplate() {
   return (
@@ -280,6 +281,13 @@ export const FirstUserLogin = () => {
         buttonLabel: 'Complete',
       });
     } catch (error) {
+      if (axios.isAxiosError(error) && error.response && error.response.status === 400) {
+        toast({
+          title: 'Error',
+          description: 'User name already exists, please choose another one',
+          variant: 'destructive',
+        });
+      }
       console.error('Error updating username', error);
     }
   };
