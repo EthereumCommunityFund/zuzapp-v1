@@ -32,6 +32,7 @@ export default function EventViewPageTemplate({ eventSpace, user }: { eventSpace
     event_type,
     experience_level,
     eventspacelocation,
+    main_location,
     tagline,
     social_links,
     extra_links,
@@ -49,14 +50,13 @@ export default function EventViewPageTemplate({ eventSpace, user }: { eventSpace
   useEffect(() => {
     if (social_links) setSocialLinks(JSON.parse(social_links));
     if (extra_links) setExtraLinks(JSON.parse(extra_links));
-    if (eventSpace.eventspacelocation) {
-      const URLs: string[] = [];
-      eventSpace.eventspacelocation.forEach((location) => {
-        if (location.image_urls) URLs.push(...location.image_urls);
-      });
-      setImgUrls(URLs);
-      setLocationName(eventSpace.eventspacelocation[0].name);
-      setLocationAddress(user && eventSpace.eventspacelocation[0].address);
+    if (main_location) {
+      // eventSpace.main_location.forEach((location) => {
+      //   if (location.image_urls) URLs.push(...location.image_urls);
+      // });
+      setImgUrls(main_location.image_urls);
+      setLocationName(eventSpace.main_location.name);
+      setLocationAddress(user && main_location.address);
     }
   }, [social_links, extra_links, eventSpace]);
 
@@ -87,9 +87,9 @@ export default function EventViewPageTemplate({ eventSpace, user }: { eventSpace
               <span className="rounded-lg flex w-auto min-w-fit px-4 py-2 items-center gap-1 opacity-60 bg-[#FFFFFF10] font-medium whitespace-nowrap">
                 <HiCalendar size={18} /> {formattedStartDate} - {formattedEndDate}
               </span>
-              {eventSpace.format === 'in-person' && user && eventspacelocation && (
+              {eventSpace.format === 'in-person' && user && main_location && (
                 <span className="rounded-lg w-auto min-w-fit flex px-4 py-1 items-center gap-1 opacity-60 bg-[#FFFFFF10] font-medium whitespace-nowrap">
-                  <HiLocationMarker size={18} /> {eventspacelocation[0].address}
+                  <HiLocationMarker size={18} /> {main_location.address}
                 </span>
               )}
             </div>

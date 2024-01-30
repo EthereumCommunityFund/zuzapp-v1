@@ -54,12 +54,12 @@ export const getSpaceDashboardCards = (eventStatus: string): SpaceDashboardCard[
       cardType: SpaceDashboardCardType.EditDetails,
       icon: HiCalendar,
     },
-    {
-      name: 'Settings',
-      description: 'Open Settings',
-      buttonName: 'Open Settings',
-      cardType: SpaceDashboardCardType.OpenSettings,
-      buttonIcon: RiSettings5Fill,
-    },
+    // {
+    //   name: 'Settings',
+    //   description: 'Open Settings',
+    //   buttonName: 'Open Settings',
+    //   cardType: SpaceDashboardCardType.OpenSettings,
+    //   buttonIcon: RiSettings5Fill,
+    // },
   ];
 };

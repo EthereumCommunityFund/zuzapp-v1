@@ -53,15 +53,14 @@ export default function EventSpaceDashboard(props: IProps) {
   const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
 
   const handlePublishEvent = async () => {
-    setIsUpdatingStatus(true);
     if (!eventSpace) {
       console.error('Event space is not defined');
       return;
     }
 
-    const { name, eventspacelocation, tracks } = eventSpace;
+    const { name, main_location, tracks } = eventSpace;
 
-    if (!name || !eventspacelocation || eventspacelocation.length === 0) {
+    if (!name || !main_location) {
       console.error('Event space does not meet the minimum requirements for publishing');
       setDialogContent({
         title: 'Error!',
@@ -82,6 +81,7 @@ export default function EventSpaceDashboard(props: IProps) {
         status: 'published',
         id: eventSpace.id,
       });
+      // setIsUpdatingStatus(true);
       console.log(result, 'Event space published successfully');
       if (result) {
         setDialogContent({
