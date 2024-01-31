@@ -66,57 +66,55 @@ export default function LinkField({ socialLinks, extraLinks, setSocialLinks, set
       <div className="">
         <div className="flex space-x-3 items-center">
           <div className="font-semibold text-base leading-[19.px] flex ">Social Links</div>
-          {
-            isLink ? (
-              <IconButton variant="dark" className="rounded-full" icon={RxMinus} onClick={() => setIsLink(!isLink)}></IconButton>
-            ) : (
-              <IconButton variant="dark" className="rounded-full" icon={RxPlus} onClick={() => setIsLink(!isLink)}></IconButton>
-            )
-          }
+          {isLink ? (
+            <IconButton variant="dark" className="rounded-full" icon={RxMinus} onClick={() => setIsLink(!isLink)}></IconButton>
+          ) : (
+            <IconButton variant="dark" className="rounded-full" icon={RxPlus} onClick={() => setIsLink(!isLink)}></IconButton>
+          )}
           {/* <IconButton variant="dark" className="rounded-full" icon={RxPlus} onClick={() => setIsLink(!isLink)}></IconButton> */}
         </div>
         {isLink && (
-          <div className="flex flex-col gap-5 justify-between">
+          <div className="flex flex-col gap-5 justify-between mt-2">
             <div className="flex w-full text-white space-x-3 items-center">
-            <div className="flex w-full text-white outline-none rounded-lg pr-3 pl-2.5 bg-inputField gap-2.5 border border-white/10 border-opacity-10 items-center">
-              <Autocomplete
-                {...defaultProps}
-                id="controlled-demo"
-                sx={{ color: 'black', width: '100%' }}
-                value={tagItem}
-                onChange={(event: any, newValue) => {
-                  if (newValue) {
-                    setTagItem({ ...tagItem, name: newValue.name });
-                  }
-                }}
-                onInputChange={(event, newInputValue) => {
-                  setTagItem({ ...tagItem, name: newInputValue });
-                }}
-                slotProps={{
-                  paper: {
-                    sx: {
-                      color: "white",
-                      backgroundColor: "#242727",
+              <div className="flex w-full text-white outline-none rounded-lg pr-3 pl-2.5 bg-inputField gap-2.5 border border-white/10 border-opacity-10 items-center">
+                <Autocomplete
+                  {...defaultProps}
+                  id="controlled-demo"
+                  sx={{ color: 'black', width: '100%' }}
+                  value={tagItem}
+                  onChange={(event: any, newValue) => {
+                    if (newValue) {
+                      setTagItem({ ...tagItem, name: newValue.name });
+                    }
+                  }}
+                  onInputChange={(event, newInputValue) => {
+                    setTagItem({ ...tagItem, name: newInputValue });
+                  }}
+                  slotProps={{
+                    paper: {
+                      sx: {
+                        color: 'white',
+                        backgroundColor: '#242727',
+                      },
                     },
-                  },
-                }}
-                renderInput={(params) => (
-                  <TextField
-                    sx={{
-                      color: 'white',
-                      input: {
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      sx={{
                         color: 'white',
-                      },
-                      label: {
-                        color: 'white',
-                      },
-                    }}
-                    {...params}
-                    label="social media"
-                    variant="standard"
-                  />
-                )}
-              />
+                        input: {
+                          color: 'white',
+                        },
+                        label: {
+                          color: 'white',
+                        },
+                      }}
+                      {...params}
+                      label="social media"
+                      variant="standard"
+                    />
+                  )}
+                />
               </div>
               <InputFieldDark
                 type={InputFieldType.Link}
@@ -130,16 +128,16 @@ export default function LinkField({ socialLinks, extraLinks, setSocialLinks, set
                 }
               />
               <div>
-                <IconButton 
-                  variant="dark" 
-                  className="rounded-full" 
-                  icon={RxPlus} 
+                <IconButton
+                  variant="dark"
+                  className="rounded-full"
+                  icon={RxPlus}
                   onClick={() => {
                     if (tagItem.link === '' || tagItem.name === '') return;
                     setSocialLinks([...socialLinks, tagItem]);
                     setTagItem({ name: '', link: '' });
                   }}
-                ></IconButton>  
+                ></IconButton>
               </div>
             </div>
             <div className="flex items-start flex-wrap gap-2.5">
@@ -164,56 +162,54 @@ export default function LinkField({ socialLinks, extraLinks, setSocialLinks, set
       <div className="">
         <div className="flex space-x-3 items-center">
           <div className="font-semibold text-base leading-[19.px] flex ">Extra Links</div>
-          {
-            otherLinks ? (
-              <IconButton variant="dark" className="rounded-full" icon={RxMinus} onClick={() => setOtherLinks(!otherLinks)}></IconButton>
-            ) : (
-              <IconButton variant="dark" className="rounded-full" icon={RxPlus} onClick={() => setOtherLinks(!otherLinks)}></IconButton>
-            )
-          }
+          {otherLinks ? (
+            <IconButton variant="dark" className="rounded-full" icon={RxMinus} onClick={() => setOtherLinks(!otherLinks)}></IconButton>
+          ) : (
+            <IconButton variant="dark" className="rounded-full" icon={RxPlus} onClick={() => setOtherLinks(!otherLinks)}></IconButton>
+          )}
         </div>
         {otherLinks && (
-          <div className="flex flex-col gap-5 justify-between ">
+          <div className="flex flex-col gap-5 justify-between mt-2">
             <div className="flex w-full text-white space-x-3 items-center">
-            <div className="flex w-full text-white outline-none rounded-lg pr-3 pl-2.5 bg-inputField gap-2.5 border border-white/10 border-opacity-10 items-center">
-              <Autocomplete
-                {...otherProps}
-                id="controlled-demo"
-                sx={{ color: 'white', width: '100%' }}
-                value={otherItem}
-                onChange={(event: any, newValue) => {
-                  if (newValue) {
-                    setOtherItem({ ...otherItem, name: newValue.name });
-                  }
-                }}
-                onInputChange={(event, newInputValue) => {
-                  setOtherItem({ ...otherItem, name: newInputValue });
-                }}
-                slotProps={{
-                  paper: {
-                    sx: {
-                      color: "white",
-                      backgroundColor: "#242727",
+              <div className="flex w-full text-white outline-none rounded-lg pr-3 pl-2.5 bg-inputField gap-2.5 border border-white/10 border-opacity-10 items-center">
+                <Autocomplete
+                  {...otherProps}
+                  id="controlled-demo"
+                  sx={{ color: 'white', width: '100%' }}
+                  value={otherItem}
+                  onChange={(event: any, newValue) => {
+                    if (newValue) {
+                      setOtherItem({ ...otherItem, name: newValue.name });
+                    }
+                  }}
+                  onInputChange={(event, newInputValue) => {
+                    setOtherItem({ ...otherItem, name: newInputValue });
+                  }}
+                  slotProps={{
+                    paper: {
+                      sx: {
+                        color: 'white',
+                        backgroundColor: '#242727',
+                      },
                     },
-                  },
-                }}
-                renderInput={(params) => (
-                  <TextField
-                    sx={{
-                      color: 'white',
-                      input: {
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      sx={{
                         color: 'white',
-                      },
-                      label: {
-                        color: 'white',
-                      },
-                    }}
-                    {...params}
-                    label="other links"
-                    variant="standard"
-                  />
-                )}
-              />
+                        input: {
+                          color: 'white',
+                        },
+                        label: {
+                          color: 'white',
+                        },
+                      }}
+                      {...params}
+                      label="other links"
+                      variant="standard"
+                    />
+                  )}
+                />
               </div>
               <InputFieldDark
                 type={InputFieldType.Link}
@@ -227,16 +223,16 @@ export default function LinkField({ socialLinks, extraLinks, setSocialLinks, set
                 }
               />
               <div>
-                <IconButton 
-                  variant="dark" 
-                  className="rounded-full" 
-                  icon={RxPlus} 
+                <IconButton
+                  variant="dark"
+                  className="rounded-full"
+                  icon={RxPlus}
                   onClick={() => {
                     if (otherItem.link === '' || otherItem.name === '') return;
                     setExtraLinks([...extraLinks, otherItem]);
                     setOtherItem({ name: '', link: '' });
                   }}
-                ></IconButton>  
+                ></IconButton>
               </div>
             </div>
             <div className="flex items-start flex-wrap gap-2.5">

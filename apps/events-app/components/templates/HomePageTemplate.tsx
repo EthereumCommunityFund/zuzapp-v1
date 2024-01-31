@@ -183,9 +183,9 @@ export const HomePageBanner = () => {
   return (
     <>
       <CustomCarousel slides={slides as unknown as string[]} curr={currentSlide} setCurr={setCurrentSlide}>
-        <div className="absolute top-0 left-0 px-8 slider_md:px-14 py-14 max-w-[650px] ml-4 mt-4">
-          <h1 className="banner_header font-bold font-inter text-left text-3xl md:text-5xl mb-5">{slideData[currentSlide].title}</h1>
-          <p className="text-left mb-4 max-w-[650px]font-inter text-gray-200 text-md">{slideData[currentSlide].description}</p>
+        <div className="absolute top-0 left-0 px-4 sm:px-8 md:px-14 max-w-[650px] ml-2 sm:ml-4 mt-4 sm:mt-8">
+          <h1 className="font-bold font-inter text-left text-2xl sm:text-3xl md:text-5xl mb-3 sm:mb-5">{slideData[currentSlide].title}</h1>
+          <p className="text-left mb-4 max-w-[650px] text-gray-200 text-sm sm:text-md">{slideData[currentSlide].description}</p>
           {slideData[currentSlide].ctas.map((cta, index) => {
             if (cta.ctaLink === '/dashboard/events/create' && !isAuthenticated) {
               return (

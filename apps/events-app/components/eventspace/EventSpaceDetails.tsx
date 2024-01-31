@@ -321,10 +321,10 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace, handl
     const { name, main_location, tracks } = eventSpace;
 
     if (!name || !main_location) {
-      console.error('Event space does not meet the minimum requirements for publishing');
+      console.error('Event space does not meet the minimum requirements for publishing. Enter Location Details');
       setDialogContent({
         title: 'Error!',
-        description: 'Event space does not meet the minimum requirements for publishing.',
+        description: 'Event space does not meet the minimum requirements for publishing. Enter Location Details',
         buttonLabel: 'Edit Event',
         buttonAction: () =>
           router.push({
@@ -780,7 +780,7 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace, handl
                       <DragAndDrop payload={locationPayloads} setPayload={setLocationPayloads} title={`Select Main Location Image`} />
                       {/* <Label className="text-xs text-white/50">We recommend using at least a 2160x1080px</Label> */}
                     </div>
-                    {locationPayloads.image_urls.length == 0 && <p className="text-sm text-btnRed">Select at least one image</p>}
+                    {/* {locationPayloads.image_urls.length == 0 && <p className="text-sm text-btnRed">Select at least one image</p>} */}
                     {locationPayloads.image_urls.length > 0 && (
                       <div className="flex gap-5">
                         {locationPayloads.image_urls.map((source, index) => (
@@ -801,8 +801,7 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace, handl
                           <span>Discard Edit</span>
                         </Button> */}
                     <Button className="rounded-full w-full md:w-full lg:w-full flex justify-center" variant="blue" size="lg" onClick={() => form.handleSubmit(onSubmit)()} leftIcon={FaCircleArrowUp}>
-                      {isLoading && !detailsUpdated && <div className="">submitting...</div>}
-                      <span>Save Edit</span>
+                      {isLoading && !detailsUpdated ? <div className="">submitting...</div> : <span>Save Edit</span>}
                     </Button>
                   </div>
                 </div>
@@ -821,9 +820,9 @@ const EventSpaceDetails: React.FC<EventSpaceDetailsProps> = ({ eventSpace, handl
             <div className="text-sm font-light text-white/70 my-2">You can edit event space details in your dashboard.</div>
             {/* <div className="font-normal text-white my-2">Now go to Tracks and start building your schedules</div> */}
             <DialogFooter>
-              <Link href={`/dashboard/events/myspaces?event_space_id=${event_space_id}`}>
+              <Link href={`/dashboard/events/space/dashboard?event_space_id=${event_space_id}`}>
                 <Button variant="primary" className="bg-[#67DBFF]/20 text-[#67DBFF] text-lg w-full justify-center rounded-full" leftIcon={HiArrowRight}>
-                  Back to Spaces
+                  Go to Dashboard
                 </Button>
               </Link>
             </DialogFooter>
