@@ -136,7 +136,7 @@ export default function DashboardHeader() {
             dashboardOpen && "open"
           }`}
         >
-          <div className="flex-1 flex flex-col">
+          <div className="top_menu_list flex flex-col">
             <div className="mt-10 flex-1">
               <ul className="space-y-1">
                 {routes.map((route, index) => (
@@ -234,7 +234,7 @@ export default function DashboardHeader() {
             <Label className="text-white text-xl">Zuzalu</Label>
             <Label className="text-white/70 text-xs font-normal">Foster a global network of communities to advance humanity by creating playgrounds at the intersection of free and open technology, science, heath and social innovation</Label>
             <Button variant='quiet' className="rounded-2xl tracking-wide justify-center" onClick={() => window.open(zuzaluLink, '_blank')}>Learn About Zuzalu</Button> */}
-            <div className="py-[15px] px-[13px] gap-3.5 flex flex-col rounded-2xl bg-[#2C2D2D] w-[240px]">
+            <div className="py-[15px] mt-5 px-[13px] gap-3.5 flex flex-col rounded-2xl bg-[#2C2D2D] w-[240px]">
               <Label className="text-white text-xl">Collaborate</Label>
               {/* <Label className="text-white/70 text-xs font-normal">
                 Take part in building Zuzalu tools and discussions!
