@@ -250,12 +250,13 @@
   font-size: 16px;
   font-weight: 500;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   /* justify-content: space-between; */
-  width: 200px;
+  width: auto;
   gap: 10px;
   transition: 0.3s;
   font-size: 15px;
+  line-height: 22px;
 }
 
 /* .duo_flex_btn_sec::before {

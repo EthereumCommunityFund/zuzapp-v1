@@ -205,10 +205,10 @@ export default function EventViewPageTemplate({
           </div>
           <div className="flex flex-col gap-4">
             <Label className="opacity-70">Main Links </Label>
-            {/* {extraLinks &&
+            {extraLinks &&
               extraLinks.map((value: IEventLink, idx: number) => (
-                <div className="flex gap-2" key={idx}>
-                  <Label className="opacity-100 text-sm cursor-pointer">
+                <div className="event_details_mainlinks_btn_wrap" key={idx}>
+                  <Label className="duo_flex_btn_sec">
                     <a
                       href={
                         value.link.includes("https://")
@@ -219,10 +219,11 @@ export default function EventViewPageTemplate({
                     >
                       {value.name}
                     </a>
+                    <img src="/images/btn_arrow.svg" alt="" />
                   </Label>
                 </div>
-              ))} */}
-            <div className="event_details_mainlinks_btn_wrap">
+              ))}
+            {/* <div className="event_details_mainlinks_btn_wrap">
               <button className="duo_flex_btn_sec">
                 <span>Website</span>
                 <img src="/images/btn_arrow.svg" alt="" />
@@ -235,7 +236,7 @@ export default function EventViewPageTemplate({
                 <span>FAQ</span>
                 <img src="/images/btn_arrow.svg" alt="" />
               </button>
-            </div>
+            </div> */}
           </div>
           <div className="flex flex-col gap-4 border-b pb-5 border-borderPrimary">
             <Label className="opacity-70">Socials </Label>
