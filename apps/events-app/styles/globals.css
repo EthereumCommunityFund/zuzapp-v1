@@ -241,6 +241,35 @@
   gap: 10px;
 }
 
+.duo_flex_btn {
+  padding: 10px 20px;
+  background: #313131;
+  color: #bdbdbd;
+  border-radius: 10px;
+  outline: none;
+  border: none;
+  font-size: 16px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 250px;
+  gap: 10px;
+  transition: 0.3s;
+}
+
+.duo_flex_btn:hover {
+  background: #434343;
+  color: #bdbdbd;
+}
+
+.event_details_mainlinks_btn_wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+
 .contributors_container {
   position: relative;
   height: 500px;
@@ -421,6 +450,21 @@
     align-items: flex-start;
     gap: 10px;
     margin-bottom: 30px;
+  }
+}
+
+@media screen and (max-width: 370px) {
+  .event_cal {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 330px) {
+  .event_date_time_flex {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 7px;
+    align-items: center;
   }
 }
 
