@@ -12,9 +12,9 @@ const slideData = [
   //   ],
   // },
   {
-    title: 'Discover and Share Events in Zuzalu City',
+    title: 'Discover and Share Events in Zuzalu.city',
     description:
-      "Zuzalu City is a discovery app for all Zuzalu-based events and communities. Your hub for finding and listing Zuzalu's most exciting events and vibrant community gatherings. Be part of the buzz",
+      "Zuzalu.city is a discovery app for all Zuzalu-based events and communities. Your hub for finding and listing Zuzalu's most exciting events and vibrant community gatherings. Be part of the buzz",
     ctas: [
       {
         ctaText: 'Create Your Event',
