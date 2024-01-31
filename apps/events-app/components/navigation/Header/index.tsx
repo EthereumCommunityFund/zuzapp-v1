@@ -132,7 +132,7 @@ export default function DashboardHeader() {
           </Link>
         </div>
         <nav
-          className={`dashboard-menu w-[260px] z-10 fixed flex flex-col h-screen border-r border-r-gray-800 bg-[#2F3232] py-10 px-6 transition-transform duration-300 ${
+          className={`mobile_menu dashboard-menu w-[260px] z-10 fixed flex flex-col h-screen border-r border-r-gray-800 bg-[#2F3232] py-10 px-6 transition-transform duration-300 ${
             dashboardOpen && "open"
           }`}
         >

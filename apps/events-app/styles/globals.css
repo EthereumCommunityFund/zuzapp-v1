@@ -447,9 +447,17 @@
   margin-top: 60px;
 }
 
+.mobile_menu {
+  display: none;
+}
+
 @media screen and (max-width: 1200px) {
   .about_container h1 {
     margin-top: 120px;
+  }
+
+  .mobile_menu {
+    display: flex;
   }
 }
 
