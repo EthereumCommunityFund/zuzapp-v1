@@ -236,9 +236,9 @@ export default function DashboardHeader() {
             <Button variant='quiet' className="rounded-2xl tracking-wide justify-center" onClick={() => window.open(zuzaluLink, '_blank')}>Learn About Zuzalu</Button> */}
             <div className="py-[15px] mt-5 px-[13px] gap-3.5 flex flex-col rounded-2xl bg-[#2C2D2D] w-[240px]">
               <Label className="text-white text-xl">Collaborate</Label>
-              {/* <Label className="text-white/70 text-xs font-normal">
+              <Label className="text-white/70 text-xs font-normal">
                 Take part in building Zuzalu tools and discussions!
-              </Label> */}
+              </Label>
 
               <Label className="text-white text-l border_top">
                 Build With Us
