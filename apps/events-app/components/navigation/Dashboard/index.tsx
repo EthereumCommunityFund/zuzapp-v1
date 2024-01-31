@@ -139,7 +139,7 @@ export default function DashboardNavigation() {
           </div>
           {/* Profile navigation */}
           {isAuthenticated && (
-            <ul className="flex mt-28 flex-col gap-[31px]">
+            <ul className="flex mt-5 flex-col gap-[31px]">
               <li className="flex items-center space-x-2">
                 <Link href={"/dashboard/events/myspaces"} className="w-full">
                   <Button
