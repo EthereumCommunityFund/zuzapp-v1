@@ -223,15 +223,15 @@ export default function EventViewPageTemplate({
                 </div>
               ))} */}
             <div className="event_details_mainlinks_btn_wrap">
-              <button className="duo_flex_btn">
+              <button className="duo_flex_btn_sec">
                 <span>Website</span>
                 <img src="/images/btn_arrow.svg" alt="" />
               </button>
-              <button className="duo_flex_btn">
+              <button className="duo_flex_btn_sec">
                 <span>Apply to Event</span>
                 <img src="/images/btn_arrow.svg" alt="" />
               </button>
-              <button className="duo_flex_btn">
+              <button className="duo_flex_btn_sec">
                 <span>FAQ</span>
                 <img src="/images/btn_arrow.svg" alt="" />
               </button>
