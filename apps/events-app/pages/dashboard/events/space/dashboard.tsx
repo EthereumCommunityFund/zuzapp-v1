@@ -61,10 +61,10 @@ export default function EventSpaceDashboard(props: IProps) {
     const { name, main_location, tracks } = eventSpace;
 
     if (!name || !main_location) {
-      console.error('Event space does not meet the minimum requirements for publishing. Enter Location Details');
+      console.error('Event space does not meet the minimum requirements for publishing. Enter Event Details and Save');
       setDialogContent({
         title: 'Error!',
-        description: 'Event space does not meet the minimum requirements for publishing. Enter Location Details',
+        description: 'Event space does not meet the minimum requirements for publishing. Enter Event Details and Save',
         buttonLabel: 'Edit Event',
         buttonAction: () =>
           router.push({
