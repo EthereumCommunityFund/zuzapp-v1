@@ -90,9 +90,9 @@ export const TestEventSpace = () => {
                   <p className="flex items-center text-xs text-white/60 bg-white/10 rounded-xl py-2 px-3 w-fit font-normal">
                     <BsCalendar2Fill className="mr-2 text-sm md:text-base" /> {formatDate(testEventSpace?.start_date)} - {formatDate(testEventSpace?.end_date)}
                   </p>
-                  <p className="flex items-center text-xs text-white/60 bg-white/10 rounded-xl py-2 px-3 w-fit font-normal">
+                  {/* <p className="flex items-center text-xs text-white/60 bg-white/10 rounded-xl py-2 px-3 w-fit font-normal">
                     <HiLockClosed className="mr-2 text-sm md:text-base" /> Resident Only
-                  </p>
+                  </p> */}
                 </div>
               </div>
             </div>
@@ -155,9 +155,9 @@ export const PublishedEventSpaces = () => {
                     <p className="flex items-center text-xs text-white/60 bg-white/10 rounded-xl py-2 px-3 w-fit font-normal">
                       <BsCalendar2Fill className="mr-2 text-sm md:text-base" /> {formatDate(event?.start_date)} - {formatDate(event?.end_date)}
                     </p>
-                    <p className="flex items-center text-xs text-white/60 bg-white/10 rounded-xl py-2 px-3 w-fit font-normal">
+                    {/* <p className="flex items-center text-xs text-white/60 bg-white/10 rounded-xl py-2 px-3 w-fit font-normal">
                       <HiLockClosed className="mr-2 text-sm md:text-base" /> Resident Only
-                    </p>
+                    </p> */}
                   </div>
                 </div>
               </div>
