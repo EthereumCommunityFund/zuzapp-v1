@@ -1,5 +1,6 @@
 import { Database } from '@/database.types';
 import { IconType } from 'react-icons';
+import { ethers } from 'ethers';
 
 export type EventSpaceUpdateRequestBody = {
   id: string;
@@ -291,3 +292,14 @@ export type ResourceItemCard = {
   prevLink: string;
   fullLink: string;
 };
+
+export interface WalletContextType {
+  provider: ethers.Provider | null;
+  signer: ethers.Signer | null
+  account: string | null;
+  isConnected: boolean;
+  connectToMetamask: () => Promise<void>;
+  hasChangedAccount: Boolean;
+  userAccounts: string[]|null;
+  // ... any other functions or state variables you want to include
+}

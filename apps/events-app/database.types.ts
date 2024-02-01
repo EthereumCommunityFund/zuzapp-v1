@@ -253,6 +253,7 @@ export interface Database {
           username: string | null
           uuid: string
           visitor_date_ranges: string[] | null
+          useraddresses: string[]|null
         }
         Insert: {
           commitment?: string | null
@@ -263,6 +264,7 @@ export interface Database {
           username?: string | null
           uuid: string
           visitor_date_ranges?: string[] | null
+          useraddresses?: string[]|null
         }
         Update: {
           commitment?: string | null
@@ -273,6 +275,7 @@ export interface Database {
           username?: string | null
           uuid?: string
           visitor_date_ranges?: string[] | null
+          useraddresses?: string[]|null
         }
         Relationships: [
           {

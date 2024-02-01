@@ -74,7 +74,7 @@ export default function SubHeader() {
               return <TabButton key={index} name={tabButton.name} ButtonIcon={tabButton.icon} onClick={() => goTabButton(tabButton.path, index)} isActive={index === activeTab} />;
             })}
           </div>
-          <AddToEventButton className="hidden sm:block" />
+          {/* <AddToEventButton className="hidden sm:block" /> */}
         </>
       )}
     </div>

@@ -94,14 +94,14 @@ export default function CustomCarousel({ autoSlide = false, autoSlideInterval = 
 
   return (
     <div
-      className="overflow-hidden h-[30rem] slider_md:h-[20rem] relative rounded-2xl"
-      onMouseDown={handleStart}
-      onMouseMove={handleMove}
-      onMouseUp={handleEnd}
-      onTouchStart={handleStart}
-      onTouchMove={handleMove}
-      onTouchEnd={handleEnd}
-      style={{ cursor: isDragging ? 'grabbing' : 'grab' }}
+      className="overflow-hidden h-[26rem] slider_md:h-[20rem] relative rounded-2xl"
+      // onMouseDown={handleStart}
+      // onMouseMove={handleMove}
+      // onMouseUp={handleEnd}
+      // onTouchStart={handleStart}
+      // onTouchMove={handleMove}
+      // onTouchEnd={handleEnd}
+      // style={{ cursor: isDragging ? 'grabbing' : 'grab' }}
     >
       <div
         ref={carouselRef}
@@ -113,7 +113,7 @@ export default function CustomCarousel({ autoSlide = false, autoSlideInterval = 
         ))}
       </div>
 
-      <div className="absolute left-[40%] slider_md:left-4 top-[95%] slider_md:top-1/2 transform -translate-y-1/2 flex slider_md:flex-col items-center gap-3 bg-white/10 p-2 rounded-2xl z-20">
+      {/* <div className="absolute left-[40%] slider_md:left-4 top-[95%] slider_md:top-1/2 transform -translate-y-1/2 flex slider_md:flex-col items-center gap-3 bg-white/10 p-2 rounded-2xl z-20">
         {slides.map((_, i) => (
           <button
             key={i}
@@ -122,7 +122,7 @@ export default function CustomCarousel({ autoSlide = false, autoSlideInterval = 
             className={`w-3 h-3 bg-white transition-all rounded-2xl cursor-pointer transform ${curr === i ? 'slider_md:scale-125 border-2 border-white' : 'bg-opacity-50'}cursor-pointer`}
           />
         ))}
-      </div>
+      </div> */}
 
       {children}
     </div>

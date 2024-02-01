@@ -17,6 +17,7 @@ import { useRouter } from "next/router";
 import localforage from "localforage";
 import Head from "next/head";
 import NProgress from "nprogress";
+import { WalletProvider } from '../context/WalletContext';
 
 const MyApp = ({
   Component,
@@ -131,10 +132,11 @@ const MyApp = ({
         <QueryClientProvider client={queryClient}>
           <GlobalProvider user={pageProps.user}>
             <UserPassportContextProvider>
-              <Hydrate state={pageProps.dehydratedState}>
-                <EventSpaceProvider>
-                  <DashboardProvider props={pageProps}>
-                    <Head>
+              <WalletProvider>
+               <Hydrate state={pageProps.dehydratedState}>
+                 <EventSpaceProvider>
+                   <DashboardProvider props={pageProps}>
+                     <Head>
                       <link
                         rel="stylesheet"
                         type="text/css"
@@ -146,6 +148,7 @@ const MyApp = ({
                   </DashboardProvider>
                 </EventSpaceProvider>
               </Hydrate>
+             </WalletProvider>
             </UserPassportContextProvider>
           </GlobalProvider>
         </QueryClientProvider>

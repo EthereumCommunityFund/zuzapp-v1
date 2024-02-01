@@ -93,11 +93,19 @@ const EventSpaceSettings = () => {
       console.error('Error revoking invite', error);
     }
   };
+  const zuconnectId = '873f2ae3-bcab-4a30-8b99-cb5e011a9db0';
   const handleDeleteEventSpace = async () => {
     if (!eventSpace) return;
-
-    setIsLoading(true);
+    if (eventSpace.id === zuconnectId) {
+      toast({
+        title: 'Error',
+        description: 'This event cannot be deleted without adequate permissions.',
+        variant: 'destructive',
+      });
+      return;
+    }
     try {
+      setIsLoading(true);
       await deleteEventSpaceById(eventSpace.id as string);
       router.push('/dashboard/events/myspaces');
     } catch (error) {
@@ -178,8 +186,8 @@ const EventSpaceSettings = () => {
 
         <Dialog>
           <DialogTrigger asChild>
-            <Button aria-disabled className="rounded-full flex justify-center" variant="red" size="lg" type="button" disabled={isLoading}>
-              {isLoading ? 'Deleting...' : 'Delete'}
+            <Button aria-disabled className="w-40 rounded-full flex justify-center" variant="red" size="lg" type="button" disabled={isLoading}>
+              {'Delete Event'}
             </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[425px] h-auto rounded-2xl">
@@ -187,13 +195,10 @@ const EventSpaceSettings = () => {
               <DialogTitle>Delete space?</DialogTitle>
               <DialogDescription className="text-sm font-bold">Are you sure you want to delete this event space?</DialogDescription>
               <DialogFooter className="pt-5">
-                <div className="flex justify-between items-center">
-                  <button className="py-2.5 px-3.5 flex items-center gap-1 rounded-[20px] bg-white/20">
-                    <span>Cancel</span>
-                  </button>
-                  <button onClick={handleDeleteEventSpace} className="py-2.5 px-3.5 flex items-center gap-1 text-[#FF5E5E] rounded-[20px] bg-[#EB5757]/20" disabled>
+                <div className="flex items-center">
+                  <button onClick={handleDeleteEventSpace} className="flex w-full justify-center py-2.5 px-3.5 items-center gap-1 text-[#FF5E5E] rounded-[20px] bg-[#EB5757]/20">
                     <HiXCircle />
-                    <span>Delete</span>
+                    <span>{isLoading ? 'Deleting...' : 'Delete'}</span>
                   </button>
                 </div>
               </DialogFooter>

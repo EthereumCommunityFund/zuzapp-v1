@@ -53,19 +53,18 @@ export default function EventSpaceDashboard(props: IProps) {
   const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
 
   const handlePublishEvent = async () => {
-    setIsUpdatingStatus(true);
     if (!eventSpace) {
       console.error('Event space is not defined');
       return;
     }
 
-    const { name, eventspacelocation, tracks } = eventSpace;
+    const { name, main_location, tracks } = eventSpace;
 
-    if (!name || !eventspacelocation || eventspacelocation.length === 0 || !tracks || tracks.length === 0 || !schedules || schedules.length === 0) {
-      console.error('Event space does not meet the minimum requirements for publishing');
+    if (!name || !main_location) {
+      console.error('Event space does not meet the minimum requirements for publishing. Enter Event Details and Save');
       setDialogContent({
         title: 'Error!',
-        description: 'Event space does not meet the minimum requirements for publishing.',
+        description: 'Event space does not meet the minimum requirements for publishing. Enter Event Details and Save',
         buttonLabel: 'Edit Event',
         buttonAction: () =>
           router.push({
@@ -82,6 +81,7 @@ export default function EventSpaceDashboard(props: IProps) {
         status: 'published',
         id: eventSpace.id,
       });
+      // setIsUpdatingStatus(true);
       console.log(result, 'Event space published successfully');
       if (result) {
         setDialogContent({
@@ -280,13 +280,13 @@ export default function EventSpaceDashboard(props: IProps) {
             <DialogTitle className="text-2xl my-3">{dialogContent?.title}</DialogTitle>
             <DialogDescription className="text-base font-normal text-white my-2">{dialogContent?.description}</DialogDescription>
           </DialogHeader>
-          <section className="text-white w-full flex flex-col gap-6 bg-accent-foreground rounded-2xl p-4">
+          {/* <section className="text-white w-full flex flex-col gap-6 bg-accent-foreground rounded-2xl p-4">
             <div className="flex gap-3">
               <span className="font-semibold">Total Tracks: {trackDetails && trackDetails.length}</span>
               <span className="font-semibold">Total Sessions: {schedules && schedules.length}</span>
             </div>
             {trackDetails && trackDetails.map((track, index) => <ScheduleList track={track} />)}
-          </section>
+          </section> */}
           <DialogFooter className="pt-5 self-end text-2xl">
             <div className="flex flex-col lg:flex-row gap-6">
               <Button

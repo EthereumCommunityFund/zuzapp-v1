@@ -42,12 +42,12 @@ const AddToEventButton: React.FC<AddToEventButton> = (props) => {
     <>
       <DropdownMenu.Root>
         <DropdownMenu.Trigger>
-          <div className="lg:inline-flex hidden pr-3 items-center gap-[10px] rounded-xl border border-[#FFFFFF20] bg-[#FFFFFF20]">
+          {/* <div className="lg:inline-flex hidden pr-3 items-center gap-[10px] rounded-xl border border-[#FFFFFF20] bg-[#FFFFFF20]">
             <div className="flex w-[37px] py-2.5 justify-center items-center rounded-bl-xl rounded-tl-xl gap-[10px] bg-[#363636]">
               <BiChevronDown className="w-4 h-4" />
             </div>
             <span className="lg:text-base text-sm font-semibold leading-[1.2]">Add</span>
-          </div>
+          </div> */}
         </DropdownMenu.Trigger>
         <DropdownMenu.Content className="flex top-[10px] flex-col items-center self-stretch bg-[#383B3B] rounded-[10px] border border-white/10 backdrop-blur-[20px] mt-4 mr-4 z-50">
           <Button className="flex py-[14px] flex-col bg-[#383B3B] hover:bg-[#383B3B] text-textSecondary hover:text-textSecondary self-stretch font-semibold leading-[1.2] border-b-[1px] border-white/10 rounded-tl-[10px] rounded-tr-[10px] border-none">
