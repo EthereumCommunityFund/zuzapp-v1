@@ -1,0 +1,45 @@
+.hide-scroll-bar::-webkit-scrollbar {
+    display: none;
+}
+
+.wekit-box {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    -webkit-line-clamp: 2;
+}
+
+.month-item {
+    min-width: 180px;
+    max-width: 180px;
+    height: 70px;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+.month-column {
+    min-width: 180px;
+    max-width: 180px;
+    box-sizing: border-box;
+    padding: 4px 2px;
+}
+
+.calendar-event-item {
+    padding: 8px;
+    border-radius: 4px;
+}
+
+.calendar-event-item .event-post {
+    width: 160px;
+    max-height: 160px;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.calendar-event-bar {
+    height: 360px;
+    box-sizing: border-box;
+}

@@ -9,6 +9,7 @@ import GlobalProvider from "../context/GlobalContext";
 import "../styles/globals.css";
 import "../styles/quill.css";
 import "../styles/toggle.css";
+import "../styles/event-calendar.css";
 import { DashboardProvider } from "@/components/ui-providers/DashboardLayout";
 import { Hydrate, QueryClient, QueryClientProvider } from "react-query";
 import { EventSpaceProvider } from "@/context/EventSpaceContext";

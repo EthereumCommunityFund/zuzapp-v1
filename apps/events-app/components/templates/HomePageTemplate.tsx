@@ -26,21 +26,27 @@ import { useWallet } from '@/context/WalletContext';
 import { CreateEvent } from './events/CreateEvent';
 import { usePublishedEvents } from '@/hooks/usePublishedEvents';
 import axios from 'axios';
+import EventCalendar from '@/components/eventspace/EventCalendar'
 
 export default function HomePageTemplate() {
   return (
-    <div className="md:w-5/6 w-[95%] mx-auto">
-      <div className="lg:mt-10 mt-48 relative w-full border border-white/10 rounded-2xl">
-        <HomePageBanner />
+    <>
+      <div className="md:w-5/6 w-[95%] mx-auto">
+        <div className="lg:mt-10 mt-48 relative w-full border border-white/10 rounded-2xl">
+          <HomePageBanner />
+        </div>
+        <div className="mt-10 pb-5">
+          <Label className="text-2xl md:text-4xl">Events</Label>
+          <CreateEvent btnTitle={'Add Event'} className="w-40" />
+          <PublishedEventSpaces />
+        </div>
+        <TestEventSpace />
+        <FirstUserLogin />
       </div>
-      <div className="mt-10 pb-5">
-        <Label className="text-2xl md:text-4xl">Events</Label>
-        <CreateEvent btnTitle={'Add Event'} className="w-40" />
-        <PublishedEventSpaces />
+      <div className='py-10'>
+        <EventCalendar />
       </div>
-      <TestEventSpace />
-      <FirstUserLogin />
-    </div>
+    </>
   );
 }
 
