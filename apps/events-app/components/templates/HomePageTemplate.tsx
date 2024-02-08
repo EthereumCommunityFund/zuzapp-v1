@@ -146,7 +146,17 @@ export const PublishedEventSpaces = () => {
             >
               <div className="flex flex-col md:flex-row md:space-x-3 md:items-center">
                 <div>
-                  <Image src={event.image_url ? event.image_url : `/images/black-img.png`} className="rounded-xl w-full md:max-w-[180px] md:max-h-[180px]" alt="Event" width={150} height={150} />
+                  <Image
+                    src={event.image_url || `/images/black-img.png`}
+                    layout="responsive"
+                    objectFit="contain"
+                    className="rounded-xl w-full md:max-w-[180px] md:max-h-[130px] md:min-w-[180px]"
+                    alt="Event"
+                    width={150}
+                    height={150}
+                    quality={50}
+                    priority={true}
+                  />
                 </div>
                 <div className="space-y-2 space-x-0 mt-2 md:mt-0">
                   <h4 className="text-2xl font-semibold">{event.name}</h4>
