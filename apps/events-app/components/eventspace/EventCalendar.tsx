@@ -5,13 +5,11 @@ import { useEffect, useState, useRef } from 'react';
 import { EventSpaceDetailsType } from '@/types';
 import Image from 'next/image'
 import Link from 'next/link'
-import Button from '@/components/ui/buttons/Button';
-import { on } from 'events';
 
 let _offsetX = 0
 let _offsetY = 0
 
-export const getformatColor = (format: string) => {
+export const getFormatColor = (format: string) => {
     const colors = ['bg-red-500', 'bg-red-800', 'bg-lime-500', 'bg-lime-800', 'bg-yellow-500', 'bg-blue-800']
 
     let sum = 0
@@ -172,7 +170,7 @@ function EventCalendar() {
                     types.map((type, index) => {
                         return <div key={type} onClick={() => setTypeFilter(type)}
                             className={`flex cursor-pointer mb-4 mr-4 select-none items-center text-xs ${typefilter === type ? 'text-white' : 'text-white/60'} bg-white/10 rounded-xl py-2 px-3 w-fit font-normal`}>
-                            <i className={`w-3 h-3 ${getformatColor(type)} border-rad rounded-full mr-1`} />
+                            <i className={`w-3 h-3 ${getFormatColor(type)} border-rad rounded-full mr-1`} />
                             {type}
                         </div>
                     })
@@ -228,7 +226,14 @@ function EventItem({ event }: { event: EventSpaceDetailsType }) {
         return `${startMonth} ${startDate} ${startYear !== endYear ? (',' + startYear) : ''} - ${endMonth} ${endDate}, ${endYear}`
     }
 
-    return <Link className='block calendar-event-item bg-zinc-800' href={`/dashboard/eventview/about?event_space_id=${event.id}`}>
+    return <Link
+        onClick={e => {
+            if (Math.abs(_offsetX) >= 3 || Math.abs(_offsetY) >= 3) {
+                console.log('stop click')
+                e.preventDefault()
+            }
+        }}
+        className='block calendar-event-item bg-zinc-800' href={`/dashboard/eventview/about?event_space_id=${event.id}`}>
         <div className='text-xs mb-2 font-medium text-white/60'>{formatTime(event.start_date, event.end_date)}</div>
         <div className='rounded event-post mb-2'>
             <Image src={event.image_url} alt={event.name} width={160} height={160} />
@@ -252,7 +257,7 @@ function EventItem({ event }: { event: EventSpaceDetailsType }) {
                 {
                     event.event_type.map((type, index) => {
                         return <div key={type} className={`mb-2 flex flex-row flex-nowrap flex-grow-0 items-center`}>
-                            <i className={`w-2 h-2 ${getformatColor(type)} border-rad rounded-full ml-1 mr-2`} />
+                            <i className={`w-2 h-2 ${getFormatColor(type)} border-rad rounded-full ml-1 mr-2`} />
                             <div className='wekit-box text-xs text-white/60'>
                                 {type}
                             </div>

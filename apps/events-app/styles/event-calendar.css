@@ -30,6 +30,7 @@
 .calendar-event-item {
     padding: 8px;
     border-radius: 4px;
+    margin-bottom: 4px;
 }
 
 .calendar-event-item .event-post {
