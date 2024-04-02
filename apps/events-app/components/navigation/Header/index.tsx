@@ -67,7 +67,7 @@ export default function DashboardHeader() {
 
   const allowedPaths = [
     "https://www.zuzagora.com/",
-    "https://www.guilded.gg/Zuzalu/blog/Commuity-Blog",
+    "https://www.guilded.gg/Zuzalu/blog/Community-Blog",
     "https://www.guilded.gg/Zuzalu/blog/Announcements",
   ];
 
