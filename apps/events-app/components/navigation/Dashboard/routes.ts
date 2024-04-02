@@ -62,7 +62,7 @@ export const dashboardRoutes: DashboardRoute[] = [
         img: "/images/about_zuzalu.svg",
       },
       {
-        path: "https://www.guilded.gg/Zuzalu/blog/Commuity-Blog",
+        path: "https://www.guilded.gg/Zuzalu/blog/Community-Blog",
         title: "Community Blog",
         img: "/images/guilded_logo.svg",
       },
