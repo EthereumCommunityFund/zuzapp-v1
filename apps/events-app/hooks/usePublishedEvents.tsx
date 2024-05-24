@@ -10,7 +10,7 @@ export const usePublishedEvents = () => {
     isError,
   } = useQuery<EventSpaceDetailsType[], Error>(
     ['publishedEventSpaces'], // Query key
-    () => fetchPublishedEventSpaces({ page: 1, limit: 10 }),
+    () => fetchPublishedEventSpaces({ page: 1, limit: 30 }),
     {
       onError: (error) => {
         console.log(error, 'error loading events');

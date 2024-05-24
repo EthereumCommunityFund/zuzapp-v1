@@ -38,7 +38,7 @@ export default function HomePageTemplate() {
         <CreateEvent btnTitle={'Add Event'} className="w-40" />
         <PublishedEventSpaces />
       </div>
-      <TestEventSpace />
+      {/*<TestEventSpace />*/}
       <FirstUserLogin />
     </div>
   );
