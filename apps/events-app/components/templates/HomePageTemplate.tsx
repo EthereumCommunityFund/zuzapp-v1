@@ -13,7 +13,7 @@ import { HomePageTemplateSkeleton } from '../commons/HomePageTemplateSkeleton';
 import { useEffect, useState } from 'react';
 import { Input } from '../ui/input';
 import { updateUsername } from '@/controllers/profile.controllers';
-import banner1 from '@/public/images/banner2.png';
+import zucity from '@/public/images/banner3.jpg';
 import banner2 from '@/public/images/banner2.png';
 import CustomCarousel from '../ui/CustomCarousel';
 import { formatDate, truncateString } from '@/utils';
@@ -187,7 +187,7 @@ export const HomePageBanner = () => {
   const router = useRouter();
 
   const [currentSlide, setCurrentSlide] = useState(0);
-  const slides = [banner1.src, banner2.src];
+  const slides = [zucity.src, zucity.src];
   const { isAuthenticated, user } = useGlobalContext();
 
   return (
