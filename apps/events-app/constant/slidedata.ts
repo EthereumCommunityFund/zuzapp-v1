@@ -13,7 +13,7 @@ const slideData = [
   // },
   {
     title: 'Alpha launching with Zuvillage Georgia',
-    description: 'Zuzalu.city is a discovery app for all Zuzalu-based events and communities.',    
+    description: 'Zuzalu.city is evolving into a web3 platform of community toolkits',    
     ctas: [
       {
         ctaText: 'Explore Now!',
