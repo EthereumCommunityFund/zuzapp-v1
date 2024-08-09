@@ -30,19 +30,20 @@ import axios from 'axios';
 export default function HomePageTemplate() {
   return (
     <div className="md:w-5/6 w-[95%] mx-auto">
-      <div className="lg:mt-10 mt-48 relative w-full border border-white/10 rounded-2xl">
-        <div className="bg-[#184D46] text-white flex justify-between items-center p-4 rounded-t-2xl"
+      <div className="bg-[#184D46] text-white flex justify-between items-center p-4 rounded-t-2xl"
             style={{ height: '43px' }}>
-          <div className="flex items-center gap-4">
-            <span className="material-icons">info_outline</span>
-            <span>Are you attending ZuVillage in Georgia?</span>
-          </div>
-          <a href="https://zuzalu-city-ten.vercel.app/" target="_blank" rel="noopener noreferrer"
-            className="bg-[#252828] hover:bg-[#1e1e1e] text-white font-bold py-2 px-4 rounded">
-            Join the Alpha
-          </a>
+        <div className="flex items-center gap-4">
+          <span className="material-icons">info_outline</span>
+          <span>Are you attending ZuVillage in Georgia?</span>
         </div>
-        <div style={{ height: '20px' }}></div>
+        <a href="https://zuzalu-city-ten.vercel.app/" target="_blank" rel="noopener noreferrer"
+          className="bg-[#252828] hover:bg-[#1e1e1e] text-white font-bold py-2 px-4 rounded">
+          Join the Alpha
+        </a>
+      </div>
+      <div style={{ height: '20px' }}></div>
+      <div className="lg:mt-10 mt-48 relative w-full border border-white/10 rounded-2xl">
+
         <HomePageBanner />
       </div>
       <div className="mt-10 pb-5">
