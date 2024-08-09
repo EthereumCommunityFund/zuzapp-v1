@@ -181,7 +181,7 @@ export default function DashboardNavigation() {
                 style={{ height: '16px', width: '16px', filter: 'brightness(0) invert(1)' }}
                 alt="Join Icon"
               />
-              <span style="color: white;">Join on Element</span>
+              <span>Join on Element</span>
           </div>
 
 
