@@ -167,7 +167,15 @@ export default function DashboardNavigation() {
             <Label className="text-white text-l border_top">
               Build With Us
             </Label>
-            <div onclick="window.open('https://matrix.to/#/#zuzalusoftware:matrix.org', '_blank');">
+            <div
+              className="menu_cta"
+              onClick={() =>
+                window.open(
+                  "https://matrix.to/#/#zuzalusoftware:matrix.org",
+                  "_blank"
+                )
+              }
+            >
               <img src="/images/elementicon.png" style="height: 16px; width: 16px; filter: brightness(0) invert(1);" alt="Join Icon"/>
               <span style="color: white;">Join on Element</span>
           </div>
