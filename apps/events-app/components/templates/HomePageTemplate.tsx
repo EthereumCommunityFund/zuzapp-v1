@@ -34,7 +34,7 @@ export default function HomePageTemplate() {
         <div className="bg-[#184D46] text-white flex justify-between items-center p-4 rounded-t-2xl"
             style={{ height: '43px' }}>
           <div className="flex items-center gap-4">
-            <span className="material-icons">info_outline</span> <!-- Updated icon name -->
+            <span className="material-icons">info_outline</span>
             <span>Are you attending ZuVillage in Georgia?</span>
           </div>
           <a href="https://zuzalu-city-ten.vercel.app/" target="_blank" rel="noopener noreferrer"
