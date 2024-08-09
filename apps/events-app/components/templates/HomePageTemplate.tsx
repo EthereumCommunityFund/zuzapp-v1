@@ -13,7 +13,7 @@ import { HomePageTemplateSkeleton } from '../commons/HomePageTemplateSkeleton';
 import { useEffect, useState } from 'react';
 import { Input } from '../ui/input';
 import { updateUsername } from '@/controllers/profile.controllers';
-import zucity from '@/public/images/banner3.jpg';
+import zucity from '@/public/images/new_banner.png';
 import banner2 from '@/public/images/banner2.png';
 import CustomCarousel from '../ui/CustomCarousel';
 import { formatDate, truncateString } from '@/utils';
@@ -31,6 +31,16 @@ export default function HomePageTemplate() {
   return (
     <div className="md:w-5/6 w-[95%] mx-auto">
       <div className="lg:mt-10 mt-48 relative w-full border border-white/10 rounded-2xl">
+      <div className="bg-green-900 text-white flex justify-between items-center p-4 rounded-t-2xl">
+          <div className="flex items-center gap-4">
+            <span className="material-icons">info</span>
+            <span>Are you attending ZuVillage in Georgia?</span>
+          </div>
+          <a href="https://zuzalu-city-ten.vercel.app/" target="_blank" rel="noopener noreferrer"
+            className="bg-teal-700 hover:bg-teal-800 text-white font-bold py-2 px-4 rounded">
+            Join the Alpha
+          </a>
+        </div>
         <HomePageBanner />
       </div>
       <div className="mt-10 pb-5">

@@ -16,7 +16,7 @@ const slideData = [
     description: 'Zuzalu.city is evolving into a web3 platform of community toolkits',    
     ctas: [
       {
-        ctaText: 'Explore Now!',
+        ctaText: 'Try the Alpha',
         ctaLink: 'https://zuzalu-city-ten.vercel.app/',
         action: 'view',
         twClassNames: 'bg-[#769270] hover:bg-[#92B68B]',
