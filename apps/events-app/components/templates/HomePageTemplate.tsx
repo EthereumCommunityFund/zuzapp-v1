@@ -46,7 +46,6 @@ export default function HomePageTemplate() {
           Join the Alpha
         </a>
       </div>
-      <div style={{ height: '10px' }}></div>
       <div className="lg:mt-10 mt-48 relative w-full border border-white/10 rounded-2xl">
         <HomePageBanner />
       </div>
