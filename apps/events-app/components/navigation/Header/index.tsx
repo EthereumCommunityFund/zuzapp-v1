@@ -244,17 +244,22 @@ export default function DashboardHeader() {
                 Build With Us
               </Label>
               <div
-                className="menu_cta"
-                onClick={() =>
-                  window.open(
-                    "https://www.guilded.gg/r/zzME2L6mXR?i=dVbg9yzd",
-                    "_blank"
-                  )
-                }
-              >
-                <img src="/images/guilded_logo.svg" />
-                <span>Join Guilded</span>
+              className="menu_cta"
+              onClick={() =>
+                window.open(
+                  "https://matrix.to/#/#zuzalusoftware:matrix.org",
+                  "_blank"
+                )
+              }
+            >
+                    <img 
+                      src="/images/elementicon.png" 
+                      style={{ height: '16px', width: '16px', filter: 'brightness(0) invert(1)' }}
+                      alt="Join Icon"
+                    />
+                  <span>Join on Element</span>
               </div>
+
 
               <Label className="text-white text-l">
                 Participate in Discussions:
@@ -344,7 +349,7 @@ export default function DashboardHeader() {
                   aria-expanded="true"
                 >
                   <img src="/images/profile.svg" />
-                  <span>Connect</span>
+                  <span>Register an Event</span>
                 </button>
 
                 {isDropdownOpen && (
