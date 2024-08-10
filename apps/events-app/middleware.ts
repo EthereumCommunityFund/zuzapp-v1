@@ -10,6 +10,6 @@ export function middleware(request: NextRequest) {
   }
 
   if (url.href === 'https://www.zuzalu.city/tools/communitygraphs') {
-    return NextResponse.redirect('http://communitygraphs.xyz/login/zuzalu')
+    return NextResponse.redirect('https://www.communitygraphs.xyz/login/zuzalu')
   }
 }
